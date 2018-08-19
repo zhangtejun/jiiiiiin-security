@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+#    http://database.51cto.com/art/201005/199278.htm
+    url: jdbc:mysql://127.0.0.1:3306/jiiiiiin-security-demo?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+    username: root
+    password: root
+  session:
+    store-type: none
+security:
+  basic:
+    enabled: false
+
