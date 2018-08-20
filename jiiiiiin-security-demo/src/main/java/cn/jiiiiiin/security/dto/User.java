@@ -1,12 +1,17 @@
 package cn.jiiiiiin.security.dto;
 
+import cn.jiiiiiin.security.validator.MyConstraint;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Past;
 import java.util.Date;
 
 /**
  * dto包下的内容都是用来封装RESTful输入输出数据的
+ *
+ * 校验参考：
+ *  Hibernate Validator
  */
 public class User {
 
@@ -20,12 +25,14 @@ public class User {
     }
 
     private String id;
+    @MyConstraint(message = "测试校验注解")
     private String username;
-    @NotBlank
+    @NotBlank(message = "密码不能为空")
     private String password;
     /**
      * 关于日期类型，最好的处理方式是请求和响应都传递时间戳，展示格式由前端自行控制
      */
+    @Past
     private Date birthday;
 
     @JsonView(UserSimpleView.class)
