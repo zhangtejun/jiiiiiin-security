@@ -18,9 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -119,6 +117,13 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id").value("1"))
         .andReturn().getResponse().getContentAsString();
         L.info("whenCreateSuccess res {}", res);
+    }
+
+    @Test
+    public void whenDeleteSuccess() throws Exception {
+        // RESTFull 请求的成功是用状态码标识，即返回200则标识删除成功
+        mockMvc.perform(delete("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
     }
 
     @After
