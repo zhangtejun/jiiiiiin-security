@@ -17,11 +17,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>cn.jiiiiiin.security</groupId>
             <artifactId>jiiiiiin-security-core</artifactId>
         </dependency>

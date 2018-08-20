@@ -1,4 +1,5 @@
 - [代码结构](https://ws2.sinaimg.cn/large/006tNbRwgy1fue02z4h20j31kw0rc0y8.jpg)
+- [RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
 
 
 ### 问题集合：
@@ -41,3 +42,31 @@
           basic:
             enabled: false
         ```
+    
+    + 怎么将demo项目打出可执行jar：
+        
+        解决：
+        ```xml
+             <plugins>
+                <!--将项目打包成一个可执行的jar https://docs.spring.io/spring-boot/docs/1.5.15.RELEASE/reference/htmlsingle/#getting-started-first-application-executable-jar-->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+    
+            </plugins>
+        ```
+        
+    + `java.lang.AssertionError: No value at JSON path "$.length()": java.lang.IllegalArgumentException: json can not be null or empty`
+    
+        因为测试的方法没有返回正确的json数据；
+        
+        
+    
