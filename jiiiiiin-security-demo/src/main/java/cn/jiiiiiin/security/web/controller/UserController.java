@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,14 @@ import java.util.List;
     //public User getUserInfo(@PathVariable Long id, @PathVariable(name = "id") Long idddd) {
     // 使用正则表达式对 path variable进行校验@GetMapping("/user/{id:\\d+}")
 
+// @RequestBody 映射请求体到java方法参数
+    // public User create(@RequestBody User user) 需要加上注解之后，才能解析前端传上来的json对象中的对应字段的值
 // spring mvc直接将前端传递的参数映射到一个实体类：public List<User> query(UserQryCondition condition){
+
+// @Valid 注解和BindingResult验证请求参数的合法性并处理校验结果
+    // public User create(@Valid @RequestBody User user) 如果直接这样写，那么前端如果没有按要求传递，则会直接不进入请求方法体，直接响应400 标识请求的格式错误，因为后台会校验对应字段的格式，但是校验失败
+    // 如果需要在校验失败也进入方法体，需要添加BindingResult到方法参数中
+    // BindingResult需要配置@Valid注解使用，在校验失败时候，会将错误消息（校验失败消息）映射到该对象
 
 // @PageableDefault 用来指定分页参数的默认值
 // @PageableDefault(page = 1, size = 10, sort = "username,asc") Pageable pageable
@@ -59,11 +68,22 @@ import java.util.List;
     // 在Controller方法上指定视图
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     final static Logger L = LoggerFactory.getLogger(UserController.class);
 
-    @GetMapping("/user")
+    @PostMapping
+    public User create(@Valid @RequestBody User user, BindingResult errors){
+        L.info("create user {}", user);
+        if(errors.hasErrors()){
+            errors.getAllErrors().stream().forEach(error -> L.error("create user err: {}", error.getDefaultMessage()));
+        }
+        user.setId("1");
+        return user;
+    }
+
+    @GetMapping
     @JsonView(User.UserSimpleView.class)
     public List<User> query(UserQryCondition condition, @PageableDefault(page = 1, size = 10, sort = "username,asc") Pageable pageable) {
         final List<User> res = new ArrayList<>();
@@ -75,7 +95,7 @@ public class UserController {
         return res;
     }
 
-    @GetMapping("/user/{id:\\d+}")
+    @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
     public User getUserInfo(@PathVariable Long id, @PathVariable(name = "id") Long idddd) {
         L.info("getUserInfo qry id is {}", id);

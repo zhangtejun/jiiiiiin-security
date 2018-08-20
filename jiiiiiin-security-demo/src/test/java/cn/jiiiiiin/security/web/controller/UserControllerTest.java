@@ -16,7 +16,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Date;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -88,6 +91,20 @@ public class UserControllerTest {
     public void whenQryUserInfoFial() throws Exception {
         mockMvc.perform(get("/user/a").contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void whenCreateSuccess() throws Exception {
+        final String reqContent = "{\"username\":\"tom\",\"password\":null,\"birthday\":"+new Date().getTime()+"}";
+        final String res = mockMvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON_UTF8)
+                // RESTFul请求参数以json格式传递
+                .content(reqContent))
+                // 405 标识请求的方式（POST）后台未定义这样的接口
+                // 400 标识请求的格式错误，因为后台会校验对应字段的格式，但是校验失败
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+        .andReturn().getResponse().getContentAsString();
+        L.info("whenCreateSuccess res {}", res);
     }
 
     @After
