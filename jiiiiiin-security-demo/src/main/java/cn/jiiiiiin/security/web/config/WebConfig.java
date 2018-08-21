@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -50,5 +51,22 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
         registry.addInterceptor(timeInterceptor);
+    }
+
+    /**
+     * 针对异步接口的拦截器配置需要通过下面的接口进行注册（相应的拦截器也需要重写）
+     * 否则常规的拦截器是拦截不到异步的接口
+     *
+     * @param configurer
+     */
+    @Override
+    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+        super.configureAsyncSupport(configurer);
+        // 设置异步请求的超时时间
+//        configurer.setDefaultTimeout()
+        // 设置可重用的线程池，而不是spring默认的简单线程池
+//        configurer.setTaskExecutor()
+//        configurer.registerDeferredResultInterceptors()
+//        configurer.registerCallableInterceptors()
     }
 }

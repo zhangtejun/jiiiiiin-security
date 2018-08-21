@@ -3,6 +3,45 @@
 
 ### 关键点
 
++ 异步处理REST服务
+
+    - 使用Callable来处理
+    
+    ![]((https://ws4.sinaimg.cn/large/006tNbRwgy1fuhcqkylckj31kw0rm0v2.jpg))
+    
+    如果使用异步方式处理请求，那么请求就不占用容器的【主线程】的资源数，使得容器可以处理更多请求而不被阻塞，提升服务器的吞吐量；
+    对于浏览器来说，还是一个【正常】的请求，因为耗时还是1.x秒得到响应；
+    
+    特点：
+        子线程必须是在主线程中开启
+        
+    - 有一种情况：
+    
+    ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fuhdliloxxj30x40ezmxz.jpg)
+    
+    即接收请求的服务器是一个前置服务器，真正进行耗时操作的是外围一台服务器， 应用1只负责接收消息，之后将消息放到消息队列，而真正处理业务是在应用2中去监控消息队列，取出并处理，处理完毕之后将结果返给消息队列，应用1在实时的去取结果；
+    而真正的请求的响应式在应用1从队列中取出处理结果之后返回给前端的；
+       
+    针对这种场景，上面的处理方式就不能满足需求，需要使用DeferredResult来进行处理，参考`@RequestMapping("/async/order2")处理逻辑
+    
+    还需要注意：
+    
+    ```java
+        /**
+         * 针对异步接口的拦截器配置需要通过下面的接口进行注册（相应的拦截器也需要重写）
+         * 否则常规的拦截器是拦截不到异步的接口
+         *
+         * @param configurer
+         */
+        @Override
+        public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+            super.configureAsyncSupport(configurer);
+    //        configurer.registerDeferredResultInterceptors()
+    //        configurer.registerCallableInterceptors()
+        }
+    ```
+       
+
 + springboot aop、拦截器、过滤器相关:
 
     ![springboot aop、拦截器、过滤器相关](https://ws3.sinaimg.cn/large/006tNbRwgy1fuh5paluivj30n90glgm0.jpg)
