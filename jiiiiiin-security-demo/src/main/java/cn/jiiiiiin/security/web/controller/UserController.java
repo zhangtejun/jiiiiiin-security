@@ -120,9 +120,10 @@ public class UserController {
     @JsonView(User.UserDetailView.class)
     public User getUserInfo(@PathVariable String id, @PathVariable(name = "id") Long idddd) {
         L.info("getUserInfo qry id is {}", id);
-        throw new UserNotExistException(id);
-//        final User res = new User();
-//        res.setUsername("tom");
-//        return res;
+        // 测试异常处理
+//        throw new UserNotExistException(id);
+        final User res = new User();
+        res.setUsername("tom");
+        return res;
     }
 }
