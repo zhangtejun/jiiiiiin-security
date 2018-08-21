@@ -9,9 +9,11 @@ import java.util.Date;
 
 /**
  * dto包下的内容都是用来封装RESTful输入输出数据的
- *
+ * <p>
  * 校验参考：
- *  Hibernate Validator
+ * Hibernate Validator
+ *
+ * @author jiiiiiin
  */
 public class User {
 
@@ -19,7 +21,7 @@ public class User {
     }
 
     /**
-     * 继承 {@link User.UserSimpleView} 就能把上层接口定义的东西继承下来
+     * 继承 {@link UserSimpleView} 就能把上层接口定义的东西继承下来
      */
     public interface UserDetailView extends UserSimpleView {
     }
@@ -34,6 +36,7 @@ public class User {
      */
     @Past
     private Date birthday;
+    private String avatar;
 
     @JsonView(UserSimpleView.class)
     public String getUsername() {
@@ -71,13 +74,13 @@ public class User {
         this.birthday = birthday;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", birthday=" + birthday +
-                '}';
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
+
+    @JsonView(UserSimpleView.class)
+    public String getAvatar() {
+        return avatar;
+    }
+
 }

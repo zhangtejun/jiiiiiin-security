@@ -22,6 +22,11 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>cn.jiiiiiin.security</groupId>
+            <artifactId>jiiiiiin-security-browser</artifactId>
+        </dependency>
+
         <!--引入spring 测试框架-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -29,9 +34,16 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.jiiiiiin.security</groupId>
-            <artifactId>jiiiiiin-security-browser</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+
+        <!--处理文件工具类库-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

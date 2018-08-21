@@ -27,7 +27,7 @@ public class TimeFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         L.info("time filter start");
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
         filterChain.doFilter(servletRequest, servletResponse);
         L.info("time filter: {}", (System.currentTimeMillis() - start));
         L.info("time filter finish");

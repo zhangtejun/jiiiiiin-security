@@ -1,6 +1,5 @@
 package cn.jiiiiiin.security.web.interceptor;
 
-import cn.jiiiiiin.security.web.filter.TimeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -12,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 如果在拦截器中需要直接获取到请求接口对应传递的参数（方法参数），其实也需要手动去request中取
+ * 所以如果要想直接拿到参数，可以使用aop切片拦截
+ *
  * @author jiiiiiin
  */
 @Component
@@ -22,6 +24,7 @@ public class TimeInterceptor implements HandlerInterceptor {
 
     /**
      * 相较于filter，interceptor就多了第三个参数，方便我们得到请求需要的接口定义信息
+     *
      * @param httpServletRequest
      * @param httpServletResponse
      * @param o
@@ -39,6 +42,7 @@ public class TimeInterceptor implements HandlerInterceptor {
 
     /**
      * 如果执行的控制器抛出异常，当前钩子不会被调用
+     *
      * @param httpServletRequest
      * @param httpServletResponse
      * @param o
@@ -52,10 +56,11 @@ public class TimeInterceptor implements HandlerInterceptor {
 
     /**
      * 当前钩子始终会被调用
+     *
      * @param httpServletRequest
      * @param httpServletResponse
      * @param o
-     * @param e 如果执行请求链条抛出了异常，则该参数不为空
+     * @param e                   如果执行请求链条抛出了异常，则该参数不为空
      * @throws Exception
      */
     @Override

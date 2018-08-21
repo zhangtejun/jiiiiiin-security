@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -94,7 +95,7 @@ public class UserControllerTest {
 
     @Test
     public void whenCreateSuccess() throws Exception {
-        final String reqContent = "{\"username\":\"tom\",\"password\":null,\"birthday\":"+new Date().getTime()+"}";
+        final String reqContent = "{\"username\":\"tom\",\"password\":null,\"birthday\":" + new Date().getTime() + "}";
         // 测试自定义校验注解
 //        final String reqContent = "{\"username\":null,\"password\":null,\"birthday\":"+new Date().getTime()+"}";
         final String res = mockMvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -104,18 +105,18 @@ public class UserControllerTest {
                 // 400 标识请求的格式错误，因为后台会校验对应字段的格式，但是校验失败
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
-        .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse().getContentAsString();
         L.info("whenCreateSuccess res {}", res);
     }
 
     @Test
     public void whenUpdateSuccess() throws Exception {
-        final String reqContent = "{\"id\":\"1\",\"username\":\"tom\",\"password\":null,\"birthday\":"+new Date().getTime()+"}";
+        final String reqContent = "{\"id\":\"1\",\"username\":\"tom\",\"password\":null,\"birthday\":" + new Date().getTime() + "}";
         final String res = mockMvc.perform(put("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(reqContent))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
-        .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse().getContentAsString();
         L.info("whenCreateSuccess res {}", res);
     }
 
@@ -125,6 +126,20 @@ public class UserControllerTest {
         mockMvc.perform(delete("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void whenUploadAvatar() throws Exception {
+        final String res = mockMvc.perform(fileUpload("/user/upload/avatar")
+                // params1 接口定义标识文件的key值
+                // params2 上传的文件名
+                .file(new MockMultipartFile("file", "avatar.txt", MediaType.MULTIPART_FORM_DATA_VALUE, "avatar mock data".getBytes())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.avatar").isNotEmpty())
+                .andReturn().getResponse().getContentAsString();
+        L.info("whenUploadAvatar res {}", res);
+    }
+
+
 
     @After
     public void tearDown() throws Exception {

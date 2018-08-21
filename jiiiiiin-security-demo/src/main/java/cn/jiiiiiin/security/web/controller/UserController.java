@@ -4,6 +4,7 @@ import cn.jiiiiiin.security.dto.User;
 import cn.jiiiiiin.security.dto.UserQryCondition;
 import cn.jiiiiiin.security.exception.UserNotExistException;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -13,8 +14,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +81,8 @@ public class UserController {
 
     final static Logger L = LoggerFactory.getLogger(UserController.class);
 
+    final static String AVATAR_SAVE_PATH = "/Users/jiiiiiin/Documents/IdeaProjects/jiiiiiin-security/jiiiiiin-security-demo/src/main/resources/static";
+
     @PostMapping
     public User create(@Valid @RequestBody User user, BindingResult errors) {
         L.info("create user {}", user);
@@ -125,5 +132,57 @@ public class UserController {
         final User res = new User();
         res.setUsername("tom");
         return res;
+    }
+
+    /**
+     * 文件上传接口示例：
+     * 注意文件上传
+     * MultipartFile file 这个file的命名很特殊，需要和测试用例的第一个参数一致
+     *
+     * @param file
+     */
+    @PostMapping("/upload/avatar")
+    @JsonView(User.UserSimpleView.class)
+    public User uploadAvatar(MultipartFile file) throws IOException {
+        // file.getOriginalFilename() 原始文件名
+        L.info("uploadAvatar: {} {} {}", file.getName(), file.getOriginalFilename(), file.getSize());
+
+        final File localFile = new File(AVATAR_SAVE_PATH, System.currentTimeMillis() + ".jpg");
+        // 将传上来的文件写到本地
+        file.transferTo(localFile);
+        // 或者拿到上传文件的输入流写到其他地方
+        // file.getInputStream()
+
+        final User res = new User();
+        res.setUsername("tom");
+        res.setAvatar("http://www.baidu.com/avatar.jpg");
+        return res;
+    }
+
+    /**
+     * 文件下载接口示例
+     *
+     * @param id
+     * @param request
+     * @param response
+     */
+    @GetMapping("/{id:\\d+}/download/avatar")
+    public void downloadAvatar(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+        // jdk7 之后直接将io操作放在try后面的括号中，jvm会自动帮我们把流释放（关闭）
+        try (
+                final InputStream inputStream = new FileInputStream(new File(AVATAR_SAVE_PATH, "1534835212463.jpg"));
+                final OutputStream outputStream = response.getOutputStream();
+        ) {
+            response.setContentType("application/x-download");
+            // 指定下载的时候服务器定义被下载文件的名称:tom_avatar.jpg
+            response.addHeader("Content-Disposition", "attachment;filename=tom_avatar.jpg");
+            // 将本地文件写到响应体中
+            IOUtils.copy(inputStream, outputStream);
+            outputStream.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
