@@ -27,6 +27,19 @@
             <artifactId>junit</artifactId>
         </dependency>
 
+        <!--https://docs.spring.io/spring-boot/docs/1.5.15.RELEASE/reference/html/configuration-metadata.html#configuration-metadata-annotation-processor-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--https://docs.spring.io/spring-mobile/docs/current/reference/html/-->
+        <dependency>
+            <groupId>org.springframework.mobile</groupId>
+            <artifactId>spring-mobile-device</artifactId>
+        </dependency>
+
         <!--负责引入spring security 和spring security oauth2相关依赖-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

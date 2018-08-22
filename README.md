@@ -1,7 +1,34 @@
-- [代码结构](https://ws2.sinaimg.cn/large/006tNbRwgy1fue02z4h20j31kw0rc0y8.jpg)
-- [RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
+- ![代码结构](https://ws2.sinaimg.cn/large/006tNbRwgy1fue02z4h20j31kw0rc0y8.jpg)
+- ![属性配置](https://ws1.sinaimg.cn/large/006tNbRwgy1fuilgv8orxj30rx0emgm6.jpg)
+
 
 ### 关键点
+
++ ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
+
++ spring security 相关：
+
+    > https://spring.io/projects/spring-security
+    > https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
+
+    - 核心功能：
+        
+        ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fuia8dpyrej30dv0bvdg4.jpg)
+        
+        ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fuib0js6rhj31kw0ju0vk.jpg)
+        
+    + 浏览器相关security配置参考: bean::BrowserSecurityConfig、MyUserDetailsService
+    
+        - 个性化用户认证流程
+            
+            - 自定义登录页面
+            
+                ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fuiiuwx7wxj31kw0s5wjo.jpg)
+                为了区分渠道，需要像上图那样去重新定义security框架的处理逻辑；
+                
+            - 自定义登录成功处理流程
+            - 自定义登录失败处理流程
+
 
 + 使用Swagger自动生成文档
     
@@ -33,6 +60,10 @@
           // 年龄区间
           @ApiModelProperty(value = "年龄终止值")
     ```
+    
+    - 自定义
+    
+        `UserDetailsService`用来通过用户名获取`UserDetails`用户标识对象；
         
 
 + 异步处理REST服务
@@ -108,6 +139,19 @@
             
 
 ### 问题集合：
+
++ spring security 常见错误：
+
+    + 默认开启了csrf，但是没有做合理配置，登录的时候就报：
+        ```xml
+        There was an unexpected error (type=Forbidden, status=403).
+        Could not verify the provided CSRF token because your session was not found.
+        ```
+        调试期间可以先关闭这个特性：
+        ```java
+          .and()
+                .csrf().disable();
+        ```
 
 **需要先创建对应数据库，启动redis服务**
 

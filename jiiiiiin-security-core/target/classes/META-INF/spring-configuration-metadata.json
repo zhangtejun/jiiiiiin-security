@@ -1,0 +1,17 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "cn.jiiiiiin.security.core.properties.SecurityProperties",
+      "name": "jiiiiiin.security",
+      "type": "cn.jiiiiiin.security.core.properties.SecurityProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "cn.jiiiiiin.security.core.properties.SecurityProperties",
+      "name": "jiiiiiin.security.browser",
+      "type": "cn.jiiiiiin.security.core.properties.BrowserProperties"
+    }
+  ]
+}

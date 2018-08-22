@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<body>
+
+<h2>demo登录</h2>
+
+<!--自定义登录交易-->
+<!--默认框架配置的登录交易，查看UsernamePasswordAuthenticationFilter#requiresAuthenticationRequestMatcher-->
+<!--<form action="/login" method="post">-->
+<form action="/signIn" method="post">
+    <p>
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username"/>
+    </p>
+    <p>
+        <label for="password">密码</label>
+        <input type="password" id="password" name="password"/>
+    </p>
+    <button type="submit" class="btn">提交</button>
+</form>
+
+</body>
+</html>

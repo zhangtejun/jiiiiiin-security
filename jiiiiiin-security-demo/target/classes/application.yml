@@ -7,10 +7,16 @@ spring:
     password: root
   session:
     store-type: none
-security:
-  basic:
-    enabled: false
+#security:
+#  basic:
+#    enabled: false
 
 swagger:
   enable: true
+
+# 自定义配置
+jiiiiiin:
+  security:
+    browser:
+      loginPage: /demo-signIn.html
 
