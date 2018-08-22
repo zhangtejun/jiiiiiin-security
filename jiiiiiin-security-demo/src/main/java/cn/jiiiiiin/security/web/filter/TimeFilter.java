@@ -21,16 +21,16 @@ public class TimeFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        L.info("time filter init");
+        L.debug("time filter init");
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        L.info("time filter start");
+        L.debug("time filter start");
         final long start = System.currentTimeMillis();
         filterChain.doFilter(servletRequest, servletResponse);
-        L.info("time filter: {}", (System.currentTimeMillis() - start));
-        L.info("time filter finish");
+        L.debug("time filter: {}", (System.currentTimeMillis() - start));
+        L.debug("time filter finish");
     }
 
     @Override

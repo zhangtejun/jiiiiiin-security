@@ -4,6 +4,8 @@ import cn.jiiiiiin.security.dto.User;
 import cn.jiiiiiin.security.dto.UserQryCondition;
 import cn.jiiiiiin.security.exception.UserNotExistException;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -113,6 +115,7 @@ public class UserController {
 
     @GetMapping
     @JsonView(User.UserSimpleView.class)
+    @ApiOperation(value = "用户列表查询服务")
     public List<User> query(UserQryCondition condition, @PageableDefault(page = 1, size = 10, sort = "username,asc") Pageable pageable) {
         final List<User> res = new ArrayList<>();
         res.add(new User());
@@ -125,7 +128,8 @@ public class UserController {
 
     @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
-    public User getUserInfo(@PathVariable String id, @PathVariable(name = "id") Long idddd) {
+    @ApiOperation(value = "用户查询服务")
+    public User getUserInfo(@ApiParam(value = "用户id") @PathVariable String id, @PathVariable(name = "id") Long idddd) {
         L.info("getUserInfo qry id is {}", id);
         // 测试异常处理
 //        throw new UserNotExistException(id);

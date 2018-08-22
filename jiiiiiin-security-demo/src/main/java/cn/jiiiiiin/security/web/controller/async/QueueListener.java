@@ -34,7 +34,7 @@ public class QueueListener implements ApplicationListener<ContextRefreshedEvent>
             // 当应用启动之后，去监听消息队列；
             while (true) {
                 final String completeOrder = mockQueue.getCompleteOrder();
-                if (StringUtils.isBlank(completeOrder)) {
+                if (!StringUtils.isBlank(completeOrder)) {
                     L.info("返回订单处理结果 {}", completeOrder);
                     // .setResult("")标识本次请求的异步处理完毕，需要返回前端结果
                     // 这里就是请求线程（控制器）和返回结果给前端的线程直接进行通讯的逻辑，依赖DeferredResult来完成处理

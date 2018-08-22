@@ -3,6 +3,38 @@
 
 ### 关键点
 
++ 使用Swagger自动生成文档
+    
+    根据代码自动生成文档，提供给前端开发人员识别接口；
+    
+    [集成](https://mvnrepository.com/artifact/io.springfox/springfox-swagger2)
+    
+    ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fui7xqrglgj31kw0ocab6.jpg)
+    
+    ```java
+        @SpringBootApplication
+        @RestController
+        @EnableSwagger2
+        public class App {}
+      
+      // 常用注解：@ApiParam、@ApiOperation
+    
+        @GetMapping("/{id:\\d+}")
+        @JsonView(User.UserDetailView.class)
+        @ApiOperation(value = "用户查询服务")
+        public User getUserInfo(@ApiParam(value = "用户id") @PathVariable String id, @PathVariable(name = "id") Long idddd) {
+    
+      // 常用注解：@ApiModelProperty
+      public class UserQryCondition {
+  
+          private String username;
+          @ApiModelProperty(value = "年龄起始值")
+          private int age;
+          // 年龄区间
+          @ApiModelProperty(value = "年龄终止值")
+    ```
+        
+
 + 异步处理REST服务
 
     - 使用Callable来处理

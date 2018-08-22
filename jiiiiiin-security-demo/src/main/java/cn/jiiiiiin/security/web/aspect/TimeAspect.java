@@ -40,19 +40,19 @@ public class TimeAspect {
      */
     @Around("execution(* cn.jiiiiiin.security.web.controller.UserController.*(..))")
     public Object handlerControllerMethod(ProceedingJoinPoint pjp) throws Throwable {
-        L.info("time aspect start {}", pjp);
+        L.debug("time aspect start {}", pjp);
         final long start = System.currentTimeMillis();
         // 在切片里面可以拿到待调用方法的实际请求数据（方法参数）
         final Object[] args = pjp.getArgs();
         for (Object arg: args) {
-            L.info("time aspect param: {}", arg);
+            L.debug("time aspect param: {}", arg);
         }
 
         // 得到的就是执行的控制器的接口返回的数据
         final Object res = pjp.proceed();
 
-        L.info("time aspect record: {}", (System.currentTimeMillis() - start));
-        L.info("time aspect end");
+        L.debug("time aspect record: {}", (System.currentTimeMillis() - start));
+        L.debug("time aspect end");
         return res;
     }
 

@@ -11,3 +11,6 @@ security:
   basic:
     enabled: false
 
+swagger:
+  enable: true
+
