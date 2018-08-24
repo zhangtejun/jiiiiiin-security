@@ -2,26 +2,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
     <title>登录</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        [v-cloak] {
+            display: none !important;
+        }
+
+        .title {
+            text-align: center;
+            margin: 0px 0px;
+        }
+
+        .image-code-input {
+            width: 50%;
+        }
+
+        .image-code {
+            position: absolute;
+            width: 100px;
+            /*right: 0px;*/
+            margin-left: 20px;
+            height: 40px;
+        }
+
+        .from {
+            margin-top: 200px;
+        }
+    </style>
 </head>
 <body>
 
-<h2>登录</h2>
+<div id="app" v-cloak>
 
-<!--自定义登录交易-->
-<!--默认框架配置的登录交易，查看UsernamePasswordAuthenticationFilter#requiresAuthenticationRequestMatcher-->
-<!--<form action="/login" method="post">-->
-<form action="/signIn" method="post">
-    <p>
-        <label for="username">用户名</label>
-        <input type="text" id="username" name="username"/>
-    </p>
-    <p>
-        <label for="password">密码</label>
-        <input type="password" id="password" name="password"/>
-    </p>
-    <button type="submit" class="btn">提交</button>
-</form>
+    <el-row class="from">
+        <el-col :span="8">&nbsp;</el-col>
+        <el-col :span="8">
 
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <h2 class="title">登录</h2>
+                </div>
+
+                <!--自定义登录交易-->
+                <!--默认框架配置的登录交易，查看UsernamePasswordAuthenticationFilter#requiresAuthenticationRequestMatcher-->
+                <!--<form action="/login" method="post">-->
+                <el-form ref="form" label-width="80px" action="/authentication/from" method="post">
+                    <el-form-item label="用户名" required="true">
+                        <el-input name="username" v-model="username"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="密码" required="true">
+                        <el-input name="password" v-model="password" type="password"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="验证码" required="true">
+                        <el-input name="imageCode" class="image-code-input"></el-input>
+                        <img src="/code/image" class="image-code">
+                    </el-form-item>
+
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+
+        </el-col>
+        <el-col :span="8">&nbsp;</el-col>
+    </el-row>
+
+</div>
+
+<!-- 生产环境版本，优化了尺寸和速度 -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                username: 'admin',
+                password: 'a11111'
+            }
+        },
+        methods: {
+            onSubmit: function (e) {
+                // console.log(this.username)
+                this.$refs.form.$el.submit();
+            }
+        }
+
+    })
+</script>
 </body>
 </html>

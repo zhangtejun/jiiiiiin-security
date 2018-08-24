@@ -1,4 +1,4 @@
-package cn.jiiiiiin.security.browser;
+package cn.jiiiiiin.security.browser.component.authentication;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
  * @author jiiiiiin
  */
 @Component
-public class MyUserDetailsService implements UserDetailsService {
+public class JUserDetailsService implements UserDetailsService {
 
-    final static Logger L = LoggerFactory.getLogger(MyUserDetailsService.class);
+    final static Logger L = LoggerFactory.getLogger(JUserDetailsService.class);
 
     @Autowired
     PasswordEncoder passwordEncoder;

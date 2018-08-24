@@ -1,6 +1,9 @@
 package cn.jiiiiiin.security.browser.config;
 
+import cn.jiiiiiin.security.browser.controller.BrowserSecurityController;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 /**
  * @author jiiiiiin
@@ -16,13 +21,29 @@ import org.springframework.security.web.FilterInvocation;
 @Configuration
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    final static Logger L = LoggerFactory.getLogger(BrowserSecurityConfig.class);
+
+    public static final String LOGIN_URL = "/authentication/require";
+    public static final String LOGIN_PROCESSING_URL = "/authentication/from";
+    private static final String CODE_IMAGE = "/code/image";
+
     @Autowired
     private SecurityProperties securityProperties;
+
+    @Autowired
+    AuthenticationSuccessHandler jAuthenticationSuccessHandler;
+
+    @Autowired
+    AuthenticationFailureHandler jAuthenticationFailureHandler;
 
     /**
      * https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
      * <p>
      * https://ws3.sinaimg.cn/large/006tNbRwgy1fuib0js6rhj31kw0ju0vk.jpg
+     * <p>
+     * 默认使用下面的方式进行用户身份认证
+     * .and()
+     * .httpBasic();
      * <p>
      * security 过滤器链关键环节：
      *
@@ -37,27 +58,34 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        final String loginPage = securityProperties.getBrowser().getLoginPage();
+
+        L.info("配置的loginPage: {}", loginPage);
+
         http
                 // 对请求进行授权，这个方法下面的都是授权的配置
                 .authorizeRequests()
+                // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
                 // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
                 // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
-                .antMatchers("/resources/**", "/signIn", securityProperties.getBrowser().getLoginPage()).permitAll()
+                .antMatchers(CODE_IMAGE, LOGIN_URL, loginPage).permitAll()
                 // 对所有请求// 都需要身份认证
                 .anyRequest().authenticated()
-                // 默认使用下面的方式进行用户身份认证
-//                .and()
-//                .httpBasic();
                 .and()
-                // formLogin() 指定身份认证的方式
+                // 开启表单登录（指定身份认证的方式）
                 // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
                 .formLogin()
-                // 自定义登录页面
-//                .loginPage("/signIn.html")
-                .loginPage("/signIn")
-                // 自定义登录交易请求接口，会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
-                .loginProcessingUrl("/signIn")
+                // 配置自定义登录页面所在的url，如`/signIn.html`，在需要登录的时候去访问的接口（渲染的页面）
+                .loginPage(LOGIN_URL)
+                // 配置自定义登录交易请求接口（上面的登录页面提交表单之后登录接口），会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
+                .loginProcessingUrl(LOGIN_PROCESSING_URL)
+                // 配置自定义认证成功处理器
+                .successHandler(jAuthenticationSuccessHandler)
+                // 配置自定义认证失败处理器
+                .failureHandler(jAuthenticationFailureHandler)
                 .and()
+                // 临时关闭防护
                 .csrf().disable();
     }
 

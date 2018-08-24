@@ -13,10 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.plugin.liveconnect.SecurityContextHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -136,6 +141,47 @@ public class UserController {
         final User res = new User();
         res.setUsername("tom");
         return res;
+    }
+
+    /**
+     * 从ss中获取登录用户的认证信息:
+     *
+     * 如通过用户名密码登录时候：
+     * {
+     *     "authorities": [
+     *         {
+     *             "authority": "admin"
+     *         }
+     *     ],
+     *     "details": {
+     *         "remoteAddress": "0:0:0:0:0:0:0:1",
+     *         "sessionId": "0F090A65706715E338D2E342B50E2078"
+     *     },
+     *     "authenticated": true,
+     *     "principal": {
+     *         "password": null,
+     *         "username": "admin",
+     *         "authorities": [
+     *             {
+     *                 "authority": "admin"
+     *             }
+     *         ],
+     *         "accountNonExpired": true,
+     *         "accountNonLocked": true,
+     *         "credentialsNonExpired": true,
+     *         "enabled": true
+     *     },
+     *     "credentials": null,
+     *     "name": "admin"
+     * }
+     *
+     * @return
+     */
+    @GetMapping("/me")
+    public Object getCurrentUser(Authentication authentication, @AuthenticationPrincipal UserDetails userDetails) {
+        L.info("get me userDetails {} {}", authentication, userDetails);
+//        return SecurityContextHolder.getContext().getAuthentication();
+        return userDetails;
     }
 
     /**

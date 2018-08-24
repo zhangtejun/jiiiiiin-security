@@ -15,20 +15,71 @@
         
         ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fuia8dpyrej30dv0bvdg4.jpg)
         
-        ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fuib0js6rhj31kw0ju0vk.jpg)
+        ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fukjvjq7chj31kw0jwwhp.jpg)
         
+        参考：https://juejin.im/post/5a434de6f265da43333eae7d
+        
+        ```java
+           o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: OrRequestMatcher [requestMatchers=[Ant [pattern='/css/**'], Ant [pattern='/js/**'], Ant [pattern='/images/**'], Ant [pattern='/webjars/**'], Ant [pattern='/**/favicon.ico'], Ant [pattern='/error']]], []
+                  2018-08-24 10:46:59.538  INFO 5296 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@64e247e, org.springframework.security.web.context.SecurityContextPersistenceFilter@1be3a294, org.springframework.security.web.header.HeaderWriterFilter@7d49fe37, org.springframework.security.web.authentication.logout.LogoutFilter@73633230, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@356ab368, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@729d1428, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4425b6ed, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@66df362c, org.springframework.security.web.session.SessionManagementFilter@231c521e, org.springframework.security.web.access.ExceptionTranslationFilter@5af1b221, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5c30decf]
+                  2018-08-24 10:46:59.558  INFO 5296 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration$LazyEndpointPathRequestMatcher@7ca8f5d7, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2dc319cf, org.springframework.security.web.context.SecurityContextPersistenceFilter@4f5df012, org.springframework.security.web.header.HeaderWriterFilter@3ad9fea, org.springframework.web.filter.CorsFilter@1690929, org.springframework.security.web.authentication.logout.LogoutFilter@53b9952f, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@46df794e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@38f3dbbf, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@574e4184, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@34d26a68, org.springframework.security.web.session.SessionManagementFilter@556e4588, org.springframework.security.web.access.ExceptionTranslationFilter@574413bd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7da9b32c]
+                  2018-08-24 10:46:59.561  INFO 5296 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: OrRequestMatcher [requestMatchers=[Ant [pattern='/**']]], [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7945986a, org.springframework.security.web.context.SecurityContextPersistenceFilter@4144d4a, org.springframework.security.web.header.HeaderWriterFilter@30a1b2ad, org.springframework.security.web.authentication.logout.LogoutFilter@37b44e8e, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@11ec2b2f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@20276412, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1dae9e61, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@442151d1, org.springframework.security.web.session.SessionManagementFilter@436d2bb9, org.springframework.security.web.access.ExceptionTranslationFilter@20608ef4, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7c31e01f]
+                  2018-08-24 10:47:00.175  INFO 5296 --- [           m
+                  
+        ```
     + 浏览器相关security配置参考: bean::BrowserSecurityConfig、MyUserDetailsService
     
         - 个性化用户认证流程
+        
+            ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fujs30pbkcj31kw10atc6.jpg)
+            
+           上图就是框架认证流程的核心处理流程
             
             - 自定义登录页面
             
                 ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fuiiuwx7wxj31kw0s5wjo.jpg)
                 为了区分渠道，需要像上图那样去重新定义security框架的处理逻辑；
                 
+                关键在于spring security的授权配置：
+                
+                ```java
+                  protected void configure(HttpSecurity http) throws Exception {
+                          http
+                                 //...
+                                  .and()
+                                  // formLogin() 指定身份认证的方式
+                                  // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
+                                  .formLogin()
+                                  // 自定义登录页面
+                  //                .loginPage("/signIn.html")
+                                  .loginPage("/signIn")
+                                  // 自定义登录交易请求接口，会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
+                                  .loginProcessingUrl("/signIn")
+                                  .and()
+                    }
+                ```
+                
+                获取请求的用户名和密码关键在`UsernamePasswordAuthenticationFilter#attemptAuthentication` 解析用户名密码哪里，目前默认是获取request中的req params，也就是表单参数，如果要支持json请求，需要继承该类，手动实现，可以参考：
+                https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#form-login-filter
+                
             - 自定义登录成功处理流程
+                
+                如果前端使用ajax异步请求一个需要授权登录的交易，那么默认的spring security的处理方式是在登录完成之后会重定向到上一个交易，如果要干预或者说，登录成功之后需要返回给前端登录用户的消息，那么就必须要进行这里的自定义；
+                
+                关键在于`AuthenticationSuccessHandler`
+                
+                ```java
+                .and()
+                // formLogin() 指定身份认证的方式
+                // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
+                //...
+                // 配置自定义认证成功处理器
+                .successHandler(jAuthenticationSuccessHandler)
+                ```
+                
             - 自定义登录失败处理流程
 
++ [kaptcha集成](https://www.jianshu.com/p/1f2f7c47e812)
 
 + 使用Swagger自动生成文档
     
@@ -141,6 +192,14 @@
 ### 问题集合：
 
 + spring security 常见错误：
+
+    + loginPage配置：
+    
+    ```java
+      .loginPage(LOGIN_URL)
+    ```
+    
+    这里的配置如果需要使用控制器来做渠道控制（渲染登录页面或者返回json提示），那么接口的名称不要和被渲染的页面名称一致，比如接口【signIn】而页面名称【signIn.html】这样会导致视图解析器报错
 
     + 默认开启了csrf，但是没有做合理配置，登录的时候就报：
         ```xml

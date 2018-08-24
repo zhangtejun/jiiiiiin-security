@@ -1,4 +1,6 @@
 spring:
+  thymeleaf:
+    cache: false
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
 #    http://database.51cto.com/art/201005/199278.htm
@@ -17,6 +19,6 @@ swagger:
 # 自定义配置
 jiiiiiin:
   security:
-    browser:
-      loginPage: /demo-signIn.html
+#    browser:
+#      loginPage: /demo-signIn.html
 
