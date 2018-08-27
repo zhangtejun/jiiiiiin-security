@@ -10,12 +10,16 @@
 
     > https://spring.io/projects/spring-security
     > https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
+    
+    - 记住我
+    
+    ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuoes59unqj30zo0fuabd.jpg)
 
     - 核心功能：
         
         ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fuia8dpyrej30dv0bvdg4.jpg)
         
-        ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fukjvjq7chj31kw0jwwhp.jpg)
+        ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuoesrwcz1j31kw0jvgp1.jpg)
         
         参考：https://juejin.im/post/5a434de6f265da43333eae7d
         

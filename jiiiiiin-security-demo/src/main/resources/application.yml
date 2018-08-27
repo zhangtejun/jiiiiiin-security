@@ -24,8 +24,8 @@ jiiiiiin:
   security:
     validate:
       image-code:
-        length: 6
-        size: 25
+        length: 3
+        size: 30
         interceptor-urls: /user/*
 #    browser:
 #      loginPage: /demo-signIn.html
