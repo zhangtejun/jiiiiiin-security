@@ -78,6 +78,12 @@
                 ```
                 
             - 自定义登录失败处理流程
+            
++ 自定义配置
+    
+   参考:
+   ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuo9h1z6mrj30t30eu0tl.jpg)
+    
 
 + [kaptcha集成](https://www.jianshu.com/p/1f2f7c47e812)
 

@@ -10,11 +10,21 @@ public class SecurityProperties {
 
     private BrowserProperties browser = new BrowserProperties();
 
+    private ValidateCodeProperties validate = new ValidateCodeProperties();
+
     public BrowserProperties getBrowser() {
         return browser;
     }
 
     public void setBrowser(BrowserProperties browser) {
         this.browser = browser;
+    }
+
+    public ValidateCodeProperties getValidate() {
+        return validate;
+    }
+
+    public void setValidate(ValidateCodeProperties validate) {
+        this.validate = validate;
     }
 }

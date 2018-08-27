@@ -1,5 +1,6 @@
 package cn.jiiiiiin.security.browser.component.authentication;
 
+import cn.jiiiiiin.security.browser.support.SimpleResponse;
 import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -72,7 +73,7 @@ public class JAuthenticationFailureHandler extends SimpleUrlAuthenticationFailur
      */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        L.info("身份认证（登录）失败 {}", exception);
+        L.info("身份认证（登录）失败", exception);
         // 根据渠道返回不同的响应数据
         final SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
@@ -82,7 +83,7 @@ public class JAuthenticationFailureHandler extends SimpleUrlAuthenticationFailur
                 response.setStatus(INTERNAL_SERVER_ERROR.value());
                 response.setContentType("application/json;charset=UTF-8");
                 // 将authentication转换成json str输出
-                response.getWriter().write(objectMapper.writeValueAsString(exception));
+                response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));
             } else {
                 // 默认是做重定向到登录之前的【期望访问资源】接口
                 super.onAuthenticationFailure(request, response, exception);

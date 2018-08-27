@@ -1,6 +1,7 @@
 spring:
   thymeleaf:
     cache: false
+    encoding: UTF-8
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
 #    http://database.51cto.com/art/201005/199278.htm
@@ -9,9 +10,11 @@ spring:
     password: root
   session:
     store-type: none
+
 #security:
 #  basic:
 #    enabled: false
+
 
 swagger:
   enable: true
@@ -19,6 +22,11 @@ swagger:
 # 自定义配置
 jiiiiiin:
   security:
+    validate:
+      image-code:
+        length: 6
+        size: 25
+        interceptor-urls: /user/*
 #    browser:
 #      loginPage: /demo-signIn.html
 

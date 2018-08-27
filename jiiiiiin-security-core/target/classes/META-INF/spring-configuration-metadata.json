@@ -12,6 +12,11 @@
       "sourceType": "cn.jiiiiiin.security.core.properties.SecurityProperties",
       "name": "jiiiiiin.security.browser",
       "type": "cn.jiiiiiin.security.core.properties.BrowserProperties"
+    },
+    {
+      "sourceType": "cn.jiiiiiin.security.core.properties.SecurityProperties",
+      "name": "jiiiiiin.security.validate",
+      "type": "cn.jiiiiiin.security.core.properties.ValidateCodeProperties"
     }
   ]
 }

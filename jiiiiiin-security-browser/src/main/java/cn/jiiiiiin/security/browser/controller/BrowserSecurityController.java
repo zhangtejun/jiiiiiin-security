@@ -61,22 +61,20 @@ public class BrowserSecurityController {
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response, Device device) throws IOException {
         // 获取到上一个被拦截的请求(原始请求）
-//        final SavedRequest savedRequest = requestCache.getRequest(request, response);
-//        if (savedRequest != null) {
-//            final String transTarget = savedRequest.getRedirectUrl();
-//            L.info("需要进行身份认证的请求是 {}", transTarget);
-//            // 检测请求是否是以html结尾，我们就认为是访问网页版本
-//            // if(StringUtils.endsWithIgnoreCase(transTarget, ".html")){
-//            // 借助spring mobile来区分渠道
-//            if (device.isNormal()) {
-//                // 直接跳转到登录页面
-//                L.info("跳转到身份认证页面 {}", securityProperties.getBrowser().getLoginPage());
-//                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getLoginPage());
-//                return null;
-//            }
-//        }
-//        return SimpleResponse.newInstance("访问的服务需要身份认证");
-        redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getLoginPage());
-        return null;
+        final SavedRequest savedRequest = requestCache.getRequest(request, response);
+        if (savedRequest != null) {
+            final String transTarget = savedRequest.getRedirectUrl();
+            L.info("需要进行身份认证的请求是 {}", transTarget);
+            // 检测请求是否是以html结尾，我们就认为是访问网页版本
+            // if(StringUtils.endsWithIgnoreCase(transTarget, ".html")){
+            // 借助spring mobile来区分渠道
+            if (device.isNormal()) {
+                // 直接跳转到登录页面
+                L.info("跳转到身份认证页面 {}", securityProperties.getBrowser().getLoginPage());
+                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getLoginPage());
+                return null;
+            }
+        }
+        return SimpleResponse.newInstance("访问的服务需要身份认证");
     }
 }

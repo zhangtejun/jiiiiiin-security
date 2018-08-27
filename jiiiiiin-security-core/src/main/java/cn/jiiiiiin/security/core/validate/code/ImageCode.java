@@ -1,5 +1,7 @@
 package cn.jiiiiiin.security.core.validate.code;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 
@@ -29,7 +31,6 @@ public class ImageCode {
     }
 
     /**
-     *
      * @param code
      * @param image
      * @param expireIn 多少秒后过期
@@ -63,5 +64,14 @@ public class ImageCode {
 
     public void setExpireTime(LocalDateTime expireTime) {
         this.expireTime = expireTime;
+    }
+
+    /**
+     * 判断验证码是否过期
+     *
+     * @return 返回true标明已经过期
+     */
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(expireTime);
     }
 }

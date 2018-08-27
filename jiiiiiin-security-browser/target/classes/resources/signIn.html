@@ -23,7 +23,6 @@
         .image-code {
             position: absolute;
             width: 100px;
-            /*right: 0px;*/
             margin-left: 20px;
             height: 40px;
         }
@@ -60,7 +59,7 @@
 
                     <el-form-item label="验证码" required="true">
                         <el-input name="imageCode" class="image-code-input"></el-input>
-                        <img src="/code/image" class="image-code">
+                        <img src="/code/image" class="image-code" @click="onChangeValidateImgCode">
                     </el-form-item>
 
                     <el-form-item>
@@ -93,6 +92,10 @@
             onSubmit: function (e) {
                 // console.log(this.username)
                 this.$refs.form.$el.submit();
+            },
+            onChangeValidateImgCode: function (e) {
+                // TODO ctx change
+                e.target.src = 'http://localhost:8080/code/image?' + new Date().getTime()
             }
         }
 

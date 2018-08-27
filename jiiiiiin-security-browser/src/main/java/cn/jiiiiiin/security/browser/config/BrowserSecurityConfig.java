@@ -2,6 +2,7 @@ package cn.jiiiiiin.security.browser.config;
 
 import cn.jiiiiiin.security.browser.controller.BrowserSecurityController;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import cn.jiiiiiin.security.core.validate.code.ValidateCodeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.Filter;
 
 /**
  * @author jiiiiiin
@@ -23,8 +27,17 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     final static Logger L = LoggerFactory.getLogger(BrowserSecurityConfig.class);
 
+    /**
+     * 需要进行身份认证的接口
+     */
     public static final String LOGIN_URL = "/authentication/require";
+    /**
+     * 身份认证表单提交的接口
+     */
     public static final String LOGIN_PROCESSING_URL = "/authentication/from";
+    /**
+     * 图形验证码
+     */
     private static final String CODE_IMAGE = "/code/image";
 
     @Autowired
@@ -35,6 +48,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     AuthenticationFailureHandler jAuthenticationFailureHandler;
+
+    @Autowired
+    Filter validateCodeFilter;
 
     /**
      * https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
@@ -64,6 +80,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         L.info("配置的loginPage: {}", loginPage);
 
         http
+                // 添加自定义图形验证码过滤器，校验session中的图形验证码
+                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 // 对请求进行授权，这个方法下面的都是授权的配置
                 .authorizeRequests()
                 // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置

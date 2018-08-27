@@ -11,8 +11,6 @@ import org.springframework.context.annotation.ImportResource;
 @Configuration
 // 注册配置
 @EnableConfigurationProperties(SecurityProperties.class)
-// 引入kaptcha验证码配置
-@ImportResource(locations = {"classpath:config/kaptcha.xml"})
 public class SecurityCoreConfig {
 
 }
