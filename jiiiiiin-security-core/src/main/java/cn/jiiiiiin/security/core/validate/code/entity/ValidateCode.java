@@ -1,46 +1,35 @@
-package cn.jiiiiiin.security.core.validate.code;
+package cn.jiiiiiin.security.core.validate.code.entity;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 
 /**
  * @author jiiiiiin
  */
-public class ImageCode {
+public class ValidateCode {
 
     /**
      * 验证码
      */
     private String code;
-    /**
-     * 根据验证码生成的图片
-     */
-    private BufferedImage image;
 
     /**
      * 到期时间
      */
     private LocalDateTime expireTime;
 
-    public ImageCode(String code, BufferedImage image, LocalDateTime expireTime) {
+    public ValidateCode(String code, LocalDateTime expireTime) {
         this.code = code;
-        this.image = image;
         this.expireTime = expireTime;
     }
 
     /**
      * @param code
-     * @param image
      * @param expireIn 多少秒后过期
      */
-    public ImageCode(String code, BufferedImage image, int expireIn) {
+    public ValidateCode(String code, int expireIn) {
         this.code = code;
-        this.image = image;
         this.expireTime = LocalDateTime.now().plusSeconds(expireIn);
     }
-
 
     public String getCode() {
         return code;
@@ -48,14 +37,6 @@ public class ImageCode {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public BufferedImage getImage() {
-        return image;
-    }
-
-    public void setImage(BufferedImage image) {
-        this.image = image;
     }
 
     public LocalDateTime getExpireTime() {

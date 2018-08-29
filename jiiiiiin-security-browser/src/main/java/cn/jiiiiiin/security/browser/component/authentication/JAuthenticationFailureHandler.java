@@ -83,7 +83,9 @@ public class JAuthenticationFailureHandler extends SimpleUrlAuthenticationFailur
                 response.setStatus(INTERNAL_SERVER_ERROR.value());
                 response.setContentType("application/json;charset=UTF-8");
                 // 将authentication转换成json str输出
-                response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));
+                final String res = objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage()));
+                L.info("返回json数据 {}", res);
+                response.getWriter().write(res);
             } else {
                 // 默认是做重定向到登录之前的【期望访问资源】接口
                 super.onAuthenticationFailure(request, response, exception);

@@ -1,6 +1,7 @@
 package cn.jiiiiiin.security.browser.config;
 
 import cn.jiiiiiin.security.browser.controller.BrowserSecurityController;
+import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.validate.code.ValidateCodeFilter;
 import org.slf4j.Logger;
@@ -40,9 +41,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     public static final String LOGIN_PROCESSING_URL = "/authentication/from";
     /**
-     * 图形验证码
+     * 验证码接口（图形验证码、短信验证码）
      */
-    private static final String CODE_IMAGE = "/code/image";
+    private static final String CODE_IMAGE = "/code/*";
+
+    private static final String STATIC_RESOURCES = "/js/**";
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -61,6 +64,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService jUserDetailsService;
+
+    @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
 
     /**
      * https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
@@ -97,7 +103,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
                 // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
                 // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
-                .antMatchers(CODE_IMAGE, LOGIN_URL, loginPage).permitAll()
+                .antMatchers(STATIC_RESOURCES, CODE_IMAGE, LOGIN_URL, loginPage).permitAll()
                 // 对所有请求// 都需要身份认证
                 .anyRequest().authenticated()
                 .and()
@@ -122,7 +128,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(jUserDetailsService)
                 .and()
                 // 临时关闭防护
-                .csrf().disable();
+                .csrf().disable()
+                // 追加短信验证码公共配置
+                .apply(smsCodeAuthenticationSecurityConfig);
     }
 
     @Bean

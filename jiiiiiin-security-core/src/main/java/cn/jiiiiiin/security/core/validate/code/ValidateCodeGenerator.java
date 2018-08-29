@@ -1,8 +1,7 @@
 package cn.jiiiiiin.security.core.validate.code;
 
+import cn.jiiiiiin.security.core.validate.code.entity.ValidateCode;
 import org.springframework.web.context.request.ServletWebRequest;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author jiiiiiin
@@ -15,5 +14,5 @@ public interface ValidateCodeGenerator {
      * @param request
      * @return
      */
-    ImageCode generate(HttpServletRequest request);
+    ValidateCode generate(ServletWebRequest request);
 }

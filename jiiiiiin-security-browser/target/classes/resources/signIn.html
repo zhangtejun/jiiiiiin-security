@@ -13,7 +13,6 @@
 
         .title {
             text-align: center;
-            margin: 0px 0px;
         }
 
         .image-code-input {
@@ -28,7 +27,7 @@
         }
 
         .from {
-            margin-top: 200px;
+            margin-top: 150px;
         }
     </style>
 </head>
@@ -40,38 +39,54 @@
         <el-col :span="8">&nbsp;</el-col>
         <el-col :span="8">
 
-            <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                    <h2 class="title">登录</h2>
-                </div>
+            <h3 class="title">登录</h3>
 
-                <!--自定义登录交易-->
-                <!--默认框架配置的登录交易，查看UsernamePasswordAuthenticationFilter#requiresAuthenticationRequestMatcher-->
-                <!--<form action="/login" method="post">-->
-                <el-form ref="form" label-width="80px" action="/authentication/from" method="post">
-                    <el-form-item label="用户名" required="true">
-                        <el-input name="username" v-model="username"></el-input>
-                    </el-form-item>
+            <el-tabs type="border-card">
+                <el-tab-pane label="账号方式">
+                    <!--自定义登录交易-->
+                    <!--默认框架配置的登录交易，查看UsernamePasswordAuthenticationFilter#requiresAuthenticationRequestMatcher-->
+                    <!--<form action="/login" method="post">-->
+                    <el-form ref="form" label-width="80px" action="/authentication/from" method="post">
+                        <el-form-item label="用户名" required="true">
+                            <el-input name="username" v-model="username"></el-input>
+                        </el-form-item>
 
-                    <el-form-item label="密码" required="true">
-                        <el-input name="password" v-model="password" type="password"></el-input>
-                    </el-form-item>
+                        <el-form-item label="密码" required="true">
+                            <el-input name="password" v-model="password" type="password"></el-input>
+                        </el-form-item>
 
-                    <el-form-item label="验证码" required="true">
-                        <el-input name="imageCode" class="image-code-input"></el-input>
-                        <img src="/code/image" class="image-code" @click="onChangeValidateImgCode">
-                    </el-form-item>
+                        <el-form-item label="验证码" required="true">
+                            <el-input name="imageCode" class="image-code-input"></el-input>
+                            <img src="/code/image" class="image-code" @click="onChangeValidateImgCode">
+                        </el-form-item>
 
-                    <el-form-item label="">
-                        <el-input name="remember-me" :value="rememberVal" type="hidden" v-show="show"></el-input>
-                        <el-checkbox v-model="remember">记住我</el-checkbox>
-                    </el-form-item>
+                        <el-form-item label="">
+                            <el-input name="remember-me" :value="rememberVal" type="hidden" v-show="show"></el-input>
+                            <el-checkbox v-model="remember">记住我</el-checkbox>
+                        </el-form-item>
 
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit">立即创建</el-button>
-                    </el-form-item>
-                </el-form>
-            </el-card>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">提交</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+                <el-tab-pane label="验证码方式">
+                    <el-form ref="form2" label-width="80px" action="/authentication/mobile" method="post">
+                        <el-form-item label="手机号" required="true">
+                            <el-input name="mobile" v-model="mobile"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="验证码" required="true">
+                            <el-input name="smsCode" class="image-code-input"></el-input>
+                            <el-button type="primary" plain @click="reqSendSmsCode" :disabled="sendSmsCodeBtnStatus">获取验证码</el-button>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit2">提交</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+            </el-tabs>
 
         </el-col>
         <el-col :span="8">&nbsp;</el-col>
@@ -83,6 +98,8 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <!-- 引入组件库 -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/js/common.js"></script>
 
 <script>
     new Vue({
@@ -91,8 +108,10 @@
             return {
                 username: 'admin',
                 password: 'a11111',
+                mobile: '15388888888',
                 remember: true,
-                show: false
+                show: false,
+                sendSmsCodeBtnStatus: false
             }
         },
         computed: {
@@ -105,9 +124,29 @@
                 console.log(this.$refs.form)
                 this.$refs.form.$el.submit();
             },
+            onSubmit2: function (e) {
+                console.log(this.$refs.form)
+                this.$refs.form2.$el.submit();
+            },
+            reqSendSmsCode: function (e) {
+                var that = this
+                this.sendSmsCodeBtnStatus = true
+                this.$vp.get('/code/sms', {
+                    params: {
+                        mobile: this.mobile
+                    }
+                }).then(function (response) {
+                    console.log(`请求发送短信成功->`, response)
+                    // TODO 对按钮做发送时长控制
+                    that.sendSmsCodeBtnStatus = false
+                    that.$message('发送成功')
+                }).catch(function (err) {
+                    alert(`请求短信验证码出错${JSON.stringify(err.response)}`)
+                    that.sendSmsCodeBtnStatus = false
+                })
+            },
             onChangeValidateImgCode: function (e) {
-                // TODO ctx change
-                e.target.src = 'http://localhost:8080/code/image?' + new Date().getTime()
+                e.target.src = `${baseConfig.baseURL}/code/image?${new Date().getTime()}`
             }
         }
 

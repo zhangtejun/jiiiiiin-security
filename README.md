@@ -11,6 +11,14 @@
     > https://spring.io/projects/spring-security
     > https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
     
+    - 配置规划
+    
+    ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuqepk8hyhj30zg0h3jtv.jpg)
+    
+    - 验证码
+    
+    ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fupfn8ecd6j30yv0fiwfo.jpg)
+    
     - 记住我
     
     ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuoes59unqj30zo0fuabd.jpg)
@@ -38,6 +46,11 @@
             ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fujs30pbkcj31kw10atc6.jpg)
             
            上图就是框架认证流程的核心处理流程
+           
+           如果需要自定义:
+           ![]()
+           
+           https://coding.imooc.com/lesson/134.html#mid=6872
             
             - 自定义登录页面
             
