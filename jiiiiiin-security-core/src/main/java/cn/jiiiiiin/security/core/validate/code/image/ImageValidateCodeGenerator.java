@@ -32,11 +32,12 @@ public class ImageValidateCodeGenerator implements ValidateCodeGenerator {
     @Override
     public ImageCode generate(ServletWebRequest request) {
         final int expireIn = ServletRequestUtils.getIntParameter(request.getRequest(), SecurityConstants.DEFAULT_PARAMETER_NAME_EXPIRE_IN, securityProperties.getValidate().getImageCode().getExpireIn());
-        L.debug("验证码有效期 {}", expireIn);
         // 生成验证码
         final String capText = captchaProducer.createText();
         final BufferedImage bi = captchaProducer.createImage(capText);
         final ImageCode imageCode = new ImageCode(capText, bi, expireIn);
+
+        L.info("图形验证码 {} 有效期 {}", capText, expireIn);
         return imageCode;
     }
 }

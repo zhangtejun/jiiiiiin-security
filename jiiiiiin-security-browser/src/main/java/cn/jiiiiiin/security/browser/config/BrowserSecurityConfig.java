@@ -3,7 +3,9 @@ package cn.jiiiiiin.security.browser.config;
 import cn.jiiiiiin.security.browser.controller.BrowserSecurityController;
 import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import cn.jiiiiiin.security.core.social.SocialConfig;
 import cn.jiiiiiin.security.core.validate.code.ValidateCodeFilter;
+import cn.jiiiiiin.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.servlet.Filter;
 import javax.sql.DataSource;
@@ -57,16 +60,22 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationFailureHandler jAuthenticationFailureHandler;
 
     @Autowired
-    private Filter validateCodeFilter;
-
-    @Autowired
     private DataSource dataSource;
 
     @Autowired
-    private UserDetailsService jUserDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
+    @Autowired
+    private ValidateCodeSecurityConfig validateCodeSecurityConfig;
+
+    /**
+     * @see SocialConfig#socialSecurityConfig() 注入social配置到ss
+     */
+    @Autowired
+    private SpringSocialConfigurer socialSecurityConfig;
 
     /**
      * https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
@@ -87,6 +96,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
      * 用来处理FilterSecurityInterceptor认证过程中认证失败时候的流程控制
      * @see org.springframework.security.web.access.intercept.FilterSecurityInterceptor#invoke(FilterInvocation)
      * 中的InterceptorStatusToken token = super.beforeInvocation(fi); 会进行身份认证授权判断
+     *
+     * @see org.springframework.social.security.SocialAuthenticationFilter
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -96,8 +107,15 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         L.info("配置的loginPage: {}", loginPage);
 
         http
-                // 添加自定义图形验证码过滤器，校验session中的图形验证码
-                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                // 添加自定义验证码过滤器，校验session中的图形验证码
+                .apply(validateCodeSecurityConfig)
+                .and()
+                // 追加短信验证码公共配置
+                .apply(smsCodeAuthenticationSecurityConfig)
+                .and()
+                // 添加social拦截过滤器，引导用户进行社交登录,`SocialAuthenticationFilter`
+                .apply(socialSecurityConfig)
+                .and()
                 // 对请求进行授权，这个方法下面的都是授权的配置
                 .authorizeRequests()
                 // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
@@ -125,12 +143,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenRepository(persistentTokenRepository())
                 // 设置记住用户的时长
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
-                .userDetailsService(jUserDetailsService)
+                // 需要业务系统自己实现
+                .userDetailsService(userDetailsService)
                 .and()
                 // 临时关闭防护
-                .csrf().disable()
-                // 追加短信验证码公共配置
-                .apply(smsCodeAuthenticationSecurityConfig);
+                .csrf().disable();
     }
 
     @Bean
@@ -144,7 +161,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
      * 记住我功能的token存取器配置
      * <p>
      * 需要插入一张框架需要的表：{@link JdbcTokenRepositoryImpl#CREATE_TABLE_SQL}
-     *
+     * <p>
      * ![关于remember me功能](https://ws1.sinaimg.cn/large/0069RVTdgy1fuoes59unqj30zo0fuabd.jpg)
      *
      * @return
