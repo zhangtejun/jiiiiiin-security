@@ -1,9 +1,12 @@
-- ![代码结构](https://ws2.sinaimg.cn/large/006tNbRwgy1fue02z4h20j31kw0rc0y8.jpg)
-- ![属性配置](https://ws1.sinaimg.cn/large/006tNbRwgy1fuilgv8orxj30rx0emgm6.jpg)
+### 参考：
+
+> [Spring Security Tutorial 《Spring Security 教程》](https://waylau.gitbooks.io/spring-security-tutorial/content/)
 
 ### 关键点
 
-- ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
+- ![代码结构](https://ws2.sinaimg.cn/large/006tNbRwgy1fue02z4h20j31kw0rc0y8.jpg)
+
+- ![属性配置](https://ws1.sinaimg.cn/large/006tNbRwgy1fuilgv8orxj30rx0emgm6.jpg)
 
 - spring social
 
@@ -43,15 +46,84 @@
 
   作为第三方比如接 qq 的实现步骤：
 
-        1.先实现`Api`接口，因为每一家服务供应商提供的用户信息数据结构都是不一样的，就需要根据不同供应商去实现该接口
-            参考：cn.jiiiiiin.security.core.social.qq.api.QQImpl
-        2.构建出service provider（一般需要两个组件，OAuth2Operations这个可以使用默认实现，如果供应商实现的OAuth比较标准、Api就使用上面第一步得到的组件）
-            参考:`cn.jiiiiiin.security.core.social.qq.connet.QQServiceProvider`
-        3.构建一个`Connection Factory`(一般需要两个自定义组件，就是上面两步得到的）
-            参考：`cn.jiiiiiin.security.core.social.qq.connet.QQConnectionFactory`
-        4.得到`Connection`，就可以拿到用户信息
-            通过`Connection Factory`构建
-        5.得到用户信息之后通过`UserConnectionRepository`就可以构建出ss框架自定义的`UserConnection`表中的数据，将service provider
+  1.先实现`Api`接口，因为每一家服务供应商提供的用户信息数据结构都是不一样的，就需要根据不同供应商去实现该接口
+  参考：cn.jiiiiiin.security.core.social.qq.api.QQImpl 2.构建出 service provider（一般需要两个组件，OAuth2Operations 这个可以使用默认实现，如果供应商实现的 OAuth 比较标准、Api 就使用上面第一步得到的组件）
+  参考:`cn.jiiiiiin.security.core.social.qq.connet.QQServiceProvider` 3.构建一个`Connection Factory`(一般需要两个自定义组件，就是上面两步得到的）
+  参考：`cn.jiiiiiin.security.core.social.qq.connet.QQConnectionFactory` 4.得到`Connection`，就可以拿到用户信息
+  通过`Connection Factory`构建 5.得到用户信息之后通过`UserConnectionRepository`就可以构建出 ss 框架自定义的`UserConnection`表中的数据，将 service provider
+
+  ![]()
+
+  > https://coding.imooc.com/lesson/134.html#mid=6890
+
+  OAuth2AuthenticationService 主要是用来进行 auth 流程的执行【`OAuth2AuthenticationService#getAuthToken`方法】，其会调用上面的 connection--> oauth2template 来执行 auth 流程；
+
+  ```java
+  public SocialAuthenticationToken getAuthToken(HttpServletRequest request, HttpServletResponse response) throws SocialAuthenticationRedirectException {
+      // code就是授权服务提供商在成功授权之后给的授权码[Authorization Code]
+      // 参考：http://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token
+      // 判断是否有授权码，即auth流程第三步返回
+  			String code = request.getParameter("code");
+  			if (!StringUtils.hasText(code)) {
+                  // 认为是流程的第一步
+  				OAuth2Parameters params =  new OAuth2Parameters();
+  				params.setRedirectUri(buildReturnToUrl(request));
+  				setScope(request, params);
+  				params.add("state", generateState(connectionFactory, request));
+  				addCustomParameters(params);
+                  // 如果是第一步就会组织参数，抛出异常，让social将请求重定向到qq的授权地址
+  				throw new SocialAuthenticationRedirectException(getConnectionFactory().getOAuthOperations().buildAuthenticateUrl(params));
+  			} else if (StringUtils.hasText(code)) {
+  				try {
+                      // 如果有授权码
+  					String returnToUrl = buildReturnToUrl(request);
+                      // 那授权码去换取令牌，第4、5步
+                      // 这里很可能出现异常，因为第三方返回的响应数据，social解析不出来的时候
+                      // 发送获取授权码的默认实现：extractAccessGrant(getRestTemplate().postForObject(accessTokenUrl, parameters, Map.class));
+                      // 标明框架期望得到的是一个json数据【RestTemplate】
+                      // 如果返回的数据内容类型非`application/json`或者数据不是json格式，就会出问题，qq返回的就不是这样的数据结构
+                      // access_token=FE04************************CCE2&expires_in=7776000&refresh_token=88E4************************BE14
+                      //http://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token
+                      // 解决方式就是自己实现template，添加相应的数据格式解析器，参考：cn.jiiiiiin.security.core.social.qq.connet.QQOAuth2Template#createRestTemplate
+                      // restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+  					AccessGrant accessGrant = getConnectionFactory().getOAuthOperations().exchangeForAccess(code, returnToUrl, null);
+  					// TODO avoid API call if possible (auth using token would be fine)
+  					Connection<S> connection = getConnectionFactory().createConnection(accessGrant);
+  					return new SocialAuthenticationToken(connection, null);
+  				} catch (RestClientException e) {
+  					logger.debug("failed to exchange for access", e);
+  					return null;
+  				}
+  			} else {
+  				return null;
+  			}
+  		}
+  ```
+
+  授权完成之后  服务提供商的  用户信息会封装到`Conncetion`中；
+
+  之后再进入 ss 身份认证的流程，`SocialAuthenticationToken`会包含着 Connection 一起丢给`AuthenticationManager`进行身份认证；
+
+  `SocialAuthenticationProvider`会调用`JdbcUsersConnectionRepository`来  通过 connection 中的授权用户信息去数据库[UserConnection 表]中查询一个`UserId`，之后调用`SocialUserDetailsService`去查询正在的业务系统的用户信息`SocialUserDetails`，重新构建 Authtication Token 标记为认证成功， 之后防止到 ss 的 context 中， 最后防止到 session 中，标识授权登录完成；
+
+* 常见问题：
+
+![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuso8tlo2fj311w0hc74n.jpg)
+上面的错误是因为没有在或者配置错误，qq 的开放平台配置的第三方应用的回调域，即流程的第三部，在服务提供商页面授权完毕之后，其会回调我们配置的这个域名；
+
+而实际在第一步导向到 qq 服务器的时候，spring social 已经为我们处理了`redirec_url`这个参数：
+`https://graph.qq.com/oauth2.0/show?which=error&display=pc&error=100010&client_id=100550231&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth%2Fqq&state=c1a93ae2-8da1-4a1a-bc78-5ec5bc8b6b5d`
+
+开发中这个域名还是本地 localhost 就和配置在开放平台的不匹配就报错了；
+
+`redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth%2Fqq`这个是我们的登录授权页面发起 qq 渠道授权的时候 href 的接口，即我们自身的接口；
+
+解决方式，让这里的 redirect_uri 和平台注册时候填写的回调域保持同一个域名；
+
+可以使用修改本机的 host 文件完成；
+![](https://ws4.sinaimg.cn/large/0069RVTdgy1fuswrpang1j30qq0k8jrt.jpg)
+
+或者部署到测试服务器，进行正式的联调；
 
 - spring security 相关：
 
@@ -111,8 +183,8 @@
                           // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
                           .formLogin()
                           // 自定义登录页面
-          //                .loginPage("/signIn.html")
-                          .loginPage("/signIn")
+          //                .signInUrl("/signIn.html")
+                          .signInUrl("/signIn")
                           // 自定义登录交易请求接口，会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
                           .loginProcessingUrl("/signIn")
                           .and()
@@ -134,6 +206,8 @@
         .successHandler(jAuthenticationSuccessHandler)
         ```
       - 自定义登录失败处理流程
+
+- ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
 
 - 自定义配置
   参考:
@@ -248,10 +322,10 @@
 
 - spring security 常见错误：
 
-  - loginPage 配置：
+  - signInUrl 配置：
 
   ```java
-    .loginPage(LOGIN_URL)
+    .signInUrl(LOGIN_URL)
   ```
 
   这里的配置如果需要使用控制器来做渠道控制（渲染登录页面或者返回 json 提示），那么接口的名称不要和被渲染的页面名称一致，比如接口【signIn】而页面名称【signIn.html】这样会导致视图解析器报错

@@ -42,6 +42,7 @@ public class QQServiceProvider extends AbstractOAuth2ServiceProvider<QQ> {
 
         // 第三个参数，对应上面流程的第一步，将用户导向到认证服务器的一个地址
         // 第四个参数，对应上面流程的第四步，即向认证服务器申请令牌的地址
+        // 默认实现OAuth2Template
         super(new QQOAuth2Template(appId, appSecret, URL_AUTHORIZE, URL_ACCESS_TOKEN));
         this.appId = appId;
     }

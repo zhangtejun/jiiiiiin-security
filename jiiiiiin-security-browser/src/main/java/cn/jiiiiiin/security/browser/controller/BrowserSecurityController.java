@@ -1,8 +1,10 @@
 package cn.jiiiiiin.security.browser.controller;
 
-import cn.jiiiiiin.security.browser.config.BrowserSecurityConfig;
 import cn.jiiiiiin.security.browser.support.SimpleResponse;
+import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import cn.jiiiiiin.security.core.social.SocialController;
+import cn.jiiiiiin.security.core.social.support.SocialUserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,13 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,13 +31,14 @@ import static cn.jiiiiiin.security.browser.config.BrowserSecurityConfig.LOGIN_UR
 
 /**
  * jiiiiiin:
- *   security:
- *     browser:
- *       loginPage = /demo-signIn.html
+ * security:
+ * browser:
+ * loginPage = /demo-signIn.html
+ *
  * @author jiiiiiin
  */
 @RestController
-public class BrowserSecurityController {
+public class BrowserSecurityController extends SocialController {
 
     final static Logger L = LoggerFactory.getLogger(BrowserSecurityController.class);
 
@@ -46,16 +52,19 @@ public class BrowserSecurityController {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
+    @Autowired
+    private ProviderSignInUtils providerSignInUtils;
+
     /**
      * 即当需要身份认证时候需要访问该接口，该接口负责根据渠道去渲染（身份认证（登录）页面）或返回json提示
-     *
+     * <p>
      * 对应spring security的`.loginPage([])`配置
      * 将区分请求的渠道进行不同的响应
      *
-     * @ResponseStatus(code = HttpStatus.UNAUTHORIZED) 返回的状态码标识返回给非网页版客户端，标识需要进行用户授权
      * @param request
      * @param response
      * @return
+     * @ResponseStatus(code = HttpStatus.UNAUTHORIZED) 返回的状态码标识返回给非网页版客户端，标识需要进行用户授权
      */
     @RequestMapping(LOGIN_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
@@ -70,11 +79,25 @@ public class BrowserSecurityController {
             // 借助spring mobile来区分渠道
             if (device.isNormal()) {
                 // 直接跳转到登录页面
-                L.info("跳转到身份认证页面 {}", securityProperties.getBrowser().getLoginPage());
-                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getLoginPage());
+                L.info("跳转到身份认证页面 {}", securityProperties.getBrowser().getSignInUrl());
+                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getSignInUrl());
                 return null;
             }
         }
         return SimpleResponse.newInstance("访问的服务需要身份认证");
+    }
+
+    /**
+     * 用户第一次社交登录时，会引导用户进行用户注册或绑定，此服务用于在注册或绑定页面获取社交网站用户信息
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping(SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL)
+    public SocialUserInfo getSocialUserInfo(HttpServletRequest request) {
+        // 从session中获取连接对象，在获取用户信息
+        // @see Connection
+        Connection<?> connection = providerSignInUtils.getConnectionFromSession(new ServletWebRequest(request));
+        return buildSocialUserInfo(connection);
     }
 }

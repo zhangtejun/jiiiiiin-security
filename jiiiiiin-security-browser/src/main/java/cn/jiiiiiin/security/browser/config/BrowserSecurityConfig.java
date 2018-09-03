@@ -1,10 +1,8 @@
 package cn.jiiiiiin.security.browser.config;
 
-import cn.jiiiiiin.security.browser.controller.BrowserSecurityController;
 import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.SocialConfig;
-import cn.jiiiiiin.security.core.validate.code.ValidateCodeFilter;
 import cn.jiiiiiin.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.social.security.SpringSocialConfigurer;
 
-import javax.servlet.Filter;
 import javax.sql.DataSource;
 
 /**
@@ -102,9 +98,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        final String loginPage = securityProperties.getBrowser().getLoginPage();
+        final String signInUrl = securityProperties.getBrowser().getSignInUrl();
+        final String signUpUrl = securityProperties.getBrowser().getSignUpUrl();
+        // TODO 业务系统的注册接口
+        final String registerUrl = "/user/register";
 
-        L.info("配置的loginPage: {}", loginPage);
+        L.info("配置的signInUrl: {} signUpUrl: {}", signInUrl, signUpUrl);
 
         http
                 // 添加自定义验证码过滤器，校验session中的图形验证码
@@ -121,14 +120,14 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
                 // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
                 // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
-                .antMatchers(STATIC_RESOURCES, CODE_IMAGE, LOGIN_URL, loginPage).permitAll()
+                .antMatchers(STATIC_RESOURCES, CODE_IMAGE, LOGIN_URL, signInUrl, signUpUrl, registerUrl).permitAll()
                 // 对所有请求// 都需要身份认证
                 .anyRequest().authenticated()
                 .and()
                 // 开启表单登录（指定身份认证的方式）
                 // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
                 .formLogin()
-                // 配置自定义登录页面所在的url，如`/signIn.html`，在需要登录的时候去访问的接口（渲染的页面）
+                // 配置自定义登录页面所在的接口，如`/signIn.html`，在需要登录的时候去访问的接口（渲染的页面）
                 .loginPage(LOGIN_URL)
                 // 配置自定义登录交易请求接口（上面的登录页面提交表单之后登录接口），会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
                 .loginProcessingUrl(LOGIN_PROCESSING_URL)

@@ -4,6 +4,7 @@
 package cn.jiiiiiin.security.core.social;
 
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import cn.jiiiiiin.security.core.social.support.CustomSpringSocialConfigurer;
 import cn.jiiiiiin.security.core.social.support.SocialAuthenticationFilterPostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +36,8 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Autowired
     private SecurityProperties securityProperties;
 
-//    @Autowired(required = false)
-//    private ConnectionSignUp connectionSignUp;
+    @Autowired(required = false)
+    private ConnectionSignUp connectionSignUp;
 
 //    @Autowired(required = false)
 //    private SocialAuthenticationFilterPostProcessor socialAuthenticationFilterPostProcessor;
@@ -61,9 +62,9 @@ public class SocialConfig extends SocialConfigurerAdapter {
      * providerId varchar(255) not null,
      * # 服务提供商对应用户的id
      * providerUserId varchar(255),
-     *
+     * <p>
      * # 上面3个字段将我们业务系统和服务提供商的两组用户信息关联
-     *
+     * <p>
      * # 等级
      * `rank` int not null,
      * # 用户名 通过ApiAdapter设置
@@ -88,9 +89,11 @@ public class SocialConfig extends SocialConfigurerAdapter {
                 connectionFactoryLocator, Encryptors.noOpText());
         // 添加表前缀
         repository.setTablePrefix("springsocial_");
-//        if (connectionSignUp != null) {
-//            repository.setConnectionSignUp(connectionSignUp);
-//        }
+        if (connectionSignUp != null) {
+            // 如果期望让用户进行第三方授权登录之后，自动帮用户创建业务系统的用户记录，完成登录，而无需跳转到下面这个接口进行注册，请看：
+            // @see org.springframework.social.security.SocialAuthenticationProvider#toUserId 去获取userIds的方法，在{@link org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository#findUserIdsWithConnection}中通过注入{@link ConnectionSignUp}完成
+            repository.setConnectionSignUp(connectionSignUp);
+        }
         return repository;
     }
 
@@ -98,27 +101,32 @@ public class SocialConfig extends SocialConfigurerAdapter {
      * 社交登录配置类，供浏览器或app模块引入设计登录配置用。
      *
      * @return
+     * @see SpringSocialConfigurer 可以参考默认实现
      */
     @Bean
     public SpringSocialConfigurer socialSecurityConfig() {
-//        String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
-//        ImoocSpringSocialConfigurer configurer = new ImoocSpringSocialConfigurer(filterProcessesUrl);
-//        configurer.signupUrl(securityProperties.getBrowser().getSignUpUrl());
+        String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
+        CustomSpringSocialConfigurer configurer = new CustomSpringSocialConfigurer(filterProcessesUrl);
+        // 配置自定义注册页面接口，当第三方授权获取user detail在业务系统找不到的时候默认调整到该页面
+        configurer.signupUrl(securityProperties.getBrowser().getSignUpUrl());
 //        configurer.setSocialAuthenticationFilterPostProcessor(socialAuthenticationFilterPostProcessor);
-//        return configurer;
-        return new SpringSocialConfigurer();
+        return configurer;
     }
 
-//    /**
-//     * 用来处理注册流程的工具类
-//     *
-//     * @param connectionFactoryLocator
-//     * @return
-//     */
-//    @Bean
-//    public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator) {
-//        return new ProviderSignInUtils(connectionFactoryLocator,
-//                getUsersConnectionRepository(connectionFactoryLocator)) {
-//        };
-//    }
+    /**
+     * 用来处理注册流程的工具类
+     * https://coding.imooc.com/lesson/134.html#mid=6891
+     * <p>
+     * 让我们在注册页面，能拿到授权信息，用户注册成功之后
+     * <p>
+     * 能将业务系统的id交给social进行处理，存储绑定关系到数据库
+     *
+     * @param connectionFactoryLocator 基类已经帮我们注入，用来获取{@link org.springframework.social.connect.ConnectionFactory}
+     * @return
+     * @see SocialConfig#getUsersConnectionRepository
+     */
+    @Bean
+    public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator) {
+        return new ProviderSignInUtils(connectionFactoryLocator, getUsersConnectionRepository(connectionFactoryLocator));
+    }
 }

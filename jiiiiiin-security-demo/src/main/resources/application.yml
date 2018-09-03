@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   thymeleaf:
     cache: false
@@ -28,11 +31,15 @@ jiiiiiin:
         size: 30
         interceptor-urls: /user/*
     social:
+      # 拦截auth2授权地址
+      filter-processes-url: /qqLogin
       qq:
+        # 配置qq auth服务器回调处理接口
+        provider-id: callback.do
         app-id: 100550231
         app-secret: 69b6ab57b22f3c2fe6a6149274e3295e
+    browser:
+      sign-up-url: /demo-signUp.html
+#      signInUrl: /demo-signIn.html
 
-#        jiiiiiin.security.social.qq", name = "app-id
-#    browser:
-#      loginPage: /demo-signIn.html
 

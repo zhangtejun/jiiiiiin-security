@@ -3,6 +3,7 @@ package cn.jiiiiiin.security.core.properties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
+ * @author jiiiiiin
  * @ConfigurationProperties(prefix = "jiiiiiin.security") 将会读取配置文件中对应prefix的配置项
  */
 @ConfigurationProperties(prefix = "jiiiiiin.security")
