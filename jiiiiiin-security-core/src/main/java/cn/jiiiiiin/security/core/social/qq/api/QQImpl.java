@@ -32,7 +32,7 @@ import org.springframework.social.oauth2.TokenStrategy;
  */
 public class QQImpl extends AbstractOAuth2ApiBinding implements QQ {
 
-    final static Logger L = LoggerFactory.getLogger(ValidateCodeController.class);
+    final static Logger L = LoggerFactory.getLogger(QQImpl.class);
 
     // 拉取openid接口：http://wiki.connect.qq.com/openapi%E8%B0%83%E7%94%A8%E8%AF%B4%E6%98%8E_oauth2-0
     private static final String URL_GET_OPENID = "https://graph.qq.com/oauth2.0/me?access_token=%s";

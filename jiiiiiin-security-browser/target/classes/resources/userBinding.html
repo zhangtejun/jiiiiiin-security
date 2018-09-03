@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>绑定第三方平台用户信息 - 默认</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        [v-cloak] {
+            display: none !important;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        .image-code-input {
+            width: 50%;
+        }
+
+        .image-code {
+            position: absolute;
+            width: 100px;
+            margin-left: 20px;
+            height: 40px;
+        }
+
+        .from {
+            margin-top: 150px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" v-cloak>
+
+    <el-row class="from">
+        <el-col :span="8">&nbsp;</el-col>
+        <el-col :span="8">
+
+            <h3 class="title">绑定第三方平台用户信息</h3>
+
+            <el-tabs type="border-card">
+                <el-tab-pane label="社交快捷方式">
+                    <el-row>
+                        <!--请求social默认绑定解绑控制器 `ConnectController`-->
+                        <!--1.先调用/connect::GET请求获取json格式的绑定和解绑信息，查看`CustomConnectionStatusView`-->
+                        <el-form ref="form" label-width="80px" action="/connect/qq" method="post">
+                            <el-form-item>
+                                <el-button type="primary" @click="onTapQQAuthBinding">绑定qq</el-button>
+                            </el-form-item>
+                        </el-form>
+
+                        <el-form-item>
+                            <el-button type="primary" @click="onTapQQAuthUnBinding">解绑qq</el-button>
+                        </el-form-item>
+
+                        <el-form ref="form" label-width="80px" action="/connect/weixin" method="post">
+                            <el-form-item>
+                                <el-button type="success" @click="onTapWeixinAuthBinding">绑定微信</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-row>
+
+                </el-tab-pane>
+            </el-tabs>
+
+        </el-col>
+        <el-col :span="8">&nbsp;</el-col>
+    </el-row>
+
+</div>
+
+<!-- 生产环境版本，优化了尺寸和速度 -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/js/common.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {}
+        },
+        computed: {
+            rememberVal: function () {
+                return this.remember
+            }
+        },
+        methods: {
+            onTapQQAuthBinding() {
+                this.$refs.form.$el.submit();
+            },
+            onTapQQAuthUnBinding: function (e) {
+                var that = this
+                // 解绑，发送delete方式的请求
+                this.$vp.delete('/connect/qq')
+                    .then(function (response) {
+                        that.$message('解绑成功')
+                    })
+                    .catch(function (err) {
+                        alert(`解绑出错${JSON.stringify(err.response)}`)
+                    })
+            },
+            onTapWeixinAuthBinding: function () {
+                this.$refs.form1.$el.submit();
+            }
+        }
+
+    })
+</script>
+</body>
+</html>

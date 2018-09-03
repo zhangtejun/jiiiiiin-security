@@ -110,6 +110,10 @@ public class QQUserInfo {
      * 标识是否为年费黄钻用户（0：不是； 1：是）
      */
     private String is_yellow_year_vip;
+    /**
+     * constellation :
+     */
+    private String constellation;
 
 
     public String getRet() {
@@ -264,5 +268,13 @@ public class QQUserInfo {
         this.is_yellow_year_vip = is_yellow_year_vip;
     }
 
+
+    public String getConstellation() {
+        return constellation;
+    }
+
+    public void setConstellation(String constellation) {
+        this.constellation = constellation;
+    }
 
 }

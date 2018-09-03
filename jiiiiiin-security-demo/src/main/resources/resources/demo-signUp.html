@@ -39,7 +39,7 @@
         <el-col :span="8">&nbsp;</el-col>
         <el-col :span="8">
 
-            <h3 class="title">登录</h3>
+            <h3 class="title">注册</h3>
 
             <el-tabs type="border-card">
                 <el-tab-pane label="账号方式">
@@ -103,11 +103,11 @@
             }
         },
         methods: {
-            onSubmit: function (e) {
+            onRegister: function (e) {
                 console.log(this.$refs.form)
                 this.$refs.form.$el.submit();
             },
-            onSubmit2: function (e) {
+            onBind: function (e) {
                 console.log(this.$refs.form)
                 this.$refs.form2.$el.submit();
             },
