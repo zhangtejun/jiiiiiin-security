@@ -38,6 +38,11 @@ jiiiiiin:
         provider-id: callback.do
         app-id: 100550231
         app-secret: 69b6ab57b22f3c2fe6a6149274e3295e
+      ##微信登录配置，参见WeixinProperties
+      weixin:
+        # 配置 weixin auth服务器回调处理接口
+        app-id: wxd99431bbff8305a0
+        app-secret: 60f78681d063590a469f1b297feff3c4
     browser:
       sign-up-url: /demo-signUp.html
 #      signInUrl: /demo-signIn.html

@@ -1,6 +1,6 @@
 var baseConfig = {
-    // baseURL: 'http://localhost:8080',
-    baseURL: 'http://www.pinzhi365.com',
+    baseURL: 'http://localhost:8080',
+    // baseURL: 'http://www.pinzhi365.com',
 }
 
 var instance = axios.create({

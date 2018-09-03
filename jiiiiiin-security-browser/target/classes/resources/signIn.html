@@ -78,7 +78,9 @@
 
                         <el-form-item label="验证码" required="true">
                             <el-input name="smsCode" class="image-code-input"></el-input>
-                            <el-button type="primary" plain @click="reqSendSmsCode" :disabled="sendSmsCodeBtnStatus">获取验证码</el-button>
+                            <el-button type="primary" plain @click="reqSendSmsCode" :disabled="sendSmsCodeBtnStatus">
+                                获取验证码
+                            </el-button>
                         </el-form-item>
 
                         <el-form-item>
@@ -90,7 +92,7 @@
                     <el-row>
                         <!--http://wiki.connect.qq.com/%E7%BD%91%E7%AB%99%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2%E8%A7%84%E8%8C%83#1..E4.BD.BF.E7.94.A8.E8.85.BE.E8.AE.AF.E6.8F.90.E4.BE.9B.E7.9A.84.E6.A0.87.E5.87.86.E2.80.9CQQ.E7.99.BB.E5.BD.95.E2.80.9D.E6.A0.87.E8.AF.86-->
                         <el-button type="primary" @click="onTapQQAuthSignIn">qq登录</el-button>
-                        <el-button type="success">微信登录</el-button>
+                        <el-button type="success" @click="onTapWeixinAuthSignIn">微信登录</el-button>
                         <!--<el-button type="info">信息按钮</el-button>-->
 
                         <!--<a href="/qqLogin/callback.do">QQ登录</a>-->
@@ -168,6 +170,10 @@
                 // window.location.href = `${baseConfig.baseURL}/auth/qq`
                 // 测试接口，本地需要使用修改host文件方式映射到，www.pinzhi365.com
                 window.location.href = `${baseConfig.baseURL}/qqLogin/callback.do`
+            },
+            onTapWeixinAuthSignIn: function () {
+                // 相同的spring social过滤器处理接口完成处理
+                window.location.href = `${baseConfig.baseURL}/qqLogin/weixin`
             }
         }
 
