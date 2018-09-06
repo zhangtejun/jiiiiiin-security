@@ -15,26 +15,31 @@ import org.springframework.social.oauth2.AbstractOAuth2ServiceProvider;
  * <p>
  * 当前类就是流程中的 Service Provider的实现
  * <p>
- * 泛型需要的是Api的接口
+ * 泛型需要的是Api的接口类型
  *
  * @author zhailiang
  * @author jiiiiiin
  */
 public class QQServiceProvider extends AbstractOAuth2ServiceProvider<QQ> {
 
-    private String appId;
+    private final String appId;
 
     // 以下两个链接：http://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token
     /**
-     * Step1：获取Authorization Code 接口
+     * 流程的第一步：获取Authorization Code 接口
      * 应用将用户引导到这个地址（授权提供服务），进行流程的第一步，获取授权码【Authorization Code】
      */
     private static final String URL_AUTHORIZE = "https://graph.qq.com/oauth2.0/authorize";
     /**
-     * Step2：通过Authorization Code获取Access Token接口
+     * 流程的第四步：通过Authorization Code获取Access Token接口
      */
     private static final String URL_ACCESS_TOKEN = "https://graph.qq.com/oauth2.0/token";
 
+    /**
+     * 构造service provider
+     * @param appId 应用【用户名】
+     * @param appSecret 应用【密码】
+     */
     public QQServiceProvider(String appId, String appSecret) {
         // 这里使用默认的QQOAuth2Template，因为qq遵循oauth2协议，所以这里的前两个参数对应的就是qq的应用id和secret
         // 这两个值相当于应用接入qq开发平台的用户名和密码，qq用来标识一个第三方应用

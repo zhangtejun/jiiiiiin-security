@@ -11,8 +11,20 @@
             display: none !important;
         }
 
-        .title {
+        .title, .hint-p {
             text-align: center;
+        }
+
+        .head-box {
+            margin-bottom: 20px;
+        }
+
+        .head-img {
+            width: 50px;
+            margin: 0 auto;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            display: block;
         }
 
         .image-code-input {
@@ -39,12 +51,26 @@
         <el-col :span="8">&nbsp;</el-col>
         <el-col :span="8">
 
-            <h3 class="title">注册</h3>
+            <h3 class="title">注册 - 社交快捷方式</h3>
+
+            <!--
+            在跳转到当前页面之前：
+            // store ConnectionData in session and redirect to register page
+            sessionStrategy.setAttribute(new ServletWebRequest(request), ProviderSignInAttempt.SESSION_ATTRIBUTE, new ProviderSignInAttempt(token.getConnection()));
+            throw new SocialAuthenticationRedirectException(buildSignupUrl(request));
+
+            可以新开一个交易获取session中的授权用户信息，进行提示
+            -->
 
             <el-tabs type="border-card">
                 <el-tab-pane label="账号方式">
+                    <div class="head-box">
+                        <img class="head-img"
+                             :src="authUserInfo!=null ? authUserInfo.headimg : 'https://spring.io/img/homepage/icon-spring-boot.svg'"
+                             alt="">
+                    </div>
                     <!--应用自身来实现注册或者绑定第三方授权用户信息的接口-->
-                    <el-form ref="form" label-width="80px" action="/user/register" method="post">
+                    <el-form ref="form" label-width="80px" action="/user/auth/register" method="post">
                         <el-form-item label="用户名" required="true">
                             <el-input name="username" v-model="username"></el-input>
                         </el-form-item>
@@ -58,11 +84,6 @@
                             <img src="/code/image" class="image-code" @click="onChangeValidateImgCode">
                         </el-form-item>
 
-                        <el-form-item label="">
-                            <el-input name="remember-me" :value="rememberVal" type="hidden" v-show="show"></el-input>
-                            <el-checkbox v-model="remember">记住我</el-checkbox>
-                        </el-form-item>
-
                         <el-form-item>
                             <el-button type="primary" @click="onRegister">提交注册</el-button>
                             <el-button type="primary" @click="onBind">绑定到已有账号</el-button>
@@ -70,6 +91,10 @@
                     </el-form>
                 </el-tab-pane>
             </el-tabs>
+
+            <p class="hint-p" v-if="authUserInfo!=null">{{authUserInfo.nickname}}需要注册之后才能和{{authUserInfo.providerId ===
+                'weixin' ?
+                '微信': 'QQ'}}社交账号进行绑定</p>
 
         </el-col>
         <el-col :span="8">&nbsp;</el-col>
@@ -91,15 +116,7 @@
             return {
                 username: 'admin',
                 password: 'a11111',
-                mobile: '15388888888',
-                remember: true,
-                show: false,
-                sendSmsCodeBtnStatus: false
-            }
-        },
-        computed: {
-            rememberVal: function () {
-                return this.remember
+                authUserInfo: null
             }
         },
         methods: {
@@ -109,7 +126,7 @@
             },
             onBind: function (e) {
                 console.log(this.$refs.form)
-                this.$refs.form2.$el.submit();
+                this.$refs.form.$el.submit();
             },
             reqSendSmsCode: function (e) {
                 var that = this
@@ -141,6 +158,17 @@
                 // 测试接口，本地需要使用修改host文件方式映射到，www.pinzhi365.com
                 window.location.href = `${baseConfig.baseURL}/qqLogin/callback.do`
             }
+        },
+        created() {
+            this.$vp.get('/social/user')
+                .then((resp) => {
+                    this.authUserInfo = resp.data
+                    console.log('resp', resp)
+                })
+                .catch(err => {
+                    console.log('获取授权用户信息失败', err)
+                    alert(`获取授权用户信息失败 [${JSON.stringify(err).substring(0, 10)}]`)
+                });
         }
 
     })

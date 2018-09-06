@@ -10,6 +10,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Template;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -17,7 +18,7 @@ import java.nio.charset.Charset;
 /**
  * 参考：http://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token
  * 根据qq要求进行框架的微调，以进行 access token令牌的解析
- *
+ * <p>
  * 提供给{@link QQServiceProvider}使用
  *
  * @author zhailiang
@@ -36,7 +37,7 @@ public class QQOAuth2Template extends OAuth2Template {
 
     /**
      * 解析qq特殊格式的响应数据
-     *
+     * <p>
      * 类似：
      * access_token=FE04************************CCE2&expires_in=7776000&refresh_token=88E4************************BE14
      *
@@ -46,16 +47,18 @@ public class QQOAuth2Template extends OAuth2Template {
     protected AccessGrant postForAccessGrant(String accessTokenUrl, MultiValueMap<String, String> parameters) {
         // 覆盖默认实现，得到String类型的响应数据
         String responseStr = getRestTemplate().postForObject(accessTokenUrl, parameters, String.class);
-
-        logger.info("获取accessToke的响应：" + responseStr);
-
-        String[] items = StringUtils.splitByWholeSeparatorPreserveAllTokens(responseStr, "&");
-
-        String accessToken = StringUtils.substringAfterLast(items[0], "=");
-        Long expiresIn = new Long(StringUtils.substringAfterLast(items[1], "="));
-        String refreshToken = StringUtils.substringAfterLast(items[2], "=");
-
-        return new AccessGrant(accessToken, null, refreshToken, expiresIn);
+        try {
+            logger.info("获取accessToke的响应：" + responseStr);
+            String[] items = StringUtils.splitByWholeSeparatorPreserveAllTokens(responseStr, "&");
+            String accessToken = StringUtils.substringAfterLast(items[0], "=");
+            Long expiresIn = new Long(StringUtils.substringAfterLast(items[1], "="));
+            String refreshToken = StringUtils.substringAfterLast(items[2], "=");
+            return new AccessGrant(accessToken, null, refreshToken, expiresIn);
+        } catch (RestClientException e) {
+            throw e;
+        } catch (NumberFormatException e) {
+            throw new RestClientException("获取qq accessToke 出错[" + responseStr + "]", e);
+        }
     }
 
     /**

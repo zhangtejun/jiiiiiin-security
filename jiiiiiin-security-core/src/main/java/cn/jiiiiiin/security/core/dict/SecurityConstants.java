@@ -65,4 +65,8 @@ public interface SecurityConstants {
      */
     String DEFAULT_SOCIAL_USER_INFO_URL = "/social/user";
 
+    /**
+     * social 第三方授权用户管理表的表前缀
+     */
+    String SOCIAL_TABLE_PREFIX = "springsocial_";
 }

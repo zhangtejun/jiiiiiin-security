@@ -1,6 +1,7 @@
 package cn.jiiiiiin.security.browser.config;
 
 import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
+import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.SocialConfig;
 import cn.jiiiiiin.security.core.validate.code.ValidateCodeSecurityConfig;
@@ -92,7 +93,6 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
      * 用来处理FilterSecurityInterceptor认证过程中认证失败时候的流程控制
      * @see org.springframework.security.web.access.intercept.FilterSecurityInterceptor#invoke(FilterInvocation)
      * 中的InterceptorStatusToken token = super.beforeInvocation(fi); 会进行身份认证授权判断
-     *
      * @see org.springframework.social.security.SocialAuthenticationFilter
      */
     @Override
@@ -101,7 +101,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         final String signInUrl = securityProperties.getBrowser().getSignInUrl();
         final String signUpUrl = securityProperties.getBrowser().getSignUpUrl();
         // TODO 业务系统的注册接口
-        final String registerUrl = "/user/register";
+        final String registerUrl = "/user/auth/register";
 
         L.info("配置的signInUrl: {} signUpUrl: {}", signInUrl, signUpUrl);
 
@@ -120,7 +120,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
                 // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
                 // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
-                .antMatchers(STATIC_RESOURCES, CODE_IMAGE, LOGIN_URL, signInUrl, signUpUrl, registerUrl).permitAll()
+                .antMatchers(SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL, STATIC_RESOURCES, CODE_IMAGE, LOGIN_URL, signInUrl, signUpUrl, registerUrl).permitAll()
                 // 对所有请求// 都需要身份认证
                 .anyRequest().authenticated()
                 .and()
@@ -159,7 +159,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 记住我功能的token存取器配置
      * <p>
-     * 需要插入一张框架需要的表：{@link JdbcTokenRepositoryImpl#CREATE_TABLE_SQL}
+     * 需要插入一张框架需要的表[persistent_logins]：{@link JdbcTokenRepositoryImpl#CREATE_TABLE_SQL}
      * <p>
      * ![关于remember me功能](https://ws1.sinaimg.cn/large/0069RVTdgy1fuoes59unqj30zo0fuabd.jpg)
      *

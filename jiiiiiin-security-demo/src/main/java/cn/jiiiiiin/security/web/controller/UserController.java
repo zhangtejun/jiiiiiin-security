@@ -2,7 +2,6 @@ package cn.jiiiiiin.security.web.controller;
 
 import cn.jiiiiiin.security.dto.User;
 import cn.jiiiiiin.security.dto.UserQryCondition;
-import cn.jiiiiiin.security.exception.UserNotExistException;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.web.ProviderSignInUtils;
@@ -25,13 +23,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartFile;
-import sun.plugin.liveconnect.SecurityContextHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,26 +90,6 @@ public class UserController {
 
     final static String AVATAR_SAVE_PATH = "/Users/jiiiiiin/Documents/IdeaProjects/jiiiiiin-security/jiiiiiin-security-demo/src/main/resources/static";
 
-    @Autowired
-    private ProviderSignInUtils providerSignInUtils;
-
-    /**
-     * 如果期望让用户进行第三方授权登录之后，自动帮用户创建业务系统的用户记录，完成登录，而无需跳转到下面这个接口进行注册，请看：
-     * @see org.springframework.social.security.SocialAuthenticationProvider#toUserId 去获取userIds的方法，在{@link org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository#findUserIdsWithConnection}中通过注入{@link ConnectionSignUp}完成
-     * @param user
-     * @param request
-     */
-    @PostMapping("/register")
-    public void register(User user, HttpServletRequest request) {
-        // TODO 待写注册或者绑定逻辑（绑定需要查询应用用户的userid，通过授权用户信息，授权用户信息在providerSignInUtils中可以获取）
-        //不管是注册用户还是绑定用户，都会拿到一个用户唯一标识。
-        String userId = user.getUsername();
-        // 真正让业务系统用户信息和spring social持有的授权用户信息进行绑定
-        providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
-//		appSingUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
-        // TODO 跳转到应用首页
-    }
-
     @PostMapping
     public User create(@Valid @RequestBody User user, BindingResult errors) {
         L.info("create user {}", user);
@@ -169,34 +145,34 @@ public class UserController {
 
     /**
      * 从ss中获取登录用户的认证信息:
-     *
+     * <p>
      * 如通过用户名密码登录时候：
      * {
-     *     "authorities": [
-     *         {
-     *             "authority": "admin"
-     *         }
-     *     ],
-     *     "details": {
-     *         "remoteAddress": "0:0:0:0:0:0:0:1",
-     *         "sessionId": "0F090A65706715E338D2E342B50E2078"
-     *     },
-     *     "authenticated": true,
-     *     "principal": {
-     *         "password": null,
-     *         "username": "admin",
-     *         "authorities": [
-     *             {
-     *                 "authority": "admin"
-     *             }
-     *         ],
-     *         "accountNonExpired": true,
-     *         "accountNonLocked": true,
-     *         "credentialsNonExpired": true,
-     *         "enabled": true
-     *     },
-     *     "credentials": null,
-     *     "name": "admin"
+     * "authorities": [
+     * {
+     * "authority": "admin"
+     * }
+     * ],
+     * "details": {
+     * "remoteAddress": "0:0:0:0:0:0:0:1",
+     * "sessionId": "0F090A65706715E338D2E342B50E2078"
+     * },
+     * "authenticated": true,
+     * "principal": {
+     * "password": null,
+     * "username": "admin",
+     * "authorities": [
+     * {
+     * "authority": "admin"
+     * }
+     * ],
+     * "accountNonExpired": true,
+     * "accountNonLocked": true,
+     * "credentialsNonExpired": true,
+     * "enabled": true
+     * },
+     * "credentials": null,
+     * "name": "admin"
      * }
      *
      * @return

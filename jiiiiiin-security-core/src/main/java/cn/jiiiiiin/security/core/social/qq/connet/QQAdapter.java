@@ -36,11 +36,11 @@ public class QQAdapter implements ApiAdapter<QQ> {
      * 需要在此设置 {@link Connection}所需要的数据项设置到values参数中
      *
      * @param api
-     * @param values
+     * @param values 包含了创建 {@link Connection}所需要的一些数据项
      */
     @Override
     public void setConnectionValues(QQ api, ConnectionValues values) {
-        QQUserInfo userInfo = api.getUserInfo();
+        final QQUserInfo userInfo = api.getUserInfo();
         // 显示的用户名
         values.setDisplayName(userInfo.getNickname());
         // 头像
@@ -54,6 +54,7 @@ public class QQAdapter implements ApiAdapter<QQ> {
     @Override
     public UserProfile fetchUserProfile(QQ api) {
         // TODO Auto-generated method stub
+        // TODO 待查询
         return null;
     }
 

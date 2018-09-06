@@ -13,9 +13,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.social.connect.ConnectionFactory;
 
 /**
+ * qq oauth2 授权配置类
+ * <p>
  * 只有应用配置了qq相关的授权信息才启动当前配置
  *
  * @author zhailiang
+ * @author jiiiiiin
  */
 @Configuration
 @ConditionalOnProperty(prefix = "jiiiiiin.security.social.qq", name = "app-id")

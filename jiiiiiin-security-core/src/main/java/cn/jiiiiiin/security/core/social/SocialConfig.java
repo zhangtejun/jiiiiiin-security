@@ -3,23 +3,24 @@
  */
 package cn.jiiiiiin.security.core.social;
 
+import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.support.CustomSpringSocialConfigurer;
-import cn.jiiiiiin.security.core.social.support.SocialAuthenticationFilterPostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.social.config.annotation.EnableSocial;
 import org.springframework.social.config.annotation.SocialConfigurerAdapter;
-import org.springframework.social.connect.ConnectionFactoryLocator;
-import org.springframework.social.connect.ConnectionSignUp;
-import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.connect.*;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 社交登录配置主类
@@ -88,7 +89,7 @@ public class SocialConfig extends SocialConfigurerAdapter {
         JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource,
                 connectionFactoryLocator, Encryptors.noOpText());
         // 添加表前缀
-        repository.setTablePrefix("springsocial_");
+        repository.setTablePrefix(SecurityConstants.SOCIAL_TABLE_PREFIX);
         if (connectionSignUp != null) {
             // 如果期望让用户进行第三方授权登录之后，自动帮用户创建业务系统的用户记录，完成登录，而无需跳转到下面这个接口进行注册，请看：
             // @see org.springframework.social.security.SocialAuthenticationProvider#toUserId 去获取userIds的方法，在{@link org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository#findUserIdsWithConnection}中通过注入{@link ConnectionSignUp}完成
@@ -105,8 +106,8 @@ public class SocialConfig extends SocialConfigurerAdapter {
      */
     @Bean
     public SpringSocialConfigurer socialSecurityConfig() {
-        String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
-        CustomSpringSocialConfigurer configurer = new CustomSpringSocialConfigurer(filterProcessesUrl);
+        final String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
+        final  CustomSpringSocialConfigurer configurer = new CustomSpringSocialConfigurer(filterProcessesUrl);
         // 配置自定义注册页面接口，当第三方授权获取user detail在业务系统找不到的时候默认调整到该页面
         configurer.signupUrl(securityProperties.getBrowser().getSignUpUrl());
 //        configurer.setSocialAuthenticationFilterPostProcessor(socialAuthenticationFilterPostProcessor);

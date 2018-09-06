@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.Arrays;
 
@@ -26,7 +23,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     private TimeInterceptor timeInterceptor;
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addViewControllers(ViewControllerRegistry registry) {
+        //浏览器发送 /atguigu 请求来到 success
+        registry.addViewController("/index").setViewName("index");
     }
 
     /**

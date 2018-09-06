@@ -10,7 +10,10 @@ import org.springframework.social.connect.support.OAuth2ConnectionFactory;
  * 参考：
  * ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuqp901tqxj30y20izwgv.jpg)
  *
+ * 用户创建 {@link org.springframework.social.connect.Connection}
+ *
  * @author zhailiang
+ * @author jiiiiiin
  */
 public class QQConnectionFactory extends OAuth2ConnectionFactory<QQ> {
 

@@ -21,6 +21,9 @@ public class QQProperties extends SocialProperties {
      * 服务提供商标识
      * <p>
      * 第三方id，用来决定发起第三方登录的url，默认是 qq。
+     *
+     * social provider提供者通过该标识来找到具体由那个服务提供商来进行处理auth流程:
+     * @see org.springframework.social.security.SocialAuthenticationFilter
      */
     private String providerId = "qq";
 
