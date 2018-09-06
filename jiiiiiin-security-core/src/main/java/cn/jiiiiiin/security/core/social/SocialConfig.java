@@ -37,6 +37,9 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Autowired
     private SecurityProperties securityProperties;
 
+    /**
+     * 业务系统进行自动授权注册的组件
+     */
     @Autowired(required = false)
     private ConnectionSignUp connectionSignUp;
 
