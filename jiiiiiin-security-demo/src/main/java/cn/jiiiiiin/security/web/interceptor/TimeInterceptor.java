@@ -33,10 +33,12 @@ public class TimeInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        L.debug("time interceptor preHandle {}", o);
-        final HandlerMethod handlerMethod = (HandlerMethod) o;
-        L.debug("handlerMethod {}", handlerMethod);
-        httpServletRequest.setAttribute(START_TIME, System.currentTimeMillis());
+        if (o instanceof HandlerMethod) {
+            L.debug("time interceptor preHandle {}", o);
+            final HandlerMethod handlerMethod = (HandlerMethod) o;
+            L.debug("handlerMethod {}", handlerMethod);
+            httpServletRequest.setAttribute(START_TIME, System.currentTimeMillis());
+        }
         return true;
     }
 
@@ -65,12 +67,14 @@ public class TimeInterceptor implements HandlerInterceptor {
      */
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-        L.debug("time interceptor afterCompletion");
-        final long startTime = (long) httpServletRequest.getAttribute(START_TIME);
-        L.debug("time interceptor: {}", (System.currentTimeMillis() - startTime));
-        // 如果定义了@ExceptionHandler(UserNotExistException.class)这样的异常处理器，处理了请求流程中抛出的异常，则这里就的e就为null
-        if (e != null) {
-            L.error("time interceptor err: {}", e);
+        if (o instanceof HandlerMethod) {
+            L.debug("time interceptor afterCompletion");
+            final long startTime = (long) httpServletRequest.getAttribute(START_TIME);
+            L.debug("time interceptor: {}", (System.currentTimeMillis() - startTime));
+            // 如果定义了@ExceptionHandler(UserNotExistException.class)这样的异常处理器，处理了请求流程中抛出的异常，则这里就的e就为null
+            if (e != null) {
+                L.error("time interceptor err: {}", e);
+            }
         }
     }
 }
