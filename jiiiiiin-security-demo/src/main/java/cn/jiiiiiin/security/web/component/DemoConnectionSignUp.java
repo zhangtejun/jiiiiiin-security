@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * @see org.springframework.social.connect.ConnectionSignUp
  * @see cn.jiiiiiin.security.web.controller.MainController#register(User, HttpServletRequest)
  */
-@Component
+//@Component
 public class DemoConnectionSignUp implements ConnectionSignUp {
 
     /* (non-Javadoc)

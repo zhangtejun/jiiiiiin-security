@@ -10,10 +10,9 @@ var instance = axios.create({
     headers: {
         // 'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Type': 'application/json',
-        Accept: 'application/json, text/plain, */*',
+        'Accept': 'application/json, text/plain, */*',
     },
-    params: {
-    },
+    params: {},
     // paramsSerializer: function (params) {
     //     return Qs.stringify(params, {arrayFormat: 'brackets'})
     // }
