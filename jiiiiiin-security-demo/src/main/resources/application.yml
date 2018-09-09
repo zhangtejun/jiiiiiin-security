@@ -1,5 +1,8 @@
 server:
   port: 8080
+  session:
+    # 设置session过期时间，单位是秒，默认30分钟，最少1分支
+    timeout: 600
 
 spring:
   thymeleaf:
@@ -17,6 +20,9 @@ spring:
 #security:
 #  basic:
 #    enabled: false
+
+thymeleaf:
+  cache: false
 
 
 swagger:

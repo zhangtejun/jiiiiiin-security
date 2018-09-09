@@ -12,7 +12,6 @@ public interface Weixin {
 
     /**
      * @param openId 微信的oauth流程在获取access token的时候就已经获得了openid
-     *               待证实
      */
     WeixinUserInfo getUserInfo(String openId);
 

@@ -58,8 +58,9 @@ public interface SecurityConstants {
     String DEFAULT_PARAMETER_NAME_PROVIDERID = "providerId";
     /**
      * session失效默认的跳转地址
+     * @see org.springframework.security.config.annotation.web.builders.HttpSecurity#sessionManagement#invalidSessionUrl
      */
-    String DEFAULT_SESSION_INVALID_URL = "/imooc-session-invalid.html";
+    String DEFAULT_SESSION_INVALID_URL = "/sessionInvalid.html";
     /**
      * 获取第三方用户信息的url
      */

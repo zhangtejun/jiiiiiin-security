@@ -15,12 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * 社交账号绑定状态视图
+ * spring social给我们提供的绑定解绑功能查询接口自定义响应视图
+ * <p>
+ * 需要访问`/connect`接口，GET方式
  *
  * @author zhailiang
- * @see org.springframework.social.connect.web.ConnectController#connectionStatus spring social给我们提供的绑定解绑功能接口需要我们自己实现响应视图
+ * @see org.springframework.social.connect.web.ConnectController#connectionStatus
  */
 @Component("connect/status")
 public class CustomConnectionStatusView extends AbstractView {
@@ -33,6 +36,7 @@ public class CustomConnectionStatusView extends AbstractView {
      * <p>
      * 将授权信息以json格式响应出去
      *
+     * @param model 参考{@link org.springframework.social.connect.web.ConnectController#connectionStatus}中设置的值
      * @see org.springframework.web.servlet.view.AbstractView#renderMergedOutputModel(java.util.Map, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     @SuppressWarnings("unchecked")
@@ -40,11 +44,11 @@ public class CustomConnectionStatusView extends AbstractView {
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
                                            HttpServletResponse response) throws Exception {
 
-        Map<String, List<Connection<?>>> connections = (Map<String, List<Connection<?>>>) model.get("connectionMap");
-
+        final Map<String, List<Connection<?>>> connections = (Map<String, List<Connection<?>>>) model.get("connectionMap");
+        final Set<String> keySet = connections.keySet();
         // 自定义响应数据
-        Map<String, Boolean> result = new HashMap<>();
-        for (String key : connections.keySet()) {
+        final Map<String, Boolean> result = new HashMap<>(keySet.size());
+        for (String key : keySet) {
             result.put(key, CollectionUtils.isNotEmpty(connections.get(key)));
         }
 

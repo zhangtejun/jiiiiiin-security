@@ -6,6 +6,11 @@ package cn.jiiiiiin.security.core.properties;
 public class BrowserProperties {
 
     /**
+     * session管理配置项
+     */
+    private SessionProperties session = new SessionProperties();
+
+    /**
      * 身份认证（登录）页面
      * 默认页面："/signIn.html"
      */
@@ -43,5 +48,13 @@ public class BrowserProperties {
 
     public void setSignUpUrl(String signUpUrl) {
         this.signUpUrl = signUpUrl;
+    }
+
+    public SessionProperties getSession() {
+        return session;
+    }
+
+    public void setSession(SessionProperties session) {
+        this.session = session;
     }
 }

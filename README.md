@@ -2,6 +2,8 @@
 
 > [Spring Security Tutorial 《Spring Security 教程》](https://waylau.gitbooks.io/spring-security-tutorial/content/)
 
+> [社区 Spring Security 从入门到进阶系列教程](http://www.spring4all.com/article/428)
+
 ### 关键点
 
 - ![代码结构](https://ws2.sinaimg.cn/large/006tNbRwgy1fue02z4h20j31kw0rc0y8.jpg)
@@ -106,6 +108,16 @@
 
   `SocialAuthenticationProvider`会调用`JdbcUsersConnectionRepository`来  通过 connection 中的授权用户信息去数据库[UserConnection 表]中查询一个`UserId`，之后调用`SocialUserDetailsService`去查询正在的业务系统的用户信息`SocialUserDetails`，重新构建 Authtication Token 标记为认证成功， 之后防止到 ss 的 context 中， 最后防止到 session 中，标识授权登录完成；
 
+  - 绑定解绑 spring social 服务，`ConnectController`:
+
+    1. `/connect::GET`提供查询当前登录用户查询第三方授权绑定信息集合的接口；
+
+       需要自定义响应视图，参考`CustomConnectionStatusView`
+
+    2. `/connect/[provideId]::POST`提供绑定当前登录用户到对第三方授权服务提供商的接口；
+
+       需要自定义响应视图，参考`CustomConnectionStatusView`
+
 * 常见问题：
 
 ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuso8tlo2fj311w0hc74n.jpg)
@@ -140,6 +152,24 @@
   - 记住我
 
   ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuoes59unqj30zo0fuabd.jpg)
+
+  - [session 管理](https://coding.imooc.com/lesson/134.html#mid=6992)
+
+    - session 超时处理
+      配置：
+
+      ```properties
+      server:
+        port: 8080
+        session:
+          # 设置session过期时间，单位是秒，默认30分钟，但是在springboot中（嵌入式）,最少的时间是1分钟，可以查看TomcatEmbeddedServletContainerFactory#configureSession方法`sessionTimeout = Math.max(TimeUnit.SECONDS.toMinutes(sessionTimeout), 1L);`
+          timeout: 10
+      ```
+
+      如何自定义 session 失效导致的需要授权登录提示？
+
+    - session 并发控制
+    - session 集群管理
 
   - 核心功能：
     ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fuia8dpyrej30dv0bvdg4.jpg)

@@ -49,8 +49,8 @@ public class MainController {
 //		appSingUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
         // ！注册成功还需要用户在重新登录才能进来，目前没有找到直接帮用户进行ss登录的方法
         final SavedRequest savedRequest = requestCache.getRequest(request, response);
-        final String originalReqUrl = savedRequest.getRedirectUrl();
-        if (!StringUtils.isBlank(originalReqUrl)) {
+        if (savedRequest != null) {
+            final String originalReqUrl = savedRequest.getRedirectUrl();
             return "redirect:" + originalReqUrl;
         } else {
             return "redirect:/";

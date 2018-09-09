@@ -4,6 +4,7 @@ import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DevicePlatform;
 import org.springframework.mobile.device.DeviceType;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class HttpUtils {
     private static final List<String> tabletUserAgentKeywords = new ArrayList<String>();
 
     private static final List<String> normalUserAgentKeywords = new ArrayList<String>();
+
+    public static Device resolveDevice(HttpServletRequest request) {
+        return resolveDevice(request.getHeader("user-agent"), request.getHeader("accept"));
+    }
 
     public static Device resolveDevice(String userAgent, String accept) {
         // UserAgent keyword detection of Tablet devices
@@ -91,7 +96,6 @@ public class HttpUtils {
     private static Device resolveWithPlatform(DeviceType tablet, DevicePlatform android) {
         return MyLiteDevice.from(tablet, android);
     }
-
 
     /**
      * A lightweight Device implementation suitable for use as support code.

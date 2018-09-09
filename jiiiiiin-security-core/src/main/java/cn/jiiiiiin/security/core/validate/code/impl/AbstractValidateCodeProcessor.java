@@ -98,20 +98,24 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     @Override
     public void validate(ServletWebRequest request) {
 
-		ValidateCodeType codeType = getValidateCodeType(request);
+        ValidateCodeType codeType = getValidateCodeType(request);
 
 //		C codeInSession = (C) validateCodeRepository.get(request, codeType);
         // TODO
         final ValidateCode cacheRealValidateCode = (ValidateCode) sessionStrategy.getAttribute(request, SESSION_KEY_VALIDATE_CODE);
+        if (cacheRealValidateCode == null) {
+            // ! 测试的时候发现如果客户端针对一个交易进行重复发送请求，则会在验证通过还没有返回响应之后就会导致报错
+            throw new ValidateCodeException("验证码已经过期");
+        }
 
         // 请求传递过来的验证码
-		String validateCode;
-		try {
-			validateCode = ServletRequestUtils.getStringParameter(request.getRequest(),
-					codeType.getParamNameOnValidate());
-		} catch (ServletRequestBindingException e) {
-			throw new ValidateCodeException("获取验证码的值失败");
-		}
+        String validateCode;
+        try {
+            validateCode = ServletRequestUtils.getStringParameter(request.getRequest(),
+                    codeType.getParamNameOnValidate());
+        } catch (ServletRequestBindingException e) {
+            throw new ValidateCodeException("获取验证码的值失败");
+        }
 
         L.info("验证码 imageCode::code {} validateCode {}", cacheRealValidateCode, validateCode);
         if (StringUtils.isBlank(validateCode)) {

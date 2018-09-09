@@ -20,6 +20,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
@@ -31,19 +33,6 @@ import javax.sql.DataSource;
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     final static Logger L = LoggerFactory.getLogger(BrowserSecurityConfig.class);
-
-    /**
-     * 需要进行身份认证的接口
-     */
-    public static final String LOGIN_URL = "/authentication/require";
-    /**
-     * 身份认证表单提交的接口
-     */
-    public static final String LOGIN_PROCESSING_URL = "/authentication/from";
-    /**
-     * 验证码接口（图形验证码、短信验证码）
-     */
-    private static final String CODE_IMAGE = "/code/*";
 
     private static final String STATIC_RESOURCES = "/js/**";
 
@@ -74,6 +63,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SpringSocialConfigurer socialSecurityConfig;
 
+    @Autowired
+    private InvalidSessionStrategy invalidSessionStrategy;
+
+    @Autowired
+    private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
+
     /**
      * https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
      * <p>
@@ -98,12 +93,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        final String signInUrl = securityProperties.getBrowser().getSignInUrl();
-        final String signUpUrl = securityProperties.getBrowser().getSignUpUrl();
         // TODO 业务系统的注册接口
         final String registerUrl = "/user/auth/register";
-
-        L.info("配置的signInUrl: {} signUpUrl: {}", signInUrl, signUpUrl);
 
         http
                 // 添加自定义验证码过滤器，校验session中的图形验证码
@@ -120,7 +111,17 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
                 // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
                 // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
-                .antMatchers(SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL, STATIC_RESOURCES, CODE_IMAGE, LOGIN_URL, signInUrl, signUpUrl, registerUrl).permitAll()
+                .antMatchers(
+                        STATIC_RESOURCES,
+                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM,
+                        SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+                        securityProperties.getBrowser().getSignInUrl(),
+                        securityProperties.getBrowser().getSignUpUrl(),
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
+                        registerUrl
+                ).permitAll()
                 // 对所有请求// 都需要身份认证
                 .anyRequest().authenticated()
                 .and()
@@ -128,13 +129,29 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
                 .formLogin()
                 // 配置自定义登录页面所在的接口，如`/signIn.html`，在需要登录的时候去访问的接口（渲染的页面）
-                .loginPage(LOGIN_URL)
+                .loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
                 // 配置自定义登录交易请求接口（上面的登录页面提交表单之后登录接口），会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
-                .loginProcessingUrl(LOGIN_PROCESSING_URL)
+                .loginProcessingUrl(SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM)
                 // 配置自定义认证成功处理器
                 .successHandler(jAuthenticationSuccessHandler)
                 // 配置自定义认证失败处理器
                 .failureHandler(jAuthenticationFailureHandler)
+
+                .and()
+                // 开启session管理配置：
+                .sessionManagement()
+                // 设置session过期之后处理的接口
+                // .invalidSessionUrl(INVALID_SESSION_URL)
+                // 设置session过期之后处理策略
+                .invalidSessionStrategy(invalidSessionStrategy)
+                // 设置单个用户session存在系统的数量
+                .maximumSessions(securityProperties.getBrowser().getSession().getMaximumSessions())
+                .maxSessionsPreventsLogin(securityProperties.getBrowser().getSession().isMaxSessionsPreventsLogin())
+                // 设置不能剔除上一个登录用户，当session数量等于上面配置的最大数量
+                // .maxSessionsPreventsLogin(true)
+                // 用来做session被“剔除”之后的记录
+                .expiredSessionStrategy(sessionInformationExpiredStrategy)
+                .and()
                 .and()
                 .rememberMe()
                 // 配置记住用户的配置

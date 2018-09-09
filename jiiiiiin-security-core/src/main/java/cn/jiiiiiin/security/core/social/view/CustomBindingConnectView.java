@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
- * 绑定结果视图
+ * 绑定/解绑结果默认视图
  * <p>
  * 支持多渠道可重用
+ * <p>
+ * 应用需要自定义定义当前视图
  *
  * @author zhailiang
  * @see org.springframework.social.connect.web.ConnectController#connect(String, NativeWebRequest) 定义该接口的响应视图
@@ -37,9 +39,10 @@ public class CustomBindingConnectView extends AbstractView {
         response.setContentType("text/html;charset=UTF-8");
         // 区分绑定还是解绑成功
         if (model.get("connections") == null) {
+            // TODO 待修正
             response.getWriter().write("<h3>解绑成功</h3>");
         } else {
-            response.getWriter().write("<h3>绑定成功</h3>");
+            response.sendRedirect(request.getContextPath() + "/userBinding.html");
         }
 
     }

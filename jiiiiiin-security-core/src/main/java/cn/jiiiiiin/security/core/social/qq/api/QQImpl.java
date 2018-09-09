@@ -67,8 +67,8 @@ public class QQImpl extends AbstractOAuth2ApiBinding implements QQ {
 
         this.appId = appId;
 
-        String url = String.format(URL_GET_OPENID, accessToken);
-        String result = getRestTemplate().getForObject(url, String.class);
+        final String url = String.format(URL_GET_OPENID, accessToken);
+        final String result = getRestTemplate().getForObject(url, String.class);
 
         // 返回数据格式参考：http://wiki.connect.qq.com/%E8%8E%B7%E5%8F%96%E7%94%A8%E6%88%B7openid_oauth2-0
         // {"client_id":"YOUR_APPID","openid":"YOUR_OPENID"}

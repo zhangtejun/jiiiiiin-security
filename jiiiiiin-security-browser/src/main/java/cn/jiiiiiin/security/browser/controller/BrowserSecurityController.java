@@ -1,6 +1,7 @@
 package cn.jiiiiiin.security.browser.controller;
 
 import cn.jiiiiiin.security.browser.support.SimpleResponse;
+import cn.jiiiiiin.security.core.dict.CommonConstants;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.SocialController;
@@ -17,6 +18,7 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.ProviderSignInUtils;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,8 +28,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static cn.jiiiiiin.security.browser.config.BrowserSecurityConfig.LOGIN_URL;
 
 /**
  * jiiiiiin:
@@ -41,6 +41,10 @@ import static cn.jiiiiiin.security.browser.config.BrowserSecurityConfig.LOGIN_UR
 public class BrowserSecurityController extends SocialController {
 
     final static Logger L = LoggerFactory.getLogger(BrowserSecurityController.class);
+    /**
+     * 给`model`中设置的提示信息key
+     */
+    private static final String MODEL_KEY_HINT_MSG = "hintMsg";
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -66,9 +70,9 @@ public class BrowserSecurityController extends SocialController {
      * @return
      * @ResponseStatus(code = HttpStatus.UNAUTHORIZED) 返回的状态码标识返回给非网页版客户端，标识需要进行用户授权
      */
-    @RequestMapping(LOGIN_URL)
+    @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
-    public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response, Device device) throws IOException {
+    public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response, Device device, Model model) throws IOException {
         // 获取到上一个被拦截的请求(原始请求）
         final SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
@@ -80,6 +84,7 @@ public class BrowserSecurityController extends SocialController {
             if (device.isNormal()) {
                 // 直接跳转到登录页面
                 L.info("跳转到身份认证页面 {}", securityProperties.getBrowser().getSignInUrl());
+                model.addAttribute(CommonConstants.MODEL_KEY_HINT_MSG, "访问的服务需要身份认证");
                 redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getSignInUrl());
                 return null;
             }
@@ -100,4 +105,34 @@ public class BrowserSecurityController extends SocialController {
         Connection<?> connection = providerSignInUtils.getConnectionFromSession(new ServletWebRequest(request));
         return buildSocialUserInfo(connection);
     }
+
+//    /**
+//     * ss权限配置中`invalidSessionUrl`配置
+//     * @param request
+//     * @param response
+//     * @param device
+//     * @return
+//     * @throws IOException
+//     */
+//    @RequestMapping(INVALID_SESSION_URL)
+//    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+//    public SimpleResponse requireAuthenticationOnInvalidSession(HttpServletRequest request, HttpServletResponse response, Device device, Model model) throws IOException {
+//        // 获取到上一个被拦截的请求(原始请求）
+//        final SavedRequest savedRequest = requestCache.getRequest(request, response);
+//        if (savedRequest != null) {
+//            final String transTarget = savedRequest.getRedirectUrl();
+//            L.info("session 失效，需要进行身份认证的请求是 {}", transTarget);
+//            // 检测请求是否是以html结尾，我们就认为是访问网页版本
+//            // if(StringUtils.endsWithIgnoreCase(transTarget, ".html")){
+//            // 借助spring mobile来区分渠道
+//            if (device.isNormal()) {
+//                // 直接跳转到登录页面
+//                L.info("跳转到身份认证页面 {}", securityProperties.getBrowser().getSignInUrl());
+//                model.addAttribute(MODEL_KEY_HINT_MSG, "登录会话失效，访问的服务需要重新身份认证");
+//                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getSignInUrl());
+//                return null;
+//            }
+//        }
+//        return SimpleResponse.newInstance("登录会话失效，访问的服务需要重新身份认证");
+//    }
 }

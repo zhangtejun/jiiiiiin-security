@@ -5,6 +5,8 @@ package cn.jiiiiiin.security.core.social.weixin.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
@@ -19,6 +21,8 @@ import java.util.List;
  * @author zhailiang
  */
 public class WeixinImpl extends AbstractOAuth2ApiBinding implements Weixin {
+
+    final static Logger L = LoggerFactory.getLogger(WeixinImpl.class);
 
     /**
      *
@@ -53,8 +57,8 @@ public class WeixinImpl extends AbstractOAuth2ApiBinding implements Weixin {
      */
     @Override
     public WeixinUserInfo getUserInfo(String openId) {
-        String url = URL_GET_USER_INFO + openId;
-        String response = getRestTemplate().getForObject(url, String.class);
+        final String url = URL_GET_USER_INFO + openId;
+        final String response = getRestTemplate().getForObject(url, String.class);
         if (StringUtils.contains(response, "errcode")) {
             return null;
         }
@@ -62,7 +66,7 @@ public class WeixinImpl extends AbstractOAuth2ApiBinding implements Weixin {
         try {
             profile = objectMapper.readValue(response, WeixinUserInfo.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            L.error("获取微信用户信息解析出错", e);
         }
         return profile;
     }

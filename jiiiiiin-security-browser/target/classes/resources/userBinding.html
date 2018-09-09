@@ -11,24 +11,10 @@
             display: none !important;
         }
 
-        .title {
-            text-align: center;
+        .content-container {
+            padding: 20px;
         }
 
-        .image-code-input {
-            width: 50%;
-        }
-
-        .image-code {
-            position: absolute;
-            width: 100px;
-            margin-left: 20px;
-            height: 40px;
-        }
-
-        .from {
-            margin-top: 150px;
-        }
     </style>
 </head>
 <body>
@@ -36,45 +22,61 @@
 <div id="app" v-cloak>
 
     <el-row class="from">
-        <el-col :span="8">&nbsp;</el-col>
-        <el-col :span="8">
+        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="22" class="content-container">
 
-            <h3 class="title">绑定第三方平台用户信息</h3>
+            <h3 v-if="user!=null">{{user.username}} 您当前的绑定信息</h3>
 
-            <el-tabs type="border-card">
-                <el-tab-pane label="社交快捷方式">
-                    <el-row>
-                        <!--请求social默认绑定解绑控制器 `ConnectController`-->
-                        <!--1.先调用/connect::GET请求获取json格式的绑定和解绑信息，查看`CustomConnectionStatusView`-->
-                        <el-form ref="form" label-width="80px" action="/connect/qq" method="post">
-                            <el-form-item>
-                                <el-button type="primary" @click="onTapQQAuthBinding">绑定qq</el-button>
-                            </el-form-item>
-                        </el-form>
+            <el-card class="box-card">
+                <el-table
+                        :data="tableData"
+                        stripe>
+                    <el-table-column
+                            prop="providerId"
+                            label="渠道">
+                    </el-table-column>
+                    <el-table-column
+                            prop="status"
+                            label="状态"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            fixed="right"
+                            label="操作"
+                    >
+                        <template slot-scope="scope">
+                            <el-button
+                                    type="text"
+                                    size="small"
+                                    @click="onTapUnBinding(scope.$index, scope.row)"
+                                    v-if="scope.row.isBinding">
+                                解绑
+                            </el-button>
+                            <el-button
+                                    type="text"
+                                    size="small"
+                                    @click="onTapBinding(scope.$index, scope.row)"
+                                    v-if="!scope.row.isBinding">
+                                绑定
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
 
-                        <el-form-item>
-                            <el-button type="primary" @click="onTapQQAuthUnBinding">解绑qq</el-button>
-                        </el-form-item>
+            </el-card>
 
-                        <el-form ref="form" label-width="80px" action="/connect/weixin" method="post">
-                            <el-form-item>
-                                <el-button type="success" @click="onTapWeixinAuthBinding">绑定微信</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
-
-                </el-tab-pane>
-            </el-tabs>
+            <p>绑定第三方帐号，可以直接登录，还可以将内容同步到以下平台，与更多好友分享</p>
 
         </el-col>
-        <el-col :span="8">&nbsp;</el-col>
+        <el-col :span="1">&nbsp;</el-col>
     </el-row>
 
+
+    <form ref="bindingWeixinForm" style="display: none" action="/connect/weixin" method="post"></form>
+    <form ref="bindingQQForm" style="display: none" action="/connect/qq" method="post"></form>
 </div>
 
-<!-- 生产环境版本，优化了尺寸和速度 -->
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<!-- 引入组件库 -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/js/common.js"></script>
@@ -83,31 +85,85 @@
     new Vue({
         el: '#app',
         data: function () {
-            return {}
+            return {
+                user: null,
+                // key 是第三方授权服务提供商的provider id
+                bindingInfo: {}
+            }
         },
         computed: {
-            rememberVal: function () {
-                return this.remember
+            weixinBinding() {
+                return this.bindingInfo.weixin
+            },
+            qqBinding() {
+                return this.bindingInfo["callback.do"]
+            },
+            tableData() {
+                const res = []
+                for (const key in this.bindingInfo) {
+                    res.push({
+                        providerId: ((key) => {
+                            switch (key) {
+                                case 'weixin':
+                                    return '微信'
+                                case 'callback.do':
+                                    return 'QQ'
+                            }
+                        })(key),
+                        status: (() => {
+                            return this.bindingInfo[key] ? '已经绑定' : '未绑定'
+                        })(),
+                        isBinding: this.bindingInfo[key]
+                    })
+                }
+                console.log(res)
+                return res
             }
         },
         methods: {
-            onTapQQAuthBinding() {
-                this.$refs.form.$el.submit();
-            },
-            onTapQQAuthUnBinding: function (e) {
-                var that = this
-                // 解绑，发送delete方式的请求
-                this.$vp.delete('/connect/qq')
-                    .then(function (response) {
-                        that.$message('解绑成功')
+            onTapUnBinding(idx, item) {
+                let provideId = 'weixin'
+                switch (item.providerId) {
+                    case 'QQ':
+                        provideId = 'callback.do'
+                        break
+                }
+                this.$vp.delete(`/connect/${provideId}`)
+                    .then((response) => {
+                        this.$message('解绑成功')
                     })
-                    .catch(function (err) {
-                        alert(`解绑出错${JSON.stringify(err.response)}`)
+                    .catch((err) => {
+                        // TODO 待修正
+                        this.$message('解绑成功')
+                        //alert(`解绑出错${JSON.stringify(err.response)}`)
                     })
             },
-            onTapWeixinAuthBinding: function () {
-                this.$refs.form1.$el.submit();
+            onTapBinding: function (idx, item) {
+                switch (item.providerId) {
+                    case 'QQ':
+                        this.$refs.bindingQQForm.submit()
+                        break
+                    default:
+                        this.$refs.bindingWeixinForm.submit()
+                }
             }
+        },
+        created() {
+            this.$vp.get('/user/me')
+                .then((response) => {
+                    this.user = response.data
+                })
+                .catch((err) => {
+                    alert(`获取登录用户信息出错 ${JSON.stringify(err.response)}`)
+                })
+
+            this.$vp.get('/connect')
+                .then((response) => {
+                    this.bindingInfo = response.data
+                })
+                .catch((err) => {
+                    alert(`获取登录用户第三方授权绑定信息出错 ${JSON.stringify(err.response)}`)
+                })
         }
 
     })
