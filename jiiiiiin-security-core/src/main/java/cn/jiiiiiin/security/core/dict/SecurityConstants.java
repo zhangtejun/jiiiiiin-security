@@ -58,6 +58,7 @@ public interface SecurityConstants {
     String DEFAULT_PARAMETER_NAME_PROVIDERID = "providerId";
     /**
      * session失效默认的跳转地址
+     *
      * @see org.springframework.security.config.annotation.web.builders.HttpSecurity#sessionManagement#invalidSessionUrl
      */
     String DEFAULT_SESSION_INVALID_URL = "/sessionInvalid.html";
@@ -70,4 +71,8 @@ public interface SecurityConstants {
      * social 第三方授权用户管理表的表前缀
      */
     String SOCIAL_TABLE_PREFIX = "springsocial_";
+    /**
+     * 默认退出登录的处理接口
+     */
+    String LOGOUT_URL = "/signOut";
 }

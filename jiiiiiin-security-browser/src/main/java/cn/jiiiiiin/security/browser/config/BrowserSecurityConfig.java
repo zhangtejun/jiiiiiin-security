@@ -1,5 +1,6 @@
 package cn.jiiiiiin.security.browser.config;
 
+import cn.jiiiiiin.security.core.authentication.FormAuthenticationConfig;
 import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
@@ -16,8 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.InvalidSessionStrategy;
@@ -38,12 +38,6 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private SecurityProperties securityProperties;
-
-    @Autowired
-    private AuthenticationSuccessHandler jAuthenticationSuccessHandler;
-
-    @Autowired
-    private AuthenticationFailureHandler jAuthenticationFailureHandler;
 
     @Autowired
     private DataSource dataSource;
@@ -68,6 +62,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
+
+    @Autowired
+    private FormAuthenticationConfig formAuthenticationConfig;
+
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
 
     /**
      * https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
@@ -96,6 +96,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         // TODO 业务系统的注册接口
         final String registerUrl = "/user/auth/register";
 
+        formAuthenticationConfig.configure(http);
+
         http
                 // 添加自定义验证码过滤器，校验session中的图形验证码
                 .apply(validateCodeSecurityConfig)
@@ -119,24 +121,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                         SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
                         securityProperties.getBrowser().getSignInUrl(),
                         securityProperties.getBrowser().getSignUpUrl(),
+                        securityProperties.getBrowser().getSignOutUrl(),
                         securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
                         registerUrl
                 ).permitAll()
                 // 对所有请求// 都需要身份认证
                 .anyRequest().authenticated()
-                .and()
-                // 开启表单登录（指定身份认证的方式）
-                // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
-                .formLogin()
-                // 配置自定义登录页面所在的接口，如`/signIn.html`，在需要登录的时候去访问的接口（渲染的页面）
-                .loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
-                // 配置自定义登录交易请求接口（上面的登录页面提交表单之后登录接口），会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
-                .loginProcessingUrl(SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM)
-                // 配置自定义认证成功处理器
-                .successHandler(jAuthenticationSuccessHandler)
-                // 配置自定义认证失败处理器
-                .failureHandler(jAuthenticationFailureHandler)
-
                 .and()
                 // 开启session管理配置：
                 .sessionManagement()
@@ -152,6 +142,16 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 用来做session被“剔除”之后的记录
                 .expiredSessionStrategy(sessionInformationExpiredStrategy)
                 .and()
+                .and()
+                .logout()
+                // 定义退出登录发送的接口名称，默认为`/logout`
+                .logoutUrl(SecurityConstants.LOGOUT_URL)
+                // 退出登录之后的处理类，将会接收到退出登录的请求，可以在这里做响应的业务处理，配置之后`logoutSuccessUrl`配置会失效
+                .logoutSuccessHandler(logoutSuccessHandler)
+                // 退出登录之后访问的页面
+                // .logoutSuccessUrl("/signOut.html")
+                // 配置退出之后，删除浏览器cookie中的对应字段，这里是删除会话id
+                .deleteCookies("JSESSIONID")
                 .and()
                 .rememberMe()
                 // 配置记住用户的配置

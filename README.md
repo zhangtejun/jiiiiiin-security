@@ -4,6 +4,8 @@
 
 > [社区 Spring Security 从入门到进阶系列教程](http://www.spring4all.com/article/428)
 
+> [spring boot 要如何学习？](https://www.zhihu.com/question/53729800/answer/311948415)
+
 ### 关键点
 
 - ![代码结构](https://ws2.sinaimg.cn/large/006tNbRwgy1fue02z4h20j31kw0rc0y8.jpg)
@@ -343,9 +345,15 @@
 
     `UserDetailsService`用来通过用户名获取`UserDetails`用户标识对象；
 
-* spring security 退出登录相关配置
+- spring security 退出登录相关配置
 
-- 异步处理 REST 服务
+  - 框架处理逻辑:
+
+    ![框架处理逻辑](https://ws1.sinaimg.cn/large/0069RVTdgy1fv4g8yzc2yj30is0eowez.jpg)
+
+    退出成功之后，会重定向到`http://localhost:8080/authentication/require?logout`登录页，通过`logout`参数标记是通过退出这个行为标记；
+
+* 异步处理 REST 服务
 
   - 使用 Callable 来处理
 
@@ -383,7 +391,7 @@
       }
   ```
 
-* springboot aop、拦截器、过滤器相关:
+- springboot aop、拦截器、过滤器相关:
 
   ![springboot aop、拦截器、过滤器相关](https://ws3.sinaimg.cn/large/006tNbRwgy1fuh5paluivj30n90glgm0.jpg)
 
@@ -393,7 +401,7 @@
 
   如果 filter 还没有处理异常，就会抛到容器（如：tomcat）最终显示到前端；
 
-- springboot 默认错误处理控制器 `org.springframework.boot.autoconfigure.web.BasicErrorController`
+* springboot 默认错误处理控制器 `org.springframework.boot.autoconfigure.web.BasicErrorController`
 
   ```java
   // /error是默认错误视图的路径

@@ -19,12 +19,18 @@ public class BrowserProperties {
     /**
      * 社交登录，如果需要用户注册，跳转的页面
      */
-    private String signUpUrl = "/imooc-signUp.html";
+    private String signUpUrl = "/signUp.html";
+
+    /**
+     * 退出成功时跳转的html输出页面，如果是移动端渠道访问则返回json数据，不走该页面。
+     */
+    private String signOutUrl = "/signOut.html";
 
     /**
      * '记住我'功能的有效时间，单位（秒），默认1小时
      */
     private int rememberMeSeconds = 3600;
+
 
     public String getSignInUrl() {
         return signInUrl;
@@ -56,5 +62,13 @@ public class BrowserProperties {
 
     public void setSession(SessionProperties session) {
         this.session = session;
+    }
+
+    public String getSignOutUrl() {
+        return signOutUrl;
+    }
+
+    public void setSignOutUrl(String signOutUrl) {
+        this.signOutUrl = signOutUrl;
     }
 }

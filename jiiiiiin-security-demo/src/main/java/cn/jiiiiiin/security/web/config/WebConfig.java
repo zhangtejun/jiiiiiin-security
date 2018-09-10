@@ -25,7 +25,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         //浏览器发送 /atguigu 请求来到 success
-        registry.addViewController("/").setViewName("index");
+        registry.addViewController("/").setViewName("index.html");
+        registry.addViewController("/index").setViewName("index.html");
     }
 
     /**
