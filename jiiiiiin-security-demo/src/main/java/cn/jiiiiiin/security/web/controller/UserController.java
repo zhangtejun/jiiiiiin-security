@@ -93,7 +93,7 @@ public class UserController {
 
     final static Logger L = LoggerFactory.getLogger(UserController.class);
 
-    final static String AVATAR_SAVE_PATH = "/Users/jiiiiiin/Documents/IdeaProjects/jiiiiiin-security/jiiiiiin-security-demo/src/main/resources/static";
+    final static String AVATAR_SAVE_PATH = "/Users/jiiiiiin/Documents/IdeaProjects/jiiiiiin-security/jiiiiiin-security-demo/src/main/resources/static/upload/img/";
 
 //    @Autowired
 //    private ProviderSignInUtils providerSignInUtils;
