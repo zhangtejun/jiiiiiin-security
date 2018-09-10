@@ -2,9 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>index</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>主页 - demo</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        [v-cloak] {
+            display: none !important;
+        }
+
+        .logo{
+            height: 30px;
+        }
+
+        .from {
+            margin-top: 150px;
+        }
+    </style>
 </head>
 <body>
-<h2>index</h2>
+
+<div id="app" v-cloak>
+
+    <el-row class="title-bar">
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+            <el-menu-item index="1"><img class="logo" src="https://spring.io/img/homepage/icon-spring-boot.svg" alt=""></el-menu-item>
+            <el-menu-item index="2" style="float: right">{{user.username}}</el-menu-item>
+            <el-menu-item index="3" style="float: right"><a href="/logout">退出登录</a></el-menu-item>
+        </el-menu>
+    </el-row>
+
+    <el-row class="from">
+        <el-col :span="8">&nbsp;</el-col>
+        <el-col :span="8">
+
+        </el-col>
+        <el-col :span="8">&nbsp;</el-col>
+    </el-row>
+
+</div>
+
+<!-- 生产环境版本，优化了尺寸和速度 -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/js/common.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                activeIndex: '2',
+                user: {}
+            }
+        },
+        methods: {},
+        created() {
+            this.$vp.get('/user/me')
+                .then((response) => {
+                    this.user = response.data
+                })
+                .catch((err) => {
+                    alert(`获取登录用户信息出错 ${JSON.stringify(err.response)}`)
+                })
+        }
+
+    })
+</script>
 </body>
 </html>

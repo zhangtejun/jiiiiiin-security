@@ -343,7 +343,9 @@
 
     `UserDetailsService`用来通过用户名获取`UserDetails`用户标识对象；
 
-* 异步处理 REST 服务
+* spring security 退出登录相关配置
+
+- 异步处理 REST 服务
 
   - 使用 Callable 来处理
 
@@ -381,7 +383,7 @@
       }
   ```
 
-- springboot aop、拦截器、过滤器相关:
+* springboot aop、拦截器、过滤器相关:
 
   ![springboot aop、拦截器、过滤器相关](https://ws3.sinaimg.cn/large/006tNbRwgy1fuh5paluivj30n90glgm0.jpg)
 
@@ -391,7 +393,7 @@
 
   如果 filter 还没有处理异常，就会抛到容器（如：tomcat）最终显示到前端；
 
-* springboot 默认错误处理控制器 `org.springframework.boot.autoconfigure.web.BasicErrorController`
+- springboot 默认错误处理控制器 `org.springframework.boot.autoconfigure.web.BasicErrorController`
 
   ```java
   // /error是默认错误视图的路径
