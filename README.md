@@ -169,83 +169,146 @@
       如何自定义 session 失效导致的需要授权登录提示？
 
     - session 并发控制
-    - session 集群管理
-
-  - 核心功能：
-    ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fuia8dpyrej30dv0bvdg4.jpg)
-    ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuoesrwcz1j31kw0jvgp1.jpg)
-    参考：https://juejin.im/post/5a434de6f265da43333eae7d
 
     ```java
-       o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: OrRequestMatcher [requestMatchers=[Ant [pattern='/css/**'], Ant [pattern='/js/**'], Ant [pattern='/images/**'], Ant [pattern='/webjars/**'], Ant [pattern='/**/favicon.ico'], Ant [pattern='/error']]], []
-              2018-08-24 10:46:59.538  INFO 5296 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@64e247e, org.springframework.security.web.context.SecurityContextPersistenceFilter@1be3a294, org.springframework.security.web.header.HeaderWriterFilter@7d49fe37, org.springframework.security.web.authentication.logout.LogoutFilter@73633230, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@356ab368, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@729d1428, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4425b6ed, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@66df362c, org.springframework.security.web.session.SessionManagementFilter@231c521e, org.springframework.security.web.access.ExceptionTranslationFilter@5af1b221, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5c30decf]
-              2018-08-24 10:46:59.558  INFO 5296 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration$LazyEndpointPathRequestMatcher@7ca8f5d7, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2dc319cf, org.springframework.security.web.context.SecurityContextPersistenceFilter@4f5df012, org.springframework.security.web.header.HeaderWriterFilter@3ad9fea, org.springframework.web.filter.CorsFilter@1690929, org.springframework.security.web.authentication.logout.LogoutFilter@53b9952f, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@46df794e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@38f3dbbf, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@574e4184, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@34d26a68, org.springframework.security.web.session.SessionManagementFilter@556e4588, org.springframework.security.web.access.ExceptionTranslationFilter@574413bd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7da9b32c]
-              2018-08-24 10:46:59.561  INFO 5296 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: OrRequestMatcher [requestMatchers=[Ant [pattern='/**']]], [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7945986a, org.springframework.security.web.context.SecurityContextPersistenceFilter@4144d4a, org.springframework.security.web.header.HeaderWriterFilter@30a1b2ad, org.springframework.security.web.authentication.logout.LogoutFilter@37b44e8e, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@11ec2b2f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@20276412, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1dae9e61, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@442151d1, org.springframework.security.web.session.SessionManagementFilter@436d2bb9, org.springframework.security.web.access.ExceptionTranslationFilter@20608ef4, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7c31e01f]
-              2018-08-24 10:47:00.175  INFO 5296 --- [           m
+      .and()
+      // 开启session管理配置：
+      .sessionManagement()
+          // 设置session过期之后处理的接口
+          // .invalidSessionUrl(INVALID_SESSION_URL)
+          // 设置session过期之后处理策略
+          .invalidSessionStrategy(invalidSessionStrategy)
+          // 设置单个用户session存在系统的数量，1标识系统中同一个用户只能存在一个session（登录用户）
+          .maximumSessions(1)
+          .maxSessionsPreventsLogin(securityProperties.getBrowser().getSession().isMaxSessionsPreventsLogin())
+          // 设置不能剔除上一个登录用户，当session数量等于上面配置的最大数量
+          // .maxSessionsPreventsLogin(true)
+          // 用来做session被“剔除”之后的记录
+          .expiredSessionStrategy(sessionInformationExpiredStrategy)
     ```
 
-  * 浏览器相关 security 配置参考: bean::BrowserSecurityConfig、MyUserDetailsService
+    - session 集群管理
 
-    - 个性化用户认证流程
+    ![](https://ws3.sinaimg.cn/large/0069RVTdgy1fv47i9tml2j30xg0ewab0.jpg)
 
-      ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fujs30pbkcj31kw10atc6.jpg)
+    依赖：
 
-      上图就是框架认证流程的核心处理流程
+    ```xml
+        <!--做集群环境下的session管理-->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session</artifactId>
+        </dependency>
+    ```
 
-      如果需要自定义:
-      ![]()
+    spring session 用来做集群环境下的 session“独立”存储支持；
+    spring session 支持的存储方式，参考`StoreType`；
+    以 redis 为例：
 
-      https://coding.imooc.com/lesson/134.html#mid=6872
+    ! 使用 redis 的两个原因：
 
-      - 自定义登录页面
+    1. 在插入的是可以设置超时时间（数据的），即在系统设置的 session 超时时间到期之后，redis 将会自动帮我们清理数据
+    2. 如果使用 jdbc 访问数据库的方式，因为每一次请求都会访问 session（ss 框架过滤器链），势必会对数据库造成很大压力，而且需要手动清理过期的 session 记录；
 
-        ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fuiiuwx7wxj31kw0s5wjo.jpg)
-        为了区分渠道，需要像上图那样去重新定义 security 框架的处理逻辑；
+    配置：
 
-        关键在于 spring security 的授权配置：
+    ```properties
+    spring:
+      session:
+        # 这里的值对应的就是`StoreType`中的某一个存储类型
+        store-type: redis
+    ```
 
-        ```java
-          protected void configure(HttpSecurity http) throws Exception {
-                  http
-                         //...
-                          .and()
-                          // formLogin() 指定身份认证的方式
-                          // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
-                          .formLogin()
-                          // 自定义登录页面
-          //                .signInUrl("/signIn.html")
-                          .signInUrl("/signIn")
-                          // 自定义登录交易请求接口，会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
-                          .loginProcessingUrl("/signIn")
-                          .and()
-            }
-        ```
+    问题：
 
-        获取请求的用户名和密码关键在`UsernamePasswordAuthenticationFilter#attemptAuthentication` 解析用户名密码哪里，目前默认是获取 request 中的 req params，也就是表单参数，如果要支持 json 请求，需要继承该类，手动实现，可以参考：
-        https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#form-login-filter
+    1. `Caused by: org.springframework.core.serializer.support.SerializationFailedException: Failed to serialize object using DefaultSerializer; nested exception is java.lang.IllegalArgumentException: DefaultSerializer requires a Serializable payload but received an object of type [cn.jiiiiiin.security.core.validate.code.image.ImageCode]`
 
-      - 自定义登录成功处理流程
-        如果前端使用 ajax 异步请求一个需要授权登录的交易，那么默认的 spring security 的处理方式是在登录完成之后会重定向到上一个交易，如果要干预或者说，登录成功之后需要返回给前端登录用户的消息，那么就必须要进行这里的自定义；
-        关键在于`AuthenticationSuccessHandler`
-        ```java
-        .and()
-        // formLogin() 指定身份认证的方式
-        // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
-        //...
-        // 配置自定义认证成功处理器
-        .successHandler(jAuthenticationSuccessHandler)
-        ```
-      - 自定义登录失败处理流程
+    开启 spring session -》 redis 之后，我们的 session 将会被存储到 redis 中，但是我们存放到 session 中的图形验证码没有实现`Serializable`接口，导致不可以被序列号到 redis 中，故报出此错误；
 
-- ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
+    [Intellij IDEA 自动生成 serialVersionUID](https://blog.csdn.net/tiantiandjava/article/details/8781776)
 
-- 自定义配置
+    测试，启动两个节点，在其中一个登录，之后访问了一个节点的`user/me`，可以获取到上一个节点登录的用户信息；
+
+    查看 redis 存储：
+    ![](https://ws4.sinaimg.cn/large/0069RVTdgy1fv4agf6zn1j31hu0b0434.jpg)
+
+    之后可以测试一下 spring security 并发控制等是否正常（开启集群之后，spring security 会监控 redis 中的 session 登录记录）
+
+* 核心功能：
+  ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fuia8dpyrej30dv0bvdg4.jpg)
+  ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuoesrwcz1j31kw0jvgp1.jpg)
+  参考：https://juejin.im/post/5a434de6f265da43333eae7d
+
+  ```java
+     o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: OrRequestMatcher [requestMatchers=[Ant [pattern='/css/**'], Ant [pattern='/js/**'], Ant [pattern='/images/**'], Ant [pattern='/webjars/**'], Ant [pattern='/**/favicon.ico'], Ant [pattern='/error']]], []
+            2018-08-24 10:46:59.538  INFO 5296 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@64e247e, org.springframework.security.web.context.SecurityContextPersistenceFilter@1be3a294, org.springframework.security.web.header.HeaderWriterFilter@7d49fe37, org.springframework.security.web.authentication.logout.LogoutFilter@73633230, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@356ab368, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@729d1428, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4425b6ed, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@66df362c, org.springframework.security.web.session.SessionManagementFilter@231c521e, org.springframework.security.web.access.ExceptionTranslationFilter@5af1b221, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5c30decf]
+            2018-08-24 10:46:59.558  INFO 5296 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration$LazyEndpointPathRequestMatcher@7ca8f5d7, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2dc319cf, org.springframework.security.web.context.SecurityContextPersistenceFilter@4f5df012, org.springframework.security.web.header.HeaderWriterFilter@3ad9fea, org.springframework.web.filter.CorsFilter@1690929, org.springframework.security.web.authentication.logout.LogoutFilter@53b9952f, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@46df794e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@38f3dbbf, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@574e4184, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@34d26a68, org.springframework.security.web.session.SessionManagementFilter@556e4588, org.springframework.security.web.access.ExceptionTranslationFilter@574413bd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7da9b32c]
+            2018-08-24 10:46:59.561  INFO 5296 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: OrRequestMatcher [requestMatchers=[Ant [pattern='/**']]], [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7945986a, org.springframework.security.web.context.SecurityContextPersistenceFilter@4144d4a, org.springframework.security.web.header.HeaderWriterFilter@30a1b2ad, org.springframework.security.web.authentication.logout.LogoutFilter@37b44e8e, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@11ec2b2f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@20276412, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1dae9e61, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@442151d1, org.springframework.security.web.session.SessionManagementFilter@436d2bb9, org.springframework.security.web.access.ExceptionTranslationFilter@20608ef4, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7c31e01f]
+            2018-08-24 10:47:00.175  INFO 5296 --- [           m
+  ```
+
+- 浏览器相关 security 配置参考: bean::BrowserSecurityConfig、MyUserDetailsService
+
+  - 个性化用户认证流程
+
+    ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fujs30pbkcj31kw10atc6.jpg)
+
+    上图就是框架认证流程的核心处理流程
+
+    如果需要自定义:
+    ![]()
+
+    https://coding.imooc.com/lesson/134.html#mid=6872
+
+    - 自定义登录页面
+
+      ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fuiiuwx7wxj31kw0s5wjo.jpg)
+      为了区分渠道，需要像上图那样去重新定义 security 框架的处理逻辑；
+
+      关键在于 spring security 的授权配置：
+
+      ```java
+        protected void configure(HttpSecurity http) throws Exception {
+                http
+                       //...
+                        .and()
+                        // formLogin() 指定身份认证的方式
+                        // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
+                        .formLogin()
+                        // 自定义登录页面
+        //                .signInUrl("/signIn.html")
+                        .signInUrl("/signIn")
+                        // 自定义登录交易请求接口，会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
+                        .loginProcessingUrl("/signIn")
+                        .and()
+          }
+      ```
+
+      获取请求的用户名和密码关键在`UsernamePasswordAuthenticationFilter#attemptAuthentication` 解析用户名密码哪里，目前默认是获取 request 中的 req params，也就是表单参数，如果要支持 json 请求，需要继承该类，手动实现，可以参考：
+      https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#form-login-filter
+
+    - 自定义登录成功处理流程
+      如果前端使用 ajax 异步请求一个需要授权登录的交易，那么默认的 spring security 的处理方式是在登录完成之后会重定向到上一个交易，如果要干预或者说，登录成功之后需要返回给前端登录用户的消息，那么就必须要进行这里的自定义；
+      关键在于`AuthenticationSuccessHandler`
+      ```java
+      .and()
+      // formLogin() 指定身份认证的方式
+      // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
+      //...
+      // 配置自定义认证成功处理器
+      .successHandler(jAuthenticationSuccessHandler)
+      ```
+    - 自定义登录失败处理流程
+
+* ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
+
+* 自定义配置
   参考:
   ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuo9h1z6mrj30t30eu0tl.jpg)
 
-* [kaptcha 集成](https://www.jianshu.com/p/1f2f7c47e812)
+- [kaptcha 集成](https://www.jianshu.com/p/1f2f7c47e812)
 
-* 使用 Swagger 自动生成文档
+- 使用 Swagger 自动生成文档
 
   根据代码自动生成文档，提供给前端开发人员识别接口；
 
@@ -280,7 +343,7 @@
 
     `UserDetailsService`用来通过用户名获取`UserDetails`用户标识对象；
 
-- 异步处理 REST 服务
+* 异步处理 REST 服务
 
   - 使用 Callable 来处理
 
@@ -318,7 +381,7 @@
       }
   ```
 
-* springboot aop、拦截器、过滤器相关:
+- springboot aop、拦截器、过滤器相关:
 
   ![springboot aop、拦截器、过滤器相关](https://ws3.sinaimg.cn/large/006tNbRwgy1fuh5paluivj30n90glgm0.jpg)
 
@@ -328,7 +391,7 @@
 
   如果 filter 还没有处理异常，就会抛到容器（如：tomcat）最终显示到前端；
 
-- springboot 默认错误处理控制器 `org.springframework.boot.autoconfigure.web.BasicErrorController`
+* springboot 默认错误处理控制器 `org.springframework.boot.autoconfigure.web.BasicErrorController`
 
   ```java
   // /error是默认错误视图的路径

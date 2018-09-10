@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8060
   session:
     # 设置session过期时间，单位是秒，默认30分钟，最少1分支
     timeout: 600
@@ -14,8 +14,13 @@ spring:
     url: jdbc:mysql://192.168.33.10:3306/jiiiiiin-security-demo?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
     username: root
     password: 1qaz@WSX
+  # 配置redis链接地址
+  redis:
+    host: 127.0.0.1
+    port: 6379
   session:
-    store-type: none
+    store-type: redis
+
 
 #security:
 #  basic:

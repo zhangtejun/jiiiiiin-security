@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
  */
 public class ImageCode extends ValidateCode {
 
+    private static final long serialVersionUID = -5743733411744551242L;
     /**
      * 根据验证码生成的图片
      */

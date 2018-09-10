@@ -64,14 +64,16 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 
     /**
      * 保存校验码
+     * <p>
+     * 开启spring session -》 redis之后，就不能直接把image code放到session中，避免出现错误，{@link cn.jiiiiiin.security.core.validate.code.image.ImageCode}
      *
      * @param request
      * @param validateCode
      */
     private void save(ServletWebRequest request, C validateCode) {
-//		ValidateCode code = new ValidateCode(validateCode.getCode(), validateCode.getExpireTime());
 //		validateCodeRepository.save(request, code, getValidateCodeType(request));
-        sessionStrategy.setAttribute(request, SESSION_KEY_VALIDATE_CODE, validateCode);
+        ValidateCode code = new ValidateCode(validateCode.getCode(), validateCode.getExpireTime());
+        sessionStrategy.setAttribute(request, SESSION_KEY_VALIDATE_CODE, code);
     }
 
     /**

@@ -26,12 +26,7 @@
             <el-card class="box-card">
                 <h2>当前会话已失效</h2>
                 <h3>安全模块默认的session失效提示页面,请通过`jiiiiiin.security.browser.session.sessionInvalidUrl`配置自己的页面URL</h3>
-                <p>此页面将在3秒后跳转到登录页</p>
-                <script type="text/javascript">
-                    setInterval(function () {
-                        window.location.href = "/signIn.html"
-                    }, 3000);
-                </script>
+                <p>此页面将在{{time}}秒后跳转到登录页</p>
             </el-card>
 
         </el-col>
@@ -46,6 +41,17 @@
 <script>
     new Vue({
         el: '#app',
+        data() {
+            return {
+                time: 3
+            }
+        },
+        mounted() {
+            setInterval(() => {
+                --this.time
+                window.location.href = "/signIn.html"
+            }, 3000);
+        }
     })
 </script>
 </body>
