@@ -54,7 +54,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
      * 验证码校验失败处理器
      */
     @Autowired
-    private AuthenticationFailureHandler jAuthenticationFailureHandler;
+    private AuthenticationFailureHandler customAuthenticationFailureHandler;
     /**
      * 系统中的校验码处理器
      */
@@ -128,7 +128,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
                 logger.info("验证码校验通过");
             } catch (ValidateCodeException exception) {
                 logger.error("验证码校验失败", exception);
-                jAuthenticationFailureHandler.onAuthenticationFailure(request, response, exception);
+                customAuthenticationFailureHandler.onAuthenticationFailure(request, response, exception);
                 return;
             }
         }

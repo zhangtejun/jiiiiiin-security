@@ -12,8 +12,6 @@
     <artifactId>jiiiiiin-security-demo</artifactId>
 
     <name>jiiiiiin-security-demo</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
 
     <properties>
         <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
@@ -34,9 +32,14 @@
             <optional>true</optional>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>cn.jiiiiiin.security</groupId>-->
+            <!--<artifactId>jiiiiiin-security-browser</artifactId>-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>cn.jiiiiiin.security</groupId>
-            <artifactId>jiiiiiin-security-browser</artifactId>
+            <artifactId>jiiiiiin-security-app</artifactId>
         </dependency>
 
         <!--引入spring 测试框架-->

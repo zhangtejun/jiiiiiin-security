@@ -3,10 +3,9 @@
  */
 package cn.jiiiiiin.security.browser.logout;
 
-import cn.jiiiiiin.security.browser.support.SimpleResponse;
 import cn.jiiiiiin.security.browser.utils.HttpUtils;
+import cn.jiiiiiin.security.core.support.SimpleResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mobile.device.Device;

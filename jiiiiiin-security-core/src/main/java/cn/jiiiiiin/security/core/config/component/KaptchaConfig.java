@@ -1,4 +1,4 @@
-package cn.jiiiiiin.security.browser.config;
+package cn.jiiiiiin.security.core.config.component;
 
 
 import cn.jiiiiiin.security.core.properties.SecurityProperties;

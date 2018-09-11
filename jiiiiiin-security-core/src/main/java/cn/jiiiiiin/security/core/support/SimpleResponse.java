@@ -1,4 +1,4 @@
-package cn.jiiiiiin.security.browser.support;
+package cn.jiiiiiin.security.core.support;
 
 /**
  * 简单响应对象

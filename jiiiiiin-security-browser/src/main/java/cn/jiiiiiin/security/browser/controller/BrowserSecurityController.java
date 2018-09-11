@@ -1,11 +1,11 @@
 package cn.jiiiiiin.security.browser.controller;
 
-import cn.jiiiiiin.security.browser.support.SimpleResponse;
 import cn.jiiiiiin.security.core.dict.CommonConstants;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.SocialController;
 import cn.jiiiiiin.security.core.social.support.SocialUserInfo;
+import cn.jiiiiiin.security.core.support.SimpleResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

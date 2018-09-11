@@ -9,38 +9,29 @@ import cn.jiiiiiin.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.social.security.SpringSocialConfigurer;
 
-import javax.sql.DataSource;
-
 /**
  * @author jiiiiiin
  */
 @Configuration
-public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
+public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapter {
 
-    final static Logger L = LoggerFactory.getLogger(BrowserSecurityConfig.class);
+    final static Logger L = LoggerFactory.getLogger(BrowserSpringSecurityBaseConfig.class);
 
     private static final String STATIC_RESOURCES = "/js/**";
 
     @Autowired
     private SecurityProperties securityProperties;
-
-    @Autowired
-    private DataSource dataSource;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -68,6 +59,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private LogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    private PersistentTokenRepository persistentTokenRepository;
 
     /**
      * https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
@@ -156,7 +150,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 // 配置记住用户的配置
                 // 配置将需要记住用户的用户名通过一下的dao设置到数据库
-                .tokenRepository(persistentTokenRepository())
+                .tokenRepository(persistentTokenRepository)
                 // 设置记住用户的时长
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
                 // 需要业务系统自己实现
@@ -164,31 +158,6 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 临时关闭防护
                 .csrf().disable();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // 可以参考下面框架提供的PasswordEncoder去实现自己系统的密码加密机制
-        return new BCryptPasswordEncoder();
-    }
-
-
-    /**
-     * 记住我功能的token存取器配置
-     * <p>
-     * 需要插入一张框架需要的表[persistent_logins]：{@link JdbcTokenRepositoryImpl#CREATE_TABLE_SQL}
-     * <p>
-     * ![关于remember me功能](https://ws1.sinaimg.cn/large/0069RVTdgy1fuoes59unqj30zo0fuabd.jpg)
-     *
-     * @return
-     */
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-        // 帮我们在开发阶段建表
-        // tokenRepository.setCreateTableOnStartup(true);
-        return tokenRepository;
     }
 
 

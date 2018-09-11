@@ -6,6 +6,8 @@
 
 > [spring boot 要如何学习？](https://www.zhihu.com/question/53729800/answer/311948415)
 
+> [SpringBoot 整合 Security（一）实现用户认证并判断返回 json 还是 view](https://www.jianshu.com/p/18875c2995f1)
+
 ### 关键点
 
 - ![代码结构](https://ws2.sinaimg.cn/large/006tNbRwgy1fue02z4h20j31kw0rc0y8.jpg)
@@ -302,15 +304,109 @@
       ```
     - 自定义登录失败处理流程
 
-* ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
+- 基于 Token 的“会话保持” - Spring Security OAuth
 
-* 自定义配置
+> [SpringBoot + Spring Security OAuth2 基本使用](https://blog.csdn.net/u013435893/article/details/79735097)
+
+![](https://ws2.sinaimg.cn/large/0069RVTdgy1fv4jn49ztij30u50g4mxp.jpg)
+
+使用 cookie 导致的一些问题:
+
+![](https://ws4.sinaimg.cn/large/0069RVTdgy1fv4jvkv8f9j30te0gxaaj.jpg)
+
+![](https://ws4.sinaimg.cn/large/0069RVTdgy1fv4kb5juokj30u20hh3zw.jpg)
+
+其中绿色部分，spring security 已经帮我们做了  默认实现；
+
+- 实现一个标准的 OAuth2 协议中 Provider 角色的主要功能
+
+  - 添加了`@EnableAuthorizationServer`注解之后，项目就可以当做一个授权服务提供商，给第三方应用提供 oauth 授权服务`，参考`CustomAuthorizationServerConfig`
+
+  - 添加了`@EnableResourceServer`注解标明当前应用是一个“资源服务器”提供商`
+
+  - 流程和参数参考:https://tools.ietf.org/html/rfc6749#section-4.1
+
+  - spring security 默认的授权页面：
+
+  ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fv5e6jnxg1j30p10aedgr.jpg)
+
+  - 用户名密码模式
+    ![](https://ws4.sinaimg.cn/large/0069RVTdgy1fv5epvqbcrj31120g3jtw.jpg)
+
+  - 授权码模式
+    ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fv5er1a31uj30zs0etdhn.jpg)
+
+    第一步：发送获取授权码请求（模拟第三方调用）
+    http://localhost:8080/oauth/authorize?response_type=code&client_id=fa0d197a-7a7b-4103-b9f6-6fad9d44feb2&redirect_uri=http://www.baidu.com&scope=all
+
+    该 url 具有如下信息：
+
+    1.那个第三方应用请求授权：通过`client_id`标识
+
+    2.那个用户提供授权：通过 basic 页面输入的用户名密码标识
+
+    3.给什么权限：通过 `scope` 标识
+
+    问题：
+
+    1. 需要添加`ROLE_USER`角色
+
+    ```java
+     /**
+     *
+     * @param userId 业务系统用户唯一标识
+     * @return
+     */
+    private SocialUserDetails buildUser(String userId) {
+        // `ROLE_USER`权限提供给，应用作为oauth授权服务提供商时候，第三方在获取授权码的时候，返回用户必须要有这个角色
+        return new SocialUser(userId, passwordEncoder.encode("a11111"),
+                true, true, true, true,
+                AuthorityUtils.commaSeparatedStringToAuthorityList("admin,ROLE_USER"));
+    }
+    ```
+
+    2.简单配置第三方 clientid：
+
+    ```properties
+      security:
+        oauth2:
+          client:
+            client-id: immoc
+            client-secret: immocsecret
+    ```
+
+    设置之后获取授权码的链接就变为：
+    `http://localhost:8080/oauth/authorize?response_type=code&client_id=immoc&redirect_uri=http://www.baidu.com&scope=all`
+
+    使用 postman 添加授权头：
+
+    ![](https://ws4.sinaimg.cn/large/0069RVTdgy1fv5o2y0e2pj31kw0syabx.jpg)
+
+    ![](https://ws4.sinaimg.cn/large/0069RVTdgy1fv5lqnreh3j31kw0kojs3.jpg)
+
+    ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fv5oa4j0atj31ce0y6gnf.jpg)
+
+    通过 token 方式进行身份认证：
+
+    ![](https://ws3.sinaimg.cn/large/0069RVTdgy1fv5qea3mqyj31kw0uttcf.jpg)
+
+    spring security oauth 核心源码：
+
+    ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fv5qj3zttsj30yn0iamz6.jpg)
+
+=======
+
+- ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
+
+- 自定义配置
   参考:
   ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuo9h1z6mrj30t30eu0tl.jpg)
 
-- [kaptcha 集成](https://www.jianshu.com/p/1f2f7c47e812)
+  设置`请求的Header中有一个Authorization参数，该参数的值是Basic + （clientId:secret Base64值）`标识第三方应用请求获取授权令牌；
 
-- 使用 Swagger 自动生成文档
+* [kaptcha 集成](https://www.jianshu.com/p/1f2f7c47e812)
+
+* 使用 Swagger 自动生成文档
 
   根据代码自动生成文档，提供给前端开发人员识别接口；
 
@@ -345,7 +441,7 @@
 
     `UserDetailsService`用来通过用户名获取`UserDetails`用户标识对象；
 
-- spring security 退出登录相关配置
+* spring security 退出登录相关配置
 
   - 框架处理逻辑:
 
@@ -353,7 +449,7 @@
 
     退出成功之后，会重定向到`http://localhost:8080/authentication/require?logout`登录页，通过`logout`参数标记是通过退出这个行为标记；
 
-* 异步处理 REST 服务
+- 异步处理 REST 服务
 
   - 使用 Callable 来处理
 
@@ -391,7 +487,7 @@
       }
   ```
 
-- springboot aop、拦截器、过滤器相关:
+* springboot aop、拦截器、过滤器相关:
 
   ![springboot aop、拦截器、过滤器相关](https://ws3.sinaimg.cn/large/006tNbRwgy1fuh5paluivj30n90glgm0.jpg)
 
@@ -401,7 +497,7 @@
 
   如果 filter 还没有处理异常，就会抛到容器（如：tomcat）最终显示到前端；
 
-* springboot 默认错误处理控制器 `org.springframework.boot.autoconfigure.web.BasicErrorController`
+- springboot 默认错误处理控制器 `org.springframework.boot.autoconfigure.web.BasicErrorController`
 
   ```java
   // /error是默认错误视图的路径

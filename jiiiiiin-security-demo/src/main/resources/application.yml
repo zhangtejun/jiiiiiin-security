@@ -4,6 +4,9 @@ server:
     # 设置session过期时间，单位是秒，默认30分钟，最少1分支
     timeout: 600
 
+swagger:
+  enable: true
+
 spring:
   thymeleaf:
     cache: false
@@ -21,17 +24,14 @@ spring:
   session:
     store-type: redis
 
-
-#security:
+security:
+  oauth2:
+    client:
+      client-id: immoc
+      client-secret: immocsecret
 #  basic:
 #    enabled: false
 
-thymeleaf:
-  cache: false
-
-
-swagger:
-  enable: true
 
 # 自定义配置
 jiiiiiin:

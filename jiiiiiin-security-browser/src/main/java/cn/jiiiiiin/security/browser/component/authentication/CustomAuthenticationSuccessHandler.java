@@ -30,10 +30,10 @@ import java.io.IOException;
  *
  * @author jiiiiiin
  */
-@Component("jAuthenticationSuccessHandler")
-public class JAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+@Component
+public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    final static Logger L = LoggerFactory.getLogger(JAuthenticationSuccessHandler.class);
+    final static Logger L = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
 
     private RequestCache requestCache = new HttpSessionRequestCache();
 
