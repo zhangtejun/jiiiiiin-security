@@ -3,6 +3,7 @@
  */
 package cn.jiiiiiin.security.app.server;
 
+import cn.jiiiiiin.security.app.component.authentication.openid.OpenIdAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.authentication.FormAuthenticationConfig;
 import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
@@ -19,7 +20,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
 /**
  * 资源服务器配置
  * 使用`@EnableResourceServer`注解标明当前应用是一个“资源服务器”提供商
- *
+ * <p>
  * 类`browser`项目针对spring security的权限配置类`BrowserSpringSecurityBaseConfig`
  *
  * @author zhailiang
@@ -28,38 +29,29 @@ import org.springframework.social.security.SpringSocialConfigurer;
 @EnableResourceServer
 public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-//	@Autowired
-//	protected AuthenticationSuccessHandler imoocAuthenticationSuccessHandler;
-//
-//	@Autowired
-//	protected AuthenticationFailureHandler imoocAuthenticationFailureHandler;
-//
-	@Autowired
-	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
-//
-//	@Autowired
-//	private OpenIdAuthenticationSecurityConfig openIdAuthenticationSecurityConfig;
-//
-	@Autowired
-	private ValidateCodeSecurityConfig validateCodeSecurityConfig;
-//
+    @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
+    @Autowired
+    private OpenIdAuthenticationSecurityConfig openIdAuthenticationSecurityConfig;
+
+    @Autowired
+    private ValidateCodeSecurityConfig validateCodeSecurityConfig;
+
     /**
      * @see SocialConfig#socialSecurityConfig() 注入social配置到ss
      */
     @Autowired
     private SpringSocialConfigurer socialSecurityConfig;
-//
-//	@Autowired
-//	private AuthorizeConfigManager authorizeConfigManager;
-//
-	@Autowired
-	private FormAuthenticationConfig formAuthenticationConfig;
+
+    @Autowired
+    private FormAuthenticationConfig formAuthenticationConfig;
 
     @Autowired
     private SecurityProperties securityProperties;
 
-	@Override
-	public void configure(HttpSecurity http) throws Exception {
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
 
 
         // TODO 业务系统的注册接口
@@ -97,6 +89,9 @@ public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter 
                 // 对所有请求// 都需要身份认证
                 .anyRequest().authenticated()
                 .and()
+                // 添加针对`openid`第三方授权登录的token版本支持
+                .apply(openIdAuthenticationSecurityConfig)
+                .and()
                 // 临时关闭防护
                 .csrf().disable();
 
@@ -113,6 +108,6 @@ public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter 
 //			.csrf().disable();
 //
 //		authorizeConfigManager.config(http.authorizeRequests());
-	}
+    }
 
 }

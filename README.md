@@ -1,5 +1,7 @@
 ### 参考：
 
+> [Spring Security 技术栈开发企业级认证与授权](https://coding.imooc.com/class/134.html)
+
 > [Spring Security Tutorial 《Spring Security 教程》](https://waylau.gitbooks.io/spring-security-tutorial/content/)
 
 > [社区 Spring Security 从入门到进阶系列教程](http://www.spring4all.com/article/428)
@@ -484,6 +486,39 @@
   ```
 
   这种模拟就  不会受到 session 的影响；
+
+* token 模式社交登录：
+
+客户端的社交登录，一般依赖于第三方服务提供商的客户端 sdk 来  走第一步流程；
+
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fv6v0fbc6fj30wb0jkgns.jpg)
+
+上图是简化模式，在 sdk 导向用户完成授权之后返回的直接就是`openid`和`accessToken`；
+
+而客户端在进行授权认证的是需要向自身的服务提供商获取`accessToken`，通过上面第三方拿到的`openid`来作为标识；
+
+也就是说  服务器需要提供一个接口，通过`openid`来换取自定义的`accessToken`令牌，即  身份认证（登录）；
+
+需要自定义：
+
+```java
++ OpenIdAuthenticationToken
+封装认证信息
+ * <p>
+ * 使用第三方授权服务提供商获取的`openid`来进行认证（登录）
+
++ OpenIdAuthenticationFilter
+  请求参数过滤器
+  拦截app token认证模式的根据`openId`的认证请求
+ * <p>
+ * 交给{@link AuthenticationManager}完成身份认证
+
++ OpenIdAuthenticationProvider
+  验证{@link OpenIdAuthenticationToken} 完成身份认证（登录）
+
++ OpenIdAuthenticationSecurityConfig
+  openid授权认证配置类，将自定义组件配置到spring security安全模块中；
+```
 
 =======
 
