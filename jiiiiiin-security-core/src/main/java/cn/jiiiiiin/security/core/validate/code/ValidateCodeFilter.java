@@ -40,11 +40,6 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
     final static Logger L = LoggerFactory.getLogger(ValidateCodeFilter.class);
 
     /**
-     * 身份认证表单提交的接口
-     */
-    public static final String SESSION_KEY_VALIDATE_CODE = "SESSION_KEY_VALIDATE_CODE";
-
-    /**
      * 系统配置信息
      */
     @Autowired

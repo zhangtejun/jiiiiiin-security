@@ -8,6 +8,7 @@ import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityC
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.SocialConfig;
+import cn.jiiiiiin.security.core.validate.code.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,8 +40,8 @@ public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter 
 //	@Autowired
 //	private OpenIdAuthenticationSecurityConfig openIdAuthenticationSecurityConfig;
 //
-//	@Autowired
-//	private ValidateCodeSecurityConfig validateCodeSecurityConfig;
+	@Autowired
+	private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 //
     /**
      * @see SocialConfig#socialSecurityConfig() 注入social配置到ss
@@ -68,8 +69,8 @@ public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter 
 
         http
                 // 添加自定义验证码过滤器，校验session中的图形验证码
-//                .apply(validateCodeSecurityConfig)
-//                .and()
+                .apply(validateCodeSecurityConfig)
+                .and()
                 // 追加短信验证码公共配置
                 .apply(smsCodeAuthenticationSecurityConfig)
                 .and()
@@ -82,7 +83,7 @@ public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter 
                 // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
                 // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
                 .antMatchers(
-                        SecurityConstants.STATIC_RESOURCES,
+                        SecurityConstants.STATIC_RESOURCES_JS,
                         SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
                         SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM,
                         SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,

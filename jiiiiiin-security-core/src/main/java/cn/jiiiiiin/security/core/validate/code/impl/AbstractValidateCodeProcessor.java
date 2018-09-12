@@ -17,8 +17,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 import java.util.Map;
 
-import static cn.jiiiiiin.security.core.validate.code.ValidateCodeFilter.SESSION_KEY_VALIDATE_CODE;
-
 /**
  * 抽象的图片验证码处理器
  *
@@ -37,6 +35,9 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     private Map<String, ValidateCodeGenerator> validateCodeGenerators;
 
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+
+    @Autowired
+    private ValidateCodeRepository validateCodeRepository;
 
     @Override
     public void create(ServletWebRequest request) throws Exception {
@@ -71,9 +72,16 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      * @param validateCode
      */
     private void save(ServletWebRequest request, C validateCode) {
-//		validateCodeRepository.save(request, code, getValidateCodeType(request));
-        ValidateCode code = new ValidateCode(validateCode.getCode(), validateCode.getExpireTime());
-        sessionStrategy.setAttribute(request, SESSION_KEY_VALIDATE_CODE, code);
+        final ValidateCode code = new ValidateCode(validateCode.getCode(), validateCode.getExpireTime());
+        //  因为使用 token 模式进行认证是没有 session 的，故之前将  验证码存储在 session 中的做法就并不可行，故思路就会改成上面的方式：
+        //
+        //  1.在请求验证码的时候，传递一个`deviceId`标识客户端
+        //
+        //  2.将验证码和标识存储到类 redis 存储中；
+        //
+        //  3.在校验的时候获取存储的数据进行校验
+        // sessionStrategy.setAttribute(request, SESSION_KEY_VALIDATE_CODE, code);
+		validateCodeRepository.save(request, code, getValidateCodeType(request));
     }
 
     /**
@@ -100,14 +108,13 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     @Override
     public void validate(ServletWebRequest request) {
 
-        ValidateCodeType codeType = getValidateCodeType(request);
+        final ValidateCodeType codeType = getValidateCodeType(request);
 
-//		C codeInSession = (C) validateCodeRepository.get(request, codeType);
-        // TODO
-        final ValidateCode cacheRealValidateCode = (ValidateCode) sessionStrategy.getAttribute(request, SESSION_KEY_VALIDATE_CODE);
+		final C cacheRealValidateCode = (C) validateCodeRepository.get(request, codeType);
+
         if (cacheRealValidateCode == null) {
             // ! 测试的时候发现如果客户端针对一个交易进行重复发送请求，则会在验证通过还没有返回响应之后就会导致报错
-            throw new ValidateCodeException("验证码已经过期");
+            throw new ValidateCodeException("验证码不存在");
         }
 
         // 请求传递过来的验证码
@@ -124,14 +131,14 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
             throw new ValidateCodeException("验证码不能为空");
         }
         if (cacheRealValidateCode.isExpired()) {
-            sessionStrategy.removeAttribute(request, SESSION_KEY_VALIDATE_CODE);
+            validateCodeRepository.remove(request, codeType);
             throw new ValidateCodeException("验证码已经过期");
         }
         if (!StringUtils.equalsIgnoreCase(cacheRealValidateCode.getCode(), validateCode)) {
             throw new ValidateCodeException("验证码不匹配");
         }
         // 验证通过
-        sessionStrategy.removeAttribute(request, SESSION_KEY_VALIDATE_CODE);
+        validateCodeRepository.remove(request, codeType);
 
     }
 

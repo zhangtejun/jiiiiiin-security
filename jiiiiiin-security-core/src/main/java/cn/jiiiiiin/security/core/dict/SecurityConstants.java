@@ -3,6 +3,8 @@
  */
 package cn.jiiiiiin.security.core.dict;
 
+import cn.jiiiiiin.security.core.validate.code.ValidateCodeRepository;
+
 /**
  * @author zhailiang
  */
@@ -45,6 +47,11 @@ public interface SecurityConstants {
      */
     String DEFAULT_PARAMETER_NAME_MOBILE = "mobile";
     /**
+     * 请求验证码(token认证模式)时候需要的客户端标识
+     * @see ValidateCodeRepository 的实现
+     */
+    String DEFAULT_PARAMETER_NAME_DEVICEID = "deviceId";
+    /**
      * 请求验证码接口时候可选参数，用于动态设置验证码超时参数
      */
     String DEFAULT_PARAMETER_NAME_EXPIRE_IN = "expireIn";
@@ -76,7 +83,10 @@ public interface SecurityConstants {
      */
     String LOGOUT_URL = "/signOut";
 
+    /**
+     * 授权匹配时候需要放开的静态资源：js
+     */
+    String STATIC_RESOURCES_JS = "/js/**";
 
-    String STATIC_RESOURCES = "/js/**";
 
 }

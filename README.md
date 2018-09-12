@@ -457,6 +457,34 @@
   				String username = tokens[0];
   ```
 
+  - 验证码改造
+
+  ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fv6tqe05yuj30xn0g5t9d.jpg)
+
+  因为使用 token 模式进行认证是没有 session 的，故之前将  验证码存储在 session 中的做法就并不可行，故思路就会改成上面的方式：
+
+  1.在请求验证码的时候，传递一个`deviceId`标识客户端
+
+  2.将验证码和标识存储到类 redis 存储中；
+
+  3.在校验的时候获取存储的数据进行校验
+
+  - 模拟客户端短信验证码登录
+
+  ```bash
+   jiiiiiin@jiiiiiins-MacBook-Pro  ~/Documents/StudioProjects/ynrcc/MobileBank   tag/306curl -X POST \ST \
+  http://127.0.0.1:8080/authentication/mobile \
+  -H 'Authorization: Basic aW1tb2M6aW1tb2NzZWNyZXQ=' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'Postman-Token: c36660c7-8389-45fd-b01b-e6355ad196a2' \
+  -H 'deviceId: 007' \
+  -d 'mobile=13588888888&smsCode=6255'
+  {"access_token":"95ee3517-027c-44d9-8449-b0f3f908f8ae","token_type":"bearer","refresh_token":"00cb5fb8-c253-4d4b-9a50-c179809ed435","expires_in":43199}%
+  ```
+
+  这种模拟就  不会受到 session 的影响；
+
 =======
 
 - ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
@@ -668,3 +696,7 @@
 - `java.lang.AssertionError: No value at JSON path "$.length()": java.lang.IllegalArgumentException: json can not be null or empty`
 
   因为测试的方法没有返回正确的 json 数据；
+
+  - postman
+
+    - [Postman 高级应用（1）：生成 cURL 和多语言代码](https://blog.csdn.net/qq598535550/article/details/80889843)
