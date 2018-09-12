@@ -30,3 +30,5 @@ rebel.xml
 .idea/
 */target
 */src/main/resources/static/upload/
+
+*.iml
