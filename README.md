@@ -394,15 +394,75 @@
 
     ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fv5qj3zttsj30yn0iamz6.jpg)
 
+    https://coding.imooc.com/lesson/134.html#mid=7233
+
+    - TokenEndpoint 相当于一个控制器，其定义了：`@RequestMapping(value = "/oauth/token", method=RequestMethod.GET)`这样的一系列接口，来处理 oauth 服务提供商提供给第三方的一些接口，比如获取令牌的请求、授权码的请求；
+      其中`http://{{host}}/oauth/token`获取授权令牌的时候，该接口是根据`grant_type`来判断需要执行的是要走“授权码”还是“用户名密码”模式的流程；
+
+    - ClientDetailsService 类似之前的 UserDetailsService，用来读取第三方应用的消息的，上面发送获取授权 token 的时候在请求头中附带的：`请求的Header中有一个Authorization参数，该参数的值是Basic + （clientId:secret Base64值）`，这个接口会读取这个头参数，生成第三方的应用信息，返回调用端`ClientDetails`对象；
+
+    - ClientDetails 封装了第三方应用的消息，类似 UserDetails；
+
+    - TokenRequest 封装了请求体中的参数信息，由 TokenEndpoint 创建，同时持有了 ClientDetails 对象；
+
+    - TokenGranter 由 TokenEndpoint 调用根据 TokenRequest 中的 GrantType 来选取一个实现类去做令牌生成的逻辑，其跟着会创建 OAuth2Request（是 TokenRequest+ClientDetails 的整合对象），另外一个创建 Authentication，其封装了认证用户的授权信息，这个里面的用户授权信息是通过 UserDetailsService 读取出来的；
+
+    - OAuth2Authentication 由 OAuth2Request 和 Authentication 组合而成，标识了，哪一个第三方应用，需要哪一个用户给予授权，使用哪种授权模式等信息持有者
+
+    - AuthorizationServerTokenServices 认证服务器令牌服务，在流程创建了 OAuth2Authentication 之后将 OAuth2Authentication 交给当前类
+
+      - TokenStore 订制令牌的存取
+      - TokenEnhancer 令牌增强器，可以改造生成的令牌
+
+    - OAuth2AccessToken 由 tokenServices#createAccessToken 创建
+
+    - 自定义 token 登录：
+
+    https://coding.imooc.com/lesson/134.html#mid=7224
+
+    ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fv6jkj7vcgj30zq0hn406.jpg)
+
+    使用 spring security oauth 的授权模式改造成上面的  流程，来响应登录请求，返回 token 令牌，替代 cookie 的 jsessionid 模式；
+
+  ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fv6jrwvd86j30zo0kedi4.jpg)
+
+  设置`请求的Header中有一个Authorization参数，该参数的值是Basic + （clientId:secret Base64值）`标识第三方应用请求获取授权令牌；
+
+  `clientid`参数是在请求头的`Authorization参数`中解析得到；
+
+  需要改造我们的`AuthenticationSuccessHandler`来完成后续的生成 Token 流程，依赖 spring security oauth 默认的创建逻辑；
+
+  参考:
+
+  - BasicAuthenticationFilter#doFilterInternal 解析`clientid`参数是在请求头的`Authorization参数`中的 clientid；
+
+  ```java
+  @Override
+  		protected void doFilterInternal(HttpServletRequest request,
+  				HttpServletResponse response, FilterChain chain)
+  						throws IOException, ServletException {
+  			final boolean debug = this.logger.isDebugEnabled();
+
+  			String header = request.getHeader("Authorization");
+
+  			if (header == null || !header.startsWith("Basic ")) {
+  				chain.doFilter(request, response);
+  				return;
+  			}
+
+  			try {
+  				String[] tokens = extractAndDecodeHeader(header, request);
+  				assert tokens.length == 2;
+
+  				String username = tokens[0];
+  ```
+
 =======
 
 - ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)
 
 - 自定义配置
   参考:
-  ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuo9h1z6mrj30t30eu0tl.jpg)
-
-  设置`请求的Header中有一个Authorization参数，该参数的值是Basic + （clientId:secret Base64值）`标识第三方应用请求获取授权令牌；
 
 * [kaptcha 集成](https://www.jianshu.com/p/1f2f7c47e812)
 

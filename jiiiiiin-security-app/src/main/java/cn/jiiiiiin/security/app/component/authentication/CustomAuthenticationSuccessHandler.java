@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package cn.jiiiiiin.security.app.component.authentication;
 
@@ -30,80 +30,113 @@ import java.io.IOException;
 
 /**
  * APP环境下认证成功处理器
- * 
- * @author zhailiang
  *
+ * @author zhailiang
  */
 @Component
 public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-	final static Logger L = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
-
-//	@Autowired
-//	private ObjectMapper objectMapper;
-//
-//	@Autowired
-//	private ClientDetailsService clientDetailsService;
-//
-//	@Autowired
-//	private AuthorizationServerTokenServices authorizationServerTokenServices;
+    final static Logger L = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
 
 	@Autowired
-	ObjectMapper objectMapper;
+	private ObjectMapper objectMapper;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.security.web.authentication.
-	 * AuthenticationSuccessHandler#onAuthenticationSuccess(javax.servlet.http.
-	 * HttpServletRequest, javax.servlet.http.HttpServletResponse,
-	 * org.springframework.security.core.Authentication)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+    /**
+     * lei {@link org.springframework.security.core.userdetails.UserDetailsService} 用来生成 {@link ClientDetails}
+     */
+	@Autowired
+	private ClientDetailsService clientDetailsService;
+
+    /**
+     * 认证服务器令牌服务
+     */
+	@Autowired
+	private AuthorizationServerTokenServices authorizationServerTokenServices;
+
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.security.web.authentication.
+     * AuthenticationSuccessHandler#onAuthenticationSuccess(javax.servlet.http.
+     * HttpServletRequest, javax.servlet.http.HttpServletResponse,
+     * org.springframework.security.core.Authentication)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-//		L.info("身份认证（登录）成功");
-//		final SavedRequest savedRequest = requestCache.getRequest(request, response);
-//		if (savedRequest != null) {
-//			final Device currentDevice = HttpUtils.resolveDevice(savedRequest.getHeaderValues("user-agent").get(0), savedRequest.getHeaderValues("accept").get(0));
-//			// 根据渠道返回不同的响应数据
-//			// 还有一种做法是根据客户端程序配置来指定响应数据格式：https://coding.imooc.com/lesson/134.html#mid=6866
-//			if (!currentDevice.isNormal()) {
-				response.setContentType("application/json;charset=UTF-8");
-				// 将authentication转换成json str输出
-				response.getWriter().write(objectMapper.writeValueAsString(authentication));
-//			} else {
-//				// 默认是做重定向到登录之前的【期望访问资源】接口
-//				super.onAuthenticationSuccess(request, response, authentication);
-//			}
-//		} else {
-//			// 默认是做重定向到登录之前的【期望访问资源】接口
-//			super.onAuthenticationSuccess(request, response, authentication);
-//		}
-	}
+        L.info("身份认证（登录 Token）成功");
 
-	private String[] extractAndDecodeHeader(String header, HttpServletRequest request) throws IOException {
+        // 解析client id
+        String header = request.getHeader("Authorization");
 
-		byte[] base64Token = header.substring(6).getBytes("UTF-8");
-		byte[] decoded;
-		try {
-			decoded = Base64.decode(base64Token);
-		} catch (IllegalArgumentException e) {
-			throw new BadCredentialsException("Failed to decode basic authentication token");
-		}
+        if (header == null || !header.startsWith("Basic ")) {
+            throw new UnapprovedClientAuthenticationException("请求头中无client信息");
+        }
 
-		String token = new String(decoded, "UTF-8");
+        String[] tokens = extractAndDecodeHeader(header, request);
+        assert tokens.length == 2;
 
-		int delim = token.indexOf(":");
+        String clientId = tokens[0];
+        String clientSecret = tokens[1];
 
-		if (delim == -1) {
-			throw new BadCredentialsException("Invalid basic authentication token");
-		}
-		return new String[] { token.substring(0, delim), token.substring(delim + 1) };
-	}
+        // 创建 clientDetails
+        final ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+
+        if (clientDetails == null) {
+            throw new UnapprovedClientAuthenticationException("clientId对应的配置信息不存在:" + clientId);
+        } else if (!StringUtils.equals(clientDetails.getClientSecret(), clientSecret)) {
+            throw new UnapprovedClientAuthenticationException("clientSecret不匹配:" + clientId);
+        }
+
+        // 创建 tokenRequest
+        // 不同的oauth模式需要传递的参数不一致
+        // params1为空，因为不需要再去创建`authentication`
+        // scope不需要进行校验，因为是提供自身使用
+        // grantType标识为自定义的
+        final TokenRequest tokenRequest = new TokenRequest(MapUtils.EMPTY_MAP, clientId, clientDetails.getScope(), "custom");
+
+        final OAuth2Request oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
+
+        final OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
+
+        final OAuth2AccessToken token = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(objectMapper.writeValueAsString(token));
+    }
+
+    /**
+     * 解析请求头中的`Authorization参数`
+     *
+     * @param header
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    private String[] extractAndDecodeHeader(String header, HttpServletRequest request) throws IOException {
+
+        byte[] base64Token = header.substring(6).getBytes("UTF-8");
+        byte[] decoded;
+        try {
+            decoded = Base64.decode(base64Token);
+        } catch (IllegalArgumentException e) {
+            throw new BadCredentialsException("Failed to decode basic authentication token");
+        }
+
+        String token = new String(decoded, "UTF-8");
+
+        int delim = token.indexOf(":");
+
+        if (delim == -1) {
+            throw new BadCredentialsException("Invalid basic authentication token");
+        }
+        // [clientId, clientSecret]
+        return new String[]{token.substring(0, delim), token.substring(delim + 1)};
+    }
 
 }

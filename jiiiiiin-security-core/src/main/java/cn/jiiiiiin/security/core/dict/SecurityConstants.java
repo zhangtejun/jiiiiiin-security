@@ -75,4 +75,8 @@ public interface SecurityConstants {
      * 默认退出登录的处理接口
      */
     String LOGOUT_URL = "/signOut";
+
+
+    String STATIC_RESOURCES = "/js/**";
+
 }

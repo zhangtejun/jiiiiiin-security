@@ -28,8 +28,6 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
 
     final static Logger L = LoggerFactory.getLogger(BrowserSpringSecurityBaseConfig.class);
 
-    private static final String STATIC_RESOURCES = "/js/**";
-
     @Autowired
     private SecurityProperties securityProperties;
 
@@ -108,7 +106,7 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
                 // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
                 .antMatchers(
-                        STATIC_RESOURCES,
+                        SecurityConstants.STATIC_RESOURCES,
                         SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
                         SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM,
                         SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
