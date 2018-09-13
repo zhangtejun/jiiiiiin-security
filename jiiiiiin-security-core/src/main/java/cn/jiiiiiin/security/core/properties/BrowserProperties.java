@@ -1,5 +1,7 @@
 package cn.jiiiiiin.security.core.properties;
 
+import org.springframework.social.oauth2.OAuth2Parameters;
+
 /**
  * @author jiiiiiin
  */
@@ -33,6 +35,7 @@ public class BrowserProperties {
 
     /**
      * 代理地址，用于访问第三方授权服务标识自身应用的服务器地址
+     * 防止 {@link cn.jiiiiiin.security.core.social.weixin.connect.WeixinOAuth2Template#buildAuthenticateUrl(OAuth2Parameters)} 调用基类返回的其实是一个本地测试地址的情况
      */
     private String proxyUri;
 
