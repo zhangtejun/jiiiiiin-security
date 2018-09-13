@@ -520,6 +520,52 @@
   openid授权认证配置类，将自定义组件配置到spring security安全模块中；
 ```
 
+
+
++ token 社交登录（标准流程）
+
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fv7wv3r3daj30vs0h7acl.jpg)
+
+需要app将授权码转发给应用，由应用去获取授权用户数据，在返回应用的授权令牌给app；
+
+可以通过依赖browser项目模拟前3步，获取到服务提供商（如微信）的授权码，之后再依赖app模块，直接发送第4步（沿用browser浏览器上面的链接）
+
+![image-20180913151524838](https://ws2.sinaimg.cn/large/006tNbRwgy1fv7xowbncyj30nm00ymxw.jpg)
+
+![image-20180913151632693](https://ws2.sinaimg.cn/large/006tNbRwgy1fv7xpy64c8j30pu0bl76s.jpg)
+
+因为我们在配置social的时候没有指定获取用户信息之后的处理器，故直接请求是发不通的（302，spring默认的成功处理做跳转，在浏览器环境其实是正确的，如果需要跳转），因为我们没有在获取用户信息成功之后，走我们自己的成功处理器`CustomAuthenticationSuccessHandler`,需要CustomSpringSocialConfigurer#setSocialAuthenticationFilterPostProcessor(socialAuthenticationFilterPostProcessor) 设置一个后处理器来完成；
+
+在CustomSpringSocialConfigurer中完成配置，为此需要定义一个SocialAuthenticationFilterPostProcessor后处理器；
+
+
+
+```java
+
+@Component
+public class AppSocialAuthenticationFilterPostProcessor implements SocialAuthenticationFilterPostProcessor {
+
+    @Autowired
+    private AuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+    @Override
+    public void process(SocialAuthenticationFilter socialAuthenticationFilter) {
+        // 修改spring social的默认授权后处理
+        socialAuthenticationFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
+    }
+}
+```
+
+
+
+![image-20180913171738358](https://ws4.sinaimg.cn/large/006tNbRwgy1fv817yw1ksj31kw0pjwnf.jpg)
+
+
+
+这个url需要在设置为brower模式，跳转到微信扫码授权页面，就停掉服务，之后由微信重定向回来的那个url，来模拟客户端调用sdk获取到标准模式的授权码，那也就是说，客户端就调相同的接口`[filter-processes-url]/[providerId]`
+
+
+
 =======
 
 - ![RESTFul API](https://ws3.sinaimg.cn/large/006tNbRwgy1fufeoc5gxdj31kw0yswnl.jpg)

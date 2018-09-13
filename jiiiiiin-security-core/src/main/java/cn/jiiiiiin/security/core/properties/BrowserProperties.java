@@ -31,6 +31,11 @@ public class BrowserProperties {
      */
     private int rememberMeSeconds = 3600;
 
+    /**
+     * 代理地址，用于访问第三方授权服务标识自身应用的服务器地址
+     */
+    private String proxyUri;
+
 
     public String getSignInUrl() {
         return signInUrl;
@@ -70,5 +75,13 @@ public class BrowserProperties {
 
     public void setSignOutUrl(String signOutUrl) {
         this.signOutUrl = signOutUrl;
+    }
+
+    public String getProxyUri() {
+        return proxyUri;
+    }
+
+    public void setProxyUri(String proxyUri) {
+        this.proxyUri = proxyUri;
     }
 }

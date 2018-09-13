@@ -15,7 +15,9 @@ import org.springframework.social.oauth2.OAuth2Template;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -26,6 +28,8 @@ import java.util.Map;
  * @author jiiiiiin
  */
 public class WeixinOAuth2Template extends OAuth2Template {
+
+    private String proxyUri;
 
     private String clientId;
 
@@ -43,6 +47,11 @@ public class WeixinOAuth2Template extends OAuth2Template {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.accessTokenUrl = accessTokenUrl;
+    }
+
+    public WeixinOAuth2Template(String clientId, String clientSecret, String authorizeUrl, String accessTokenUrl, String proxyUri) {
+        this(clientId, clientSecret, authorizeUrl, accessTokenUrl);
+        this.proxyUri = proxyUri;
     }
 
     /* (non-Javadoc)
@@ -115,6 +124,9 @@ public class WeixinOAuth2Template extends OAuth2Template {
      */
     @Override
     public String buildAuthenticateUrl(OAuth2Parameters parameters) {
+        if(!StringUtils.isBlank(proxyUri)) {
+            parameters.setRedirectUri(buildReturnToUrl(parameters.getRedirectUri()));
+        }
         String url = super.buildAuthenticateUrl(parameters);
         url = url + "&appid=" + clientId + "&scope=snsapi_login";
         return url;
@@ -133,6 +145,14 @@ public class WeixinOAuth2Template extends OAuth2Template {
         RestTemplate restTemplate = super.createRestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
         return restTemplate;
+    }
+
+    private String buildReturnToUrl(String url) {
+        String[] arr = url.split("/");
+        StringBuilder sb = new StringBuilder(proxyUri);
+        sb.append("/").append(arr[3]);
+        sb.append("/").append(arr[4]);
+        return sb.toString();
     }
 
 }

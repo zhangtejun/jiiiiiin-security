@@ -1,7 +1,7 @@
 /**
  *
  */
-package cn.jiiiiiin.security.app.component.authentication.openid;
+package cn.jiiiiiin.security.app.component.authentication.social.openid;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.authentication.AuthenticationProvider;

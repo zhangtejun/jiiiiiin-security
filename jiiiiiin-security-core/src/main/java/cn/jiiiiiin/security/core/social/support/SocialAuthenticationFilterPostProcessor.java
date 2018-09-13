@@ -14,7 +14,7 @@ import org.springframework.social.security.SocialAuthenticationFilter;
 public interface SocialAuthenticationFilterPostProcessor {
 	
 	/**
-	 * @param socialAuthenticationFilter
+	 * @param socialAuthenticationFilter 社交登录过滤器
 	 */
 	void process(SocialAuthenticationFilter socialAuthenticationFilter);
 

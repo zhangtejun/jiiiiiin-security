@@ -1,7 +1,7 @@
 var baseConfig = {
-    baseURL: 'http://localhost:8080',
+    // baseURL: 'http://localhost:8080',
     // 测试oauth2流程
-    // baseURL: 'http://www.pinzhi365.com',
+    baseURL: 'http://www.pinzhi365.com',
 }
 
 var instance = axios.create({

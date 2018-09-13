@@ -33,6 +33,10 @@ public class WeixinServiceProvider extends AbstractOAuth2ServiceProvider<Weixin>
         super(new WeixinOAuth2Template(appId, appSecret, URL_AUTHORIZE, URL_ACCESS_TOKEN));
     }
 
+    public WeixinServiceProvider(String appId, String appSecret, String proxyUri) {
+        super(new WeixinOAuth2Template(appId, appSecret, URL_AUTHORIZE, URL_ACCESS_TOKEN, proxyUri));
+    }
+
 
     /* (non-Javadoc)
      * @see org.springframework.social.oauth2.AbstractOAuth2ServiceProvider#getApi(java.lang.String)

@@ -3,7 +3,7 @@
  */
 package cn.jiiiiiin.security.app.server;
 
-import cn.jiiiiiin.security.app.component.authentication.openid.OpenIdAuthenticationSecurityConfig;
+import cn.jiiiiiin.security.app.component.authentication.social.openid.OpenIdAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.authentication.FormAuthenticationConfig;
 import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;

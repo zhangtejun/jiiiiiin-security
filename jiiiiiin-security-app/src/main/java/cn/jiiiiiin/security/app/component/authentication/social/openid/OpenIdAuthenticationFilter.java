@@ -1,7 +1,7 @@
 /**
  *
  */
-package cn.jiiiiiin.security.app.component.authentication.openid;
+package cn.jiiiiiin.security.app.component.authentication.social.openid;
 
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import org.springframework.security.authentication.AuthenticationManager;

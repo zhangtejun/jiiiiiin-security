@@ -27,6 +27,10 @@ public class WeixinConnectionFactory extends OAuth2ConnectionFactory<Weixin> {
         super(providerId, new WeixinServiceProvider(appId, appSecret), new WeixinAdapter());
     }
 
+    public WeixinConnectionFactory(String providerId, String appId, String appSecret, String proxyUri) {
+        super(providerId, new WeixinServiceProvider(appId, appSecret, proxyUri), new WeixinAdapter());
+    }
+
     /**
      * 由于微信的openId是和accessToken一起返回的，所以在这里直接根据accessToken设置providerUserId即可，不用像QQ那样通过QQAdapter来获取
      * <p>

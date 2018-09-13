@@ -6,6 +6,7 @@ package cn.jiiiiiin.security.core.social;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.support.CustomSpringSocialConfigurer;
+import cn.jiiiiiin.security.core.social.support.SocialAuthenticationFilterPostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,8 +44,8 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Autowired(required = false)
     private ConnectionSignUp connectionSignUp;
 
-//    @Autowired(required = false)
-//    private SocialAuthenticationFilterPostProcessor socialAuthenticationFilterPostProcessor;
+    @Autowired(required = false)
+    private SocialAuthenticationFilterPostProcessor socialAuthenticationFilterPostProcessor;
 
     /**
      * 提供{@link UsersConnectionRepository}帮助我们将授权数据插入框架定义的表中
@@ -110,10 +111,11 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Bean
     public SpringSocialConfigurer socialSecurityConfig() {
         final String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
-        final  CustomSpringSocialConfigurer configurer = new CustomSpringSocialConfigurer(filterProcessesUrl);
+        final CustomSpringSocialConfigurer configurer = new CustomSpringSocialConfigurer(filterProcessesUrl);
         // 配置自定义注册页面接口，当第三方授权获取user detail在业务系统找不到的时候默认调整到该页面
         configurer.signupUrl(securityProperties.getBrowser().getSignUpUrl());
-//        configurer.setSocialAuthenticationFilterPostProcessor(socialAuthenticationFilterPostProcessor);
+        // 注入后处理器，以便app模式（标准）下授权登录能够完成
+        configurer.setSocialAuthenticationFilterPostProcessor(socialAuthenticationFilterPostProcessor);
         return configurer;
     }
 

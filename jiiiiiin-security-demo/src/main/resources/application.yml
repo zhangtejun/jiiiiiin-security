@@ -59,6 +59,7 @@ jiiiiiin:
     browser:
       sign-up-url: /demo-signUp.html
       sign-out-url: /demo-signOut.html
+      proxy-uri: http://www.pinzhi365.com
 #      signInUrl: /demo-signIn.html
 
 

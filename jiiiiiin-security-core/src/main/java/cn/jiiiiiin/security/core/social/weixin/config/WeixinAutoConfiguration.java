@@ -43,7 +43,7 @@ public class WeixinAutoConfiguration extends SocialAutoConfigurerAdapter {
     protected ConnectionFactory<?> createConnectionFactory() {
         WeixinProperties weixinConfig = securityProperties.getSocial().getWeixin();
         return new WeixinConnectionFactory(weixinConfig.getProviderId(), weixinConfig.getAppId(),
-                weixinConfig.getAppSecret());
+                weixinConfig.getAppSecret(), securityProperties.getBrowser().getProxyUri());
     }
 
     /**

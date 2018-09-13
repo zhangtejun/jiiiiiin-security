@@ -40,9 +40,10 @@ public class CustomSpringSocialConfigurer extends SpringSocialConfigurer {
     protected <T> T postProcess(T object) {
         final SocialAuthenticationFilter filter = (SocialAuthenticationFilter) super.postProcess(object);
         filter.setFilterProcessesUrl(filterProcessesUrl);
-//        if (socialAuthenticationFilterPostProcessor != null) {
-//            socialAuthenticationFilterPostProcessor.process(filter);
-//        }
+        if (socialAuthenticationFilterPostProcessor != null) {
+            // 处理获取到第三方用户信息之后的处理
+            socialAuthenticationFilterPostProcessor.process(filter);
+        }
         return (T) filter;
     }
 
