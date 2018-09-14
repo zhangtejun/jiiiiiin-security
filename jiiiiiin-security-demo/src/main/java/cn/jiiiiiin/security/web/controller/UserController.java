@@ -1,5 +1,6 @@
 package cn.jiiiiiin.security.web.controller;
 
+import cn.jiiiiiin.security.app.component.authentication.social.AppSingUpUtils;
 import cn.jiiiiiin.security.dto.User;
 import cn.jiiiiiin.security.dto.UserQryCondition;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -95,38 +96,37 @@ public class UserController {
 
     final static String AVATAR_SAVE_PATH = "/Users/jiiiiiin/Documents/IdeaProjects/jiiiiiin-security/jiiiiiin-security-demo/src/main/resources/static/upload/img/";
 
-//    @Autowired
-//    private ProviderSignInUtils providerSignInUtils;
-//
-//    private RequestCache requestCache = new HttpSessionRequestCache();
+    @Autowired
+    private ProviderSignInUtils providerSignInUtils;
 
-//    /**
-//     * 系统授权注册接口，提供给第三方授权之后，为查询到业务系统的userid，即没有记录时候渲染的注册页面使用
-//     * <p>
-//     * 如果注册页面需要获取第三方授权用户信息，可以使用 {@link cn.jiiiiiin.security.browser.controller.BrowserSecurityController#getSocialUserInfo(HttpServletRequest)}
-//     *
-//     * @param user
-//     * @param request
-//     * @see cn.jiiiiiin.security.core.social.SocialConfig#socialSecurityConfig
-//     * <p>
-//     * 如果期望让用户进行第三方授权登录之后，自动帮用户创建业务系统的用户记录，完成登录，而无需跳转到下面这个接口进行注册，请看：
-//     * @see org.springframework.social.security.SocialAuthenticationProvider#toUserId 去获取userIds的方法，在{@link org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository#findUserIdsWithConnection}中通过注入{@link ConnectionSignUp}完成
-//     */
-//    @PostMapping("/auth/register")
-//    public Map<String, Object> register(User user, HttpServletRequest request, HttpServletResponse response) {
-//        final SavedRequest savedRequest = requestCache.getRequest(request, response);
-//        // TODO 待写注册或者绑定逻辑（绑定需要查询应用用户的userid，通过授权用户信息，授权用户信息在providerSignInUtils中可以获取）
-//        // 不管是注册用户还是绑定用户，都会拿到一个用户唯一标识。
-//        String userId = user.getUsername();
-//        // 真正让业务系统用户信息和spring social持有的授权用户信息进行绑定，记录`UserConnection`表
-//        providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
-////		appSingUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
-//        // 返回已经注册成功的用户信息
-//        final Map<String, Object> res = new HashMap<>(2);
-//        res.put("user", user);
-//        res.put("originalReqUrl", savedRequest.getRedirectUrl());
-//        return res;
-//    }
+    @Autowired
+    private AppSingUpUtils appSingUpUtils;
+
+    /**
+     * 系统授权注册接口，提供给第三方授权之后，为查询到业务系统的userid，即没有记录时候渲染的注册页面使用
+     * <p>
+     * 如果注册页面需要获取第三方授权用户信息，可以使用 {@link cn.jiiiiiin.security.browser.controller.BrowserSecurityController#getSocialUserInfo(HttpServletRequest)}
+     * <p>
+     * app模块需要使用{@link cn.jiiiiiin.security.app.AppSecurityController#getSocialUserInfo(HttpServletRequest)}
+     *
+     * @param user
+     * @param request
+     * @see cn.jiiiiiin.security.core.social.SocialConfig#socialSecurityConfig
+     * <p>
+     * 如果期望让用户进行第三方授权登录之后，自动帮用户创建业务系统的用户记录，完成登录，而无需跳转到下面这个接口进行注册，请看：
+     * @see org.springframework.social.security.SocialAuthenticationProvider#toUserId 去获取userIds的方法，在{@link org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository#findUserIdsWithConnection}中通过注入{@link ConnectionSignUp}完成
+     */
+    @PostMapping("/user/auth/register")
+    public User register(User user, HttpServletRequest request, HttpServletResponse response) {
+        // TODO 待写注册或者绑定逻辑（绑定需要查询应用用户的userid，通过授权用户信息，授权用户信息在providerSignInUtils中可以获取）
+        // 不管是注册用户还是绑定用户，都会拿到一个用户唯一标识。
+        String userId = user.getUsername();
+        // 真正让业务系统用户信息和spring social持有的授权用户信息进行绑定，记录`UserConnection`表
+        providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
+        // app端关联
+        appSingUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
+        return user;
+    }
 
     @PostMapping
     public User create(@Valid @RequestBody User user, BindingResult errors) {

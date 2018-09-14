@@ -603,6 +603,114 @@ public class AppSocialAuthenticationFilterPostProcessor implements SocialAuthent
 
 这个url需要在设置为brower模式，跳转到微信扫码授权页面，就停掉服务，之后由微信重定向回来的那个url，来模拟客户端调用sdk获取到标准模式的授权码，那也就是说，客户端就调相同的接口`[filter-processes-url]/[providerId]`
 
+#### token(app)模式自定义注册
+
+```java
+ /**
+     * 社交登录配置类，供浏览器或app模块引入设计登录配置用。
+     *
+     * @return
+     * @see SpringSocialConfigurer 可以参考默认实现
+     */
+    @Bean
+    public SpringSocialConfigurer socialSecurityConfig() {
+        final String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
+        final CustomSpringSocialConfigurer configurer = new CustomSpringSocialConfigurer(filterProcessesUrl);
+        // 配置自定义注册页面接口，当第三方授权获取user detail在业务系统找不到的时候默认调整到该页面
+        configurer.signupUrl(securityProperties.getBrowser().getSignUpUrl());
+        // 注入后处理器，以便app模式（标准）下授权登录能够完成
+        configurer.setSocialAuthenticationFilterPostProcessor(socialAuthenticationFilterPostProcessor);
+        return configurer;
+    }
+```
+
+新增`setSocialAuthenticationFilterPostProcessor`设置，通过`socialAuthenticationFilterPostProcessor`自定义后处理器，来控制获取到第三方用户信息，但是没有用户标识（`UserConnnect`表中没有记录），让`socialAuthenticationFilterPostProcessor`帮我们将授权和客户端标识通过`AppSingUpUtils`(app环境下替换providerSignInUtils，避免由于没有session导致读不到社交用户信息的问题)将客户端和授权信息缓存到本地，在返回给客户端json格式的用户信息；
+
+
+
+```java
+public class SpringSocialConfigurerPostProcessor implements BeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        // socialSecurityConfig就是需要进行后处理的bean
+        if (StringUtils.equals(beanName, "socialSecurityConfig")) {
+            // 实现`CustomSpringSocialConfigurer`
+            SpringSocialConfigurer springSocialConfigurer = (SpringSocialConfigurer) bean;
+            // 覆盖默认的针对浏览器的处理接口
+            springSocialConfigurer.signupUrl(SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL);
+            return springSocialConfigurer;
+        }
+        return bean;
+    }
+}
+
+```
+
+app模块组件，自定义`BeanPostProcessor`，覆盖注册处理接口，在app环境进行容器初始化的时候；
+
+
+
+```java
+ /**
+     * 需要注册时跳到这里，返回401和用户信息给前端
+     *
+     * @param request
+     * @return
+     * @see AppSingUpUtils
+     * @see cn.jiiiiiin.security.app.component.authentication.social.SpringSocialConfigurerPostProcessor
+     * @see SocialConfig#socialSecurityConfig()
+     */
+    @GetMapping(SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public SocialUserInfo getSocialUserInfo(HttpServletRequest request) {
+        Connection<?> connection = providerSignInUtils.getConnectionFromSession(new ServletWebRequest(request));
+        appSingUpUtils.saveConnectionData(new ServletWebRequest(request), connection.createData());
+        return buildSocialUserInfo(connection);
+    }
+```
+
+实现处理接口；
+
+还需要对当前接口配置授权；
+
+```java
+ /**
+     * 系统授权注册接口，提供给第三方授权之后，为查询到业务系统的userid，即没有记录时候渲染的注册页面使用
+     * <p>
+     * 如果注册页面需要获取第三方授权用户信息，可以使用 {@link cn.jiiiiiin.security.browser.controller.BrowserSecurityController#getSocialUserInfo(HttpServletRequest)}
+     * <p>
+     * app模块需要使用{@link cn.jiiiiiin.security.app.AppSecurityController#getSocialUserInfo(HttpServletRequest)}
+     *
+     * @param user
+     * @param request
+     * @see cn.jiiiiiin.security.core.social.SocialConfig#socialSecurityConfig
+     * <p>
+     * 如果期望让用户进行第三方授权登录之后，自动帮用户创建业务系统的用户记录，完成登录，而无需跳转到下面这个接口进行注册，请看：
+     * @see org.springframework.social.security.SocialAuthenticationProvider#toUserId 去获取userIds的方法，在{@link org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository#findUserIdsWithConnection}中通过注入{@link ConnectionSignUp}完成
+     */
+    @PostMapping("/user/auth/register")
+    public User register(User user, HttpServletRequest request, HttpServletResponse response) {
+        // TODO 待写注册或者绑定逻辑（绑定需要查询应用用户的userid，通过授权用户信息，授权用户信息在providerSignInUtils中可以获取）
+        // 不管是注册用户还是绑定用户，都会拿到一个用户唯一标识。
+        String userId = user.getUsername();
+        // 真正让业务系统用户信息和spring social持有的授权用户信息进行绑定，记录`UserConnection`表
+        providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
+        // app端关联
+        appSingUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
+        return user;
+    }
+```
+
+编写注册和绑定`UserConnection`表；
+
+至此app模式的第三方授权注册、绑定，就可以实现了；
+
+
 
 
 ## 其他

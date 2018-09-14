@@ -114,7 +114,7 @@ public class SocialConfig extends SocialConfigurerAdapter {
         final CustomSpringSocialConfigurer configurer = new CustomSpringSocialConfigurer(filterProcessesUrl);
         // 配置自定义注册页面接口，当第三方授权获取user detail在业务系统找不到的时候默认调整到该页面
         configurer.signupUrl(securityProperties.getBrowser().getSignUpUrl());
-        // 注入后处理器，以便app模式（标准）下授权登录能够完成
+        // 注入后处理器，以便app模式（标准）下授权登录能够完成，动态设置signupUrl根据模块（app/browser）
         configurer.setSocialAuthenticationFilterPostProcessor(socialAuthenticationFilterPostProcessor);
         return configurer;
     }

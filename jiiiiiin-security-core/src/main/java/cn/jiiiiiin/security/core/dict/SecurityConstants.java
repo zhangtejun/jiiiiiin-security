@@ -3,7 +3,9 @@
  */
 package cn.jiiiiiin.security.core.dict;
 
+import cn.jiiiiiin.security.core.social.SocialConfig;
 import cn.jiiiiiin.security.core.validate.code.ValidateCodeRepository;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 /**
  * @author zhailiang
@@ -71,6 +73,9 @@ public interface SecurityConstants {
     String DEFAULT_SESSION_INVALID_URL = "/sessionInvalid.html";
     /**
      * 获取第三方用户信息的url
+     *
+     * 针对 app模块的针对{@link SpringSocialConfigurer#signupUrl(String)}的处理器
+     *      * @see SocialConfig#socialSecurityConfig()
      */
     String DEFAULT_SOCIAL_USER_INFO_URL = "/social/user";
 
@@ -87,6 +92,4 @@ public interface SecurityConstants {
      * 授权匹配时候需要放开的静态资源：js
      */
     String STATIC_RESOURCES_JS = "/js/**";
-
-
 }
