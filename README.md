@@ -10,6 +10,8 @@
 
 > [SpringBoot 整合 Security（一）实现用户认证并判断返回 json 还是 view](https://www.jianshu.com/p/18875c2995f1)
 
+> [Spring Security (Authentication & Authorisation from MySQL) in Spring Boot App | Tech Primers](https://youtu.be/egXtoL5Kg08)
+
 # 关键点
 
 ## 代码结构
@@ -709,6 +711,32 @@ app模块组件，自定义`BeanPostProcessor`，覆盖注册处理接口，在a
 编写注册和绑定`UserConnection`表；
 
 至此app模式的第三方授权注册、绑定，就可以实现了；
+
+
+
+#### token(app) 自定义Token生成策略
+
+
+
++ 参考：https://coding.imooc.com/lesson/134.html#mid=7236
+
+
+
+##### 基本的Token参数配置
+
+
+
+##### 使用JWT替换默认的Token
+
+
+
+##### 扩展和解析JWT的信息
+
+
+
+
+
+
 
 
 

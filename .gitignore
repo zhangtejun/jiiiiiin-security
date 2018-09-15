@@ -32,3 +32,4 @@ rebel.xml
 */src/main/resources/static/upload/
 
 *.iml
+.vagrant/
