@@ -1,12 +1,18 @@
 package cn.jiiiiiin.security.web.controller;
 
 import cn.jiiiiiin.security.app.component.authentication.social.AppSingUpUtils;
+import cn.jiiiiiin.security.core.dict.CommonConstants;
+import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.dto.User;
 import cn.jiiiiiin.security.dto.UserQryCondition;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.val;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -101,6 +107,9 @@ public class UserController {
 
     @Autowired
     private AppSingUpUtils appSingUpUtils;
+
+    @Autowired
+    private SecurityProperties securityProperties;
 
     /**
      * 系统授权注册接口，提供给第三方授权之后，为查询到业务系统的user id，即没有记录时候渲染的注册页面使用
@@ -213,15 +222,41 @@ public class UserController {
      * "name": "admin"
      * }
      *
-     * 如果使用jwt方式，那么框架会根据jwt的payload重新组装一个 {@link Authentication}对象，直接获取 {@link UserDetails}将得不到内容
+     * 获取Authentication:
+     * 1. 直接通过参数注入
+     * 2. SecurityContextHolder.getContext().getAuthentication();
+     * <p>
+     * 如果使用的是非JWT那么直接输出 {@link UserDetails}
      *
      * @return
+     * @GetMapping("/me") public Object getCurrentUser(Authentication authentication, @AuthenticationPrincipal UserDetails userDetails) {
+     * L.info("get me userDetails {} {}", authentication, userDetails);
+     * //        return SecurityContextHolder.getContext().getAuthentication();
+     * return userDetails;
+     * }
+     * <p>
+     * 如果使用jwt方式，那么框架会根据jwt的payload重新组装一个 {@link Authentication}对象，直接获取 {@link UserDetails}将得不到内容
      */
     @GetMapping("/me")
-    public Object getCurrentUser(Authentication authentication, @AuthenticationPrincipal UserDetails userDetails) {
+    public Object getCurrentUser(Authentication authentication, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
         L.info("get me userDetails {} {}", authentication, userDetails);
-//        return SecurityContextHolder.getContext().getAuthentication();
-        return userDetails;
+        // TODO 解析源信息
+        final String token = StringUtils.substringAfter(request.getHeader("Authorization"), CommonConstants.DEFAULT_HEADER_NAME_AUTHORIZATION_PRIFIX);
+
+        try {
+            val claims = Jwts.parser()
+                    // 设置jwt秘钥，签名数据使用UTF-8编码，这里需要手动指定
+                    .setSigningKey(securityProperties.getOauth2().getJwtSigningKey().getBytes("UTF-8"))
+                    // 解析token
+                    .parseClaimsJws(token)
+                    .getBody();
+            // 获取自定义源信息
+            String company = (String) claims.get("company");
+            L.info(company);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return authentication;
     }
 
     /**

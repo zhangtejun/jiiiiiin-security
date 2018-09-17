@@ -15,4 +15,8 @@ public class CommonConstants {
      * 设置到{@link org.springframework.ui.Model}中的属性key
      */
     public static final String MODEL_KEY_HINT_MSG = "hintMsg";
+    /**
+     * token 授权需要传递到请求头的 Authorization字段前缀
+     */
+    public static final String DEFAULT_HEADER_NAME_AUTHORIZATION_PRIFIX = "bearer ";
 }
