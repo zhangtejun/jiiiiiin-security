@@ -4,6 +4,8 @@
 package cn.jiiiiiin.security.core.properties;
 
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
@@ -12,6 +14,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
  * @author zhailiang
  * @author jiiiiiin
  */
+@Setter
+@Getter
 public class SessionProperties {
 
     /**
@@ -32,29 +36,5 @@ public class SessionProperties {
      * @see HttpSecurity#sessionManagement() {@link #sessionInvalidUrl}
      */
     private String sessionInvalidUrl = SecurityConstants.DEFAULT_SESSION_INVALID_URL;
-
-    public int getMaximumSessions() {
-        return maximumSessions;
-    }
-
-    public void setMaximumSessions(int maximumSessions) {
-        this.maximumSessions = maximumSessions;
-    }
-
-    public boolean isMaxSessionsPreventsLogin() {
-        return maxSessionsPreventsLogin;
-    }
-
-    public void setMaxSessionsPreventsLogin(boolean maxSessionsPreventsLogin) {
-        this.maxSessionsPreventsLogin = maxSessionsPreventsLogin;
-    }
-
-    public String getSessionInvalidUrl() {
-        return sessionInvalidUrl;
-    }
-
-    public void setSessionInvalidUrl(String sessionInvalidUrl) {
-        this.sessionInvalidUrl = sessionInvalidUrl;
-    }
 
 }

@@ -1,10 +1,14 @@
 package cn.jiiiiiin.security.core.properties;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.social.oauth2.OAuth2Parameters;
 
 /**
  * @author jiiiiiin
  */
+@Setter
+@Getter
 public class BrowserProperties {
 
     /**
@@ -39,52 +43,4 @@ public class BrowserProperties {
      */
     private String proxyUri;
 
-
-    public String getSignInUrl() {
-        return signInUrl;
-    }
-
-    public void setSignInUrl(String signInUrl) {
-        this.signInUrl = signInUrl;
-    }
-
-    public int getRememberMeSeconds() {
-        return rememberMeSeconds;
-    }
-
-    public void setRememberMeSeconds(int rememberMeSeconds) {
-        this.rememberMeSeconds = rememberMeSeconds;
-    }
-
-    public String getSignUpUrl() {
-        return signUpUrl;
-    }
-
-    public void setSignUpUrl(String signUpUrl) {
-        this.signUpUrl = signUpUrl;
-    }
-
-    public SessionProperties getSession() {
-        return session;
-    }
-
-    public void setSession(SessionProperties session) {
-        this.session = session;
-    }
-
-    public String getSignOutUrl() {
-        return signOutUrl;
-    }
-
-    public void setSignOutUrl(String signOutUrl) {
-        this.signOutUrl = signOutUrl;
-    }
-
-    public String getProxyUri() {
-        return proxyUri;
-    }
-
-    public void setProxyUri(String proxyUri) {
-        this.proxyUri = proxyUri;
-    }
 }

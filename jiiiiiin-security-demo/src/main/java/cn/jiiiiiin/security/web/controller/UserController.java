@@ -103,7 +103,7 @@ public class UserController {
     private AppSingUpUtils appSingUpUtils;
 
     /**
-     * 系统授权注册接口，提供给第三方授权之后，为查询到业务系统的userid，即没有记录时候渲染的注册页面使用
+     * 系统授权注册接口，提供给第三方授权之后，为查询到业务系统的user id，即没有记录时候渲染的注册页面使用
      * <p>
      * 如果注册页面需要获取第三方授权用户信息，可以使用 {@link cn.jiiiiiin.security.browser.controller.BrowserSecurityController#getSocialUserInfo(HttpServletRequest)}
      * <p>

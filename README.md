@@ -11,6 +11,12 @@
 > [SpringBoot 整合 Security（一）实现用户认证并判断返回 json 还是 view](https://www.jianshu.com/p/18875c2995f1)
 
 > [Spring Security (Authentication & Authorisation from MySQL) in Spring Boot App | Tech Primers](https://youtu.be/egXtoL5Kg08)
+>
+> [Spring Security using Spring Data JPA + MySQL + Spring Boot](https://www.youtube.com/watch?v=IyzC1kkHZ-I&frags=pl%2Cwn)
+>
+> [Java开发中用到的，lombok是什么？](https://www.zhihu.com/question/42348457)
+>
+> [Java 8 中的 Streams API 详解](https://www.ibm.com/developerworks/cn/java/j-lo-java8streamapi/index.html)
 
 # 关键点
 
@@ -723,6 +729,143 @@ app模块组件，自定义`BeanPostProcessor`，覆盖注册处理接口，在a
 
 
 ##### 基本的Token参数配置
+
+```java
+/**
+ * 认证服务器配置
+ *
+ * @author zhailiang
+ * @see org.springframework.security.oauth2.provider.endpoint.TokenEndpoint
+ */
+@Configuration
+@EnableAuthorizationServer
+public class CustomAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    /**
+     * 当去做认证的时候使用的`userDetailsService`
+     */
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    /**
+     * 当去做认证的时候使用的`authenticationManager`
+     */
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private SecurityProperties securityProperties;
+
+    /**
+     * 认证及token配置
+     */
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        // 当继承了`AuthorizationServerConfigurerAdapter`之后就需要自己配置下面的认证组件
+        endpoints
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService);
+    }
+
+    /**
+     * 客户端配置
+     * <p>
+     * 当复写了该方法，默认的
+     * <p>
+     * security:
+     * oauth2:
+     * client:
+     * client-id: immoc
+     * client-secret: immocsecret
+     * 配置将会失效
+     * <p>
+     * 需要自己根据配置应用支持的第三方应用client-id等应用信息
+     *
+     * @param clients 那些应用允许来进行token认证
+     */
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        // clients.jdbc() 如果要实现qq那样提供授权信息给第三方最好使用这种模式，而下面的模式主要是针对`token`客户端登录的
+        InMemoryClientDetailsServiceBuilder builder = clients.inMemory();
+        if (!securityProperties.getOauth2().getClients().isEmpty()) {
+            for (OAuth2ClientProperties client : securityProperties.getOauth2().getClients()) {
+                // 指定支持的第三方应用信息
+                builder.withClient(client.getClientId())
+                        .secret(client.getClientSecret())
+                        // 针对当前第三方应用所支持的授权模式，即http://{{host}}/oauth/token#grant_type
+                        .authorizedGrantTypes("refresh_token", "authorization_code", "password")
+                        // 配置令牌的过期时间限
+                        .accessTokenValiditySeconds(client.getAccessTokenValidateSeconds())
+                        //
+                        .refreshTokenValiditySeconds(2592000)
+                        // 针对当前第三方应用所支持的权限，即http://{{host}}/oauth/token#scope
+                        // 说明应用需要的权限，发送请求的scope参数需要在此范围之内，不传就使用默认（即配置的值）
+                        .scopes("all");
+            }
+        }
+    }
+
+}
+
+```
+
+
+
+上面这种方式创建的令牌是存储到内存，重启应用就会失效；
+
+建议使用redis完成令牌的存储：`RedisTokenStore`
+
+```java
+
+@Configuration
+public class TokenStoreConfig {
+
+    /**
+     * 使用redis存储token的配置，只有在imooc.security.oauth2.tokenStore配置为redis时生效
+     *
+     * @author zhailiang
+     */
+    @Configuration
+    @ConditionalOnProperty(prefix = "jiiiiiin.security.oauth2", name = "tokenStore", havingValue = "redis")
+    public static class RedisConfig {
+
+        /**
+         * 链接工厂
+         */
+        @Autowired
+        private RedisConnectionFactory redisConnectionFactory;
+
+        /**
+         * @return
+         */
+        @Bean
+        public TokenStore redisTokenStore() {
+            return new RedisTokenStore(redisConnectionFactory);
+        }
+
+    }
+
+    
+@Configuration
+@EnableAuthorizationServer
+public class CustomAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+    /**
+     * 认证及token配置
+     */
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        // 当继承了`AuthorizationServerConfigurerAdapter`之后就需要自己配置下面的认证组件
+        endpoints
+                .tokenStore(tokenStore)
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService);
+```
+
+声明使用`TokenStore`为redis；
+
+
+
+
 
 
 

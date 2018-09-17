@@ -1,6 +1,8 @@
 package cn.jiiiiiin.security.core.properties;
 
 import cn.jiiiiiin.security.core.validate.code.ValidateCodeController;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +13,8 @@ import java.util.Set;
  *
  * @author jiiiiiin
  */
+@Setter
+@Getter
 public class SmsCodeProperties {
 
     /**
@@ -31,27 +35,4 @@ public class SmsCodeProperties {
      */
     private Set<String> interceptorUrls = new HashSet<>();
 
-    public String getLength() {
-        return length;
-    }
-
-    public void setLength(String length) {
-        this.length = length;
-    }
-
-    public int getExpireIn() {
-        return expireIn;
-    }
-
-    public void setExpireIn(int expireIn) {
-        this.expireIn = expireIn;
-    }
-
-    public Set<String> getInterceptorUrls() {
-        return interceptorUrls;
-    }
-
-    public void setInterceptorUrls(Set<String> interceptorUrls) {
-        this.interceptorUrls = interceptorUrls;
-    }
 }

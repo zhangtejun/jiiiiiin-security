@@ -3,6 +3,8 @@
  */
 package cn.jiiiiiin.security.core.properties;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 
 /**
@@ -15,6 +17,8 @@ import org.springframework.boot.autoconfigure.social.SocialProperties;
  * @author zhailiang
  * @author jiiiiiin
  */
+@Setter
+@Getter
 public class QQProperties extends SocialProperties {
 
     /**
@@ -26,13 +30,5 @@ public class QQProperties extends SocialProperties {
      * @see org.springframework.social.security.SocialAuthenticationFilter
      */
     private String providerId = "qq";
-
-    public String getProviderId() {
-        return providerId;
-    }
-
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
-    }
 
 }

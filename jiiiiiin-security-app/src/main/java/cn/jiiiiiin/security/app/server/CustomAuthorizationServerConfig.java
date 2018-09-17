@@ -3,7 +3,9 @@
  */
 package cn.jiiiiiin.security.app.server;
 
+import cn.jiiiiiin.security.core.properties.OAuth2ClientProperties;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -95,22 +97,35 @@ import java.util.List;
  * `/oauth/authorize::GET`接口来提供oauth流程第一步，提供第三方服务获取“授权码”
  * <p>
  * `/oauth/token::POST`接口来提供oauth流程第而步，第三方服务通过“授权码”来获取授权令牌
+ * <p>
+ * 关于自定义生成Token
+ * <p>
+ * 当继承了{@link AuthorizationServerConfigurerAdapter}之后默认就不会生成默认的`clientId`和`secret`
  *
  * @author zhailiang
+ * @see org.springframework.security.oauth2.provider.endpoint.TokenEndpoint
  */
 @Configuration
 @EnableAuthorizationServer
-public class CustomAuthorizationServerConfig {
-//public class CustomAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+public class CustomAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-//
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-//
-//    @Autowired
-//    private TokenStore tokenStore;
+    /**
+     * 当去做认证的时候使用的`userDetailsService`
+     */
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    /**
+     * 当去做认证的时候使用的`authenticationManager`
+     */
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    /**
+     * 负责令牌的存取
+     */
+    @Autowired
+    private TokenStore tokenStore;
 //
 //    @Autowired(required = false)
 //    private JwtAccessTokenConverter jwtAccessTokenConverter;
@@ -118,18 +133,20 @@ public class CustomAuthorizationServerConfig {
 //    @Autowired(required = false)
 //    private TokenEnhancer jwtTokenEnhancer;
 //
-//    @Autowired
-//    private SecurityProperties securityProperties;
-//
-//    /**
-//     * 认证及token配置
-//     */
-//    @Override
-//    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-//        endpoints.tokenStore(tokenStore)
-//                .authenticationManager(authenticationManager)
-//                .userDetailsService(userDetailsService);
-//
+    @Autowired
+    private SecurityProperties securityProperties;
+
+    /**
+     * 认证及token配置
+     */
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        // 当继承了`AuthorizationServerConfigurerAdapter`之后就需要自己配置下面的认证组件
+        endpoints
+                .tokenStore(tokenStore)
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService);
+
 //        if (jwtAccessTokenConverter != null && jwtTokenEnhancer != null) {
 //            TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
 //            List<TokenEnhancer> enhancers = new ArrayList<>();
@@ -138,8 +155,8 @@ public class CustomAuthorizationServerConfig {
 //            enhancerChain.setTokenEnhancers(enhancers);
 //            endpoints.tokenEnhancer(enhancerChain).accessTokenConverter(jwtAccessTokenConverter);
 //        }
-//
-//    }
+
+    }
 //
 //    /**
 //     * tokenKey的访问权限表达式配置
@@ -149,22 +166,43 @@ public class CustomAuthorizationServerConfig {
 //        security.tokenKeyAccess("permitAll()");
 //    }
 //
-//    /**
-//     * 客户端配置
-//     */
-//    @Override
-//    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-//        InMemoryClientDetailsServiceBuilder builder = clients.inMemory();
-//        if (ArrayUtils.isNotEmpty(securityProperties.getOauth2().getClients())) {
-//            for (OAuth2ClientProperties client : securityProperties.getOauth2().getClients()) {
-//                builder.withClient(client.getClientId())
-//                        .secret(client.getClientSecret())
-//                        .authorizedGrantTypes("refresh_token", "authorization_code", "password")
-//                        .accessTokenValiditySeconds(client.getAccessTokenValidateSeconds())
-//                        .refreshTokenValiditySeconds(2592000)
-//                        .scopes("all");
-//            }
-//        }
-//    }
+
+    /**
+     * 客户端配置
+     * <p>
+     * 当复写了该方法，默认的
+     * <p>
+     * security:
+     * oauth2:
+     * client:
+     * client-id: immoc
+     * client-secret: immocsecret
+     * 配置将会失效
+     * <p>
+     * 需要自己根据配置应用支持的第三方应用client-id等应用信息
+     *
+     * @param clients 那些应用允许来进行token认证
+     */
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        // clients.jdbc() 如果要实现qq那样提供授权信息给第三方最好使用这种模式，而下面的模式主要是针对`token`客户端登录的
+        val builder = clients.inMemory();
+        securityProperties.getOauth2().getClients().stream()
+                .forEach(client -> {
+                    // 指定支持的第三方应用信息
+                    builder
+                            .withClient(client.getClientId())
+                            .secret(client.getClientSecret())
+                            // 针对当前第三方应用所支持的授权模式，即http://{{host}}/oauth/token#grant_type
+                            .authorizedGrantTypes("refresh_token", "authorization_code", "password")
+                            // 配置令牌的过期时间限
+                            .accessTokenValiditySeconds(client.getAccessTokenValidateSeconds())
+                            //
+                            .refreshTokenValiditySeconds(2592000)
+                            // 针对当前第三方应用所支持的权限，即http://{{host}}/oauth/token#scope
+                            // 说明应用需要的权限，发送请求的scope参数需要在此范围之内，不传就使用默认（即配置的值）
+                            .scopes("all");
+                });
+    }
 
 }

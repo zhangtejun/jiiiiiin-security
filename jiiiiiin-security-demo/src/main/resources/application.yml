@@ -24,11 +24,11 @@ spring:
   session:
     store-type: redis
 
-security:
-  oauth2:
-    client:
-      client-id: immoc
-      client-secret: immocsecret
+#security:
+#  oauth2:
+#    client:
+#      client-id: immoc
+#      client-secret: immocsecret
 #  basic:
 #    enabled: false
 
@@ -61,5 +61,10 @@ jiiiiiin:
       sign-out-url: /demo-signOut.html
       proxy-uri: http://www.pinzhi365.com
 #      signInUrl: /demo-signIn.html
-
+    oauth2:
+      tokenStore: redis
+      clients:
+      - client-id: immoc
+        client-secret: immocsecret
+        access-token-validate-seconds: 3600
 

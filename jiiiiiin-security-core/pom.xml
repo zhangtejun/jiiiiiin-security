@@ -94,6 +94,12 @@
             <artifactId>commons-beanutils</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- kaptcha验证码 -->
         <dependency>
             <groupId>com.github.penggle</groupId>

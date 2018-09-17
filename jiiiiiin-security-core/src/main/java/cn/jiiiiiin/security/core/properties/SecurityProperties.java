@@ -1,5 +1,7 @@
 package cn.jiiiiiin.security.core.properties;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -7,6 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @ConfigurationProperties(prefix = "jiiiiiin.security") 将会读取配置文件中对应prefix的配置项
  */
 @ConfigurationProperties(prefix = "jiiiiiin.security")
+@Setter
+@Getter
 public class SecurityProperties {
     /**
      * 浏览器环境配置
@@ -22,27 +26,8 @@ public class SecurityProperties {
      */
     private SocialProperties social = new SocialProperties();
 
-    public BrowserProperties getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(BrowserProperties browser) {
-        this.browser = browser;
-    }
-
-    public ValidateCodeProperties getValidate() {
-        return validate;
-    }
-
-    public void setValidate(ValidateCodeProperties validate) {
-        this.validate = validate;
-    }
-
-    public SocialProperties getSocial() {
-        return social;
-    }
-
-    public void setSocial(SocialProperties social) {
-        this.social = social;
-    }
+    /**
+     * OAuth2认证服务器配置
+     */
+    private OAuth2Properties oauth2 = new OAuth2Properties();
 }
