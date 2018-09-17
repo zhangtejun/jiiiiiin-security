@@ -213,6 +213,8 @@ public class UserController {
      * "name": "admin"
      * }
      *
+     * 如果使用jwt方式，那么框架会根据jwt的payload重新组装一个 {@link Authentication}对象，直接获取 {@link UserDetails}将得不到内容
+     *
      * @return
      */
     @GetMapping("/me")

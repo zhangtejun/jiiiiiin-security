@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -126,18 +127,24 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
      */
     @Autowired
     private TokenStore tokenStore;
-//
-//    @Autowired(required = false)
-//    private JwtAccessTokenConverter jwtAccessTokenConverter;
-//
-//    @Autowired(required = false)
-//    private TokenEnhancer jwtTokenEnhancer;
-//
+
+    /**
+     * 自有{@link TokenStore}使用jwt进行存储时候生效
+     */
+    @Autowired(required = false)
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+
+    @Autowired(required = false)
+    private TokenEnhancer jwtTokenEnhancer;
+
     @Autowired
     private SecurityProperties securityProperties;
 
     /**
      * 认证及token配置
+     * 定义token增强器来自定义token的生成策略，覆盖{@link org.springframework.security.oauth2.provider.token.DefaultTokenServices}默认的UUID生成策略
+     *
+     * @see org.springframework.security.oauth2.provider.token.DefaultTokenServices#createAccessToken(OAuth2Authentication)
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -146,16 +153,18 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
                 .tokenStore(tokenStore)
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService);
-
-//        if (jwtAccessTokenConverter != null && jwtTokenEnhancer != null) {
-//            TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
-//            List<TokenEnhancer> enhancers = new ArrayList<>();
-//            enhancers.add(jwtTokenEnhancer);
-//            enhancers.add(jwtAccessTokenConverter);
-//            enhancerChain.setTokenEnhancers(enhancers);
-//            endpoints.tokenEnhancer(enhancerChain).accessTokenConverter(jwtAccessTokenConverter);
-//        }
-
+        // jwtAccessTokenConverter将token生成策略改成jwt，进行jwt的token生成（签名等）
+        if (jwtAccessTokenConverter != null) {
+            val enhancerChain = new TokenEnhancerChain();
+            final List<TokenEnhancer> enhancers = new ArrayList<>();
+            if (jwtTokenEnhancer != null) {
+                // jwtTokenEnhancer向jwt token中订制自定义数据
+                enhancers.add(jwtTokenEnhancer);
+            }
+            enhancers.add(jwtAccessTokenConverter);
+            enhancerChain.setTokenEnhancers(enhancers);
+            endpoints.tokenEnhancer(enhancerChain).accessTokenConverter(jwtAccessTokenConverter);
+        }
     }
 //
 //    /**

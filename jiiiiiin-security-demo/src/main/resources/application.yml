@@ -62,7 +62,7 @@ jiiiiiin:
       proxy-uri: http://www.pinzhi365.com
 #      signInUrl: /demo-signIn.html
     oauth2:
-      tokenStore: redis
+      tokenStore: jwt
       clients:
       - client-id: immoc
         client-secret: immocsecret
