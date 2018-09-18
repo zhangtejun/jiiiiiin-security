@@ -1248,11 +1248,21 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
 
 
 
+#### 基于JWT实现SSO（单点登录）
 
 
 
+> [基于Jwt实现sso](https://coding.imooc.com/lesson/134.html#mid=7238)
 
+##### sso流程
 
+![image-20180918160642584](https://ws3.sinaimg.cn/large/006tNbRwgy1fvdr9ru6mtj30qo0gbdi2.jpg)
+
+用户只用在应用A进行授权时候在认证服务器端登录，在应用B进行授权时候就不用登录；
+
+![image-20180918161151717](https://ws1.sinaimg.cn/large/006tNbRwgy1fvdrf1le1oj30y50gc43g.jpg)
+
+如果应用B是一个前后端分离的应用，在拿到JWT之后，再去对应的资源服务器进行请求就可以了。
 
 
 ## 其他
