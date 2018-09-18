@@ -3,6 +3,8 @@
 > [Spring Security 技术栈开发企业级认证与授权](https://coding.imooc.com/class/134.html)
 
 > [Spring Security Tutorial 《Spring Security 教程》](https://waylau.gitbooks.io/spring-security-tutorial/content/)
+>
+> [使用 Spring Security 保护 Web 应用的安全](https://www.ibm.com/developerworks/cn/java/j-lo-springsecurity/)
 
 > [社区 Spring Security 从入门到进阶系列教程](http://www.spring4all.com/article/428)
 
@@ -717,6 +719,14 @@ app模块组件，自定义`BeanPostProcessor`，覆盖注册处理接口，在a
 编写注册和绑定`UserConnection`表；
 
 至此app模式的第三方授权注册、绑定，就可以实现了；
+
+
+
+#### 刷新令牌
+
+![image-20180918154338442](https://ws4.sinaimg.cn/large/006tNbRwgy1fvdqltok70j31kw0ndatc.jpg)
+
+在客户端进行资源访问的时候，如果后台返回令牌过期**"expires_in": 3599,**，那么就可以静默的发送上面的接口，进行token令牌的刷新；
 
 
 

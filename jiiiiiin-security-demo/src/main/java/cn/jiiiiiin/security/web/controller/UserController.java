@@ -241,8 +241,7 @@ public class UserController {
     public Object getCurrentUser(Authentication authentication, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
         L.info("get me userDetails {} {}", authentication, userDetails);
         // TODO 解析源信息
-        final String token = StringUtils.substringAfter(request.getHeader("Authorization"), CommonConstants.DEFAULT_HEADER_NAME_AUTHORIZATION_PRIFIX);
-
+        val token = StringUtils.substringAfter(request.getHeader("Authorization"), CommonConstants.DEFAULT_HEADER_NAME_AUTHORIZATION_PRIFIX);
         try {
             val claims = Jwts.parser()
                     // 设置jwt秘钥，签名数据使用UTF-8编码，这里需要手动指定
@@ -251,7 +250,7 @@ public class UserController {
                     .parseClaimsJws(token)
                     .getBody();
             // 获取自定义源信息
-            String company = (String) claims.get("company");
+            val company = (String) claims.get("company");
             L.info(company);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

@@ -206,7 +206,7 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
                             .authorizedGrantTypes("refresh_token", "authorization_code", "password")
                             // 配置令牌的过期时间限
                             .accessTokenValiditySeconds(client.getAccessTokenValidateSeconds())
-                            //
+                            // 配置refresh token的有效期
                             .refreshTokenValiditySeconds(2592000)
                             // 针对当前第三方应用所支持的权限，即http://{{host}}/oauth/token#scope
                             // 说明应用需要的权限，发送请求的scope参数需要在此范围之内，不传就使用默认（即配置的值）
