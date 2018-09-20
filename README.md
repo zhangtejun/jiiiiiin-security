@@ -224,6 +224,8 @@ http
 
 ### OAuth2协议介绍
 
+> [理解OAuth 2.0](http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html)
+
   ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuqn54pzzmj30wd0ilaby.jpg)
 
 + 这里的第二步其实流程会像下面这样进行：
@@ -1253,6 +1255,10 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
 
 
 > [基于Jwt实现sso](https://coding.imooc.com/lesson/134.html#mid=7238)
+>
+> [SSO单点登录与 OAuth2.0授权简单介绍](https://xiedajian.github.io/2017/09/25/SSO-OAuth2/)
+>
+> [理解OAuth 2.0](http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html)
 
 ##### sso流程
 

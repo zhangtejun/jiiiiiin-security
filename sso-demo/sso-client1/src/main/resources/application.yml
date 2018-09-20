@@ -1,0 +1,18 @@
+server:
+  port: 9991
+  context-path: /client1
+
+security:
+  oauth2:
+    client:
+      client-id: imooc1
+      client-secret: imoocsecrect1
+      # 认证服务器的认证地址（流程第1步）
+      # server是上下文
+      user-authorization-uri: http://127.0.0.1:9999/server/oauth/authorize
+      # 请求认证服务器令牌的接口
+      access-token-uri: http://127.0.0.1:9999/server/oauth/token
+    resource:
+      jwt:
+        # 请求认证服务器token_key的接口，获取秘钥，之后才能验签，验证token的正确性
+        key-uri: http://127.0.0.1:9999/server/oauth/token_key
