@@ -116,9 +116,15 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                         securityProperties.getBrowser().getSignOutUrl(),
                         securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
                         registerUrl
-                ).permitAll()
-                // 对所有请求// 都需要身份认证
-                .anyRequest().authenticated()
+                )
+                // 允许上面的接口无需登录就能访问
+                .permitAll()
+                // 只有具有“ADMIN”角色的认证用户才能访问“/user”接口
+                .antMatchers("/user").hasRole("ADMIN")
+                // 对其他的所有请求
+                .anyRequest()
+                // 都需要身份认证
+                .authenticated()
                 .and()
                 // 开启session管理配置：
                 .sessionManagement()

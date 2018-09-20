@@ -220,6 +220,85 @@ http
 
     退出成功之后，会重定向到`http://localhost:8080/authentication/require?logout`登录页，通过`logout`参数标记是通过退出这个行为标记；
 
+
+
+### 权限控制
+
+> Spring Security授权简介
+
+
+
+#### [Spring Security授权简介](https://coding.imooc.com/lesson/134.html#mid=7388)
+
+![image-20180920105828916](https://ws2.sinaimg.cn/large/006tNbRwgy1fvftlll8k9j30vi0jb79f.jpg)
+
+![image-20180920110740445](https://ws4.sinaimg.cn/large/006tNbRwgy1fvftv5qri9j30qd0g5n0c.jpg)
+
++ 针对业务系统，权限变化不大的情况，可以直接把接口权限声明在控制器的对应接口方法上，以代码的形式完成控制；
+
+
+
+#### 控制“公共和非公共”接口权限
+
++ 即那些接口需要登录才能进行访问，身份认证控制：
+
+```java
+.and()
+                // 对请求进行授权，这个方法下面的都是授权的配置
+                .authorizeRequests()
+                // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
+                // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
+                // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
+                .antMatchers(
+                        SecurityConstants.STATIC_RESOURCES_JS,
+                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM,
+                        SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+                        securityProperties.getBrowser().getSignInUrl(),
+                        securityProperties.getBrowser().getSignUpUrl(),
+                        securityProperties.getBrowser().getSignOutUrl(),
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
+                        registerUrl
+                )
+                // 允许上面的接口无需登录就能访问
+                .permitAll()
+                // 对其他的所有请求
+                .anyRequest()
+                // 都需要身份认证
+                .authenticated()
+                .and()
+```
+
+
+
+#### 控制接口需要具有某种角色才能访问
+
+```java
+.antMatchers(
+                      //....
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
+                        registerUrl
+                )
+                // 允许上面的接口无需登录就能访问
+                .permitAll()
+                // 只有具有“ADMIN”角色的认证用户才能访问“/user”接口
+                .antMatchers("/user").hasRole("ADMIN")
+                // 对其他的所有请求
+                .anyRequest()
+                // 都需要身份认证
+                .authenticated()
+                .and()
+```
+
+
+
+
+
+
+
+
+
 ## spring social相关记录
 
 ### OAuth2协议介绍
