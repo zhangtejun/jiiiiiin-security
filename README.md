@@ -4,6 +4,8 @@
 
 > [Spring Security Tutorial 《Spring Security 教程》](https://waylau.gitbooks.io/spring-security-tutorial/content/)
 
+> [使用 Spring Security 保护 Web 应用的安全](https://www.ibm.com/developerworks/cn/java/j-lo-springsecurity/)
+
 > [社区 Spring Security 从入门到进阶系列教程](http://www.spring4all.com/article/428)
 
 > [spring boot 要如何学习？](https://www.zhihu.com/question/53729800/answer/311948415)
@@ -11,11 +13,11 @@
 > [SpringBoot 整合 Security（一）实现用户认证并判断返回 json 还是 view](https://www.jianshu.com/p/18875c2995f1)
 
 > [Spring Security (Authentication & Authorisation from MySQL) in Spring Boot App | Tech Primers](https://youtu.be/egXtoL5Kg08)
->
+
 > [Spring Security using Spring Data JPA + MySQL + Spring Boot](https://www.youtube.com/watch?v=IyzC1kkHZ-I&frags=pl%2Cwn)
->
+
 > [Java开发中用到的，lombok是什么？](https://www.zhihu.com/question/42348457)
->
+
 > [Java 8 中的 Streams API 详解](https://www.ibm.com/developerworks/cn/java/j-lo-java8streamapi/index.html)
 
 # 关键点
@@ -218,9 +220,90 @@ http
 
     退出成功之后，会重定向到`http://localhost:8080/authentication/require?logout`登录页，通过`logout`参数标记是通过退出这个行为标记；
 
+
+
+### 权限控制
+
+> Spring Security授权简介
+
+
+
+#### [Spring Security授权简介](https://coding.imooc.com/lesson/134.html#mid=7388)
+
+![image-20180920105828916](https://ws2.sinaimg.cn/large/006tNbRwgy1fvftlll8k9j30vi0jb79f.jpg)
+
+![image-20180920110740445](https://ws4.sinaimg.cn/large/006tNbRwgy1fvftv5qri9j30qd0g5n0c.jpg)
+
++ 针对业务系统，权限变化不大的情况，可以直接把接口权限声明在控制器的对应接口方法上，以代码的形式完成控制；
+
+
+
+#### 控制“公共和非公共”接口权限
+
++ 即那些接口需要登录才能进行访问，身份认证控制：
+
+```java
+.and()
+                // 对请求进行授权，这个方法下面的都是授权的配置
+                .authorizeRequests()
+                // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
+                // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
+                // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
+                .antMatchers(
+                        SecurityConstants.STATIC_RESOURCES_JS,
+                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM,
+                        SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+                        securityProperties.getBrowser().getSignInUrl(),
+                        securityProperties.getBrowser().getSignUpUrl(),
+                        securityProperties.getBrowser().getSignOutUrl(),
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
+                        registerUrl
+                )
+                // 允许上面的接口无需登录就能访问
+                .permitAll()
+                // 对其他的所有请求
+                .anyRequest()
+                // 都需要身份认证
+                .authenticated()
+                .and()
+```
+
+
+
+#### 控制接口需要具有某种角色才能访问
+
+```java
+.antMatchers(
+                      //....
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
+                        registerUrl
+                )
+                // 允许上面的接口无需登录就能访问
+                .permitAll()
+                // 只有具有“ADMIN”角色的认证用户才能访问“/user”接口
+                .antMatchers("/user").hasRole("ADMIN")
+                // 对其他的所有请求
+                .anyRequest()
+                // 都需要身份认证
+                .authenticated()
+                .and()
+```
+
+
+
+
+
+
+
+
+
 ## spring social相关记录
 
 ### OAuth2协议介绍
+
+> [理解OAuth 2.0](http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html)
 
   ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuqn54pzzmj30wd0ilaby.jpg)
 
@@ -720,6 +803,14 @@ app模块组件，自定义`BeanPostProcessor`，覆盖注册处理接口，在a
 
 
 
+#### 刷新令牌
+
+![image-20180918154338442](https://ws4.sinaimg.cn/large/006tNbRwgy1fvdqltok70j31kw0ndatc.jpg)
+
+在客户端进行资源访问的时候，如果后台返回令牌过期**"expires_in": 3599,**，那么就可以静默的发送上面的接口，进行token令牌的刷新；
+
+
+
 #### token(app) 自定义Token生成策略
 
 
@@ -727,6 +818,10 @@ app模块组件，自定义`BeanPostProcessor`，覆盖注册处理接口，在a
 + 参考：https://coding.imooc.com/lesson/134.html#mid=7236
 
 
+
+##### Token创建流程
+
+![image-20180917170645562](https://ws1.sinaimg.cn/large/006tNbRwgy1fvcndv0n8gj31440nan0q.jpg)
 
 ##### 基本的Token参数配置
 
@@ -863,23 +958,400 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
 
 声明使用`TokenStore`为redis；
 
+这样token模式的存储也和应用分离，就可以实现多应用节点部署，无需前置（F5/Nginx）进行session粘黏；![image-20180917145147262](https://ws3.sinaimg.cn/large/006tNbRwgy1fvcjhjyo0xj30x60je7jg.jpg)
+
+z'h
+
+##### 使用JWT（Json Web Token）替换默认的Token
+
+
+
+参考: 
+
+[什么是JWT](什么是JWT)
+
+[JSON Web Token 入门教程](http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html)
+
++ 自包含：包含有意义的消息（自身包含用户信息）相比ss原始的UUID座位Token，原始的令牌需要依赖一个存储，去查询附加信息；
++ 密签：使用的是签名机制来防串改
++ 可扩展：可以自定义放进token的信息
+
+![image-20180917162836370](https://ws3.sinaimg.cn/large/006tNbRwgy1fvcma73pucj31hg0k4k1o.jpg)
+
+
+
+集成：
+
+```java
+/**
+ *
+ */
+package cn.jiiiiiin.security.app.server;
+
+import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+
+/**
+ * 负责令牌的存取
+ *
+ * @author zhailiang
+ * @author jiiiiiin
+ * @see CustomAuthorizationServerConfig
+ */
+@Configuration
+public class TokenStoreConfig {
+
+    /**
+     * 使用redis存储token的配置，只有在imooc.security.oauth2.tokenStore配置为redis时生效
+     *
+     * @author zhailiang
+     */
+    @Configuration
+    @ConditionalOnProperty(prefix = "jiiiiiin.security.oauth2", name = "tokenStore", havingValue = "redis")
+    public static class RedisConfig {
+
+        /**
+         * 链接工厂
+         */
+        @Autowired
+        private RedisConnectionFactory redisConnectionFactory;
+
+        /**
+         * @return
+         */
+        @Bean
+        public TokenStore redisTokenStore() {
+            return new RedisTokenStore(redisConnectionFactory);
+        }
+
+    }
+
+    /**
+     * 使用jwt时的配置，默认生效
+     *
+     * @author zhailiang
+     */
+    @Configuration
+    @ConditionalOnProperty(prefix = "jiiiiiin.security.oauth2", name = "tokenStore", havingValue = "jwt", matchIfMissing = true)
+    public static class JwtConfig {
+
+        @Autowired
+        private SecurityProperties securityProperties;
+
+        /**
+         * @return
+         * @see TokenStore 处理token的存储
+         */
+        @Bean
+        public TokenStore jwtTokenStore() {
+            return new JwtTokenStore(jwtAccessTokenConverter());
+        }
+
+        /**
+         * @return
+         * @see JwtAccessTokenConverter 处理token的生成
+         */
+        @Bean
+        public JwtAccessTokenConverter jwtAccessTokenConverter() {
+            val converter = new JwtAccessTokenConverter();
+            // 指定密签秘钥
+            converter.setSigningKey(securityProperties.getOauth2().getJwtSigningKey());
+            return converter;
+        }
+
+        /**
+         * 用于扩展和解析JWT的信息
+         * <p>
+         * 业务系统可以自行配置自己的{@link TokenEnhancer}
+         *
+         * @return
+         */
+        @Bean
+        @ConditionalOnBean(TokenEnhancer.class)
+        public TokenEnhancer jwtTokenEnhancer() {
+            return new TokenJwtEnhancer();
+        }
+
+    }
+
+
+}
+
+/**
+ *
+ */
+package cn.jiiiiiin.security.app.server;
+
+import lombok.val;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 扩展和解析JWT的信息
+ *
+ * 将自定义的信息加入到token中返回给客户端
+ *
+ * @author zhailiang
+ * @author jiiiiiin
+ */
+public class TokenJwtEnhancer implements TokenEnhancer {
+
+    /* (non-Javadoc)
+     * @see org.springframework.security.oauth2.provider.token.TokenEnhancer#enhance(org.springframework.security.oauth2.common.OAuth2AccessToken, org.springframework.security.oauth2.provider.OAuth2Authentication)
+     */
+    @Override
+    public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+        // 自定义token元信息
+        final Map<String, Object> info = new HashMap<>();
+        // TODO 测试
+        info.put("company", "jiiiiiin");
+        // 设置附加信息
+        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
+        return accessToken;
+    }
+
+}
+
+
+/**
+ *
+ */
+package cn.jiiiiiin.security.app.server;
+
+import cn.jiiiiiin.security.core.properties.OAuth2ClientProperties;
+import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 认证服务器配置
+ * <p>
+ * <p>
+ * ![](https://ws4.sinaimg.cn/large/0069RVTdgy1fuqnerfq5uj30w10g3q4o.jpg)
+ * <p>
+ * 上图也是下面的授权模式中，使用最多的授权码模式的交互流程；
+ * <p>
+ * ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fuqn6o8vm2j30ox0bm3z0.jpg)
+ *
+ * <p>
+ * https://oauth.net/2/
+ * <p>
+ * 4.1.  Authorization Code Grant
+ * <p>
+ * The authorization code grant type is used to obtain both access
+ * tokens and refresh tokens and is optimized for confidential clients.
+ * Since this is a redirection-based flow, the client must be capable of
+ * interacting with the resource owner's user-agent (typically a web
+ * browser) and capable of receiving incoming requests (via redirection)
+ * from the authorization server.
+ * <p>
+ * +----------+
+ * | Resource |
+ * |   Owner  |
+ * |          |
+ * +----------+
+ * ^
+ * |
+ * (B)
+ * +----|-----+          Client Identifier      +---------------+
+ * |         -+----(A)-- & Redirection URI ---->|               |
+ * |  User-   |                                 | Authorization |
+ * |  Agent  -+----(B)-- User authenticates --->|     Server    |
+ * |          |                                 |               |
+ * |         -+----(C)-- Authorization Code ---<|               |
+ * +-|----|---+                                 +---------------+
+ * |    |                                         ^      v
+ * (A)  (C)                                        |      |
+ * |    |                                         |      |
+ * ^    v                                         |      |
+ * +---------+                                      |      |
+ * |         |>---(D)-- Authorization Code ---------'      |
+ * |  Client |          & Redirection URI                  |
+ * |         |                                             |
+ * |         |<---(E)----- Access Token -------------------'
+ * +---------+       (w/ Optional Refresh Token)
+ * <p>
+ * Note: The lines illustrating steps (A), (B), and (C) are broken into
+ * two parts as they pass through the user-agent.
+ * <p>
+ * Figure 3: Authorization Code Flow
+ *
+ * <p>
+ * 添加了`@EnableAuthorizationServer`注解之后，项目就可以当做一个授权服务提供商，给第三方应用提供oauth授权服务
+ * <p>
+ * `/oauth/authorize::GET`接口来提供oauth流程第一步，提供第三方服务获取“授权码”
+ * <p>
+ * 所需参数：
+ * response_type
+ * REQUIRED.  Value MUST be set to "code".
+ * <p>
+ * client_id
+ * REQUIRED.  The client identifier as described in Section 2.2.
+ * <p>
+ * redirect_uri
+ * OPTIONAL.  As described in Section 3.1.2.
+ * <p>
+ * <p>
+ * `/oauth/authorize::GET`接口来提供oauth流程第一步，提供第三方服务获取“授权码”
+ * <p>
+ * `/oauth/token::POST`接口来提供oauth流程第而步，第三方服务通过“授权码”来获取授权令牌
+ * <p>
+ * 关于自定义生成Token
+ * <p>
+ * 当继承了{@link AuthorizationServerConfigurerAdapter}之后默认就不会生成默认的`clientId`和`secret`
+ *
+ * @author zhailiang
+ * @see org.springframework.security.oauth2.provider.endpoint.TokenEndpoint
+ */
+@Configuration
+@EnableAuthorizationServer
+public class CustomAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    /**
+     * 当去做认证的时候使用的`userDetailsService`
+     */
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    /**
+     * 当去做认证的时候使用的`authenticationManager`
+     */
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    /**
+     * 负责令牌的存取
+     */
+    @Autowired
+    private TokenStore tokenStore;
+
+    /**
+     * 自有{@link TokenStore}使用jwt进行存储时候生效
+     */
+    @Autowired(required = false)
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+
+    @Autowired(required = false)
+    private TokenEnhancer jwtTokenEnhancer;
+
+    @Autowired
+    private SecurityProperties securityProperties;
+
+    /**
+     * 认证及token配置
+     * 定义token增强器来自定义token的生成策略，覆盖{@link org.springframework.security.oauth2.provider.token.DefaultTokenServices}默认的UUID生成策略
+     *
+     * @see org.springframework.security.oauth2.provider.token.DefaultTokenServices#createAccessToken(OAuth2Authentication)
+     */
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        // 当继承了`AuthorizationServerConfigurerAdapter`之后就需要自己配置下面的认证组件
+        endpoints
+                .tokenStore(tokenStore)
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService);
+        // jwtAccessTokenConverter将token生成策略改成jwt
+        if (jwtAccessTokenConverter != null) {
+            val enhancerChain = new TokenEnhancerChain();
+            List<TokenEnhancer> enhancers = new ArrayList<>();
+            if (jwtTokenEnhancer != null) {
+                // jwtTokenEnhancer向jwt token中订制自定义数据
+                enhancers.add(jwtTokenEnhancer);
+            }
+            enhancers.add(jwtAccessTokenConverter);
+            enhancerChain.setTokenEnhancers(enhancers);
+            endpoints.tokenEnhancer(enhancerChain).accessTokenConverter(jwtAccessTokenConverter);
+        }
+    }
+
+
+
+
+```
 
 
 
 
 
+测试：
 
-##### 使用JWT替换默认的Token
+![image-20180917163047090](https://ws2.sinaimg.cn/large/006tNbRwgy1fvcmcgomy4j31kw0qwqi6.jpg)
+
+![image-20180917163132472](https://ws3.sinaimg.cn/large/006tNbRwgy1fvcmdbaipzj31kw16ldon.jpg)
+
+通过https://jwt.io/进行解析`access_token`得到的payload就是我们创建的token；
+
+**如果使用jwt方式，那么框架会根据jwt的payload重新组装一个 {@link Authentication}对象，直接获取 {@link UserDetails}将得不到内容**
 
 
 
-##### 扩展和解析JWT的信息
+扩展和解析JWT的信息
 
 
 
+![image-20180917165238883](https://ws3.sinaimg.cn/large/006tNbRwgy1fvcmz6uofmj31kw0lgwl7.jpg)
+
+##### 
 
 
 
+#### 基于JWT实现SSO（单点登录）
+
+
+
+> [基于Jwt实现sso](https://coding.imooc.com/lesson/134.html#mid=7238)
+>
+> [SSO单点登录与 OAuth2.0授权简单介绍](https://xiedajian.github.io/2017/09/25/SSO-OAuth2/)
+>
+> [理解OAuth 2.0](http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html)
+
+##### sso流程
+
+![image-20180918160642584](https://ws3.sinaimg.cn/large/006tNbRwgy1fvdr9ru6mtj30qo0gbdi2.jpg)
+
+用户只用在应用A进行授权时候在认证服务器端登录，在应用B进行授权时候就不用登录；
+
+![image-20180918161151717](https://ws1.sinaimg.cn/large/006tNbRwgy1fvdrf1le1oj30y50gc43g.jpg)
+
+如果应用B是一个前后端分离的应用，在拿到JWT之后，再去对应的资源服务器进行请求就可以了。
+
+
+
+具体demo：[feature/sso](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/sso) 分支
 
 
 
