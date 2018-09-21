@@ -62,7 +62,8 @@
         created() {
             this.$vp.get('/user/me')
                 .then((response) => {
-                    this.user = response.data
+                    this.user = response.data.principal
+                    console.log('xxxxx', this)
                 })
                 .catch((err) => {
                     alert(`获取登录用户信息出错 ${JSON.stringify(err.response)}`)

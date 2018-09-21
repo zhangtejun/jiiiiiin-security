@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -121,6 +122,10 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 .permitAll()
                 // 只有具有“ADMIN”角色的认证用户才能访问“/user”接口
                 .antMatchers("/user").hasRole("ADMIN")
+                // 匹配/user/[id]这样的接口
+                .antMatchers("/user/*").hasRole("ADMIN")
+                // 匹配接口（且匹配接口action）
+                .antMatchers(HttpMethod.GET,"/user/me").hasRole("USER")
                 // 对其他的所有请求
                 .anyRequest()
                 // 都需要身份认证

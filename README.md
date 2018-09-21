@@ -3,7 +3,7 @@
 > [Spring Security 技术栈开发企业级认证与授权](https://coding.imooc.com/class/134.html)
 
 > [Spring Security Tutorial 《Spring Security 教程》](https://waylau.gitbooks.io/spring-security-tutorial/content/)
->
+
 > [使用 Spring Security 保护 Web 应用的安全](https://www.ibm.com/developerworks/cn/java/j-lo-springsecurity/)
 
 > [社区 Spring Security 从入门到进阶系列教程](http://www.spring4all.com/article/428)
@@ -13,12 +13,16 @@
 > [SpringBoot 整合 Security（一）实现用户认证并判断返回 json 还是 view](https://www.jianshu.com/p/18875c2995f1)
 
 > [Spring Security (Authentication & Authorisation from MySQL) in Spring Boot App | Tech Primers](https://youtu.be/egXtoL5Kg08)
->
+
 > [Spring Security using Spring Data JPA + MySQL + Spring Boot](https://www.youtube.com/watch?v=IyzC1kkHZ-I&frags=pl%2Cwn)
->
+
 > [Java开发中用到的，lombok是什么？](https://www.zhihu.com/question/42348457)
->
+
 > [Java 8 中的 Streams API 详解](https://www.ibm.com/developerworks/cn/java/j-lo-java8streamapi/index.html)
+
+> [微服务架构实战160讲](https://time.geekbang.org/course/detail/84-6933)
+>
+> [基于 RBAC 的 Web Security Framework 的研究与应用](https://www.ibm.com/developerworks/cn/java/j-lo-rbacwebsecurity/index.html)
 
 # 关键点
 
@@ -142,7 +146,38 @@ spring session 支持的存储方式，参考`StoreType`；
 
   ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuoesrwcz1j31kw0jvgp1.jpg)
 
+![image-20180920145215355](https://ws1.sinaimg.cn/large/006tNbRwgy1fvg0cuovo0j31kw0jlwy7.jpg)
+
+其中绿色的过滤器是用来负责做身份认证；
+
+
+
++ AnonymousAuthenticationFilter：
+
+  匿名的认证过滤器，其位于绿色的认证过滤器链的最后一个，主要逻辑是判断本次请求的security上下文中是否有`Authentication`实例(封装了当前认证的用户信息)，如果有则标识前面的某一个认证过滤器，对本次请求完成了认证过程，实例化了对应的`Authentication`，或者请求从session中获取到了一个上一次认证通过的`Authentication`实例；
+
+  如果没有获取到`Authentication`实例，则会在当前filter中创建一个`AnonymousAuthenticationToken`，而创建的**这个Authentication对象的principal是当前filter的一个初始化常量`"anonymousUser"`，而非真正意义上的一个`UserDetails`接口的实现**；
+
+  也就是Spring Security为了保证后续逻辑的处理，必定会往security上下文中防止一个`Authentication`实例，AnonymousAuthenticationFilter这个类就保证了这一点；
+
++ FilterSecurityInterceptor:
+
+​	负责最后的检测，看请求是否能满足应用配置认证和授权等要求，如果可以，则请求能访问对应资源接口，否则根据不同的原因抛出异常；
+
+​	参考：*Spring Security控制授权流程*一节
+
++ ExceptionTranslationFilter：
+
+  处理`FilterSecurityInterceptor`验证过程中抛出的异常；
+
+  ![image-20180920160808128](/Users/jiiiiiin/Library/Application%20Support/typora-user-images/image-20180920160808128.png)
+
+>  [以上两个Filter的源码分析](https://coding.imooc.com/lesson/134.html#mid=7382)
+
+​	
+
 #### 参考：
+
 > [Spring Security 核心过滤器链分析](https://juejin.im/post/5a434de6f265da43333eae7d)
 
 项目启动时候输出的spring security filter chain: `Creating filter chain`
@@ -238,6 +273,105 @@ http
 
 
 
+#### Spring Security控制授权流程
+
+![image-20180920151040270](https://ws3.sinaimg.cn/large/006tNbRwgy1fvg0w1h4z2j31kw0v7awh.jpg)
+
++ FilterSecurityInterceptor，授权控制的入口（过滤器链的最后一个），
+
+  + AccessDecisionManager，访问决定管理对象，在抽象实现`AbstractAccessDecisionManager`中管理者一组`AccessDecisionVoter`投票者对象（根据spring表单式判断是否“通过”），管理者调用每一个投票者，由投票者（每一个投票者负责不同的检测逻辑）来判断其维护的逻辑是否“通过”，管理者收集投票结果，统计出最终的决策结果。
+
+    管理者判断最终的决策结果，由其3个具体的实现，看应用配置的策略来使用3个中的一个：
+
+    + AffirmacticeBased（默认配置的实现）：只要有一个投票者投票通过，则决策结果为通过；
+
+      ![image-20180920160248763](https://ws1.sinaimg.cn/large/006tNbRwgy1fvg2eanz1mj30wr0gcqa4.jpg)
+
+    + UnanimousBased：只要有一个投票者投票否决，则决策结果为不通过；
+    + ConsensusBased：统计投票者的投票比例（那个多），取投票多的（通过、不通过）来决策结果；
+
+    判断之前需要2组数据：
+
+   1. 第一组，FilterSecurityInterceptor需要持有系统的权限配置信息：
+
+      获取系统配置的资源接口预设权限集（即类似：系统定义的，访问[/user]需要的权限定义），而安全配置在`WebSecurityConfigurerAdapter#configure`接口中定义，在应用的`SecurityConfig`实例中获取，FilterSecurityInterceptor会将上面配置的认证授权信息读取出来配置成一组`ConfigAttribute`，每一个代表一种预设配置，如`.antMatchers("/user").hasRole("ADMIN")`就由一个`ConfigAttribute`来标识；
+
+   2. 第二组，FilterSecurityInterceptor需要持有当前请求的用户拥有的权限信息：即从security上下文中获取的Authentication实例中标识；
+
+  除此之外，FilterSecurityInterceptor中还持有当前请求的消息（request对象）；
+
+
+
+  FilterSecurityInterceptor会将以上3份信息都传递给AccessDecisionManager，来进行权限控制的判断，AccessDecisionManager会将这些信息给到`AccessDecisionVoter`投票者对象来分别判断；
+
+
+
+  spring security3之后新增了一个`WebExpressionVoter`，其包办了之前种种Web环境下Voter的活计，即它的投票直接决定最后的决策结果；
+
+
+
+  + 调试在未登录之后的FilterSecurityInterceptor处理流程
+
+  **FilterSecurityInterceptor代码片段；**
+
+  ![image-20180920154112101](https://ws2.sinaimg.cn/large/006tNbRwgy1fvg1rrrhx8j30t005mjvv.jpg)
+
+  ![image-20180920154435660](https://ws4.sinaimg.cn/large/006tNbRwgy1fvg1vaysf6j30rg08aae0.jpg)
+
+  ![image-20180920154606324](https://ws4.sinaimg.cn/large/006tNbRwgy1fvg1wwgpg9j30rf09844v.jpg)
+
+
+
+
+
+  ![image-20180920154828680](https://ws1.sinaimg.cn/large/006tNbRwgy1fvg1zckcmzj30y609kn32.jpg)
+
+  ![image-20180920155012582](https://ws3.sinaimg.cn/large/006tNbRwgy1fvg2153optj31kw076q8w.jpg)
+
+  上面是获取*第一组，FilterSecurityInterceptor需要持有系统的权限配置信息*的代码；
+
+  ![image-20180920155125644](https://ws3.sinaimg.cn/large/006tNbRwgy1fvg22enpzcj30lr06wq6f.jpg)
+
+  ![image-20180920155318122](https://ws4.sinaimg.cn/large/006tNbRwgy1fvg24dknd7j30qb03y41u.jpg)
+
+  比如找不到请求对应的系统配置（满足的匹配条件对应的标识实例），就抛出异常，中断判断：
+
+  ![image-20180920155441129](https://ws2.sinaimg.cn/large/006tNbRwgy1fvg25sihbij30qk05t43g.jpg)
+
+  ![image-20180920155719830](https://ws3.sinaimg.cn/large/006tNbRwgy1fvg28j83iyj30qn08842y.jpg)
+
+  ![image-20180920160456284](https://ws3.sinaimg.cn/large/006tNbRwgy1fvg2gmisnej30ra07wn1i.jpg)
+
+![image-20180921105721921](https://ws2.sinaimg.cn/large/006tNbRwgy1fvgz6r1wjyj31kw10bb29.jpg)
+
+![image-20180921111333834](https://ws2.sinaimg.cn/large/006tNbRwgy1fvgznt69voj30y30ioh0h.jpg)
+
+
+
+![image-20180921111857933](https://ws2.sinaimg.cn/large/006tNbRwgy1fvgzt7v4grj30v303aq5i.jpg)
+
+需要进行身份认证的处理就是跳到安全配置的登录接口（返回页面或者json）；
+
+![image-20180921111519194](https://ws1.sinaimg.cn/large/006tNbRwgy1fvgzpfp1cbj30qx051q5c.jpg)
+
+![image-20180921111757060](https://ws4.sinaimg.cn/large/006tNbRwgy1fvgzs641ylj30tk0fjqcm.jpg)
+
+
+
+  + 调试在登录之后满足权限要求的FilterSecurityInterceptor处理流程
+
+![image-20180921112241830](https://ws3.sinaimg.cn/large/006tNbRwgy1fvgzx3f63wj30qn060tbw.jpg)
+
+访问`/user/1`->`.antMatchers("/user/*").hasRole("ADMIN")`，得到的ConfigAttribute映射对象，得到的是一个spring的表达式（字符串）；
+
+![image-20180921112600969](https://ws3.sinaimg.cn/large/006tNbRwgy1fvh00k4ztmj30ud06dq6j.jpg)
+
+配置时候的hasRole转换方法，spring security之后就会判断这个表达式；
+
+
+
+
+
 #### 控制“公共和非公共”接口权限
 
 + 即那些接口需要登录才能进行访问，身份认证控制：
@@ -291,11 +425,33 @@ http
                 .and()
 ```
 
++ 针对REST接口：
+
+```java
+ // 只有具有“ADMIN”角色的认证用户才能访问“/user”接口
+                .antMatchers("/user").hasRole("ADMIN")
+                // 匹配/user/[id]这样的接口
+                .antMatchers("/user/*").hasRole("ADMIN")
+                // 匹配接口（且匹配接口action）
+                .antMatchers(HttpMethod.GET,"/user").hasRole("ADMIN")
+```
 
 
 
+![image-20180920115513851](https://ws3.sinaimg.cn/large/006tNbRwgy1fvfv8nhb2gj312a0fcjui.jpg)
 
 
+
+如果登陆用户没有`ADMIN`权限就会出现上面的情况，403访问被拒；
+
+认证用户的权限是放在`UserDetails`示例中:
+
+```java
+public User(String username, String password,
+			Collection<? extends GrantedAuthority> authorities)
+```
+
+`Collection<? extends GrantedAuthority> authorities`权限信息被放置在这个集合中；
 
 
 
@@ -305,7 +461,45 @@ http
 
 > [理解OAuth 2.0](http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html)
 
-  ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuqn54pzzmj30wd0ilaby.jpg)
+![image-20180920232344951](https://ws3.sinaimg.cn/large/006tNbRwgy1fvgf526kdwj31kw0wpu0x.jpg)
+
+![image-20180920232505834](https://ws4.sinaimg.cn/large/006tNbRwgy1fvgf6g7or3j31kw0xw1ky.jpg)
+
++ 传统应用安全流程：
+
+![image-20180920230546821](https://ws4.sinaimg.cn/large/006tNbRwgy1fvgemfum12j31kw10me81.jpg)
+
+
+
++  现代基于token的身份认证：
+
+![image-20180920230822621](https://ws3.sinaimg.cn/large/006tNbRwgy1fvgep1q48jj31kw0w2hdt.jpg)
+
++ oauth2的应用场景：
+
+![image-20180920231057861](https://ws3.sinaimg.cn/large/006tNbRwgy1fvgerqsvz1j31kw0x2qv5.jpg)
+
+
+
+
+
++ oauth2简明向导：
+
+  > [《OAuth2.0最简向导》](https://medium.com/@darutk/the-simplest-guide-to-oauth-2-0-8c71bd9a15bb)
+
+![image-20180920231650568](https://ws4.sinaimg.cn/large/006tNbRwgy1fvgexv2rp4j31kw0zsb29.jpg)
+
+![image-20180920232100500](https://ws2.sinaimg.cn/large/006tNbRwgy1fvgf27zy0mj31kw0zrb2a.jpg)
+
+![image-20180920233314747](https://ws3.sinaimg.cn/large/006tNbRwgy1fvgfexdvnij31kw0wee82.jpg)
+
+![image-20180920233452594](https://ws2.sinaimg.cn/large/006tNbRwgy1fvgfgn7wyfj319g192e81.jpg)
+
+
+
+
+
+![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuqn54pzzmj30wd0ilaby.jpg)
 
 + 这里的第二步其实流程会像下面这样进行：
 

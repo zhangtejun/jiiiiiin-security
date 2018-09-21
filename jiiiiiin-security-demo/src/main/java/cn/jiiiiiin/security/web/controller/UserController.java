@@ -1,6 +1,7 @@
 package cn.jiiiiiin.security.web.controller;
 
-import cn.jiiiiiin.security.app.component.authentication.social.AppSingUpUtils;
+//import cn.jiiiiiin.security.app.component.authentication.social.AppSingUpUtils;
+
 import cn.jiiiiiin.security.core.dict.CommonConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.dto.User;
@@ -105,8 +106,8 @@ public class UserController {
     @Autowired
     private ProviderSignInUtils providerSignInUtils;
 
-    @Autowired
-    private AppSingUpUtils appSingUpUtils;
+//    @Autowired
+//    private AppSingUpUtils appSingUpUtils;
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -133,7 +134,7 @@ public class UserController {
         // 真正让业务系统用户信息和spring social持有的授权用户信息进行绑定，记录`UserConnection`表
         providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
         // app端关联
-        appSingUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
+//        appSingUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
         return user;
     }
 
@@ -221,7 +222,7 @@ public class UserController {
      * "credentials": null,
      * "name": "admin"
      * }
-     *
+     * <p>
      * 获取Authentication:
      * 1. 直接通过参数注入
      * 2. SecurityContextHolder.getContext().getAuthentication();
@@ -252,8 +253,8 @@ public class UserController {
             // 获取自定义源信息
             val company = (String) claims.get("company");
             L.info(company);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            L.error("解析自定义JWT原数据失败", e);
         }
         return authentication;
     }

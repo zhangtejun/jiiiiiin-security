@@ -79,7 +79,6 @@ public class DemoUserDetailsService implements UserDetailsService, SocialUserDet
     }
 
     /**
-     *
      * @param userId 业务系统用户唯一标识
      * @return
      */
@@ -87,7 +86,8 @@ public class DemoUserDetailsService implements UserDetailsService, SocialUserDet
         // `ROLE_USER`权限提供给，应用作为oauth授权服务提供商时候，第三方在获取授权码的时候，返回用户必须要有这个角色
         return new SocialUser(userId, passwordEncoder.encode("a11111"),
                 true, true, true, true,
-                AuthorityUtils.commaSeparatedStringToAuthorityList("admin,ROLE_USER"));
+                // TODO 登陆的时候动态获取用户的角色列表
+                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN,ROLE_USER"));
     }
 
 }
