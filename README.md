@@ -450,7 +450,7 @@ http
 
 ![image-20180920115513851](https://ws3.sinaimg.cn/large/006tNbRwgy1fvfv8nhb2gj312a0fcjui.jpg)
 
-
+可以在项目的error目录配置对应响应吗**403.html**来定制化该页面样式；
 
 如果登陆用户没有`ADMIN`权限就会出现上面的情况，403访问被拒；
 
@@ -462,6 +462,30 @@ public User(String username, String password,
 ```
 
 `Collection<? extends GrantedAuthority> authorities`权限信息被放置在这个集合中；
+
+
+
+#### 基于数据库Rbac数据模型控制权限
+
+
+
+> [基于数据库Rbac数据模型控制权限](https://coding.imooc.com/lesson/134.html#mid=7384)
+
+
+
+##### 通用RBAC数据模型
+
+![image-20180922202731675](https://ws1.sinaimg.cn/large/006tNbRwgy1fvilad2miij31kw0tbqt7.jpg)
+
+
+
+![image-20180922203138170](https://ws2.sinaimg.cn/large/006tNbRwgy1fvilekhddfj31kw0iv439.jpg)
+
+![image-20180922203039093](https://ws2.sinaimg.cn/large/006tNbRwgy1fvildjkjw8j31kw0qbqdi.jpg)
+
+
+
+
 
 
 

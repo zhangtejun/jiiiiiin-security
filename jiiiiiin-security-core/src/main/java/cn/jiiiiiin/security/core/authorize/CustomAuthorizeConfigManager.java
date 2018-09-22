@@ -40,6 +40,8 @@ import java.util.List;
  * // 都需要身份认证
  * .authenticated()
  *
+ * **.anyRequest()**的配置需要放在其他antMatchers之后，因为会存在覆盖关系，故AuthorizeConfigProvider的定义需要指定先后顺序，使用@Order
+ *
  * @author zhailiang
  * @see HttpSecurity#authorizeRequests()
  */

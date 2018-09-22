@@ -42,6 +42,11 @@
             <!--<artifactId>jiiiiiin-security-app</artifactId>-->
         <!--</dependency>-->
 
+        <dependency>
+            <groupId>cn.jiiiiiin.security</groupId>
+            <artifactId>jiiiiiin-security-authorize</artifactId>
+        </dependency>
+
         <!--引入spring 测试框架-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
