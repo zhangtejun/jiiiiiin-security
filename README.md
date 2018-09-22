@@ -370,6 +370,16 @@ http
 
 
 
+#####  权限表达式
+
+参考: https://coding.imooc.com/lesson/134.html#mid=7383
+
+![image-20180921114552139](https://ws3.sinaimg.cn/large/006tNbRwgy1fvh0l89a5zj30zh0j87hc.jpg)
+
+![image-20180921114310537](https://ws1.sinaimg.cn/large/006tNbRwgy1fvh0ieecq2j30sh01575j.jpg)
+
+如果需要联合表单式，需要像上面这样声明
+
 
 
 #### 控制“公共和非公共”接口权限

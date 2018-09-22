@@ -87,7 +87,7 @@ public class DemoUserDetailsService implements UserDetailsService, SocialUserDet
         return new SocialUser(userId, passwordEncoder.encode("a11111"),
                 true, true, true, true,
                 // TODO 登陆的时候动态获取用户的角色列表
-                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN,ROLE_USER"));
+                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
     }
 
 }

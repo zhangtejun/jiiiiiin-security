@@ -5,6 +5,7 @@ package cn.jiiiiiin.security.app.server;
 
 import cn.jiiiiiin.security.app.component.authentication.social.openid.OpenIdAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.authentication.FormAuthenticationConfig;
+import cn.jiiiiiin.security.core.authorize.AuthorizeConfigManager;
 import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
@@ -50,6 +51,9 @@ public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter 
     @Autowired
     private SecurityProperties securityProperties;
 
+    @Autowired
+    private AuthorizeConfigManager authorizeConfigManager;
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
 
@@ -69,45 +73,14 @@ public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter 
                 // 添加social拦截过滤器，引导用户进行社交登录,`SocialAuthenticationFilter`
                 .apply(socialSecurityConfig)
                 .and()
-                // 对请求进行授权，这个方法下面的都是授权的配置
-                .authorizeRequests()
-                // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
-                // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
-                // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
-                .antMatchers(
-                        SecurityConstants.STATIC_RESOURCES_JS,
-                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
-                        SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM,
-                        SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
-                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
-                        securityProperties.getBrowser().getSignInUrl(),
-                        securityProperties.getBrowser().getSignUpUrl(),
-                        securityProperties.getBrowser().getSignOutUrl(),
-                        securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
-                        registerUrl
-                ).permitAll()
-                // 对所有请求// 都需要身份认证
-                .anyRequest().authenticated()
-                .and()
                 // 添加针对`openid`第三方授权登录的token版本支持
                 .apply(openIdAuthenticationSecurityConfig)
                 .and()
                 // 临时关闭防护
                 .csrf().disable();
 
-//		formAuthenticationConfig.configure(http);
-//
-//		http.apply(validateCodeSecurityConfig)
-//				.and()
-//			.apply(smsCodeAuthenticationSecurityConfig)
-//				.and()
-//			.apply(imoocSocialSecurityConfig)
-//				.and()
-//			.apply(openIdAuthenticationSecurityConfig)
-//				.and()
-//			.csrf().disable();
-//
-//		authorizeConfigManager.config(http.authorizeRequests());
+        // 对请求进行授权，这个方法下面的都是授权的配置
+        authorizeConfigManager.config(http.authorizeRequests());
     }
 
 }

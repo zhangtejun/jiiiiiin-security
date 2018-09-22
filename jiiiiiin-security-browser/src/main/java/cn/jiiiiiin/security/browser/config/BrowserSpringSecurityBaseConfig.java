@@ -1,6 +1,7 @@
 package cn.jiiiiiin.security.browser.config;
 
 import cn.jiiiiiin.security.core.authentication.FormAuthenticationConfig;
+import cn.jiiiiiin.security.core.authorize.AuthorizeConfigManager;
 import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
@@ -62,6 +63,9 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
     @Autowired
     private PersistentTokenRepository persistentTokenRepository;
 
+    @Autowired
+    private AuthorizeConfigManager authorizeConfigManager;
+
     /**
      * https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
      * <p>
@@ -86,9 +90,6 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        // TODO 业务系统的注册接口
-        final String registerUrl = "/user/auth/register";
-
         formAuthenticationConfig.configure(http);
 
         http
@@ -100,36 +101,6 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 .and()
                 // 添加social拦截过滤器，引导用户进行社交登录,`SocialAuthenticationFilter`
                 .apply(socialSecurityConfig)
-                .and()
-                // 对请求进行授权，这个方法下面的都是授权的配置
-                .authorizeRequests()
-                // 添加匹配器，匹配器必须要放在`.anyRequest().authenticated()`之前配置
-                // 配置授权，允许匹配的请求不需要进行认证（permitAll()）
-                // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
-                .antMatchers(
-                        SecurityConstants.STATIC_RESOURCES_JS,
-                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
-                        SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM,
-                        SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
-                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
-                        securityProperties.getBrowser().getSignInUrl(),
-                        securityProperties.getBrowser().getSignUpUrl(),
-                        securityProperties.getBrowser().getSignOutUrl(),
-                        securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
-                        registerUrl
-                )
-                // 允许上面的接口无需登录就能访问
-                .permitAll()
-                // 只有具有“ADMIN”角色的认证用户才能访问“/user”接口
-                .antMatchers("/user").hasRole("ADMIN")
-                // 匹配/user/[id]这样的接口
-                .antMatchers("/user/*").hasRole("ADMIN")
-                // 匹配接口（且匹配接口action）
-                .antMatchers(HttpMethod.GET,"/user/me").hasRole("USER")
-                // 对其他的所有请求
-                .anyRequest()
-                // 都需要身份认证
-                .authenticated()
                 .and()
                 // 开启session管理配置：
                 .sessionManagement()
@@ -167,6 +138,9 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 .and()
                 // 临时关闭防护
                 .csrf().disable();
+
+        // 对请求进行授权，这个方法下面的都是授权的配置
+        authorizeConfigManager.config(http.authorizeRequests());
     }
 
 
