@@ -30,7 +30,9 @@ public class CustomUserDetails implements UserDetails {
         return admin.getRoles().stream()
                 // TODO need test
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                .collect(Collectors.toList());
+                .collec
+
+        t(Collectors.toList());
     }
 
     @Override
