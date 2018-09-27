@@ -1,10 +1,10 @@
 /**
  *
  */
-package cn.jiiiiiin.security.rbac.authorize;
+package cn.jiiiiiin.security.rbac.component.authorize;
 
 import cn.jiiiiiin.security.core.authorize.AuthorizeConfigProvider;
-import cn.jiiiiiin.security.rbac.service.RbacService;
+import cn.jiiiiiin.security.rbac.component.service.RbacService;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

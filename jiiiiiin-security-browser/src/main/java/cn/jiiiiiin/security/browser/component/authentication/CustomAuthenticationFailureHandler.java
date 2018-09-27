@@ -75,7 +75,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         // 根据渠道返回不同的响应数据
         final SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
-            final Device currentDevice = HttpUtils.resolveDevice(savedRequest.getHeaderValues("user-agent").get(0), savedRequest.getHeaderValues("accept").get(0));
+            final Device currentDevice = HttpUtils.resolveDevice(savedRequest.getHeaderValues("admin-agent").get(0), savedRequest.getHeaderValues("accept").get(0));
             // 根据渠道返回不同的响应数据
             if (!currentDevice.isNormal()) {
                 response.setStatus(INTERNAL_SERVER_ERROR.value());

@@ -40,7 +40,7 @@ jiiiiiin:
       image-code:
         length: 3
         size: 30
-        interceptor-urls: /user/*,/admin/*
+        interceptor-urls: /admin/*,/admin/*
     social:
       # 拦截auth2授权地址
       # TODO 需要根据配置在qq开发者平台中的接口地址匹配，最好还原成默认的social SocialAuthenticationFilter 中的/auth

@@ -13,6 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @RestController
 @EnableSwagger2
+//@SpringBootApplication(scanBasePackages = )
 public class App {
 
     public static void main(String[] args) {

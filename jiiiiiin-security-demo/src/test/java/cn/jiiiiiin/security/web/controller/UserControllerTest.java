@@ -53,7 +53,7 @@ public class UserControllerTest {
         // mockMvc.perform() 表示需要执行一个请求
         // MockMvcRequestBuilders.get() 表示需要构建一个get请求
         // contentType(MediaType.APPLICATION_JSON_UTF8) 请求的内容类型
-        final String res = mockMvc.perform(get("/user")
+        final String res = mockMvc.perform(get("/admin")
                 // .param("","") 可以通过该方法设置参数, org.springframework.data.domain.Pageable
                 .param("username", "tom")
                 .param("age", "10")
@@ -75,21 +75,21 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.length()").value(3))
                 // 将返回的结果一字符串形式获取
                 .andReturn().getResponse().getContentAsString();
-        L.info("qry user list {}", res);
+        L.info("qry admin list {}", res);
     }
 
     @Test
     public void whenQryUserInfoSuccess() throws Exception {
-        final String res = mockMvc.perform(get("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8))
+        final String res = mockMvc.perform(get("/admin/1").contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("tom"))
                 .andReturn().getResponse().getContentAsString();
-        L.info("qry user info {}", res);
+        L.info("qry admin info {}", res);
     }
 
     @Test
     public void whenQryUserInfoFial() throws Exception {
-        mockMvc.perform(get("/user/a").contentType(MediaType.APPLICATION_JSON_UTF8))
+        mockMvc.perform(get("/admin/a").contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -98,7 +98,7 @@ public class UserControllerTest {
         final String reqContent = "{\"username\":\"tom\",\"password\":null,\"birthday\":" + new Date().getTime() + "}";
         // 测试自定义校验注解
 //        final String reqContent = "{\"username\":null,\"password\":null,\"birthday\":"+new Date().getTime()+"}";
-        final String res = mockMvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON_UTF8)
+        final String res = mockMvc.perform(post("/admin").contentType(MediaType.APPLICATION_JSON_UTF8)
                 // RESTFul请求参数以json格式传递
                 .content(reqContent))
                 // 405 标识请求的方式（POST）后台未定义这样的接口
@@ -112,7 +112,7 @@ public class UserControllerTest {
     @Test
     public void whenUpdateSuccess() throws Exception {
         final String reqContent = "{\"id\":\"1\",\"username\":\"tom\",\"password\":null,\"birthday\":" + new Date().getTime() + "}";
-        final String res = mockMvc.perform(put("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8)
+        final String res = mockMvc.perform(put("/admin/1").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(reqContent))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
@@ -123,13 +123,13 @@ public class UserControllerTest {
     @Test
     public void whenDeleteSuccess() throws Exception {
         // RESTFull 请求的成功是用状态码标识，即返回200则标识删除成功
-        mockMvc.perform(delete("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8))
+        mockMvc.perform(delete("/admin/1").contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void whenUploadAvatar() throws Exception {
-        final String res = mockMvc.perform(fileUpload("/user/upload/avatar")
+        final String res = mockMvc.perform(fileUpload("/admin/upload/avatar")
                 // params1 接口定义标识文件的key值
                 // params2 上传的文件名
                 .file(new MockMultipartFile("file", "avatar.txt", MediaType.MULTIPART_FORM_DATA_VALUE, "avatar mock data".getBytes())))

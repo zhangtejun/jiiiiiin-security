@@ -23,6 +23,8 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
         </dependency>
 
         <!--https://docs.spring.io/spring-boot/docs/1.5.15.RELEASE/reference/html/configuration-metadata.html#configuration-metadata-annotation-processor-->
@@ -55,10 +57,10 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>mysql</groupId>-->
+            <!--<artifactId>mysql-connector-java</artifactId>-->
+        <!--</dependency>-->
 
         <!--spring social相关: 实现第三方登录（如qq登录）需要的依赖-->
         <dependency>

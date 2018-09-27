@@ -42,7 +42,7 @@ public class BrowserSecurityController extends SocialController {
 
     final static Logger L = LoggerFactory.getLogger(BrowserSecurityController.class);
     /**
-     * 给`model`中设置的提示信息key
+     * 给`entity`中设置的提示信息key
      */
     private static final String MODEL_KEY_HINT_MSG = "hintMsg";
 
@@ -116,7 +116,7 @@ public class BrowserSecurityController extends SocialController {
 //     */
 //    @RequestMapping(INVALID_SESSION_URL)
 //    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
-//    public SimpleResponse requireAuthenticationOnInvalidSession(HttpServletRequest request, HttpServletResponse response, Device device, Model model) throws IOException {
+//    public SimpleResponse requireAuthenticationOnInvalidSession(HttpServletRequest request, HttpServletResponse response, Device device, Model entity) throws IOException {
 //        // 获取到上一个被拦截的请求(原始请求）
 //        final SavedRequest savedRequest = requestCache.getRequest(request, response);
 //        if (savedRequest != null) {
@@ -128,7 +128,7 @@ public class BrowserSecurityController extends SocialController {
 //            if (device.isNormal()) {
 //                // 直接跳转到登录页面
 //                L.info("跳转到身份认证页面 {}", securityProperties.getBrowser().getSignInUrl());
-//                model.addAttribute(MODEL_KEY_HINT_MSG, "登录会话失效，访问的服务需要重新身份认证");
+//                entity.addAttribute(MODEL_KEY_HINT_MSG, "登录会话失效，访问的服务需要重新身份认证");
 //                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getSignInUrl());
 //                return null;
 //            }

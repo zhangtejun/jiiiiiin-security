@@ -29,12 +29,12 @@ import java.util.List;
  * )
  * // 允许上面的接口无需登录就能访问
  * .permitAll()
- * // 只有具有“ADMIN”角色的认证用户才能访问“/user”接口
- * .antMatchers("/user").hasRole("ADMIN")
- * // 匹配/user/[id]这样的接口
- * .antMatchers("/user/*").hasRole("ADMIN")
+ * // 只有具有“ADMIN”角色的认证用户才能访问“/admin”接口
+ * .antMatchers("/admin").hasRole("ADMIN")
+ * // 匹配/admin/[id]这样的接口
+ * .antMatchers("/admin/*").hasRole("ADMIN")
  * // 匹配接口（且匹配接口action）
- * .antMatchers(HttpMethod.GET,"/user/me").hasRole("USER")
+ * .antMatchers(HttpMethod.GET,"/admin/me").hasRole("USER")
  * // 对其他的所有请求
  * .anyRequest()
  * // 都需要身份认证

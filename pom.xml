@@ -13,6 +13,10 @@
         <module>jiiiiiin-security-app</module>
         <module>jiiiiiin-security-authorize</module>
         <module>jiiiiiin-security-demo</module>
+        <module>jiiiiiin-server-manager</module>
+        <module>jiiiiiin-data-orm</module>
+        <module>jiiiiiin-module-common</module>
+        <module>jiiiiiin-module-mngauth</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -67,6 +71,24 @@
             <dependency>
                 <groupId>cn.jiiiiiin.security</groupId>
                 <artifactId>jiiiiiin-security-authorize</artifactId>
+                <version>${jiiiiiin-security-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.jiiiiiin.security</groupId>
+                <artifactId>jiiiiiin-data-orm</artifactId>
+                <version>${jiiiiiin-security-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.jiiiiiin.security</groupId>
+                <artifactId>jiiiiiin-module-common</artifactId>
+                <version>${jiiiiiin-security-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.jiiiiiin.security</groupId>
+                <artifactId>jiiiiiin-module-user</artifactId>
                 <version>${jiiiiiin-security-version}</version>
             </dependency>
 

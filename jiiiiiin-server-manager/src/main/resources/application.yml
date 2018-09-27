@@ -1,0 +1,84 @@
+#spring.profiles.active=test或者pro 来控制加载哪个环境的配置,完整命令如下:
+#java -jar xxxxx.jar --spring.profiles.active=test  表示加载测试环境的配置
+#java -jar xxxxx.jar --spring.profiles.active=pro  表示加载生产环境的配置
+
+#查看springboot开启了哪些配置
+debug: false
+
+server:
+  port: 9090
+
+spring:
+  profiles:
+    active: dev
+  session:
+    store-type: redis
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: cn.jiiiiiin.module.common.entity
+  type-aliases-super-type: cn.jiiiiiin.data.orm.entity.BaseEntity
+  typeEnumsPackage: cn.jiiiiiin.module.common.entity.enums
+  global-config:
+    db-config:
+        id-type: id_worker
+    #刷新mapper 调试神器
+    refresh: true
+    sql-parser-cache: false
+  executor-type: reuse
+  # 原生配置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+# 自定义配置
+jiiiiiin:
+  security:
+    validate:
+      image-code:
+        length: 3
+        size: 30
+        interceptor-urls: /admin/*,/user/*
+
+---
+
+spring:
+ profiles: dev
+ datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.33.10:3306/jiiiiiin-security-demo?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+    username: root
+    password: 1qaz@WSX
+  # 配置redis链接地址
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+logging:
+  level:
+    cn.jiiiiiin: debug
+
+swagger:
+  enable: true
+
+---
+
+spring:
+  profiles: produce
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.33.10:3306/jiiiiiin-security-demo?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+    username: root
+    password: 1qaz@WSX
+  # 配置redis链接地址
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+logging:
+  level:
+    cn.jiiiiiin: info
+
+swagger:
+  enable: false

@@ -29,17 +29,6 @@ public class SecurityCoreConfig {
     private DataSource dataSource;
 
     /**
-     * @return
-     * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername
-     * @see SocialUserDetailsService#loadUserByUserId(String)
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // 可以参考下面框架提供的PasswordEncoder去实现自己系统的密码加密机制
-        return new BCryptPasswordEncoder();
-    }
-
-    /**
      * 记住我功能的token存取器配置
      * <p>
      * 需要插入一张框架需要的表[persistent_logins]：{@link JdbcTokenRepositoryImpl#CREATE_TABLE_SQL}

@@ -52,16 +52,16 @@ import java.util.Map;
  * // public List<User> query(@RequestParam String username) 标识请求需要携带一个参数（GET）
  * // @RequestParam(name="username") String name 标识传递的参数的key和方法的参数不统一的时候，通过name或者value来进行映射
  * // @PathVariable 作用是将http请求的url参数映射到java的方法对应参数上去
- * //@GetMapping("/user/{id}")
+ * //@GetMapping("/admin/{id}")
  * //public User getUserInfo(@PathVariable Long id, @PathVariable(name = "id") Long idddd) {
- * // 使用正则表达式对 path variable进行校验@GetMapping("/user/{id:\\d+}")
+ * // 使用正则表达式对 path variable进行校验@GetMapping("/admin/{id:\\d+}")
  * <p>
  * // @RequestBody 映射请求体到java方法参数
- * // public User create(@RequestBody User user) 需要加上注解之后，才能解析前端传上来的json对象中的对应字段的值
+ * // public User create(@RequestBody User admin) 需要加上注解之后，才能解析前端传上来的json对象中的对应字段的值
  * // spring mvc直接将前端传递的参数映射到一个实体类：public List<User> query(UserQryCondition condition){
  * <p>
  * // @Valid 注解和BindingResult验证请求参数的合法性并处理校验结果
- * // public User create(@Valid @RequestBody User user) 如果直接这样写，那么前端如果没有按要求传递，则会直接不进入请求方法体，直接响应400 标识请求的格式错误，因为后台会校验对应字段的格式，但是校验失败
+ * // public User create(@Valid @RequestBody User admin) 如果直接这样写，那么前端如果没有按要求传递，则会直接不进入请求方法体，直接响应400 标识请求的格式错误，因为后台会校验对应字段的格式，但是校验失败
  * // 如果需要在校验失败也进入方法体，需要添加BindingResult到方法参数中
  * // BindingResult需要配置@Valid注解使用，在校验失败时候，会将错误消息（校验失败消息）映射到该对象
  * <p>
@@ -140,11 +140,11 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user, BindingResult errors) {
-        L.info("create user {}", user);
+        L.info("create admin {}", user);
         if (errors.hasErrors()) {
             errors.getAllErrors().forEach(error -> {
                 final FieldError fieldError = (FieldError) error;
-                L.error("create user err: {} - {}", fieldError.getField(), error.getDefaultMessage());
+                L.error("create admin err: {} - {}", fieldError.getField(), error.getDefaultMessage());
             });
         }
         user.setId("1");
@@ -153,9 +153,9 @@ public class UserController {
 
     @PutMapping("/{id:\\d+}")
     public User update(@Valid @RequestBody User user, BindingResult errors) {
-        L.info("update user {}", user);
+        L.info("update admin {}", user);
         if (errors.hasErrors()) {
-            errors.getAllErrors().forEach(error -> L.error("create user err: {}", error.getDefaultMessage()));
+            errors.getAllErrors().forEach(error -> L.error("create admin err: {}", error.getDefaultMessage()));
         }
         user.setId("1");
         return user;

@@ -77,7 +77,7 @@ public interface SecurityConstants {
      * 针对 app模块的针对{@link SpringSocialConfigurer#signupUrl(String)}的处理器
      *      * @see SocialConfig#socialSecurityConfig()
      */
-    String DEFAULT_SOCIAL_USER_INFO_URL = "/social/user";
+    String DEFAULT_SOCIAL_USER_INFO_URL = "/social/admin";
 
     /**
      * social 第三方授权用户管理表的表前缀

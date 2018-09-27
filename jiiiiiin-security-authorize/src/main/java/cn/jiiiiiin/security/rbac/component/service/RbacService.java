@@ -1,7 +1,7 @@
 /**
  *
  */
-package cn.jiiiiiin.security.rbac.service;
+package cn.jiiiiiin.security.rbac.component.service;
 
 import org.springframework.security.core.Authentication;
 

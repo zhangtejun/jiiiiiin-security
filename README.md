@@ -23,6 +23,10 @@
 > [微服务架构实战160讲](https://time.geekbang.org/course/detail/84-6933)
 >
 > [基于 RBAC 的 Web Security Framework 的研究与应用](https://www.ibm.com/developerworks/cn/java/j-lo-rbacwebsecurity/index.html)
+>
+> [Mybatis-Plus逻辑删除视频教程](http://v.youku.com/v_show/id_XMjc4ODY0MDI5Ng==.html?spm=a2hzp.8244740.userfeed.5!2~5~5~5!3~5~A)
+>
+> [黑马程序员-mybatis](https://www.bilibili.com/video/av17774929?from=search&seid=15415449383506844011)
 
 # 关键点
 
@@ -426,7 +430,7 @@ http
                 )
                 // 允许上面的接口无需登录就能访问
                 .permitAll()
-                // 只有具有“ADMIN”角色的认证用户才能访问“/user”接口
+                admin
                 .antMatchers("/user").hasRole("ADMIN")
                 // 对其他的所有请求
                 .anyRequest()
@@ -438,9 +442,9 @@ http
 + 针对REST接口：
 
 ```java
- // 只有具有“ADMIN”角色的认证用户才能访问“/user”接口
+ admin
                 .antMatchers("/user").hasRole("ADMIN")
-                // 匹配/user/[id]这样的接口
+                admin
                 .antMatchers("/user/*").hasRole("ADMIN")
                 // 匹配接口（且匹配接口action）
                 .antMatchers(HttpMethod.GET,"/user").hasRole("ADMIN")
@@ -555,13 +559,25 @@ public User(String username, String password,
 
   以上是一个 Oauth 的授权流程；
 
+
+
+  > [06 | OAuth2 模式该如何选型](https://time.geekbang.org/course/detail/84-6938)
+
+  ![image-20180925001127222](/Users/jiiiiiin/Library/Application%20Support/typora-user-images/image-20180925001127222.png)
+
+
+
+### 授权类型选择-流程
+
+![image-20180925001428263](/Users/jiiiiiin/Library/Application%20Support/typora-user-images/image-20180925001428263.png)
+
 ### spring social 的授权登录流程：
 
   ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuqnpxoqo6j30wg0hr0v0.jpg)
 
   spring social 的作用就是帮助我们封装了这套流程到 ss 过滤器链的`SocialAuthenticationFilter`中；
 
-  ![](https://ws4.sinaimg.cn/large/0069RVTdgy1fuqoup6qazj31kw0jqn0l.jpg)
+  ![image-20180925002538293](https://ws1.sinaimg.cn/large/006tNbRwgy1fvl3ep74jtj31kw0z87wi.jpg)![](https://ws4.sinaimg.cn/large/0069RVTdgy1fuqoup6qazj31kw0jqn0l.jpg)
 
   主要涉及的类：
 
@@ -678,6 +694,12 @@ public User(String username, String password,
 其中绿色部分，spring security 已经帮我们做了  默认实现；
 
 ### 实现一个标准的 OAuth2 协议中 Provider 角色的主要功能
+
+#### 授权服务器
+
+> [Spring Security OAuth2 架构简介](https://time.geekbang.org/course/detail/84-6945)
+
+![image-20180925002131479](https://ws3.sinaimg.cn/large/006tNbRwgy1fvl3aglqwlj31kw0x0hdt.jpg)
 
   - 添加了`@EnableAuthorizationServer`注解之后，项目就可以当做一个授权服务提供商，给第三方应用提供 oauth 授权服务`，参考`CustomAuthorizationServerConfig`
 
@@ -1340,9 +1362,7 @@ import java.util.Map;
  */
 public class TokenJwtEnhancer implements TokenEnhancer {
 
-    /* (non-Javadoc)
-     * @see org.springframework.security.oauth2.provider.token.TokenEnhancer#enhance(org.springframework.security.oauth2.common.OAuth2AccessToken, org.springframework.security.oauth2.provider.OAuth2Authentication)
-     */
+    module
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         // 自定义token元信息

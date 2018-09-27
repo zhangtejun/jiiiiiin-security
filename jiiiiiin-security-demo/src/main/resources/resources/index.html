@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,admin-scalable=no">
     <title>主页 - demo</title>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -27,7 +27,7 @@
     <el-row class="title-bar">
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
             <el-menu-item index="1"><img class="logo" src="https://spring.io/img/homepage/icon-spring-boot.svg" alt=""></el-menu-item>
-            <el-menu-item index="2" style="float: right">{{user.username}}</el-menu-item>
+            <el-menu-item index="2" style="float: right">{{admin.username}}</el-menu-item>
             <el-menu-item index="3" style="float: right"><a href="/signOut">退出登录</a></el-menu-item>
         </el-menu>
     </el-row>
