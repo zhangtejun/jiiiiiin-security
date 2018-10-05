@@ -26,7 +26,6 @@
 >
 > [Mybatis-Plus逻辑删除视频教程](http://v.youku.com/v_show/id_XMjc4ODY0MDI5Ng==.html?spm=a2hzp.8244740.userfeed.5!2~5~5~5!3~5~A)
 >
-> [黑马程序员-mybatis](https://www.bilibili.com/video/av17774929?from=search&seid=15415449383506844011)
 
 # 关键点
 
@@ -495,6 +494,24 @@ public User(String username, String password,
 
 ## spring social相关记录
 
+
+
+### 参考：
+
+####  [Android对接OAuth2授权服务器（基于Spring Security OAuth2+内存H2数据库）](https://github.com/geektime-geekbang/oauth2lab/blob/135e35eb8809d21df50b1a6eabcc45f7ff44e393/lab04/README.md)
+
+#### [AngularJS 单页应用实验和课后扩展](https://github.com/geektime-geekbang/oauth2lab/blob/135e35eb8809d21df50b1a6eabcc45f7ff44e393/lab05/README.md)
+
+​	需要注意，如果android（移动客户端）使用授权码模式获取token，那么自定义schema有可能被恶意解惑，可以参考：
+
+​	![image-20180929173538235](https://ws2.sinaimg.cn/large/006tNc79gy1fvqjnm1r2hj30e007mq5m.jpg)
+
+​	PKCE方案；
+
+
+
+
+
 ### OAuth2协议介绍
 
 > [理解OAuth 2.0](http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html)
@@ -677,6 +694,14 @@ public User(String username, String password,
 或者部署到测试服务器，进行正式的联调；
 
 
+
+#### 吊销token
+
+> `$scope.revokeToken = $resource("http://localhost:8081/oauth/token/revokeById/:tokenId",{tokenId:'@tokenId'});`
+
+
+
+
 ## 自定义改造
 
 ### 基于 Token 的“会话保持” - Spring Security OAuth 实现服务提供商端介绍
@@ -698,6 +723,18 @@ public User(String username, String password,
 #### 授权服务器
 
 > [Spring Security OAuth2 架构简介](https://time.geekbang.org/course/detail/84-6945)
+>
+> [基于授权码模式+Spring Security OAuth2的最简授权服务器](https://github.com/geektime-geekbang/oauth2lab/tree/master/lab01/authcode-server)
+>
+> [基于简化模式+Spring Security OAuth2的最简授权服务器](https://github.com/geektime-geekbang/oauth2lab/tree/master/lab01/implicit-server)
+>
+> [基于密码模式+Spring Security OAuth2的最简授权服务器](https://github.com/geektime-geekbang/oauth2lab/tree/master/lab01/password-server)
+>
+> [基于客户端模式+Spring Security OAuth2的最简授权服务器](https://github.com/geektime-geekbang/oauth2lab/tree/master/lab01/client-server)
+>
+> [客户端以授权码方式访问OAuth2服务器案例，使用rest template](https://github.com/geektime-geekbang/oauth2lab/tree/master/lab02/client-resttemplate)
+
+![image-20180929145547568](https://ws3.sinaimg.cn/large/006tNc79gy1fvqf1flo0zj30pm0ld4an.jpg)
 
 ![image-20180925002131479](https://ws3.sinaimg.cn/large/006tNbRwgy1fvl3aglqwlj31kw0x0hdt.jpg)
 
@@ -707,69 +744,76 @@ public User(String username, String password,
 
   - 流程和参数参考:https://tools.ietf.org/html/rfc6749#section-4.1
 
-  - spring security 默认的授权页面：
+  - 第一步：发送获取授权码请求（模拟第三方调用）
+    http://localhost:8080/oauth/authorize?response_type=code&client_id=fa0d197a-7a7b-4103-b9f6-6fad9d44feb2&redirect_uri=http://www.baidu.com&scope=all
+
+    ***注意如果是简化模式，response_type会不同，且直接就获取到了access_token：***
+
+    ![image-20180929103630405](https://ws3.sinaimg.cn/large/006tNc79gy1fvq7jn8bptj30uy01c3zp.jpg)
+
+
+
+    ![image-20180929103735693](https://ws1.sinaimg.cn/large/006tNc79gy1fvq7kns94gj30qt01gmyb.jpg)
+
+
+
+    客户端模式：
+    
+    ![image-20180929144209692](https://ws3.sinaimg.cn/large/006tNc79gy1fvqen3z9t8j30jq08edgw.jpg)
+
+
+
+    接着看下面的授权码模式：
+
+
+
+      - 该 url 具有如下信息：
+    
+        1.那个第三方应用请求授权：通过`client_id`标识
+    
+        2.给什么权限：通过 `scope` 标识
+    
+        3.redirect_uri第三方应用的接收授权码的回调地址	
+    
+    - spring security 默认的授权页面：
+
+![image-20180929101641882](https://ws2.sinaimg.cn/large/006tNc79gy1fvq6ywbd4wj30j907rmyi.jpg)
+
+默认需要进行身份认证；
 
   ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fv5e6jnxg1j30p10aedgr.jpg)
 
++ 授权回调通知页面；
+
+![image-20180929094930008](https://ws2.sinaimg.cn/large/006tNc79gy1fvq66r9ztfj30ce05lq33.jpg)
+
+- 第二步通过上面获取的授权码去换取access token
   - 用户名密码模式
     ![](https://ws4.sinaimg.cn/large/0069RVTdgy1fv5epvqbcrj31120g3jtw.jpg)
 
   - 授权码模式
     ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fv5er1a31uj30zs0etdhn.jpg)
 
-    第一步：发送获取授权码请求（模拟第三方调用）
-    http://localhost:8080/oauth/authorize?response_type=code&client_id=fa0d197a-7a7b-4103-b9f6-6fad9d44feb2&redirect_uri=http://www.baidu.com&scope=all
+    - Basic header： 用来标识第三方（用户名、密码）
+    - grant_type：定义期望走的授权服务器所支持的[4]种授权模式
+    - Code: 上面获取到的授权码
+    - ....
 
-    该 url 具有如下信息：
+    请求之后就可以换取到access token：
 
-    1.那个第三方应用请求授权：通过`client_id`标识
+    ![image-20180929101220727](https://ws4.sinaimg.cn/large/006tNc79gy1fvq6ugiia0j30f305bwfu.jpg)
 
-    2.那个用户提供授权：通过 basic 页面输入的用户名密码标识
++ 之后就可以凭借access_token去请求需要认证的接口，比如获取用户信息
 
-    3.给什么权限：通过 `scope` 标识
+![](https://ws3.sinaimg.cn/large/0069RVTdgy1fv5qea3mqyj31kw0uttcf.jpg)
 
-+ 问题：
++ 资源服务器会对access token进行校验：
 
-    1. 需要添加`ROLE_USER`角色
+​	授权服务器和资源服务器住在一起，授权服务器使用内存模式，那么资源服务器也是使用内存去比对校验令牌的。如果两者不住在一起，使用数据库存储，那么资源服务器可以去数据库比对校验令牌，也可以通过授权服务器提供的校验端点比对校验令牌。
 
-    ```java
-     /**
-     *
-     * @param userId 业务系统用户唯一标识
-     * @return
-     */
-    private SocialUserDetails buildUser(String userId) {
-        // `ROLE_USER`权限提供给，应用作为oauth授权服务提供商时候，第三方在获取授权码的时候，返回用户必须要有这个角色
-        return new SocialUser(userId, passwordEncoder.encode("a11111"),
-                true, true, true, true,
-                AuthorityUtils.commaSeparatedStringToAuthorityList("admin,ROLE_USER"));
-    }
-    ```
+​	如果是id token，一般在受保护资源端或网关发回auth server的令牌校验端点去校验是否过期。jwt token可在受保护资源端自校验是否过期。
 
-    2.简单配置第三方 clientid：
 
-    ```properties
-      security:
-        oauth2:
-          client:
-            client-id: immoc
-            client-secret: immocsecret
-    ```
-
-    设置之后获取授权码的链接就变为：
-    `http://localhost:8080/oauth/authorize?response_type=code&client_id=immoc&redirect_uri=http://www.baidu.com&scope=all`
-
-    使用 postman 添加授权头：
-
-    ![](https://ws4.sinaimg.cn/large/0069RVTdgy1fv5o2y0e2pj31kw0syabx.jpg)
-
-    ![](https://ws4.sinaimg.cn/large/0069RVTdgy1fv5lqnreh3j31kw0kojs3.jpg)
-
-    ![](https://ws1.sinaimg.cn/large/0069RVTdgy1fv5oa4j0atj31ce0y6gnf.jpg)
-
-    通过 token 方式进行身份认证：
-
-    ![](https://ws3.sinaimg.cn/large/0069RVTdgy1fv5qea3mqyj31kw0uttcf.jpg)
 
 ### spring security oauth 核心源码：
 
@@ -1210,23 +1254,43 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
 
 这样token模式的存储也和应用分离，就可以实现多应用节点部署，无需前置（F5/Nginx）进行session粘黏；![image-20180917145147262](https://ws3.sinaimg.cn/large/006tNbRwgy1fvcjhjyo0xj30x60je7jg.jpg)
 
-z'h
+
 
 ##### 使用JWT（Json Web Token）替换默认的Token
 
-
-
 参考: 
 
-[什么是JWT](什么是JWT)
+> [基于密码模式+Spring Security OAuth2+JWT的最简授权服务器](https://github.com/geektime-geekbang/oauth2lab/tree/master/lab03)
 
-[JSON Web Token 入门教程](http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html)
+​	上面的demo演示了使用jwt将授权服务器和资源服务器分离成两个服务的示例，关键：
+
+​	资源服务器需要配置授权服务器的jwt签名秘钥：
+
+​	`security.oauth2.resource.jwt.key-value=test-secret` 配置之后资源服务器就会自己去校验token的有效性；
+
+>  [什么是JWT](什么是JWT)
+
+>  [JSON Web Token 入门教程](http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html)
 
 + 自包含：包含有意义的消息（自身包含用户信息）相比ss原始的UUID座位Token，原始的令牌需要依赖一个存储，去查询附加信息；
 + 密签：使用的是签名机制来防串改
 + 可扩展：可以自定义放进token的信息
++ 节省集中式令牌校验开销，实现无状态授权认证，是jwt等自包含令牌一大优势。
 
 ![image-20180917162836370](https://ws3.sinaimg.cn/large/006tNbRwgy1fvcma73pucj31hg0k4k1o.jpg)
+
+
+
++ 关于jwt token ，如果不使用 jwe 。仅仅使用HTTPS协议作为数据传输，请求header里面的token 还能第三方恶意用户获取吗？
+
+  如果只用https，只能保证传输层安全，jwt token在客户端还是可以查看其中的内容的(比如用户标识符角色信息等)，如果有些信息是敏感的，可以使用JWE全程加密（授权服务器端加密，资源服务器端解密），过程中无法查看jwt token中的信息。
+
+
+
+
+![image-20180929155756617](https://ws1.sinaimg.cn/large/006tNc79gy1fvqgtz8txgj30zs0jvh9b.jpg)
+
+普通令牌和类jwt令牌区别；
 
 
 
@@ -1565,6 +1629,12 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
 
 **如果使用jwt方式，那么框架会根据jwt的payload重新组装一个 {@link Authentication}对象，直接获取 {@link UserDetails}将得不到内容**
 
+![image-20180929160328460](https://ws4.sinaimg.cn/large/006tNc79gy1fvqgzq29rdj30yy0lbwsf.jpg)
+
+
+
+jwt token可以被资源服务器自己验证签名（需要资源服务器具有签名秘钥），资源服务器可以读取jwt token中的原数据比如上面针对授权服务器办法的audience判断自己是否可以给请求客户端提供服务；
+
 
 
 扩展和解析JWT的信息
@@ -1573,7 +1643,9 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
 
 ![image-20180917165238883](https://ws3.sinaimg.cn/large/006tNbRwgy1fvcmz6uofmj31kw0lgwl7.jpg)
 
-##### 
++ 扩展
+
+![image-20180929165142304](https://ws4.sinaimg.cn/large/006tNc79gy1fvqidw99rzj30fa08adi9.jpg)
 
 
 

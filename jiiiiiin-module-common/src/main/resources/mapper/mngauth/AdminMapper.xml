@@ -3,7 +3,16 @@
 <mapper namespace="cn.jiiiiiin.module.common.mapper.mngauth.AdminMapper">
 
     <!-- 开启二级缓存 -->
-    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/>
+        <property name="timeToLiveSeconds" value="3600"/>
+        <!-- 同ehcache参数maxElementsInMemory -->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <!-- 同ehcache参数maxElementsOnDisk -->
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.jiiiiiin.module.common.entity.mngauth.Admin">
@@ -20,5 +29,12 @@
         id,
         create_time, username, password, phone, email
     </sql>
+
+    <select id="findByUsername" resultType="cn.jiiiiiin.module.common.entity.mngauth.Admin" useCache="true">
+        select
+        <include refid="Base_Column_List"/>
+        from mng_admin
+        where username = #{username}
+    </select>
 
 </mapper>

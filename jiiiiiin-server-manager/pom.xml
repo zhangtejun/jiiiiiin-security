@@ -26,12 +26,28 @@
 
         <dependency>
             <groupId>cn.jiiiiiin.security</groupId>
-            <artifactId>jiiiiiin-data-orm</artifactId>
+            <artifactId>jiiiiiin-module-common</artifactId>
         </dependency>
 
         <dependency>
             <groupId>cn.jiiiiiin.security</groupId>
-            <artifactId>jiiiiiin-module-user</artifactId>
+            <artifactId>jiiiiiin-module-mngauth</artifactId>
+        </dependency>
+
+        <!--<dependency>-->
+        <!--<groupId>cn.jiiiiiin.security</groupId>-->
+        <!--<artifactId>jiiiiiin-security-browser</artifactId>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>cn.jiiiiiin.security</groupId>
+            <artifactId>jiiiiiin-security-app</artifactId>
+        </dependency>
+
+        <!--引入spring 测试框架-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
         <dependency>
@@ -44,6 +60,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!--处理文件工具类库-->

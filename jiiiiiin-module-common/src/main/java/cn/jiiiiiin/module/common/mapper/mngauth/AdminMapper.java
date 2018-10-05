@@ -2,6 +2,7 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * <p>
@@ -13,4 +14,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface AdminMapper extends BaseMapper<Admin> {
 
+    // @Select("select * from mng_admin where username=#{username}")
+    Admin findByUsername(String username);
 }

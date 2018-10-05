@@ -26,6 +26,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
 
 /**
  * 资源服务器配置
+ * <p>
  * 使用`@EnableResourceServer`注解标明当前应用是一个“资源服务器”提供商
  * <p>
  * 类`browser`项目针对spring security的权限配置类`BrowserSpringSecurityBaseConfig`
@@ -65,10 +66,6 @@ public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter 
     @Override
     public void configure(HttpSecurity http) throws Exception {
 
-
-        // TODO 业务系统的注册接口
-        final String registerUrl = "/admin/auth/register";
-
         formAuthenticationConfig.configure(http);
 
         http
@@ -92,6 +89,14 @@ public class CustomResourceServerConfig extends ResourceServerConfigurerAdapter 
     }
 
     /**
+     * 防止使用jwt token，spring security在权限认证的时候，使用自定义认证服务组件校验报错：
+     *
+     * `EL1057E: No bean resolver registered in the context to resolve access to bean 'permissionService'`
+     *
+     * 如：`.access("@permissionService.hasPermission(authentication,request)")`
+     *
+     * 参考：
+     *
      * https://blog.csdn.net/liu_zhaoming/article/details/79411021
      *
      * @param resources

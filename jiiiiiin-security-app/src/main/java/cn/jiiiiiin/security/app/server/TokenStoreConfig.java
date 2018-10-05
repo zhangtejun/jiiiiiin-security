@@ -28,6 +28,8 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 public class TokenStoreConfig {
 
     /**
+     * 透明令牌生成器
+     *
      * 使用redis存储token的配置，只有在imooc.security.oauth2.tokenStore配置为redis时生效
      *
      * @author zhailiang

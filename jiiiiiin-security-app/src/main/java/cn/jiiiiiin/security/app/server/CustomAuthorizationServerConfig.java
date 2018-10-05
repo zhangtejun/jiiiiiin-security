@@ -150,11 +150,14 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         // 当继承了`AuthorizationServerConfigurerAdapter`之后就需要自己配置下面的认证组件
         endpoints
+                // 1.设置token生成器
                 .tokenStore(tokenStore)
+                // 2.支持用户名密码模式必须，授权默认中的用户名密码模式需要直接将认证凭证（用户名密码传递给授权服务器），授权服务器需要配置authenticationManager，去对这个用户进行身份认证
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService);
         // jwtAccessTokenConverter将token生成策略改成jwt，进行jwt的token生成（签名等）
         if (jwtAccessTokenConverter != null) {
+            // 3.1自定义数据配置
             val enhancerChain = new TokenEnhancerChain();
             final List<TokenEnhancer> enhancers = new ArrayList<>();
             if (jwtTokenEnhancer != null) {
@@ -163,7 +166,9 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
             }
             enhancers.add(jwtAccessTokenConverter);
             enhancerChain.setTokenEnhancers(enhancers);
-            endpoints.tokenEnhancer(enhancerChain).accessTokenConverter(jwtAccessTokenConverter);
+            endpoints.tokenEnhancer(enhancerChain)
+                    // 3.设置token签名器
+                    .accessTokenConverter(jwtAccessTokenConverter);
         }
     }
 //
@@ -202,7 +207,10 @@ public class CustomAuthorizationServerConfig extends AuthorizationServerConfigur
                     builder
                             .withClient(client.getClientId())
                             .secret(client.getClientSecret())
+                            // 可以直接配置获取授权码和授权token的第三方回调通知地址，如果配置就会用其校验获取授权code、码时候传递的redirect_uri
+                            //.redirectUris()
                             // 针对当前第三方应用所支持的授权模式，即http://{{host}}/oauth/token#grant_type
+                            // 还可以配置`implicit`简化模式/`client_credentials`客户端模式
                             .authorizedGrantTypes("refresh_token", "authorization_code", "password")
                             // 配置令牌的过期时间限
                             .accessTokenValiditySeconds(client.getAccessTokenValidateSeconds())

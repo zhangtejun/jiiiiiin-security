@@ -88,7 +88,7 @@
 
             <dependency>
                 <groupId>cn.jiiiiiin.security</groupId>
-                <artifactId>jiiiiiin-module-user</artifactId>
+                <artifactId>jiiiiiin-module-mngauth</artifactId>
                 <version>${jiiiiiin-security-version}</version>
             </dependency>
 
