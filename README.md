@@ -25,7 +25,8 @@
 > [基于 RBAC 的 Web Security Framework 的研究与应用](https://www.ibm.com/developerworks/cn/java/j-lo-rbacwebsecurity/index.html)
 >
 > [Mybatis-Plus逻辑删除视频教程](http://v.youku.com/v_show/id_XMjc4ODY0MDI5Ng==.html?spm=a2hzp.8244740.userfeed.5!2~5~5~5!3~5~A)
->
+
+> [spring boot whitelabel 404 error page](https://www.youtube.com/watch?v=e9XCGqnBD2c)
 
 # 关键点
 
@@ -376,6 +377,8 @@ http
 #####  权限表达式
 
 参考: https://coding.imooc.com/lesson/134.html#mid=7383
+
+[授权表达式举例说明](https://www.jianshu.com/p/01498e0e0c83)
 
 ![image-20180921114552139](https://ws3.sinaimg.cn/large/006tNbRwgy1fvh0l89a5zj30zh0j87hc.jpg)
 

@@ -2,12 +2,12 @@
 --
 -- 数据表的命名格式为：
 --
--- b：代表批量数据类（Batch）
+-- bth：代表批量数据类（Batch）
 -- mng：表示管理类表（Management）
--- h：代表历史数据类（History）
--- r：表示报表类（Report）
--- s：代表系统信息类（System）
--- t：表示临时表（Temp）
+-- hty：代表历史数据类（History）
+-- rpt：表示报表类（Report）
+-- sys：代表系统信息类（System）
+-- temp：表示临时表（Temp）
 
 DROP DATABASE IF EXISTS `vplusdb`;
 CREATE DATABASE IF NOT EXISTS `vplusdb` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
@@ -33,10 +33,11 @@ CREATE TABLE `mng_admin` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `username` varchar(50) NOT NULL COMMENT '用户名',
-  `password` varchar(32) NOT NULL COMMENT '密码，加密存储',
+  `password` varchar(60) NOT NULL COMMENT '密码，加密存储',
   `phone` varchar(20) DEFAULT NULL COMMENT '手机号',
   `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  key idx_username(username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 /*Table structure for table `mng_role` */
@@ -44,9 +45,13 @@ CREATE TABLE `mng_admin` (
 DROP TABLE IF EXISTS `mng_role`;
 
 CREATE TABLE `mng_role` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `pid` bigint(20) DEFAULT 0 COMMENT '父角色id 0标识为根节点',
   `name` varchar(20) NOT NULL COMMENT '角色名称',
-  PRIMARY KEY (`id`)
+  `authority_name` varchar(10) NOT NULL COMMENT '角色标识',
+  `num` int(11) DEFAULT NULL COMMENT '序号',
+  PRIMARY KEY (`id`),
+  key idx_pid(pid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 /*Table structure for table `mng_role_admin` */
@@ -66,9 +71,8 @@ DROP TABLE IF EXISTS `mng_resource`;
 
 CREATE TABLE `mng_resource` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `code` varchar(255) DEFAULT NULL COMMENT '菜单编号',
-  `pcode` varchar(255) DEFAULT NULL COMMENT '菜单父编号',
-  `pcodes` varchar(255) DEFAULT NULL COMMENT '当前菜单的所有父菜单编号',
+  `pid` bigint(20) DEFAULT 0 COMMENT '父角色id 0标识为根节点',
+  `pids` varchar(255) DEFAULT '0' COMMENT '当前菜单的所有父菜单编号',
   `name` varchar(255) DEFAULT NULL COMMENT '菜单名称',
   `url` varchar(255) DEFAULT NULL COMMENT 'url地址',
   `num` int(65) DEFAULT NULL COMMENT '菜单排序号',
@@ -78,8 +82,8 @@ CREATE TABLE `mng_resource` (
   `status` tinyint DEFAULT NULL COMMENT '菜单状态 :  1:启用   0:不启用',
   `isopen` tinyint DEFAULT NULL COMMENT '是否打开:    1:打开   0:不打开',
   PRIMARY KEY (`id`),
-  key idx_code(code),
-  key idx_code(pcode),
+  key idx_pid(pid),
+  key idx_pids(pids)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限资源表';
 
 

@@ -30,14 +30,10 @@ public class RbacAuthorizeConfigProvider implements AuthorizeConfigProvider {
     @Override
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
         config
-                .antMatchers(HttpMethod.GET, "/fonts/**").permitAll()
-                .antMatchers(HttpMethod.GET,
-                        "/**/*.html",
-                        "/admin/me",
-                        "/resource").authenticated()
                 .anyRequest()
-                // 自定义权限表达式
-                .access("@rbacService.hasPermission(request, authentication)");
+                .authenticated();
+//                // 自定义权限表达式
+//                .access("@rbacService.hasPermission(request, authentication)");
         return true;
     }
 

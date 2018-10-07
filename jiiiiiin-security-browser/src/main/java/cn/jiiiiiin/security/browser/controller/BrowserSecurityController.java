@@ -6,6 +6,9 @@ import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.SocialController;
 import cn.jiiiiiin.security.core.social.support.SocialUserInfo;
 import cn.jiiiiiin.security.core.support.SimpleResponse;
+import lombok.val;
+import lombok.var;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -41,10 +45,6 @@ import java.io.IOException;
 public class BrowserSecurityController extends SocialController {
 
     final static Logger L = LoggerFactory.getLogger(BrowserSecurityController.class);
-    /**
-     * 给`entity`中设置的提示信息key
-     */
-    private static final String MODEL_KEY_HINT_MSG = "hintMsg";
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -73,23 +73,25 @@ public class BrowserSecurityController extends SocialController {
     @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response, Device device, Model model) throws IOException {
-        // 获取到上一个被拦截的请求(原始请求）
-        final SavedRequest savedRequest = requestCache.getRequest(request, response);
-        if (savedRequest != null) {
-            final String transTarget = savedRequest.getRedirectUrl();
-            L.info("需要进行身份认证的请求是 {}", transTarget);
-            // 检测请求是否是以html结尾，我们就认为是访问网页版本
-            // if(StringUtils.endsWithIgnoreCase(transTarget, ".html")){
-            // 借助spring mobile来区分渠道
-            if (device.isNormal()) {
-                // 直接跳转到登录页面
-                L.info("跳转到身份认证页面 {}", securityProperties.getBrowser().getSignInUrl());
-                model.addAttribute(CommonConstants.MODEL_KEY_HINT_MSG, "访问的服务需要身份认证");
-                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getSignInUrl());
-                return null;
+        if (device.isNormal()) {
+            // 获取到上一个被拦截的请求(原始请求）
+            final SavedRequest savedRequest = requestCache.getRequest(request, response);
+            if (savedRequest != null) {
+                final String transTarget = savedRequest.getRedirectUrl();
+                L.info("需要进行身份认证的请求是 {}", transTarget);
             }
+            var msg = request.getParameter(WebAttributes.AUTHENTICATION_EXCEPTION);
+            // 直接跳转到登录页面
+            L.info("跳转到身份认证页面 {} {}", securityProperties.getBrowser().getSignInUrl(), msg);
+            if(StringUtils.isEmpty(msg)){
+                msg = "访问的服务需要身份认证";
+            }
+            val url = securityProperties.getBrowser().getSignInUrl()+ "?" + WebAttributes.AUTHENTICATION_EXCEPTION + "=" + msg;
+            redirectStrategy.sendRedirect(request, response, url);
+            return null;
+        }else {
+            return SimpleResponse.newInstance("访问的服务需要身份认证");
         }
-        return SimpleResponse.newInstance("访问的服务需要身份认证");
     }
 
     /**

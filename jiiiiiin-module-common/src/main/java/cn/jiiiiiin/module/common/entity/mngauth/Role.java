@@ -31,7 +31,22 @@ public class Role extends BaseEntity<Role> {
     @ApiModelProperty(value = "角色名称")
     private String name;
 
+    @ApiModelProperty(value = "角色名称")
+    private String authorityName;
+
+    @ApiModelProperty(value = "序号")
+    private Integer num;
+
+    @ApiModelProperty(value = "父角色id")
+    private Long pid;
+
 
     public static final String NAME = "name";
+
+    public static final String AUTHORITY_NAME = "authority_name";
+
+    public static final String NUM = "num";
+
+    public static final String PID = "pid";
 
 }

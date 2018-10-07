@@ -20,7 +20,7 @@ public class BrowserProperties {
      * 身份认证（登录）页面
      * 默认页面："/signIn.html"
      */
-    private String signInUrl = "/signIn.html";
+    private String signInUrl = "/signIn";
 
     /**
      * 社交登录，如果需要用户注册，跳转的页面

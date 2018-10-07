@@ -92,7 +92,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
         L.info("身份认证（登录）成功");
         final SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
-            final Device currentDevice = HttpUtils.resolveDevice(savedRequest.getHeaderValues("admin-agent").get(0), savedRequest.getHeaderValues("accept").get(0));
+            final Device currentDevice = HttpUtils.resolveDevice(savedRequest.getHeaderValues("User-Agent").get(0), savedRequest.getHeaderValues("accept").get(0));
             // 根据渠道返回不同的响应数据
             // 还有一种做法是根据客户端程序配置来指定响应数据格式：https://coding.imooc.com/lesson/134.html#mid=6866
             if (!currentDevice.isNormal()) {

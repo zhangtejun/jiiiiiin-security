@@ -11,8 +11,13 @@ server:
 spring:
   profiles:
     active: dev
-#  session:
-#    store-type: redis
+  thymeleaf:
+    cache: false
+    # 避免Thymeleaf对html语法检查过严 https://www.jianshu.com/p/b361a6acbe0c
+    mode: LEGACYHTML5
+  # 使用`jiiiiiin-security-browser`模块需开启
+  session:
+    store-type: redis
   # https://segmentfault.com/a/1190000013269653
   cache:
     # 缓存的技术类型
@@ -114,7 +119,11 @@ jiiiiiin:
       image-code:
         length: 3
         size: 30
-        interceptor-urls: /admin/*,/user/*
+        interceptor-urls: /admapin/*,/user/*
+    browser:
+      sign-up-url: /demo-signUp.html
+      sign-out-url: /demo-signOut.html
+      proxy-uri: http://www.pinzhi365.com
 
 ---
 

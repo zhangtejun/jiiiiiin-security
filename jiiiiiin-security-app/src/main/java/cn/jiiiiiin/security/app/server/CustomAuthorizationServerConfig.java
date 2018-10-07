@@ -111,7 +111,7 @@ import java.util.List;
 public class CustomAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     /**
-     * 当去做认证的时候使用的`userDetailsService`
+     * 当去做认证的时候使用的`pa`
      */
     @Autowired
     private UserDetailsService userDetailsService;

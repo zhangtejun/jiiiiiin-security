@@ -6,6 +6,7 @@ import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -18,7 +19,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @RestController
 @EnableSwagger2
 @SpringBootApplication
-@MapperScan(value = {"cn.jiiiiiin.module.common.mapper", "cn.jiiiiiin.security.rbac.mapper"})
+/**
+ *
+ */
+@EnableTransactionManagement
+@MapperScan(value = {"cn.jiiiiiin.module.common.mapper"})
 public class ManagerApp {
 
     public static void main(String[] args) {

@@ -28,14 +28,11 @@ public class Resource extends BaseEntity<Resource> {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "菜单编号")
-    private String code;
+    @ApiModelProperty(value = "菜单父id")
+    private Long pid;
 
-    @ApiModelProperty(value = "菜单父编号")
-    private String pcode;
-
-    @ApiModelProperty(value = "当前菜单的所有父菜单编号")
-    private String pcodes;
+    @ApiModelProperty(value = "当前菜单的所有父菜ids")
+    private String pids;
 
     @ApiModelProperty(value = "菜单名称")
     private String name;
@@ -62,11 +59,9 @@ public class Resource extends BaseEntity<Resource> {
     private Integer isopen;
 
 
-    public static final String CODE = "code";
+    public static final String PID = "pid";
 
-    public static final String PCODE = "pcode";
-
-    public static final String PCODES = "pcodes";
+    public static final String PIDS = "pids";
 
     public static final String NAME = "name";
 

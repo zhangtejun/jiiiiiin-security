@@ -2,10 +2,12 @@ package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
+import cn.jiiiiiin.module.common.entity.mngauth.Role;
+import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.val;
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,8 +16,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -34,21 +39,38 @@ public class AdminServiceImplTest {
     @Autowired
     private IAdminService adminService;
 
+    @Autowired
+    private RoleMapper roleMapper;
+
     @Before
     public void before() {
-        adminService.save(new Admin().setUsername("admin").setPassword("admin_pwd"));
+        adminService.save(new Admin().setUsername("user").setPassword("admin_pwd"));
     }
 
     @Test
     public void findByUsername() {
-        val admin = adminService.findByUsername("admin");
-        Assert.assertEquals("admin", admin.getUsername());
+        val admin = adminService.signInByUsername("user");
+        Assert.assertEquals("user", admin.getUsername());
         // 测试EHCache缓存
-        val admin2 = adminService.findByUsername("admin");
+        val admin2 = adminService.signInByUsername("user");
+    }
+
+
+    @Test
+    public void relationRole() {
+        Set<Role> roles = new HashSet<>();
+        val adminRole = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
+        val userRole = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "DB_ADMIN"));
+        roles.add(adminRole);
+        roles.add(userRole);
+        val admin = adminService.signInByUsername("admin");
+        admin.setRoles(roles);
+        val res = adminService.relationRole(admin);
+        Assert.assertTrue(res);
     }
 
     @After
     public void after() {
-        adminService.remove(new QueryWrapper<Admin>().eq("username", "admin"));
+        adminService.remove(new QueryWrapper<Admin>().eq("username", "user"));
     }
 }

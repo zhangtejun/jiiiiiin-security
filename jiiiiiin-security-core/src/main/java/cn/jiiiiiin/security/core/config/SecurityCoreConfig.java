@@ -5,13 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.social.security.SocialUserDetailsService;
 
 import javax.sql.DataSource;
 
@@ -23,6 +20,7 @@ import javax.sql.DataSource;
 @Configuration
 // 注册配置
 @EnableConfigurationProperties(SecurityProperties.class)
+//@PropertySource(value = {"exception.properties"}, encoding = "UTF-8")
 public class SecurityCoreConfig {
 
     @Autowired

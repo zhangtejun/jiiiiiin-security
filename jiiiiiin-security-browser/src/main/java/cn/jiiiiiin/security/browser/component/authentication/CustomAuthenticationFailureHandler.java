@@ -1,13 +1,16 @@
 package cn.jiiiiiin.security.browser.component.authentication;
 
 import cn.jiiiiiin.security.browser.utils.HttpUtils;
+import cn.jiiiiiin.security.core.dict.CommonConstants;
 import cn.jiiiiiin.security.core.support.SimpleResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -72,23 +75,17 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         L.info("身份认证（登录）失败", exception);
+        val currentDevice = HttpUtils.resolveDevice(request);
         // 根据渠道返回不同的响应数据
-        final SavedRequest savedRequest = requestCache.getRequest(request, response);
-        if (savedRequest != null) {
-            final Device currentDevice = HttpUtils.resolveDevice(savedRequest.getHeaderValues("admin-agent").get(0), savedRequest.getHeaderValues("accept").get(0));
-            // 根据渠道返回不同的响应数据
-            if (!currentDevice.isNormal()) {
-                response.setStatus(INTERNAL_SERVER_ERROR.value());
-                response.setContentType("application/json;charset=UTF-8");
-                // 将authentication转换成json str输出
-                final String res = objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage()));
-                L.info("返回json数据 {}", res);
-                response.getWriter().write(res);
-            } else {
-                // 默认是做重定向到登录之前的【期望访问资源】接口
-                super.onAuthenticationFailure(request, response, exception);
-            }
+        if (!currentDevice.isNormal()) {
+            response.setStatus(INTERNAL_SERVER_ERROR.value());
+            response.setContentType(CommonConstants.CONTENT_TYPE_JSON);
+            // 将authentication转换成json str输出
+            final String res = objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage()));
+            L.info("返回json数据 {}", res);
+            response.getWriter().write(res);
         } else {
+            request.setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, exception.getMessage());
             // 默认是做重定向到登录之前的【期望访问资源】接口
             super.onAuthenticationFailure(request, response, exception);
         }

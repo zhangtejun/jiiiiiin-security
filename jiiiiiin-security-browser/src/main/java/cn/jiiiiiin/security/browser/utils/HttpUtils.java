@@ -24,7 +24,7 @@ public class HttpUtils {
     private static final List<String> normalUserAgentKeywords = new ArrayList<String>();
 
     public static Device resolveDevice(HttpServletRequest request) {
-        return resolveDevice(request.getHeader("admin-agent"), request.getHeader("accept"));
+        return resolveDevice(request.getHeader("User-Agent"), request.getHeader("accept"));
     }
 
     public static Device resolveDevice(String userAgent, String accept) {

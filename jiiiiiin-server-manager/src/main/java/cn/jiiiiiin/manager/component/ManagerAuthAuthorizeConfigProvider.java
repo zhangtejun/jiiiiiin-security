@@ -14,13 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ManagerAuthAuthorizeConfigProvider implements AuthorizeConfigProvider {
 
-    /* (non-Javadoc)
-     * @see com.imooc.security.core.authorize.AuthorizeConfigProvider#config(org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry)
-     */
     @Override
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
-
         config
+                .antMatchers("/hello").hasRole("ADMIN")
                 .antMatchers(
                         // TODO 判断是否是develop模式
                         // Druid监控的配置

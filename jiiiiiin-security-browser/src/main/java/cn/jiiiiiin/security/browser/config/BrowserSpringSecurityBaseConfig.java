@@ -16,6 +16,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
@@ -66,6 +68,12 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
 
     @Autowired
     private AuthorizeConfigManager authorizeConfigManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
 
     /**
      * https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/
@@ -128,6 +136,11 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 // 配置退出之后，删除浏览器cookie中的对应字段，这里是删除会话id
                 .deleteCookies("JSESSIONID")
                 .and()
+                // TODO 设置为配置 条件判断设置
+                .exceptionHandling()
+                .accessDeniedPage("/403")
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .and()
                 .rememberMe()
                 // 配置记住用户的配置
                 // 配置将需要记住用户的用户名通过一下的dao设置到数据库
@@ -135,7 +148,7 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 // 设置记住用户的时长
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
                 // 需要业务系统自己实现
-                .userDetailsService(userDetailsService)
+                //.userDetailsService(userDetailsService)
                 .and()
                 // 临时关闭防护
                 .csrf().disable();
@@ -146,11 +159,14 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
 
     /**
      * https://www.jianshu.com/p/e8651cf91ec5
+     *
      * @param auth
      * @throws Exception
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder);
     }
 }

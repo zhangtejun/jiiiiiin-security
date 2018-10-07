@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -18,6 +19,17 @@ import org.springframework.stereotype.Component;
  */
 public interface IAdminService extends IService<Admin> {
 
-    Admin findByUsername(@NonNull String username);
+    Admin signInByUsername(@NonNull String username);
+
+    /**
+     * spring 事务：
+     * https://www.ibm.com/developerworks/cn/java/j-master-spring-transactional-use/index.html
+     * http://blog.didispace.com/springboottransactional/
+     *
+     * @param admin
+     * @return
+     */
+    @Transactional
+    boolean relationRole(@NonNull Admin admin);
 
 }

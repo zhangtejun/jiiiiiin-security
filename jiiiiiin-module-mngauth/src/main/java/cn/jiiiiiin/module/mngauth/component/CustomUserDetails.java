@@ -3,9 +3,12 @@ package cn.jiiiiiin.module.mngauth.component;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -25,10 +28,14 @@ public class CustomUserDetails implements UserDetails {
         this.admin = admin;
     }
 
+    /**
+     * 简化：AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
+     *
+     * @return
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return admin.getRoles().stream()
-                // TODO need test
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                 .collect(Collectors.toList());
     }
