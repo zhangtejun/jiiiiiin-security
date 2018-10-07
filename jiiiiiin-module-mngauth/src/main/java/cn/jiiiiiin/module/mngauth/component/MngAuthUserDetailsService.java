@@ -1,6 +1,5 @@
 package cn.jiiiiiin.module.mngauth.component;
 
-import cn.jiiiiiin.module.common.mapper.mngauth.AdminMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class MngAuthUserDetailsService implements UserDetailsService {
         if (optionalAdmin == null) {
             throw new UsernameNotFoundException("用户名密码不符");
         } else {
-            return new CustomUserDetails(optionalAdmin);
+            return new MngUserDetails(optionalAdmin);
         }
     }
 

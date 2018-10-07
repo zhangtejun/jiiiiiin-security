@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
-public class CustomUserDetails implements UserDetails {
+public class MngUserDetails implements UserDetails {
 
     private static final long serialVersionUID = -8362660409491439833L;
 
     private Admin admin;
 
-    public CustomUserDetails(Admin admin) {
+    public MngUserDetails(Admin admin) {
         this.admin = admin;
     }
 
@@ -36,7 +36,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return admin.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getAuthorityName()))
                 .collect(Collectors.toList());
     }
 
