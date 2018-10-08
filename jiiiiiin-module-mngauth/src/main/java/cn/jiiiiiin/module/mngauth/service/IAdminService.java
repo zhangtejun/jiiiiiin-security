@@ -19,6 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface IAdminService extends IService<Admin> {
 
+    /**
+     * 除了下面两种角色，将会load对应用户具有角色的资源信息集合
+     * {@link cn.jiiiiiin.security.rbac.component.dict.RbacDict#ROLE_ADMIN_AUTHORITY_NAME}
+     * {@link cn.jiiiiiin.security.rbac.component.dict.RbacDict#ROLE_DB_ADMIN_AUTHORITY_NAME}
+     *
+     * @param username
+     * @return
+     */
     Admin signInByUsername(@NonNull String username);
 
     /**

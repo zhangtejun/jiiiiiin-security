@@ -1,5 +1,6 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -10,6 +11,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>
@@ -40,6 +44,9 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "url地址")
     private String url;
 
+    @ApiModelProperty(value = "接口类型: 如POST标识添加")
+    private String method;
+
     @ApiModelProperty(value = "菜单排序号")
     private Integer num;
 
@@ -49,15 +56,11 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "是否是菜单（1：是  0：不是）")
     private Integer ismenu;
 
-    @ApiModelProperty(value = "备注")
-    private String tips;
-
     @ApiModelProperty(value = "菜单状态 :  1:启用   0:不启用")
     private Integer status;
 
     @ApiModelProperty(value = "是否打开:    1:打开   0:不打开")
     private Integer isopen;
-
 
     public static final String PID = "pid";
 
@@ -73,7 +76,7 @@ public class Resource extends BaseEntity<Resource> {
 
     public static final String ISMENU = "ismenu";
 
-    public static final String TIPS = "tips";
+    public static final String METHOD = "method";
 
     public static final String STATUS = "status";
 

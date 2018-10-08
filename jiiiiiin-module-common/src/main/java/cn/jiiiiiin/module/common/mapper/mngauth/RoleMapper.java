@@ -13,4 +13,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RoleMapper extends BaseMapper<Role> {
 
+    /**
+     * 批量插入role管理的resource
+     *
+     * @param role
+     * @return
+     */
+    int relationResource(Role role);
 }

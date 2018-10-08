@@ -7,24 +7,37 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.jiiiiiin.module.common.entity.mngauth.Resource">
-    <result column="id" property="id" />
-        <result column="code" property="code" />
-        <result column="pcode" property="pcode" />
-        <result column="pcodes" property="pcodes" />
-        <result column="name" property="name" />
-        <result column="url" property="url" />
-        <result column="num" property="num" />
-        <result column="levels" property="levels" />
-        <result column="ismenu" property="ismenu" />
-        <result column="tips" property="tips" />
-        <result column="status" property="status" />
-        <result column="isopen" property="isopen" />
+        <result column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="pcode" property="pcode"/>
+        <result column="pcodes" property="pcodes"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="num" property="num"/>
+        <result column="levels" property="levels"/>
+        <result column="ismenu" property="ismenu"/>
+        <result column="tips" property="tips"/>
+        <result column="status" property="status"/>
+        <result column="isopen" property="isopen"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        code, pcode, pcodes, name, url, num, levels, ismenu, tips, status, isopen
+        pid, pids, name, url, method, num, levels, ismenu, status, isopen
     </sql>
+
+    <sql id="selectByRoleId_Column_List">
+        r.id,
+        r.name, r.url, r.method
+    </sql>
+
+    <select id="selectByRoleId" resultType="cn.jiiiiiin.module.common.entity.mngauth.Resource">
+        select
+        <include refid="selectByRoleId_Column_List"/>
+        from mng_resource r
+        left join mng_role_resource mrr on mrr.resource_id = r.id
+        where mrr.role_id = #{roleId} and r.status != 0
+    </select>
 
 </mapper>

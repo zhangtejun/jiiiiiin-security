@@ -28,9 +28,7 @@ public class RbacServiceImpl implements RbacService {
     @Override
     public boolean hasPermission(HttpServletRequest request, Authentication authentication) {
         // principal即系统的UserDetailsService返回的用户标识对象，如果没有通过认证则是一个匿名的字符串
-        Object principal = authentication.getPrincipal();
-        boolean hasPermission = false;
-        return hasPermission;
+        throw new UnsupportedOperationException("请自行实现`rbacService`权限控制服务");
     }
 
 }

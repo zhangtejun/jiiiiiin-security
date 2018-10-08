@@ -1,5 +1,6 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -10,6 +11,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>
@@ -40,6 +44,8 @@ public class Role extends BaseEntity<Role> {
     @ApiModelProperty(value = "父角色id")
     private Long pid;
 
+    @TableField(exist = false)
+    private Set<Resource> resources = new HashSet<>();
 
     public static final String NAME = "name";
 

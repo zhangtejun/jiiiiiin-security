@@ -20,4 +20,12 @@
         name
     </sql>
 
+    <insert id="relationResource">
+        insert into mng_role_resource(resource_id, role_id) values
+        <foreach collection="resources" item="item" index="index"
+                 separator=",">
+            (#{item.id}, #{id})
+        </foreach>
+    </insert>
+
 </mapper>

@@ -39,7 +39,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
      * https://my.oschina.net/zjllovecode/blog/1818716
      *
      * @param admin
-     * @return 批量插入是否成功（0-失败，1-成功）
+     * @return {@link com.baomidou.mybatisplus.core.toolkit.sql.SqlHelper#retBool(Integer)} 批量插入是否成功（0-失败，1-成功）
      */
     int relationRole(Admin admin);
 }

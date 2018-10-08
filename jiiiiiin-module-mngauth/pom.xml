@@ -36,6 +36,11 @@
 
         <dependency>
             <groupId>cn.jiiiiiin.security</groupId>
+            <artifactId>jiiiiiin-security-authorize</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.jiiiiiin.security</groupId>
             <artifactId>jiiiiiin-module-common</artifactId>
         </dependency>
 

@@ -4,6 +4,7 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
+import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlHelper;
@@ -36,12 +37,14 @@ public class RoleMapperTest {
     @Test
     @Rollback
     public void testInsert(){
-        int res = roleMapper.insert(new Role().setAuthorityName("ADMIN").setName("系统管理员").setNum(0));
+        int res = roleMapper.insert(new Role().setAuthorityName(RbacDict.ROLE_ADMIN_AUTHORITY_NAME).setName("系统管理员").setNum(0));
         Assert.assertTrue(SqlHelper.retBool(res));
         val adminRole = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
         Assert.assertNotNull(adminRole);
-        int res2 = roleMapper.insert(new Role().setAuthorityName("DB_ADMIN").setName("数据库管理员").setNum(0).setPid(adminRole.getId()));
+        int res2 = roleMapper.insert(new Role().setAuthorityName(RbacDict.ROLE_DB_ADMIN_AUTHORITY_NAME).setName("数据库管理员").setNum(0).setPid(adminRole.getId()));
         Assert.assertTrue(SqlHelper.retBool(res2));
+        int res3 = roleMapper.insert(new Role().setAuthorityName("OPERATOR").setName("部门操作员").setNum(1));
+        Assert.assertTrue(SqlHelper.retBool(res3));
     }
 
 }

@@ -31,9 +31,8 @@ public class RbacAuthorizeConfigProvider implements AuthorizeConfigProvider {
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
         config
                 .anyRequest()
-                .authenticated();
-//                // 自定义权限表达式
-//                .access("@rbacService.hasPermission(request, authentication)");
+                // 自定义权限表达式
+                .access("@rbacService.hasPermission(request, authentication)");
         return true;
     }
 

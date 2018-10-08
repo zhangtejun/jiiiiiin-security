@@ -42,13 +42,6 @@
         delete from mng_role_admin where user_id = #{id}
     </delete>
 
-    <!--<select id="selectByUsername" resultType="cn.jiiiiiin.module.common.entity.mngauth.Admin" useCache="true">-->
-        <!--select-->
-        <!--<include refid="Base_Column_List"/>-->
-        <!--from mng_admin-->
-        <!--where username = #{username}-->
-    <!--</select>-->
-
     <resultMap id="selectByUsernameResultMap" type="Admin">
         <result column="id" property="id"/>
         <result column="create_time" property="createTime"/>
@@ -57,11 +50,11 @@
         <result column="phone" property="phone"/>
         <result column="email" property="email"/>
         <collection property="roles" ofType="Role" javaType="list">
-            <result column="id" property="id" />
-            <result column="name" property="name" />
-            <result column="authority_name" property="authorityName" />
-            <result column="num" property="num" />
-            <result column="pid" property="pid" />
+            <result column="id" property="id"/>
+            <result column="name" property="name"/>
+            <result column="authority_name" property="authorityName"/>
+            <result column="num" property="num"/>
+            <result column="pid" property="pid"/>
         </collection>
     </resultMap>
 
