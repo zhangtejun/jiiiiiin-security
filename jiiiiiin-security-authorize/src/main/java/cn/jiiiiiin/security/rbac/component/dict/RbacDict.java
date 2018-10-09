@@ -5,7 +5,6 @@ package cn.jiiiiiin.security.rbac.component.dict;
  */
 public class RbacDict {
 
-    public static final String DB_URI = "";
     /**
      * 系统管理员角色，系统默认配置
      */

@@ -48,35 +48,35 @@ public class ResourceMapperTest {
     }
 
     @Test
-    @Transactional
-    @Rollback
+//    @Transactional
+//    @Rollback
     public void testInsert() {
 
         val resource = new Resource()
-                .setName("用户管理")
+                .setName("控制台")
                 .setLevels(1)
-                .setUrl("/admin")
+                .setUrl("/")
                 .setNum(1)
                 .setMethod(GET);
         int res = resourceMapper.insert(resource);
         Assert.assertTrue(SqlHelper.retBool(res));
         Assert.assertTrue(resource.getId() > 0);
         log.info("admin res {}", resource);
-
-        val resource2 = new Resource()
-                .setName("添加用户")
-                .setPid(resource.getId())
-                .setLevels(2)
-                .setNum(1)
-                .setUrl("/admin")
-                .setMethod(POST);
-        int res2 = resourceMapper.insert(resource2);
-        Assert.assertTrue(SqlHelper.retBool(res2));
+//
+//        val resource2 = new Resource()
+//                .setName("添加用户")
+//                .setPid(resource.getId())
+//                .setLevels(2)
+//                .setNum(1)
+//                .setUrl("/admin")
+//                .setMethod(POST);
+//        int res2 = resourceMapper.insert(resource2);
+//        Assert.assertTrue(SqlHelper.retBool(res2));
 
         val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "OPERATOR"));
         Set<Resource> set = new HashSet<>();
         set.add(resource);
-        set.add(resource2);
+//        set.add(resource2);
         operator.setResources(set);
         int res3 = roleMapper.relationResource(operator);
         Assert.assertTrue(SqlHelper.retBool(res3));

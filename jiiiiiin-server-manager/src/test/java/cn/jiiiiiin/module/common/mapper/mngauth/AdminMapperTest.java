@@ -33,7 +33,7 @@ public class AdminMapperTest {
     }
 
     @Test
-    public void testSelectByUsername(){
+    public void testSelectByUsername() {
         val res = adminMapper.selectByUsername("admin");
         log.info("selectByUsername {}", res);
         Assert.assertNotNull(res);
@@ -42,14 +42,14 @@ public class AdminMapperTest {
 
     @Test
     @Rollback
-    public void testInsert(){
+    public void testInsert() {
         int res = adminMapper.insert(new Admin().setUsername("admin").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setEmail("15399999999@163.com").setPhone("15399999999"));
         Assert.assertTrue(SqlHelper.retBool(res));
     }
 
     @Test
     @Rollback
-    public void testClearRelationRoleAdminRecord(){
+    public void testClearRelationRoleAdminRecord() {
         val res = SqlHelper.delBool(adminMapper.clearRelationRoleAdminRecord((Admin) new Admin().setId(1L)));
         Assert.assertTrue(res);
     }

@@ -50,7 +50,7 @@
         <result column="phone" property="phone"/>
         <result column="email" property="email"/>
         <collection property="roles" ofType="Role" javaType="list">
-            <result column="id" property="id"/>
+            <result column="role_id" property="id"/>
             <result column="name" property="name"/>
             <result column="authority_name" property="authorityName"/>
             <result column="num" property="num"/>
@@ -61,7 +61,8 @@
     <select id="selectByUsername" resultMap="selectByUsernameResultMap">
         select
           admin.*,
-          role.*
+          role.*,
+          role.id role_id
           from mng_admin as admin
           left join mng_role_admin mra on admin.id = mra.user_id
           left join mng_role role on mra.role_id = role.id

@@ -36,7 +36,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         log.debug("登录用户名 {}", username);
         val res = adminMapper.selectByUsername(username);
         val ignoreLoadResource = res.getRoles().stream().anyMatch(role ->
-                role.getAuthorityName().equalsIgnoreCase(RbacDict.ROLE_ADMIN_AUTHORITY_NAME) || role.getAuthorityName().equalsIgnoreCase(RbacDict.ROLE_DB_ADMIN_AUTHORITY_NAME));
+                role.getAuthorityName().equalsIgnoreCase(RbacDict.ROLE_ADMIN_AUTHORITY_NAME));
         if (!ignoreLoadResource) {
             res.getRoles().stream().forEach(role ->
                     role.setResources(resourceMapper.selectByRoleId(role.getId())));
