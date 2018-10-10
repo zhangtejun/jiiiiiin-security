@@ -6,6 +6,7 @@ package cn.jiiiiiin.manager.component.authorize;
 import cn.jiiiiiin.module.mngauth.component.MngUserDetails;
 import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
 import cn.jiiiiiin.security.rbac.component.service.RbacService;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author zhailiang
  */
+@Slf4j
 @Component("rbacService")
 public class ManagerRbacServiceImpl implements RbacService {
 
@@ -48,6 +50,7 @@ public class ManagerRbacServiceImpl implements RbacService {
                 // 读取用户所拥有权限的所有URL
                 // 通过用户标识-》用户角色-》角色拥有的资源
                 val roles = admin.getRoles();
+                log.debug("hasPermission 服务 判断 {} {} {}", reqURI, reqMethod, roles);
                 val iterator = roles.iterator();
                 while (iterator.hasNext()) {
                     val role = iterator.next();

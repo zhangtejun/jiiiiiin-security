@@ -1,3 +1,4 @@
-import page from './page'
+// import page from './page'
+import customPage from './custom-page'
 
-export default page
+export default customPage
