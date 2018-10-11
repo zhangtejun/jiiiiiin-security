@@ -22,14 +22,19 @@ import menuAside from '@/menu/aside'
 import {
   frameInRoutes
 } from '@/router/routes'
+import Navigation from 'vue-navigation'
+import ViewPlus from 'vue-viewplus'
+import viewPlusOptions from '@/plugin/vue-viewplus'
 
-// import ViewPlus from 'vue-viewplus'
-// import viewPlusOptions from '@/plugin/vue-viewplus'
-// console.log(viewPlusOptions)
-// Vue.use(ViewPlus, {
-//   store,
-//   ...viewPlusOptions
-// })
+Vue.use(Navigation, {
+  router,
+  store
+})
+
+Vue.use(ViewPlus, {
+  store,
+  ...viewPlusOptions
+})
 
 // 核心插件
 Vue.use(d2Admin)
@@ -62,10 +67,5 @@ new Vue({
     this.$store.commit('d2admin/ua/get')
     // 初始化全屏监听
     this.$store.dispatch('d2admin/fullscreen/listen')
-
-    const bigBox = {
-      weight: 10
-    };
-    console.log(bigBox::getWeight()); // prints '10'
   }
 }).$mount('#app')

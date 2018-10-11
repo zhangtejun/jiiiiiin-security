@@ -20,8 +20,13 @@ module.exports = {
     overlay: {
       warnings: true,
       errors: true
-    }
+    },
+    port: 9000
   },
+  transpileDependencies: [
+    '@babel/plugin-proposal-function-bind',
+    'vue-viewplus/src/'
+  ],
   // 默认设置: https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-service/lib/config/base.js
   chainWebpack: config => {
     // 解决 cli3 热更新失效 https://github.com/vuejs/vue-cli/issues/1559
@@ -69,10 +74,10 @@ module.exports = {
     entry
       .add('babel-polyfill')
       .end()
-    const jsRule = config.module.rule('js')
-    jsRule
-      .include
-      .add(resolve('./node_modules/vue-viewplus/src/'))
-      .end()
+    // const jsRule = config.module.rule('js')
+    // jsRule
+    //   .include
+    //   .add(resolve('./node_modules/vue-viewplus/src/'))
+    //   .end()
   }
 }

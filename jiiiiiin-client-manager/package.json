@@ -3,11 +3,11 @@
   "version": "1.5.0",
   "scripts": {
     "serve": "vue-cli-service serve --open",
-    "start": "vue-cli-service serve --open",
-    "dev": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
-    "build:travis": "vue-cli-service build --mode travis",
     "lint": "vue-cli-service lint --fix",
+    "build:travis": "vue-cli-service build --mode travis",
+    "dev": "vue-cli-service serve --open",
+    "start": "vue-cli-service serve --open",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
@@ -30,13 +30,15 @@
     "ua-parser-js": "^0.7.18",
     "vue": "^2.5.17",
     "vue-i18n": "^7.4.2",
+    "vue-navigation": "^1.1.4",
     "vue-router": "^3.0.1",
     "vue-viewplus": "^0.6.8",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-function-bind": "^7.0.0",
     "@kazupon/vue-i18n-loader": "^0.3.0",
-    "@vue/cli-plugin-babel": "^3.0.0",
+    "@vue/cli-plugin-babel": "^3.0.5",
     "@vue/cli-plugin-eslint": "^3.0.0",
     "@vue/cli-plugin-unit-jest": "^3.0.0",
     "@vue/cli-service": "^3.0.0",
@@ -44,7 +46,6 @@
     "@vue/test-utils": "^1.0.0-beta.20",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
-    "babel-plugin-transform-function-bind": "^6.22.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-prettier": "^3.0.0",
     "lint-staged": "^7.2.0",

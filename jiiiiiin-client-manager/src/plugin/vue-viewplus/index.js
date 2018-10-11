@@ -1,22 +1,22 @@
 import router from '@/router/index'
-import store from '@/store/index'
+
+const _env = process.env.NODE_ENV
+const _baseUrl = `http://192.168.3.43:9000${process.env.BASE_URL}`
 
 export default {
   router,
   env: 'BROWSER',
-  debug: process.env.NODE_ENV !== 'production',
-  appUrl: 'http://localhost:9090',
+  debug: _env !== 'production',
+  appUrl: _baseUrl,
   errorHandler(err) {
     console.error('vp errorHandler', err)
     if (err && err instanceof Error) {
       switch (err.code) {
-        case 'RUN_EVN_NOT_SUPPORT':
-          store.commit(JS_BRIDGE_CAN_USE_STATUS, false)
-          break
+        // case 'RUN_EVN_NOT_SUPPORT':
+        //   store.commit(JS_BRIDGE_CAN_USE_STATUS, false)
+        //   break
         default:
-          this.uiDialog(err instanceof Error ? err.message : JSON.stringify(err), {
-            title: '捕获到全局错误'
-          })
+          alert(err.message)
       }
     }
   },
@@ -25,17 +25,16 @@ export default {
     checkPaths: [
       /^((\/Interbus)(?!\/(SubMenu|ExchangeRateQry))\/.+)|(\/AccountManagement.+)|(\/Loan.+)|(\/QrPay.+)|(\/InvestmentFinance(?!\/(FinanceCalc|FinanceSubMenu|MyFinance|ProductDetail|Fund\/FundProductDetail|Fund\/FundTradingRules|Fund\/FundArchives|Fund\/FundAllocation|Fund\/FundAllocationzc|Fund\/FundManager|Fund\/NetWorthDetail))\/.+)|(\/TransferMoney.+)|(\/CustomerAgent.+)|(\/CreditCard.+)|(\/PersonalCenter(?!\/(OnlineRegisterPre|OnlineRegisterConf|OnlineRegisterRes|OnlineRegisterForEbankUserPre|OnlineRegisterForEbankUserConf|OnlineRegisterForEbankUserRes|VersionHome|VersionDescription|EntryInformation|ForgetPasswordPre|ForgetPasswordRes|AnswerForQuestion|QAHelp))\/.+)|(\/Others(?!\/(AnnouncementList|AnnouncementDetails|HomeSubMenu|LiveSubMenu|SMSBankIOS|SMSBankAndroid|WonderfulLife|AccountInsurance|FundChange|ActivityList|EInDevelopmentPre|RInDevelopmentPre|ExcitingActivities|ExcitingActivityDet|Download))\/.+)$/
     ],
-    //onLoginStateCheckFaild
+    onLoginStateCheckFaild(to, from, next) {
+      alert('您尚未登录，请先登录', to, from)
+    }
   },
   utilHttp: {
-    baseURL: `${this.appUrl}/pweb`,
+    baseURL: `${_baseUrl}/pweb`,
     timeout: '100000',
-    mode: HTTP_MODE,
+    mode: 'POST',
     headers: {
-      Accept: 'application/json, text/plain, */*',
-    },
-    params: {
-      _locale: 'zh_CN'
+      Accept: 'application/json'
     },
     statusCodeKey: 'STATUS_CODE_KEY',
     statusCode: 'STATUS_CODE',
@@ -66,11 +65,14 @@ export default {
     },
     accessRules: {
       sessionTimeOut: ['role.invalid_user'],
-      onSessionTimeOut,
+      onSessionTimeOut(response) {
+        // TODO 待测试
+        alert('example on onSessionTimeOut call', response)
+      },
       unauthorized: ['core_error_unauthorized'],
       onUnauthorized(response) {
         // TODO 待测试
-        alert('example on onUnauthorized call')
+        alert('example on onUnauthorized call', response)
       }
     }
   }
