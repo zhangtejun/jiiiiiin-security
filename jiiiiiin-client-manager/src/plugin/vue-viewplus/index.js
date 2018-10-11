@@ -1,13 +1,20 @@
 import router from '@/router/index'
 
 const _env = process.env.NODE_ENV
-const _baseUrl = `http://192.168.3.43:9000${process.env.BASE_URL}`
+export const baseUrl = `http://192.168.1.116:9000`
+export const serverUrl = `${baseUrl}/mng`
+
+export const mixinConfig = {
+  install() {},
+  baseUrl,
+  serverUrl
+}
 
 export default {
   router,
   env: 'BROWSER',
   debug: _env !== 'production',
-  appUrl: _baseUrl,
+  appUrl: baseUrl,
   errorHandler(err) {
     console.error('vp errorHandler', err)
     if (err && err instanceof Error) {
@@ -30,7 +37,7 @@ export default {
     }
   },
   utilHttp: {
-    baseURL: `${_baseUrl}/pweb`,
+    baseURL: serverUrl,
     timeout: '100000',
     mode: 'POST',
     headers: {

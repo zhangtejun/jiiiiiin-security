@@ -1,4 +1,6 @@
 const path = require('path')
+const merge = require('webpack-merge')
+const devServerConfig = require('./dev-server.config.js')
 
 // 拼接路径
 function resolve(dir) {
@@ -8,13 +10,13 @@ function resolve(dir) {
 // 基础路径 注意发布之前要先修改这里
 let baseUrl = '/'
 // 演示项目自动构建使用
-if (process.env.VUE_APP_TRAVIS === 'TRUE') baseUrl = '/d2-admin-start-kit/'
+if (process.env.VUE_APP_TRAVIS === 'TRUE') baseUrl = '/mng/'
 
 module.exports = {
   baseUrl: baseUrl, // 根据你的实际情况更改这里
   // https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint#configuration
   lintOnSave: process.env.NODE_ENV !== 'production',
-  devServer: {
+  devServer: merge({
     // 和 baseUrl 保持一致
     publicPath: baseUrl,
     overlay: {
@@ -22,7 +24,7 @@ module.exports = {
       errors: true
     },
     port: 9000
-  },
+  }, devServerConfig),
   transpileDependencies: [
     '@babel/plugin-proposal-function-bind',
     'vue-viewplus/src/'

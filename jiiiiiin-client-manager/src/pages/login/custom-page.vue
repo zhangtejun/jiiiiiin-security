@@ -24,7 +24,7 @@
               <el-input type="text" v-model="formLogin.code" placeholder="- - - -">
                 <template slot="prepend">验证码</template>
                 <template slot="append">
-                  <img class="login-code" src="./image/login-code.png">
+                  <img class="login-code" :src="validateImgCodeUri" @click="onChangeValidateImgCode">
                 </template>
               </el-input>
             </el-form-item>
@@ -44,6 +44,7 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
+      validateImgCodeUri: `${this.$vp.serverUrl}/code/image`,
       users: [
         {
           name: '管理员',
@@ -92,6 +93,10 @@ export default {
   },
   methods: {
     ...mapActions('d2admin/account', ['login']),
+    onChangeValidateImgCode: function(e) {
+      this.formLogin.code = ''
+      e.target.src = `${this.validateImgCodeUri}?${new Date().getTime()}`
+    },
     /**
      * @description 接收选择一个用户快速登录的事件
      * @param {Object} user 用户信息

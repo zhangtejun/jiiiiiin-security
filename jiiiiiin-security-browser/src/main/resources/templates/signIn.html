@@ -60,7 +60,7 @@
 
                         <el-form-item label="验证码" required="true">
                             <el-input name="imageCode" class="image-code-input"></el-input>
-                            <img src="/code/image" class="image-code" @click="onChangeValidateImgCode">
+                            <img th:src="@{/code/image}" class="image-code" @click="onChangeValidateImgCode">
                         </el-form-item>
 
                         <el-form-item label="">
@@ -74,7 +74,7 @@
                     </el-form>
                 </el-tab-pane>
                 <el-tab-pane label="验证码方式">
-                    <el-form ref="form2" label-width="80px" action="/authentication/mobile" method="post">
+                    <el-form ref="form2" label-width="80px" action="@{/authentication/mobile}" method="post">
                         <el-form-item label="手机号" required="true">
                             <el-input name="mobile" v-model="mobile"></el-input>
                         </el-form-item>
@@ -113,7 +113,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="/js/common.js"></script>
+<script th:src="@{/js/common.js}"></script>
 
 <script>
 

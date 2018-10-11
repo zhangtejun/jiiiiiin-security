@@ -24,13 +24,15 @@ import {
 } from '@/router/routes'
 import Navigation from 'vue-navigation'
 import ViewPlus from 'vue-viewplus'
-import viewPlusOptions from '@/plugin/vue-viewplus'
+import viewPlusOptions, {
+  mixinConfig as viewPlusMixinConfig
+} from '@/plugin/vue-viewplus'
 
 Vue.use(Navigation, {
   router,
   store
 })
-
+ViewPlus.mixin(Vue, viewPlusMixinConfig)
 Vue.use(ViewPlus, {
   store,
   ...viewPlusOptions

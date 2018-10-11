@@ -7,6 +7,8 @@ debug: false
 
 server:
   port: 9090
+  context-path: /mng
+
 
 spring:
   profiles:

@@ -1,5 +1,5 @@
 var baseConfig = {
-    baseURL: 'http://localhost:9090',
+    baseURL: 'http://localhost:9090/mng',
     // 测试oauth2流程
     // baseURL: 'http://www.pinzhi365.com',
 }
