@@ -2,17 +2,13 @@ package cn.jiiiiiin.security.browser.component.authentication;
 
 
 import cn.jiiiiiin.security.browser.utils.HttpUtils;
+import cn.jiiiiiin.security.core.dict.CommonConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,12 +26,8 @@ import java.io.IOException;
  *
  * @author jiiiiiin
  */
-@Component
-public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-
-    final static Logger L = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
-
-    private RequestCache requestCache = new HttpSessionRequestCache();
+@Slf4j
+public class BrowserAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Autowired
     ObjectMapper objectMapper;
@@ -89,23 +81,21 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        L.info("身份认证（登录）成功");
-        final SavedRequest savedRequest = requestCache.getRequest(request, response);
-        if (savedRequest != null) {
-            final Device currentDevice = HttpUtils.resolveDevice(savedRequest.getHeaderValues("User-Agent").get(0), savedRequest.getHeaderValues("accept").get(0));
-            // 根据渠道返回不同的响应数据
-            // 还有一种做法是根据客户端程序配置来指定响应数据格式：https://coding.imooc.com/lesson/134.html#mid=6866
-            if (!currentDevice.isNormal()) {
-                response.setContentType("application/json;charset=UTF-8");
-                // 将authentication转换成json str输出
-                response.getWriter().write(objectMapper.writeValueAsString(authentication));
-            } else {
-                // 默认是做重定向到登录之前的【期望访问资源】接口
-                super.onAuthenticationSuccess(request, response, authentication);
-            }
+        log.debug("身份认证（登录）成功");
+        final Device currentDevice = HttpUtils.resolveDevice(request);
+        // 根据渠道返回不同的响应数据
+        // 还有一种做法是根据客户端程序配置来指定响应数据格式：https://coding.imooc.com/lesson/134.html#mid=6866
+        if (!currentDevice.isNormal()) {
+            respJson(response, authentication);
         } else {
             // 默认是做重定向到登录之前的【期望访问资源】接口
             super.onAuthenticationSuccess(request, response, authentication);
         }
+    }
+
+    protected void respJson(HttpServletResponse response, Authentication authentication) throws IOException {
+        response.setContentType(CommonConstants.CONTENT_TYPE_JSON);
+        // 将authentication转换成json str输出
+        response.getWriter().write(objectMapper.writeValueAsString(authentication));
     }
 }

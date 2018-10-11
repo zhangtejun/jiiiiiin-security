@@ -6,15 +6,18 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.social.security.SocialAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author jiiiiiin
+ */
 @Component
 public class AppSocialAuthenticationFilterPostProcessor implements SocialAuthenticationFilterPostProcessor {
 
     @Autowired
-    private AuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Override
     public void process(SocialAuthenticationFilter socialAuthenticationFilter) {
         // 修改spring social的默认授权后处理
-        socialAuthenticationFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
+        socialAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
     }
 }

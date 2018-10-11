@@ -7,7 +7,6 @@ import cn.jiiiiiin.security.app.component.authentication.social.openid.OpenIdAut
 import cn.jiiiiiin.security.core.authentication.FormAuthenticationConfig;
 import cn.jiiiiiin.security.core.authorize.AuthorizeConfigManager;
 import cn.jiiiiiin.security.core.config.component.SmsCodeAuthenticationSecurityConfig;
-import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.SocialConfig;
 import cn.jiiiiiin.security.core.validate.code.ValidateCodeSecurityConfig;

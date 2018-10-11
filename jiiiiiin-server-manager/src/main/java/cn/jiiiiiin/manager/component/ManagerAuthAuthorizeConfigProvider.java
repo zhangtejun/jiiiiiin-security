@@ -18,7 +18,8 @@ public class ManagerAuthAuthorizeConfigProvider implements AuthorizeConfigProvid
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
         config
 //                .antMatchers("/hello").hasRole("ADMIN")
-                .antMatchers("/hello").permitAll()
+//                .antMatchers("/hello").permitAll()
+                .antMatchers("/admin").permitAll()
                 .antMatchers(
                         // TODO 判断是否是develop模式
                         // Druid监控的配置

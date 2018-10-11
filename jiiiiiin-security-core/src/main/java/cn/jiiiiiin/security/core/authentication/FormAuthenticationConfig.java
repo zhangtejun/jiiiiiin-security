@@ -20,10 +20,10 @@ import org.springframework.stereotype.Component;
 public class FormAuthenticationConfig {
 
     @Autowired
-    private AuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Autowired
-    private SimpleUrlAuthenticationFailureHandler customAuthenticationFailureHandler;
+    private AuthenticationFailureHandler authenticationFailureHandler;
 
     public void configure(HttpSecurity http) throws Exception {
         http
@@ -35,9 +35,9 @@ public class FormAuthenticationConfig {
             // 配置自定义登录交易请求接口（上面的登录页面提交表单之后登录接口），会被UsernamePasswordAuthenticationFilter所识别作为requiresAuthenticationRequestMatcher
             .loginProcessingUrl(SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM)
             // 配置自定义认证成功处理器
-            .successHandler(customAuthenticationSuccessHandler)
+            .successHandler(authenticationSuccessHandler)
             // 配置自定义认证失败处理器
-            .failureHandler(customAuthenticationFailureHandler);
+            .failureHandler(authenticationFailureHandler);
     }
 
 }

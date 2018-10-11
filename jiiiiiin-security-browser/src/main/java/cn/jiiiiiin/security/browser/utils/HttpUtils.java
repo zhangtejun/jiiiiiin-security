@@ -1,5 +1,6 @@
 package cn.jiiiiiin.security.browser.utils;
 
+import cn.jiiiiiin.security.core.dict.CommonConstants;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DevicePlatform;
 import org.springframework.mobile.device.DeviceType;
@@ -71,7 +72,7 @@ public class HttpUtils {
             }
         }
         // Accept-header based detection
-        if (accept != null && accept.contains("wap")) {
+        if (accept != null && (accept.contains(CommonConstants.ACCEPT_JSON_PREFIX) || accept.contains("wap"))) {
             return resolveWithPlatform(DeviceType.MOBILE, DevicePlatform.UNKNOWN);
         }
         // UserAgent keyword detection for Mobile devices
@@ -100,6 +101,7 @@ public class HttpUtils {
     /**
      * A lightweight Device implementation suitable for use as support code.
      * Typically used to hold the output of a device resolution invocation.
+     *
      * @author Keith Donald
      * @author Roy Clarkson
      * @author Scott Rossillo

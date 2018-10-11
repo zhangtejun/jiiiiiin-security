@@ -1,7 +1,8 @@
 import router from '@/router/index'
 
 const _env = process.env.NODE_ENV
-export const baseUrl = `http://192.168.1.116:9000`
+export const baseUrl = `http://192.168.3.43:9000`
+// export const baseUrl = `http://192.168.1.116:9000`
 export const serverUrl = `${baseUrl}/mng`
 
 export const mixinConfig = {
@@ -30,7 +31,7 @@ export default {
   loginStateCheck: {
     isLogined: false,
     checkPaths: [
-      /^((\/Interbus)(?!\/(SubMenu|ExchangeRateQry))\/.+)|(\/AccountManagement.+)|(\/Loan.+)|(\/QrPay.+)|(\/InvestmentFinance(?!\/(FinanceCalc|FinanceSubMenu|MyFinance|ProductDetail|Fund\/FundProductDetail|Fund\/FundTradingRules|Fund\/FundArchives|Fund\/FundAllocation|Fund\/FundAllocationzc|Fund\/FundManager|Fund\/NetWorthDetail))\/.+)|(\/TransferMoney.+)|(\/CustomerAgent.+)|(\/CreditCard.+)|(\/PersonalCenter(?!\/(OnlineRegisterPre|OnlineRegisterConf|OnlineRegisterRes|OnlineRegisterForEbankUserPre|OnlineRegisterForEbankUserConf|OnlineRegisterForEbankUserRes|VersionHome|VersionDescription|EntryInformation|ForgetPasswordPre|ForgetPasswordRes|AnswerForQuestion|QAHelp))\/.+)|(\/Others(?!\/(AnnouncementList|AnnouncementDetails|HomeSubMenu|LiveSubMenu|SMSBankIOS|SMSBankAndroid|WonderfulLife|AccountInsurance|FundChange|ActivityList|EInDevelopmentPre|RInDevelopmentPre|ExcitingActivities|ExcitingActivityDet|Download))\/.+)$/
+      /^(\/admin.+)$/
     ],
     onLoginStateCheckFaild(to, from, next) {
       alert('您尚未登录，请先登录', to, from)
@@ -43,9 +44,10 @@ export default {
     headers: {
       Accept: 'application/json'
     },
-    statusCodeKey: 'STATUS_CODE_KEY',
-    statusCode: 'STATUS_CODE',
-    msgKey: 'MSG_KEY',
+    // 适配后端`com.baomidou.mybatisplus.extension.api.R`接口
+    statusCodeKey: 'code',
+    statusCode: '0',
+    msgKey: 'msg',
     defShowLoading: true,
     onSendAjaxRespHandle: (response) => {
       return response

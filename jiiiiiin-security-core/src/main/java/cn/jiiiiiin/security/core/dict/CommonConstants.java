@@ -14,4 +14,9 @@ public class CommonConstants {
      * token 授权需要传递到请求头的 Authorization字段前缀
      */
     public static final String DEFAULT_HEADER_NAME_AUTHORIZATION_PRIFIX = "bearer ";
+
+    /**
+     * 判断请求头Accept字段是期望返回json的标记字段
+     */
+    public static final String ACCEPT_JSON_PREFIX = "application/json";
 }

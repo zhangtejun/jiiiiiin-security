@@ -35,7 +35,7 @@ public interface SecurityConstants {
     /**
      * 默认登录页面
      */
-    String DEFAULT_SIGN_IN_PAGE_URL = "/imooc-signIn.html";
+    String DEFAULT_SIGN_IN_PAGE_URL = "/signIn";
     /**
      * 验证图片验证码时，http请求中默认的携带图片验证码信息的参数的名称
      */
@@ -70,7 +70,7 @@ public interface SecurityConstants {
      *
      * @see org.springframework.security.config.annotation.web.builders.HttpSecurity#sessionManagement#invalidSessionUrl
      */
-    String DEFAULT_SESSION_INVALID_URL = "/sessionInvalid.html";
+    String DEFAULT_SESSION_INVALID_URL = "/sessionInvalid";
     /**
      * 获取第三方用户信息的url
      *

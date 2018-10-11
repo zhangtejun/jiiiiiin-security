@@ -123,9 +123,9 @@ jiiiiiin:
         size: 30
         interceptor-urls: /admapin/*,/user/*
     browser:
-      sign-up-url: /demo-signUp.html
-      sign-out-url: /demo-signOut.html
-      proxy-uri: http://www.pinzhi365.com
+      sign-up-url: /signUp.html
+      sign-out-url: /signOut.html
+      # proxy-uri: http://www.pinzhi365.com
 
 ---
 

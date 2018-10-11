@@ -34,7 +34,7 @@ function errorLog(err) {
 }
 
 // 创建一个 axios 实例
-const service = axios.create({
+let service = axios.create({
   baseURL: process.env.VUE_APP_API,
   timeout: 5000 // 请求超时时间
 })
@@ -133,5 +133,11 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+// zhaojin:将d2admin axios实例替换时候添加
+// TODO vplus 目前版本没有保留自己持有的axios实例
+export function replaceInstance(instance) {
+  this.service = instance
+}
 
 export default service

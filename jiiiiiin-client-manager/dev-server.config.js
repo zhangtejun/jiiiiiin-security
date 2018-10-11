@@ -5,8 +5,9 @@ module.exports = {
       pathRewrite: {
         '^/mng': '/mng'
       },
-      changeOrigin: true,
+      changeOrigin: true
     }
   },
+  open: false,
   quiet: false
 }

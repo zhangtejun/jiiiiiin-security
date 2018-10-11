@@ -1,10 +1,16 @@
 package cn.jiiiiiin.module.mngauth.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import cn.jiiiiiin.module.common.entity.mngauth.Admin;
+import com.baomidou.mybatisplus.extension.api.ApiResult;
+import com.baomidou.mybatisplus.extension.api.R;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
 import cn.jiiiiiin.module.common.controller.BaseController;
+
+import javax.validation.Valid;
 
 /**
  * <p>
@@ -17,5 +23,10 @@ import cn.jiiiiiin.module.common.controller.BaseController;
 @RestController
 @RequestMapping("/admin")
 public class AdminController extends BaseController {
+
+    @GetMapping
+    public R<Admin> create() {
+        return success(new Admin().setUsername("haha"));
+    }
 
 }

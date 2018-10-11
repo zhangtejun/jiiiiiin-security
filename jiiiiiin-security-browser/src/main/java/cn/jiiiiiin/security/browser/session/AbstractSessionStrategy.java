@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
-import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.util.UrlUtils;
@@ -37,7 +36,7 @@ public class AbstractSessionStrategy {
     /**
      * 系统配置信息
      */
-    private SecurityProperties securityPropertie;
+    private SecurityProperties securityProperties;
     /**
      * 重定向策略
      */
@@ -54,9 +53,9 @@ public class AbstractSessionStrategy {
     public AbstractSessionStrategy(SecurityProperties securityProperties) {
         String invalidSessionUrl = securityProperties.getBrowser().getSession().getSessionInvalidUrl();
         Assert.isTrue(UrlUtils.isValidRedirectUrl(invalidSessionUrl), "url must start with '/' or with 'http(s)'");
-        Assert.isTrue(StringUtils.endsWithIgnoreCase(invalidSessionUrl, ".html"), "url must end with '.html'");
+        Assert.isTrue(StringUtils.isNotEmpty(invalidSessionUrl), "url must be not empty");
         this.destinationUrl = invalidSessionUrl;
-        this.securityPropertie = securityProperties;
+        this.securityProperties = securityProperties;
     }
 
     /**
@@ -82,8 +81,8 @@ public class AbstractSessionStrategy {
         final Device currentDevice = HttpUtils.resolveDevice(request);
 
         if (currentDevice.isNormal()) {
-            if (StringUtils.equals(sourceUrl, securityPropertie.getBrowser().getSignInUrl())
-                //|| StringUtils.equals(sourceUrl, securityPropertie.getBrowser().getSignOutUrl())
+            if (StringUtils.equals(sourceUrl, securityProperties.getBrowser().getSignInUrl())
+                //|| StringUtils.equals(sourceUrl, securityProperties.getBrowser().getSignOutUrl())
                     ) {
                 targetUrl = sourceUrl;
             } else {

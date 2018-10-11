@@ -3,7 +3,9 @@
  */
 package cn.jiiiiiin.security.app.component.authentication;
 
+import cn.jiiiiiin.security.core.dict.CommonConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,12 +35,8 @@ import java.io.IOException;
  *
  * @author zhailiang
  */
-@Component
-public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    final static Logger L = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
+@Slf4j
+public class AppAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -69,7 +67,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        L.info("身份认证（登录 Token）成功");
+        log.debug("身份认证（登录 Token）成功");
 
         // 解析client id
         String header = request.getHeader("Authorization");
@@ -106,7 +104,11 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
         final OAuth2AccessToken token = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
 
-        response.setContentType("application/json;charset=UTF-8");
+        respJson(response, token);
+    }
+
+    private void respJson(HttpServletResponse response, OAuth2AccessToken token) throws IOException {
+        response.setContentType(CommonConstants.CONTENT_TYPE_JSON);
         response.getWriter().write(objectMapper.writeValueAsString(token));
     }
 

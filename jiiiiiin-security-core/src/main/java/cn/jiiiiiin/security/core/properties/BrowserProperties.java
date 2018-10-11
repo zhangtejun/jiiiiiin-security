@@ -1,5 +1,6 @@
 package cn.jiiiiiin.security.core.properties;
 
+import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.social.oauth2.OAuth2Parameters;
@@ -20,7 +21,7 @@ public class BrowserProperties {
      * 身份认证（登录）页面
      * 默认页面："/signIn.html"
      */
-    private String signInUrl = "/signIn";
+    private String signInUrl = SecurityConstants.DEFAULT_SIGN_IN_PAGE_URL;
 
     /**
      * 社交登录，如果需要用户注册，跳转的页面

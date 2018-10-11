@@ -3,6 +3,8 @@
  */
 package cn.jiiiiiin.security.browser.config;
 
+import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticationFailureHandler;
+import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticationSuccessHandler;
 import cn.jiiiiiin.security.browser.component.authentication.BrowserLoginUrlAuthenticationEntryPoint;
 import cn.jiiiiiin.security.browser.logout.CustomLogoutSuccessHandler;
 import cn.jiiiiiin.security.browser.session.CustomExpiredSessionStrategy;
@@ -15,6 +17,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
@@ -73,6 +77,18 @@ public class BrowserSecurityBeanConfig {
     @ConditionalOnMissingBean(AuthenticationEntryPoint.class)
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new BrowserLoginUrlAuthenticationEntryPoint(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AuthenticationSuccessHandler.class)
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new BrowserAuthenticationSuccessHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AuthenticationFailureHandler.class)
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new BrowserAuthenticationFailureHandler();
     }
 
 }

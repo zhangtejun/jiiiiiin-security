@@ -24,7 +24,7 @@
               <el-input type="text" v-model="formLogin.code" placeholder="- - - -">
                 <template slot="prepend">验证码</template>
                 <template slot="append">
-                  <img class="login-code" :src="validateImgCodeUri" @click="onChangeValidateImgCode">
+                  <img ref="codeImageDom" class="login-code" :src="validateImgCodeUri" @click="onChangeValidateImgCode">
                 </template>
               </el-input>
             </el-form-item>
@@ -66,7 +66,7 @@ export default {
       formLogin: {
         username: 'admin',
         password: 'admin',
-        code: 'v9am'
+        code: ''
       },
       // 校验
       rules: {
@@ -119,8 +119,10 @@ export default {
           this.login({
             vm: this,
             username: this.formLogin.username,
-            password: this.formLogin.password
+            password: this.formLogin.password,
+            imageCode: this.formLogin.code
           })
+          this.$refs.codeImageDom.click()
         } else {
           // 登录表单校验失败
           this.$message.error('表单校验失败')
