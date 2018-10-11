@@ -17,3 +17,5 @@ yarn-error.log*
 *.sw*
 
 package-lock.json
+
+output.js
