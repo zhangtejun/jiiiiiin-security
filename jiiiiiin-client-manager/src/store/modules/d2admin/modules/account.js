@@ -30,7 +30,6 @@ export default {
         imageCode
       })
         .then(async res => {
-          console.log('login res: ', res)
           // 设置 cookie 一定要存 uuid 和 token 两个 cookie
           // 整个系统依赖这两个数据进行校验和存储
           // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
@@ -48,7 +47,6 @@ export default {
           await dispatch('load')
           // 更新路由 尝试去获取 cookie 里保存的需要重定向的页面完整地址
           const path = util.cookies.get('redirect')
-          console.log('path', path)
           // 根据是否存有重定向页面判断如何重定向
           vm.$router.replace(path ? {
             path
@@ -58,9 +56,6 @@ export default {
         })
         .catch(err => {
           console.log('err: ', err)
-          vm.$vp.uiDialog(err, {
-            title: '错误提示'
-          })
         })
     },
     /**

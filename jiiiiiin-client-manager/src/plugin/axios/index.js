@@ -134,10 +134,4 @@ service.interceptors.response.use(
   }
 )
 
-// zhaojin:将d2admin axios实例替换时候添加
-// TODO vplus 目前版本没有保留自己持有的axios实例
-export function replaceInstance(instance) {
-  this.service = instance
-}
-
 export default service

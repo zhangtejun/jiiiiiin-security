@@ -28,7 +28,7 @@
                 </template>
               </el-input>
             </el-form-item>
-            <el-button size="default" @click="submit" type="primary" class="button-login">登录</el-button>
+            <el-button size="default" @click="submit" :disabled="submitBtnDisabled" type="primary" class="button-login">登录</el-button>
           </el-form>
         </el-card>
       </div>
@@ -44,6 +44,7 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
+      submitBtnDisabled: false,
       validateImgCodeUri: `${this.$vp.serverUrl}/code/image`,
       // 表单
       formLogin: {
