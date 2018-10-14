@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @Component("rbacService")
-public class ManagerRbacServiceImpl implements RbacService {
+public class MngRbacServiceImpl implements RbacService {
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 

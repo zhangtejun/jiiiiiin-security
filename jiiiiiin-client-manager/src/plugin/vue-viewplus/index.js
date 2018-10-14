@@ -24,7 +24,9 @@ export default {
         //   store.commit(JS_BRIDGE_CAN_USE_STATUS, false)
         //   break
         default:
-          alert(err.message)
+          this.uiDialog(err instanceof Error ? err.message : JSON.stringify(err), {
+            title: '捕获到全局错误'
+          })
       }
     }
   },
@@ -34,7 +36,10 @@ export default {
       /^(\/admin.+)$/
     ],
     onLoginStateCheckFaild(to, from, next) {
-      alert('您尚未登录，请先登录', to, from)
+      this.uiToast('您尚未登录，请先登录', {
+        type: 'warning'
+      })
+      next('/login')
     }
   },
   utilHttp: {
@@ -45,43 +50,52 @@ export default {
       Accept: 'application/json'
     },
     // 适配后端`com.baomidou.mybatisplus.extension.api.R`接口
-    statusCodeKey: 'code',
-    statusCode: '0',
     msgKey: 'msg',
+    dataKey: 'data',
+    errInfoOutDataObj: true,
     defShowLoading: true,
-    onSendAjaxRespHandle: (response) => {
+    onParseServerResp(response) {
+      return response.data.code !== 0
+    },
+    onSendAjaxRespHandle(response) {
       return response
     },
-    onReqErrPaserMsg: (response, errMsg) => {
+    onReqErrPaserMsg(response, errMsg) {
       return `${errMsg} [服务端]`
     },
     noNeedDialogHandlerErr: [],
     errDialog(content = '错误消息未定义', {
-      action,
       title = '错误提示',
       hideOnBlur = false
     } = {}) {
-      alert(`${title} ${content}`)
+      this.uiDialog(content, {
+        title,
+        hideOnBlur
+      })
       return this
     },
     loading(_showLoading) {
       if (_showLoading) {
-        console.log('need loading')
+        this.uiLoading()
       }
     },
     hideLoading() {
-      console.log('need un loading')
+      this.uiHideLoading()
     },
     accessRules: {
       sessionTimeOut: ['role.invalid_user'],
       onSessionTimeOut(response) {
-        // TODO 待测试
-        alert('example on onSessionTimeOut call', response)
+        this.uiToast('会话超时，请重新登录', {
+          type: 'warning'
+        })
+        this.psPageReplace('/login')
       },
       unauthorized: ['core_error_unauthorized'],
       onUnauthorized(response) {
-        // TODO 待测试
-        alert('example on onUnauthorized call', response)
+        console.error(`onUnauthorized ${response}`)
+        this.uiToast('您尚未登录，请先登录', {
+          type: 'error'
+        })
       }
     }
   }

@@ -36,8 +36,8 @@ export default {
           // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
           // token 代表用户当前登录状态 建议在网络请求中携带 token
           // 如有必要 token 需要定时更新，默认保存一天
-          util.cookies.set('uuid', res.uuid)
-          util.cookies.set('token', res.token)
+          util.cookies.set('uuid', `${res.principal.admin.username}-uuid`)
+          util.cookies.set('token', res.details.sessionId)
           // 设置 vuex 用户信息
           await dispatch('d2admin/user/set', {
             name: res.name
@@ -48,6 +48,7 @@ export default {
           await dispatch('load')
           // 更新路由 尝试去获取 cookie 里保存的需要重定向的页面完整地址
           const path = util.cookies.get('redirect')
+          console.log('path', path)
           // 根据是否存有重定向页面判断如何重定向
           vm.$router.replace(path ? {
             path
@@ -57,6 +58,9 @@ export default {
         })
         .catch(err => {
           console.log('err: ', err)
+          vm.$vp.uiDialog(err, {
+            title: '错误提示'
+          })
         })
     },
     /**

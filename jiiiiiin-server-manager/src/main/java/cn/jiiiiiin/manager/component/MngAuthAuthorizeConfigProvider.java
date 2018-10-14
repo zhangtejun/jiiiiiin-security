@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author jiiiiiin
  */
 @Component
-public class ManagerAuthAuthorizeConfigProvider implements AuthorizeConfigProvider {
+public class MngAuthAuthorizeConfigProvider implements AuthorizeConfigProvider {
 
     @Override
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {

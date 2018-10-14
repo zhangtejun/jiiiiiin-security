@@ -27,12 +27,14 @@ import ViewPlus from 'vue-viewplus'
 import viewPlusOptions, {
   mixinConfig as viewPlusMixinConfig
 } from '@/plugin/vue-viewplus'
+import jsComponents from '@/plugin/vue-viewplus/js-ui-component.js'
 
 Vue.use(Navigation, {
   router,
   store
 })
 ViewPlus.mixin(Vue, viewPlusMixinConfig)
+ViewPlus.mixin(Vue, jsComponents)
 Vue.use(ViewPlus, {
   store,
   ...viewPlusOptions

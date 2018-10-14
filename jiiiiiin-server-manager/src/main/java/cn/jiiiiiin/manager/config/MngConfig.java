@@ -12,9 +12,9 @@ import org.springframework.core.io.ClassPathResource;
  * @author jiiiiiin
  */
 @Configuration
-public class ManagerConfig {
+public class MngConfig {
 
-    private Logger logger = LoggerFactory.getLogger(ManagerConfig.class);
+    private Logger logger = LoggerFactory.getLogger(MngConfig.class);
 
     @Bean
     public EhCacheManagerFactoryBean cacheManagerFactory() {

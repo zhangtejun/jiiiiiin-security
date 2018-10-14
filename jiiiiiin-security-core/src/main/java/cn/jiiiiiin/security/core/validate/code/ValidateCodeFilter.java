@@ -50,6 +50,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
      */
     @Autowired
     private AuthenticationFailureHandler customAuthenticationFailureHandler;
+
     /**
      * 系统中的校验码处理器
      */

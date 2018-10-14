@@ -45,23 +45,6 @@ export default {
   data() {
     return {
       validateImgCodeUri: `${this.$vp.serverUrl}/code/image`,
-      users: [
-        {
-          name: '管理员',
-          username: 'admin',
-          password: 'admin'
-        },
-        {
-          name: '编辑',
-          username: 'editor',
-          password: 'editor'
-        },
-        {
-          name: '用户1',
-          username: 'user1',
-          password: 'user1'
-        }
-      ],
       // 表单
       formLogin: {
         username: 'admin',
@@ -114,8 +97,6 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           // 登录
-          // 注意 这里的演示没有传验证码
-          // 具体需要传递的数据请自行修改代码
           this.login({
             vm: this,
             username: this.formLogin.username,
