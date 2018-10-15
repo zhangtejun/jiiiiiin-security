@@ -1,68 +1,28 @@
-// layout
+import demo from './modules/demo'
+
 import layoutHeaderAside from '@/layout/header-aside'
 
-const meta = {
-  requiresAuth: true
-}
+const meta = { requiresAuth: true }
 
 /**
  * 在主框架内显示
  */
-const frameIn = [{
-  path: '/',
-  redirect: {
-    name: 'index'
-  },
-  component: layoutHeaderAside,
-  children: [{
-    path: 'index',
-    name: 'index',
-    meta,
-    component: () =>
-        import('@/pages/index')
-  },
+const frameIn = [
   {
-    path: '/page1',
-    name: 'page1',
-    component: () =>
-        import('@/pages/page1'),
-    meta: {
-      meta,
-      title: '页面 1'
-    }
+    path: '/',
+    redirect: { name: 'index' },
+    component: layoutHeaderAside,
+    children: [
+      {
+        path: 'index',
+        name: 'index',
+        meta,
+        component: () => import('@/pages/index')
+      }
+    ]
   },
-  {
-    path: '/page2',
-    name: 'page2',
-    component: () =>
-        import('@/pages/page2'),
-    meta: {
-      meta,
-      title: '页面 2'
-    }
-  },
-  {
-    path: '/page3',
-    name: 'page3',
-    component: () =>
-        import('@/pages/page3'),
-    meta: {
-      meta,
-      title: '页面 3'
-    }
-  },
-  {
-    path: '/page-demo',
-    name: 'page-demo',
-    component: () =>
-        import('@/pages/page-demo'),
-    meta: {
-      meta,
-      title: '新建示例'
-    }
-  }
-  ]
-}]
+  demo
+]
 
 /**
  * 在主框架之外显示
@@ -71,15 +31,16 @@ const frameOut = [
   // 页面重定向使用 必须保留
   {
     path: '/redirect/:path*',
-    component: () =>
-      import('@/pages/redirect')
+    component: {
+      beforeCreate () { this.$router.replace(JSON.parse(this.$route.params.path)) },
+      render: h => h()
+    }
   },
   // 登录
   {
     path: '/login',
     name: 'login',
-    component: () =>
-      import('@/pages/login')
+    component: () => import('@/pages/login')
   }
 ]
 
@@ -91,8 +52,7 @@ const errorPage = [
   {
     path: '*',
     name: '404',
-    component: () =>
-      import('@/pages/error-page-404')
+    component: () => import('@/pages/error-page-404')
   }
 ]
 

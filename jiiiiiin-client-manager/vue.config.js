@@ -76,10 +76,5 @@ module.exports = {
     entry
       .add('babel-polyfill')
       .end()
-    // const jsRule = config.module.rule('js')
-    // jsRule
-    //   .include
-    //   .add(resolve('./node_modules/vue-viewplus/src/'))
-    //   .end()
   }
 }
