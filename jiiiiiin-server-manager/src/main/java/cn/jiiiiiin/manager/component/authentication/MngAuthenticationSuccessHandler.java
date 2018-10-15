@@ -24,9 +24,6 @@ import java.io.IOException;
 @Component("authenticationSuccessHandler")
 public class MngAuthenticationSuccessHandler extends BrowserAuthenticationSuccessHandler {
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Override
     protected void respJson(HttpServletResponse response, Authentication authentication) throws IOException {
         response.setContentType(CommonConstants.CONTENT_TYPE_JSON);

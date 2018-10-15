@@ -6,7 +6,7 @@ package cn.jiiiiiin.security.browser.config;
 import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticationFailureHandler;
 import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticationSuccessHandler;
 import cn.jiiiiiin.security.browser.component.authentication.BrowserLoginUrlAuthenticationEntryPoint;
-import cn.jiiiiiin.security.browser.logout.CustomLogoutSuccessHandler;
+import cn.jiiiiiin.security.browser.logout.BrowserLogoutSuccessHandler;
 import cn.jiiiiiin.security.browser.session.CustomExpiredSessionStrategy;
 import cn.jiiiiiin.security.browser.session.CustomInvalidSessionStrategy;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
@@ -70,7 +70,7 @@ public class BrowserSecurityBeanConfig {
     @Bean
     @ConditionalOnMissingBean(LogoutSuccessHandler.class)
     public LogoutSuccessHandler logoutSuccessHandler() {
-        return new CustomLogoutSuccessHandler(securityProperties.getBrowser().getSignOutUrl());
+        return new BrowserLogoutSuccessHandler(securityProperties.getBrowser().getSignOutUrl());
     }
 
     @Bean

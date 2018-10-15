@@ -5,9 +5,12 @@ package cn.jiiiiiin.security.browser.logout;
 
 import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import cn.jiiiiiin.security.core.support.SimpleResponse;
+import cn.jiiiiiin.security.core.utils.HttpDataUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -24,17 +27,17 @@ import java.io.IOException;
  * @author zhailiang
  * @author jiiiiiin
  */
-public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
+@Slf4j
+public class BrowserLogoutSuccessHandler implements LogoutSuccessHandler {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    public CustomLogoutSuccessHandler(String signOutSuccessUrl) {
+    public BrowserLogoutSuccessHandler(String signOutSuccessUrl) {
         this.signOutSuccessUrl = signOutSuccessUrl;
     }
 
     private String signOutSuccessUrl;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     /**
      * 根据渠道渲染响应数据
@@ -42,15 +45,18 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
-        logger.info("退出成功");
+        log.info("退出成功");
         final Device currentDevice = HttpUtils.resolveDevice(request);
         if (!currentDevice.isNormal()) {
-            response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse("退出成功")));
+            respJson(response);
         } else {
             response.sendRedirect(signOutSuccessUrl);
         }
 
+    }
+
+    protected void respJson(HttpServletResponse response) throws IOException {
+        HttpDataUtil.respJson(response, objectMapper.writeValueAsString(new SimpleResponse("退出成功")));
     }
 
 }

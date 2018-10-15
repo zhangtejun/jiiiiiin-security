@@ -30,7 +30,7 @@ import java.io.IOException;
 public class BrowserAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Autowired
-    ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
 
     /**
      * 登录成功之后被调用

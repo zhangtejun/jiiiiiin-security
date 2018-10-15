@@ -4,6 +4,8 @@ package cn.jiiiiiin.module.mngauth.controller;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import com.baomidou.mybatisplus.extension.api.ApiResult;
 import com.baomidou.mybatisplus.extension.api.R;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,8 @@ public class AdminController extends BaseController {
 
     @GetMapping
     public R<Admin> create() {
-        return success(new Admin().setUsername("haha"));
+        val admin = new Admin().setUsername("haha");
+        return success(admin);
     }
 
 }

@@ -93,10 +93,16 @@ export default {
           type: 'warning'
         })
           .then(() => {
-            commit('d2admin/gray/set', false, {
-              root: true
-            })
-            logout()
+            vm.$vp.ajaxGet('/signOut')
+              .then(() => {
+                commit('d2admin/gray/set', false, {
+                  root: true
+                })
+                logout()
+              })
+              .catch((err) => {
+                vm.$vp.uiToast(`请求出错，请稍后尝试[${typeof err === 'object' ? err.message : err}]`)
+              })
           })
           .catch(() => {
             commit('d2admin/gray/set', false, {

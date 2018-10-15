@@ -1,8 +1,8 @@
 import router from '@/router/index'
 
 const _env = process.env.NODE_ENV
-export const baseUrl = `http://192.168.3.43:9000`
-// export const baseUrl = `http://192.168.1.116:9000`
+// export const baseUrl = `http://192.168.3.43:9000`
+export const baseUrl = `http://192.168.1.109:9000`
 export const serverUrl = `${baseUrl}/mng`
 
 export const mixinConfig = {

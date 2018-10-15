@@ -30,9 +30,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @Component("authenticationFailureHandler")
 public class MngAuthenticationFailureHandler extends BrowserAuthenticationFailureHandler {
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Override
     protected void respJson(HttpServletResponse response, AuthenticationException exception) throws IOException {
         response.setContentType(CommonConstants.CONTENT_TYPE_JSON);

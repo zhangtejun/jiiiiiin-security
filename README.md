@@ -27,6 +27,10 @@
 > [Mybatis-Plus逻辑删除视频教程](http://v.youku.com/v_show/id_XMjc4ODY0MDI5Ng==.html?spm=a2hzp.8244740.userfeed.5!2~5~5~5!3~5~A)
 
 > [spring boot whitelabel 404 error page](https://www.youtube.com/watch?v=e9XCGqnBD2c)
+>
+> [1.权限数据库设计](https://github.com/lenve/vhr/wiki/1.权限数据库设计)
+>
+> [Spring Security 技术栈开发企业级认证与授权笔记](https://github.com/zq99299/essay-note/blob/master/chapter/imooc/spring_security/index.md)
 
 # 关键点
 

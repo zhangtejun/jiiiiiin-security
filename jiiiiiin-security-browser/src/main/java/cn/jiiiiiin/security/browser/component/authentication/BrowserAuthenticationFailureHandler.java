@@ -36,9 +36,8 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @Slf4j
 public class BrowserAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-
     @Autowired
-    ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
 
     /**
      * 登录失败之后被调用
