@@ -67,9 +67,7 @@ export default {
         util.cookies.remove('token')
         util.cookies.remove('uuid')
         // 跳转路由
-        vm.$router.push({
-          name: 'login'
-        })
+        vm.$vp.psPageReplace('/login')
       }
       // 判断是否需要确认
       if (confirm) {
@@ -86,7 +84,7 @@ export default {
                 logout()
               })
               .catch((err) => {
-                vm.$vp.uiToast(`请求出错，请稍后尝试[${typeof err === 'object' ? err.message : err}]`)
+                vm.$vp.toast(`请求出错，请稍后尝试[${typeof err === 'object' ? err.message : err}]`)
               })
           })
           .catch(() => {

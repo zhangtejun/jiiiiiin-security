@@ -1,38 +1,33 @@
 import router from '@/router/index'
-import Vue from 'vue'
-
-const _env = process.env.NODE_ENV
-export const baseUrl = process.env.VUE_APP_SEVER_URL
-export const serverUrl = `${baseUrl}${process.env.VUE_APP_API}`
+import store from '@/store/index'
+import _ from 'lodash'
 
 export const mixinConfig = {
-  install() {
-    console.log('mixinConfig init')
-  },
-  baseUrl,
-  serverUrl,
-  installed() {
-    console.log('mixinConfig installed', Vue.prototype.$vp, this)
-  }
+  baseUrl: process.env.VUE_APP_SEVER_URL,
+  serverUrl: `${process.env.VUE_APP_SEVER_URL}${process.env.VUE_APP_API}`
 }
 
 export default {
   router,
-  env: 'BROWSER',
-  debug: _env !== 'production',
-  appUrl: baseUrl,
+  store,
+  debug: process.env.NODE_ENV !== 'production',
+  runNative: false,
   errorHandler(err) {
-    console.error('vp errorHandler', err)
-    if (err && err instanceof Error) {
-      switch (err.code) {
-        // case 'RUN_EVN_NOT_SUPPORT':
-        //   store.commit(JS_BRIDGE_CAN_USE_STATUS, false)
-        //   break
-        default:
-          this.uiDialog(err instanceof Error ? err.message : JSON.stringify(err), {
-            title: '捕获到全局错误'
-          })
+    if (_.isError(err)) {
+      if (err.code) {
+        switch (err.code) {
+          case 'RUN_EVN_NOT_SUPPORT':
+          case 'NOT_SUPPORT_AJAX_JSBRIDGE':
+            console.debug(err)
+            break
+          default:
+            console.warn(err)
+        }
+      } else {
+        console.error(err.message)
       }
+    } else {
+      console.error(`err参数错误 ${err}`)
     }
   },
   loginStateCheck: {
@@ -40,17 +35,15 @@ export default {
     checkPaths: [
       /^(\/admin.+)$/
     ],
-    onLoginStateCheckFaild(to, from, next) {
-      this.uiToast('您尚未登录，请先登录', {
+    onLoginStateCheckFail(to, from, next) {
+      this.toast('您尚未登录，请先登录', {
         type: 'warning'
       })
       next('/login')
     }
   },
   utilHttp: {
-    baseURL: serverUrl,
-    timeout: '100000',
-    mode: 'POST',
+    baseURL: mixinConfig.serverUrl,
     headers: {
       Accept: 'application/json'
     },
@@ -62,43 +55,33 @@ export default {
     onParseServerResp(response) {
       return response.data.code !== 0
     },
-    onSendAjaxRespHandle(response) {
-      return response
-    },
-    onReqErrPaserMsg(response, errMsg) {
+    onReqErrParseMsg(response, errMsg) {
       return `${errMsg} [服务端]`
     },
-    noNeedDialogHandlerErr: [],
-    errDialog(content = '错误消息未定义', {
-      title = '错误提示',
-      hideOnBlur = false
-    } = {}) {
-      this.uiDialog(content, {
-        title,
-        hideOnBlur
+    errDialog(content = '错误消息未定义') {
+      this.dialog(content, {
+        title: '错误消息'
       })
       return this
     },
-    loading(_showLoading) {
-      if (_showLoading) {
-        this.uiLoading()
-      }
+    loading(loadingHintText) {
+      this.loading(loadingHintText)
     },
     hideLoading() {
-      this.uiHideLoading()
+      this.hideLoading()
     },
     accessRules: {
       sessionTimeOut: ['role.invalid_user'],
       onSessionTimeOut(response) {
-        this.uiToast('会话超时，请重新登录', {
+        this.toast('会话超时，请重新登录', {
           type: 'warning'
         })
-        this.psPageReplace('/login')
+        store.commit('logout')
       },
       unauthorized: ['core_error_unauthorized'],
       onUnauthorized(response) {
         console.error(`onUnauthorized ${response}`)
-        this.uiToast('您尚未登录，请先登录', {
+        this.toast('您尚未登录，请先登录', {
           type: 'error'
         })
       }

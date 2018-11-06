@@ -15,7 +15,7 @@ export default {
    * @param {*} msg
    * @param {*} param1
    */
-  uiToast(msg = '默认消息', {
+  toast(msg = '默认消息', {
     time = 2000,
     type = 'info'
   } = {}) {
@@ -31,7 +31,7 @@ export default {
    * @param {*} content
    * @param {*} param1
    */
-  uiDialog(content = '默认消息', {
+  dialog(content = '默认消息', {
     title = '提示',
     buttonText = '确认',
     hideOnBlur = false
@@ -50,7 +50,7 @@ export default {
    * @param {*} option
    * @return Promise
    */
-  uiConfirm(content = '确认消息!', {
+  confirm(content = '确认消息!', {
     title = '提示',
     confirmText = '确认',
     cancelText = '取消',
@@ -71,7 +71,7 @@ export default {
    * @param time
    * @returns {plugin}
    */
-  uiLoading(text = '加载中...', {
+  loading(text = '加载中...', {
     time
   } = {}) {
     _gloabLoadingInstance = Loading.service({
@@ -88,7 +88,7 @@ export default {
     }
     return this
   },
-  uiHideLoading() {
+  hideLoading() {
     if (_t) {
       clearTimeout(_t)
     }

@@ -17,34 +17,34 @@ import D2Crud from '@d2-projects/d2-crud'
 import router from './router'
 import menuHeader from '@/menu/header'
 import menuAside from '@/menu/aside'
-import {
-  frameInRoutes
-} from '@/router/routes'
+import { frameInRoutes } from '@/router/routes'
 import Navigation from 'vue-navigation'
 import ViewPlus from 'vue-viewplus'
-import viewPlusOptions, {
-  mixinConfig as viewPlusMixinConfig
-} from '@/plugin/vue-viewplus'
+import viewPlusOptions, { mixinConfig as viewPlusMixinConfig } from '@/plugin/vue-viewplus'
 import jsComponents from '@/plugin/vue-viewplus/js-ui-component.js'
 
 Vue.use(Navigation, {
   router,
   store
 })
+
 const {
   debug,
   errorHandler
 } = viewPlusOptions
+
 ViewPlus.mixin(Vue, viewPlusMixinConfig, {
   debug,
   errorHandler,
   moduleName: '自定义常量模块'
 })
+
 ViewPlus.mixin(Vue, jsComponents, {
   debug,
   errorHandler,
   moduleName: '自定义jsComponents模块'
 })
+
 Vue.use(ViewPlus, {
   store,
   ...viewPlusOptions
