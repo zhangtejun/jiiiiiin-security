@@ -23,8 +23,8 @@ export default {
       'logout'
     ]),
     /**
-       * @description 登出
-       */
+     * @description 登出
+     */
     logOff () {
       this.logout({
         vm: this,

@@ -1,14 +1,19 @@
 import router from '@/router/index'
+import Vue from 'vue'
 
 const _env = process.env.NODE_ENV
-// export const baseUrl = `http://192.168.3.43:9000`
-export const baseUrl = `http://192.168.1.109:9000`
-export const serverUrl = `${baseUrl}/mng`
+export const baseUrl = process.env.VUE_APP_SEVER_URL
+export const serverUrl = `${baseUrl}${process.env.VUE_APP_API}`
 
 export const mixinConfig = {
-  install() {},
+  install() {
+    console.log('mixinConfig init')
+  },
   baseUrl,
-  serverUrl
+  serverUrl,
+  installed() {
+    console.log('mixinConfig installed', Vue.prototype.$vp, this)
+  }
 }
 
 export default {

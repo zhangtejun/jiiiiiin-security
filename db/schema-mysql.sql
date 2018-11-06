@@ -81,6 +81,7 @@ CREATE TABLE `mng_resource` (
   `ismenu` tinyint DEFAULT 1 COMMENT '是否是菜单（1：是  0：不是）',
   `status` tinyint DEFAULT 1 COMMENT '菜单状态 :  1:启用   0:不启用',
   `isopen` tinyint DEFAULT 0 COMMENT '是否打开:    1:打开   0:不打开',
+  `channel` tinyint DEFAULT 0 COMMENT '标识渠道，不同的渠道就是不同的资源分组:    0: 后台资源 1: 前端资源',
   PRIMARY KEY (`id`),
   key idx_pid(pid),
   key idx_pids(pids)

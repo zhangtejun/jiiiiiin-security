@@ -118,8 +118,8 @@ export default {
       themeActiveSetting: 'theme/activeSetting'
     }),
     /**
-       * @description 最外层容器的背景图片样式
-       */
+     * @description 最外层容器的背景图片样式
+     */
     styleLayoutMainGroup () {
       return {
         ...this.themeActiveSetting.backgroundImage ? {
@@ -133,8 +133,8 @@ export default {
       'asideCollapseToggle'
     ]),
     /**
-       * 接收点击切换侧边栏的按钮
-       */
+     * 接收点击切换侧边栏的按钮
+     */
     handleToggleAside () {
       this.asideCollapseToggle()
     }

@@ -31,12 +31,26 @@ Vue.use(Navigation, {
   router,
   store
 })
-ViewPlus.mixin(Vue, viewPlusMixinConfig)
-ViewPlus.mixin(Vue, jsComponents)
+const {
+  debug,
+  errorHandler
+} = viewPlusOptions
+ViewPlus.mixin(Vue, viewPlusMixinConfig, {
+  debug,
+  errorHandler,
+  moduleName: '自定义常量模块'
+})
+ViewPlus.mixin(Vue, jsComponents, {
+  debug,
+  errorHandler,
+  moduleName: '自定义jsComponents模块'
+})
 Vue.use(ViewPlus, {
   store,
   ...viewPlusOptions
 })
+
+console.log(Vue.prototype.$vp)
 
 // 核心插件
 Vue.use(d2Admin)
