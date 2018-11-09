@@ -27,7 +27,7 @@ public interface IAdminService extends IService<Admin> {
      * @param username
      * @return
      */
-    Admin signInByUsername(@NonNull String username);
+    Admin signInByUsername(@NonNull String username, Integer channel);
 
     /**
      * spring 事务：

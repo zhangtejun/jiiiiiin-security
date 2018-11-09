@@ -11,22 +11,15 @@ import '@/mock'
 import i18n from './i18n'
 // 核心插件
 import d2Admin from '@/plugin/d2admin'
-// [ 可选插件组件 ]D2-Crud
-import D2Crud from '@d2-projects/d2-crud'
+
 // 菜单和路由设置
 import router from './router'
 import menuHeader from '@/menu/header'
 import menuAside from '@/menu/aside'
 import { frameInRoutes } from '@/router/routes'
-import Navigation from 'vue-navigation'
 import ViewPlus from 'vue-viewplus'
 import viewPlusOptions, { mixinConfig as viewPlusMixinConfig } from '@/plugin/vue-viewplus'
 import jsComponents from '@/plugin/vue-viewplus/js-ui-component.js'
-
-Vue.use(Navigation, {
-  router,
-  store
-})
 
 const {
   debug,
@@ -50,14 +43,8 @@ Vue.use(ViewPlus, {
   ...viewPlusOptions
 })
 
-console.log(Vue.prototype.$vp)
-
 // 核心插件
 Vue.use(d2Admin)
-
-// 可选插件组件
-// https://github.com/d2-projects/d2-crud
-Vue.use(D2Crud)
 
 new Vue({
   router,

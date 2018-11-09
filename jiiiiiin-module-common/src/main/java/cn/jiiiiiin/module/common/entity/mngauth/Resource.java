@@ -1,19 +1,12 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * <p>
@@ -41,6 +34,9 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "菜单名称")
     private String name;
 
+    @ApiModelProperty(value = "菜单图标")
+    private String icon;
+
     @ApiModelProperty(value = "url地址")
     private String url;
 
@@ -53,20 +49,26 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "菜单层级")
     private Integer levels;
 
-    @ApiModelProperty(value = "是否是菜单（1：是  0：不是）")
+    @ApiModelProperty(value = "是否是菜单:   1:是 0:不是")
     private Integer ismenu;
 
-    @ApiModelProperty(value = "菜单状态 :  1:启用   0:不启用")
+    @ApiModelProperty(value = "菜单状态:    1:启用   0:不启用")
     private Integer status;
 
+    @Deprecated
     @ApiModelProperty(value = "是否打开:    1:打开   0:不打开")
     private Integer isopen;
+
+    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组:    0: 前端资源 1: 后台资源")
+    private Integer channel;
 
     public static final String PID = "pid";
 
     public static final String PIDS = "pids";
 
     public static final String NAME = "name";
+
+    public static final String ICON = "icon";
 
     public static final String URL = "url";
 
@@ -81,5 +83,7 @@ public class Resource extends BaseEntity<Resource> {
     public static final String STATUS = "status";
 
     public static final String ISOPEN = "isopen";
+
+    public static final String CHANNEL = "channel";
 
 }

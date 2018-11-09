@@ -32,15 +32,15 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     ResourceMapper resourceMapper;
 
     @Override
-    public Admin signInByUsername(@NonNull String username) {
+    public Admin signInByUsername(@NonNull String username, Integer channel) {
         log.debug("登录用户名 {}", username);
         val res = adminMapper.selectByUsername(username);
-        val ignoreLoadResource = res.getRoles().stream().anyMatch(role ->
-                role.getAuthorityName().equalsIgnoreCase(RbacDict.ROLE_ADMIN_AUTHORITY_NAME));
-        if (!ignoreLoadResource) {
-            res.getRoles().stream().forEach(role ->
-                    role.setResources(resourceMapper.selectByRoleId(role.getId())));
-        }
+        // TODO 待前端支持admin权限再做修改
+//        val ignoreLoadResource = res.getRoles().stream().anyMatch(role ->
+//                role.getAuthorityName().equalsIgnoreCase(RbacDict.ROLE_ADMIN_AUTHORITY_NAME));
+//        if (!ignoreLoadResource) {
+            res.getRoles().forEach(role -> role.setResources(resourceMapper.selectByRoleId(role.getId(), channel)));
+//        }
         return res;
     }
 

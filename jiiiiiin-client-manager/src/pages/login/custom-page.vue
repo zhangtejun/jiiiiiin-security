@@ -91,9 +91,8 @@ export default {
       this.submit()
     },
     /**
-     * @description 提交表单
+     * @description 提交登录信息
      */
-    // 提交登录信息
     submit() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {

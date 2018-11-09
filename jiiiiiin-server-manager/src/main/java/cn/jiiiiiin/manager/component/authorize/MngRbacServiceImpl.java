@@ -34,14 +34,12 @@ public class MngRbacServiceImpl implements RbacService {
     @Override
     public boolean hasPermission(HttpServletRequest request, Authentication authentication) {
         // principal即系统的UserDetailsService返回的用户标识对象，如果没有通过认证则是一个匿名的字符串
-        Object principal = authentication.getPrincipal();
-
+        val principal = authentication.getPrincipal();
         boolean hasPermission = false;
         if (principal instanceof MngUserDetails) {
             val admin = ((MngUserDetails) principal).getAdmin();
-            val hasAdminRole = admin.getRoles().stream()
-                    // TODO 可以作为配置化
-                    .anyMatch(role -> role.getAuthorityName().equals(RbacDict.ROLE_ADMIN_AUTHORITY_NAME));
+            val roles = admin.getRoles();
+            val hasAdminRole = roles.stream().anyMatch(role -> role.getAuthorityName().equals(RbacDict.ROLE_ADMIN_AUTHORITY_NAME));
             if (hasAdminRole) {
                 hasPermission = true;
             } else {
@@ -49,13 +47,14 @@ public class MngRbacServiceImpl implements RbacService {
                 val reqMethod = request.getMethod();
                 // 读取用户所拥有权限的所有URL
                 // 通过用户标识-》用户角色-》角色拥有的资源
-                val roles = admin.getRoles();
+
                 log.debug("hasPermission 服务 判断 {} {} {}", reqURI, reqMethod, roles);
                 val iterator = roles.iterator();
                 while (iterator.hasNext()) {
                     val role = iterator.next();
                     // 进行权限匹配
-                    val res = role.getResources().stream()
+                    val res = role.getResources()
+                            .stream()
                             .anyMatch(resource -> antPathMatcher.match(resource.getUrl(), reqURI)
                                     && request.getMethod().equalsIgnoreCase(reqMethod));
                     if (res) {

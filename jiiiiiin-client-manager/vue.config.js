@@ -15,7 +15,7 @@ if (process.env.VUE_APP_TRAVIS === 'TRUE') baseUrl = '/mng/'
 module.exports = {
   baseUrl: baseUrl, // 根据你的实际情况更改这里
   // https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint#configuration
-  lintOnSave: process.env.NODE_ENV !== 'production',
+  lintOnSave: true,
   devServer: merge({
     // 和 baseUrl 保持一致
     publicPath: baseUrl,

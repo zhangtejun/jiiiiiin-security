@@ -49,10 +49,10 @@ public class AdminServiceImplTest {
 
     @Test
     public void findByUsername() {
-        val admin = adminService.signInByUsername("user");
+        val admin = adminService.signInByUsername("user", 1);
         Assert.assertEquals("user", admin.getUsername());
         // 测试EHCache缓存
-        val admin2 = adminService.signInByUsername("user");
+        val admin2 = adminService.signInByUsername("user", 1);
     }
 
 
@@ -63,7 +63,7 @@ public class AdminServiceImplTest {
         val userRole = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "DB_ADMIN"));
         roles.add(adminRole);
         roles.add(userRole);
-        val admin = adminService.signInByUsername("admin");
+        val admin = adminService.signInByUsername("admin", 1);
         admin.setRoles(roles);
         val res = adminService.relationRole(admin);
         Assert.assertTrue(res);

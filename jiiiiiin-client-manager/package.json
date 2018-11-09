@@ -1,18 +1,18 @@
 {
-  "name": "jiiiiiin-client-manager",
-  "version": "1.5.3",
+  "name": "d2-admin",
+  "version": "1.5.9",
+  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
+    "start": "npm run serve",
+    "dev": "npm run serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint --fix",
     "build:travis": "vue-cli-service build --mode travis",
-    "dev": "vue-cli-service serve",
-    "start": "vue-cli-service serve --open",
+    "lint": "vue-cli-service lint --fix",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "@d2-projects/d2-crud": "^1.2.0",
-    "axios": "^0.18.0",
+    "axios": "^0.17.1",
     "babel-polyfill": "^6.26.0",
     "better-scroll": "^1.12.1",
     "dayjs": "^1.6.7",
@@ -32,7 +32,7 @@
     "vue-i18n": "^7.4.2",
     "vue-navigation": "^1.1.4",
     "vue-router": "^3.0.1",
-    "vue-viewplus": "^0.9.3",
+    "vue-viewplus": "^0.9.4",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

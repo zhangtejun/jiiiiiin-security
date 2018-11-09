@@ -127,6 +127,8 @@ jiiiiiin:
       sign-out-url: /signOut.html
       # proxy-uri: http://www.pinzhi365.com
 
+manager:
+  channel: 0
 ---
 
 spring:

@@ -56,6 +56,10 @@ export default {
       return response.data.code !== 0
     },
     onReqErrParseMsg(response, errMsg) {
+      switch (errMsg) {
+        case '未解析到服务端返回的错误消息':
+          return errMsg
+      }
       return `${errMsg} [服务端]`
     },
     errDialog(content = '错误消息未定义') {

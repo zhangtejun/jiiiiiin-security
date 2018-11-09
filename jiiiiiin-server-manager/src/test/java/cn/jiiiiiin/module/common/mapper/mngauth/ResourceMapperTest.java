@@ -86,7 +86,7 @@ public class ResourceMapperTest {
     public void testSelectByRoleId() {
         val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "OPERATOR"));
         Assert.assertNotNull(operator);
-        val res = resourceMapper.selectByRoleId(operator.getId());
+        val res = resourceMapper.selectByRoleId(operator.getId(), 1);
         log.info("testSelectByRoleId {}", res);
         Assert.assertNotNull(res);
         Assert.assertTrue(res.size() > 0);

@@ -1,6 +1,18 @@
 import util from '@/libs/util.js'
 import { AccountLogin } from '@/api/sys/login'
 
+function _converterMenuData(res) {
+  const roles = res.principal.admin.roles
+  const resources = ((roles) => {
+    const res = []
+    roles.forEach((item, index, array) => {
+      res.push(item.resources)
+    })
+    return res
+  })(roles)
+  console.log('resources', resources)
+}
+
 export default {
   namespaced: true,
   actions: {
@@ -35,6 +47,7 @@ export default {
           // 如有必要 token 需要定时更新，默认保存一天
           util.cookies.set('uuid', `${res.principal.admin.username}-uuid`)
           util.cookies.set('token', res.details.sessionId)
+          _converterMenuData(res)
           // 设置 vuex 用户信息
           await dispatch('d2admin/user/set', {
             name: res.name

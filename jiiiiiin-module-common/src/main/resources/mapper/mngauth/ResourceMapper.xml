@@ -19,17 +19,18 @@
         <result column="tips" property="tips"/>
         <result column="status" property="status"/>
         <result column="isopen" property="isopen"/>
+        <result column="channel" property="channel"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        pid, pids, name, url, method, num, levels, ismenu, status, isopen
+        pid, pids, name, icon, url, method, num, levels, ismenu, status, isopen, channel
     </sql>
 
     <sql id="selectByRoleId_Column_List">
         r.id,
-        r.name, r.url, r.method
+        r.pid, r.name, r.icon, r.url, r.method, r.num, r.levels, r.ismenu
     </sql>
 
     <select id="selectByRoleId" resultType="cn.jiiiiiin.module.common.entity.mngauth.Resource">
@@ -37,7 +38,10 @@
         <include refid="selectByRoleId_Column_List"/>
         from mng_resource r
         left join mng_role_resource mrr on mrr.resource_id = r.id
-        where mrr.role_id = #{roleId} and r.status != 0
+        where
+        mrr.role_id = #{roleId}
+        and r.status = 1
+        and r.channel = #{channel}
     </select>
 
 </mapper>
