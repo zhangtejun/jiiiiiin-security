@@ -42,6 +42,7 @@
         mrr.role_id = #{roleId}
         and r.status = 1
         and r.channel = #{channel}
+        order by levels,num asc
     </select>
 
 </mapper>

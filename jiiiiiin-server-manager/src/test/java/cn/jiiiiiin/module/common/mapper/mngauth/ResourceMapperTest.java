@@ -2,6 +2,7 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 
 
 import cn.jiiiiiin.ManagerApp;
+import cn.jiiiiiin.module.common.dto.mngauth.Menu;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
@@ -14,6 +15,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.annotation.Transient;
@@ -51,7 +54,6 @@ public class ResourceMapperTest {
 //    @Transactional
 //    @Rollback
     public void testInsert() {
-
         val resource = new Resource()
                 .setName("控制台")
                 .setLevels(1)
@@ -90,5 +92,27 @@ public class ResourceMapperTest {
         log.info("testSelectByRoleId {}", res);
         Assert.assertNotNull(res);
         Assert.assertTrue(res.size() > 0);
+    }
+
+    @Test
+    public void testModelMapper() {
+        val modelMapper = new ModelMapper();
+        val resource = new Resource()
+                .setName("控制台")
+                .setIcon("home")
+                .setLevels(1)
+                .setUrl("/")
+                .setNum(1)
+                .setMethod(GET);
+        modelMapper.addMappings(new PropertyMap<Resource, Menu>() {
+
+            @Override
+            protected void configure() {
+                map().setPath(source.getUrl());
+                map().setTitle(source.getName());
+            }
+        });
+        val menu = modelMapper.map(resource, Menu.class);
+        log.info("menu {}", menu);
     }
 }

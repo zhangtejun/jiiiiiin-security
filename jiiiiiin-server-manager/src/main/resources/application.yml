@@ -9,7 +9,6 @@ server:
   port: 9090
   context-path: /mng
 
-
 spring:
   profiles:
     active: dev
@@ -135,8 +134,8 @@ spring:
   profiles: dev
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.33.10:3306/vplusdb?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
-    username: root
+    url: jdbc:mysql://127.0.0.1:3306/vplusdb?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+    username: vplus
     password: 1qaz@WSX
   # 配置redis链接地址
   redis:
@@ -161,8 +160,8 @@ spring:
   profiles: produce
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.33.10:3306/vplusdb?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
-    username: root
+    url: jdbc:mysql://127.0.0.1:3306/vplusdb?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+    username: vplus
     password: 1qaz@WSX
   # 配置redis链接地址
   redis:

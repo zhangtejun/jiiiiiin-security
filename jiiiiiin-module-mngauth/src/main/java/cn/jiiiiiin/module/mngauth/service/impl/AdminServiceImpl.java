@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
+import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.mapper.mngauth.AdminMapper;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
@@ -35,12 +36,15 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     public Admin signInByUsername(@NonNull String username, Integer channel) {
         log.debug("登录用户名 {}", username);
         val res = adminMapper.selectByUsername(username);
-        // TODO 待前端支持admin权限再做修改
-//        val ignoreLoadResource = res.getRoles().stream().anyMatch(role ->
-//                role.getAuthorityName().equalsIgnoreCase(RbacDict.ROLE_ADMIN_AUTHORITY_NAME));
-//        if (!ignoreLoadResource) {
+        if(Resource.CHANNEL_SPA.equals(channel)){
             res.getRoles().forEach(role -> role.setResources(resourceMapper.selectByRoleId(role.getId(), channel)));
-//        }
+        } else {
+            val ignoreLoadResource = res.getRoles().stream().anyMatch(role ->
+                    role.getAuthorityName().equalsIgnoreCase(RbacDict.ROLE_ADMIN_AUTHORITY_NAME));
+            if (!ignoreLoadResource) {
+                res.getRoles().forEach(role -> role.setResources(resourceMapper.selectByRoleId(role.getId(), channel)));
+            }
+        }
         return res;
     }
 

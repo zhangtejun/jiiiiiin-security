@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.util.Objects;
+
 /**
  * <p>
  * 权限资源表
@@ -23,13 +25,19 @@ import lombok.experimental.Accessors;
 @ApiModel(value="Resource对象", description="权限资源表")
 public class Resource extends BaseEntity<Resource> {
 
+    /**
+     * {@link Resource#channel}
+     */
+    public static final Integer CHANNEL_SPA = 0;
+    /**
+     * 根节点
+     */
+    public static final Long IS_ROOT_MENU = 0L;
+
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "菜单父id")
     private Long pid;
-
-    @ApiModelProperty(value = "当前菜单的所有父菜ids")
-    private String pids;
 
     @ApiModelProperty(value = "菜单名称")
     private String name;
@@ -40,7 +48,7 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "url地址")
     private String url;
 
-    @ApiModelProperty(value = "接口类型: 如POST标识添加")
+    @ApiModelProperty(value = "接口类型，如GET标识添加")
     private String method;
 
     @ApiModelProperty(value = "菜单排序号")
@@ -64,8 +72,6 @@ public class Resource extends BaseEntity<Resource> {
 
     public static final String PID = "pid";
 
-    public static final String PIDS = "pids";
-
     public static final String NAME = "name";
 
     public static final String ICON = "icon";
@@ -85,5 +91,16 @@ public class Resource extends BaseEntity<Resource> {
     public static final String ISOPEN = "isopen";
 
     public static final String CHANNEL = "channel";
+
+    public enum MENU {
+        Y(1),
+        N(0);
+
+        public Integer ismenu;
+
+        MENU(Integer ismenu) {
+            this.ismenu = ismenu;
+        }
+    }
 
 }

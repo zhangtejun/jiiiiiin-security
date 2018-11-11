@@ -1,11 +1,13 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
+import cn.jiiiiiin.module.common.dto.mngauth.Menu;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,6 +53,14 @@ public class Admin extends BaseEntity<Admin> {
     @TableField(exist = false)
     private Set<Role> roles = new HashSet<>();
 
+    @ApiModelProperty(value = "前端授权资源")
+    @TableField(exist = false)
+    private HashSet<Resource> authorizeResources;
+
+    @ApiModelProperty(value = "前端菜单")
+    @TableField(exist = false)
+    private ArrayList<Menu> menus;
+
     public static final String CREATE_TIME = "create_time";
 
     public static final String USERNAME = "username";
@@ -60,5 +70,4 @@ public class Admin extends BaseEntity<Admin> {
     public static final String PHONE = "phone";
 
     public static final String EMAIL = "email";
-
 }

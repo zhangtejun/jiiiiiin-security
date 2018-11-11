@@ -43,7 +43,7 @@ public class RoleMapperTest {
         Assert.assertNotNull(adminRole);
         int res2 = roleMapper.insert(new Role().setAuthorityName(RbacDict.ROLE_DB_ADMIN_AUTHORITY_NAME).setName("数据库管理员").setNum(0).setPid(adminRole.getId()));
         Assert.assertTrue(SqlHelper.retBool(res2));
-        int res3 = roleMapper.insert(new Role().setAuthorityName("OPERATOR").setName("部门操作员").setNum(1));
+        int res3 = roleMapper.insert(new Role().setAuthorityName("OPERATOR").setName("部门操作员").setNum(1).setPid(adminRole.getId()));
         Assert.assertTrue(SqlHelper.retBool(res3));
     }
 

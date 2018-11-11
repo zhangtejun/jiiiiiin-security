@@ -41,11 +41,11 @@
         </dependency>
 
         <!--http://modelmapper.org/getting-started/-->
-        <!--<dependency>-->
-            <!--<groupId>org.modelmapper</groupId>-->
-            <!--<artifactId>modelmapper</artifactId>-->
-            <!--<version>2.3.0</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>2.3.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>

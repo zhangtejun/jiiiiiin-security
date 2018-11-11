@@ -12,8 +12,8 @@
 DROP DATABASE IF EXISTS `vplusdb`;
 CREATE DATABASE IF NOT EXISTS `vplusdb` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
-CREATE USER 'testuser'@'localhost' IDENTIFIED BY 'test';
-GRANT ALL PRIVILEGES ON vplusdb.* TO 'testuser'@'localhost';
+CREATE USER 'vplus'@'localhost' IDENTIFIED BY '1qaz@WSX';
+GRANT ALL PRIVILEGES ON vplusdb.* TO 'vplus'@'localhost';
 
 USE `vplusdb`;
 
@@ -72,11 +72,10 @@ DROP TABLE IF EXISTS `mng_resource`;
 CREATE TABLE `mng_resource` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `pid` bigint(20) DEFAULT 0 COMMENT '父角色id 0标识为根节点',
-  `pids` varchar(255) DEFAULT '0' COMMENT '当前菜单的所有父菜单编号',
   `name` varchar(255) DEFAULT NULL COMMENT '菜单名称',
   `icon` varchar(55) DEFAULT NULL COMMENT '菜单图标',
   `url` varchar(255) NOT NULL COMMENT 'url地址',
-  `method` varchar(6) DEFAULT 'POST' COMMENT '接口类型，如POST标识添加',
+  `method` varchar(6) DEFAULT 'GET' COMMENT '接口类型，如GET标识添加',
   `num` int(65) DEFAULT NULL COMMENT '菜单排序号',
   `levels` int(65) DEFAULT 1 COMMENT '菜单层级',
   `ismenu` tinyint DEFAULT 1 COMMENT '是否是菜单: 1:是  0:不是',
@@ -84,8 +83,7 @@ CREATE TABLE `mng_resource` (
   `isopen` tinyint DEFAULT 0 COMMENT '是否打开:    1:打开   0:不打开',
   `channel` tinyint DEFAULT 0 COMMENT '标识渠道，不同的渠道就是不同的资源分组:    0: 前端资源 1: 后台资源',
   PRIMARY KEY (`id`),
-  key idx_pid(pid),
-  key idx_pids(pids)
+  key idx_pid(pid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限资源表';
 
 
@@ -102,39 +100,6 @@ CREATE TABLE `mng_role_resource` (
 /*Table structure for table `mng_resource_urls` */
 
 ### 管理端表结构
-
--- https://github.com/codingXiaxw/seckill/blob/master/src/main/sql/schema.sql
-CREATE TABLE seckill(
-  `seckill_id` BIGINT NOT NUll AUTO_INCREMENT COMMENT '商品库存ID',
-  `name` VARCHAR(120) NOT NULL COMMENT '商品名称',
-  `number` int NOT NULL COMMENT '库存数量',
-  `start_time` TIMESTAMP  NOT NULL COMMENT '秒杀开始时间',
-  `end_time`   TIMESTAMP   NOT NULL COMMENT '秒杀结束时间',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (seckill_id),
-  key idx_start_time(start_time),
-  key idx_end_time(end_time),
-  key idx_create_time(create_time)
-)ENGINE=INNODB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='秒杀库存表';
-
--- 初始化数据
-INSERT into seckill(name,number,start_time,end_time)
-VALUES
-  ('1000元秒杀iphone6',100,'2016-01-01 00:00:00','2016-01-02 00:00:00'),
-  ('800元秒杀ipad',200,'2016-01-01 00:00:00','2016-01-02 00:00:00'),
-  ('6600元秒杀mac book pro',300,'2016-01-01 00:00:00','2016-01-02 00:00:00'),
-  ('7000元秒杀iMac',400,'2016-01-01 00:00:00','2016-01-02 00:00:00');
-
--- 秒杀成功明细表
--- 用户登录认证相关信息(简化为手机号)
-CREATE TABLE success_killed(
-  `seckill_id` BIGINT NOT NULL COMMENT '秒杀商品ID',
-  `user_phone` BIGINT NOT NULL COMMENT '用户手机号',
-  `state` TINYINT NOT NULL DEFAULT -1 COMMENT '状态标识:-1:无效 0:成功 1:已付款 2:已发货',
-  `create_time` TIMESTAMP NOT NULL COMMENT '创建时间',
-  PRIMARY KEY(seckill_id,user_phone),/*联合主键*/
-  KEY idx_create_time(create_time)
-)ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='秒杀成功明细表';
 
 ### 其他表结构
 
