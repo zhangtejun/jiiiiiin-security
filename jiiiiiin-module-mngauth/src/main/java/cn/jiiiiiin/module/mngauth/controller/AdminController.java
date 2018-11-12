@@ -1,18 +1,13 @@
 package cn.jiiiiiin.module.mngauth.controller;
 
 
-import cn.jiiiiiin.module.common.entity.mngauth.Admin;
-import com.baomidou.mybatisplus.extension.api.ApiResult;
-import com.baomidou.mybatisplus.extension.api.R;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-
 import cn.jiiiiiin.module.common.controller.BaseController;
-
-import javax.validation.Valid;
+import cn.jiiiiiin.module.common.entity.mngauth.Admin;
+import com.baomidou.mybatisplus.extension.api.R;
+import lombok.val;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>

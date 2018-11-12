@@ -36,7 +36,7 @@ public class Resource extends BaseEntity<Resource> {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "菜单父id")
+    @ApiModelProperty(value = "菜单父id: 0标识(默认)为根节点")
     private Long pid;
 
     @ApiModelProperty(value = "菜单名称")
@@ -48,7 +48,7 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "url地址")
     private String url;
 
-    @ApiModelProperty(value = "接口类型，如GET标识添加")
+    @ApiModelProperty(value = "接口类型，如GET(默认)")
     private String method;
 
     @ApiModelProperty(value = "菜单排序号")
@@ -57,17 +57,17 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "菜单层级")
     private Integer levels;
 
-    @ApiModelProperty(value = "是否是菜单:   1:是 0:不是")
+    @ApiModelProperty(value = "是否是菜单: 1:是(默认) 0:不是")
     private Integer ismenu;
 
-    @ApiModelProperty(value = "菜单状态:    1:启用   0:不启用")
+    @ApiModelProperty(value = "菜单状态: 1:启用(默认) 0:不启用")
     private Integer status;
 
     @Deprecated
-    @ApiModelProperty(value = "是否打开:    1:打开   0:不打开")
+    @ApiModelProperty(value = "是否打开: 1:打开 0:不打开(默认)")
     private Integer isopen;
 
-    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组:    0: 前端资源 1: 后台资源")
+    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:前端资源(默认) 1:后台资源")
     private Integer channel;
 
     public static final String PID = "pid";

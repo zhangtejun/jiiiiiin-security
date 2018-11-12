@@ -51,37 +51,58 @@ public class ResourceMapperTest {
     }
 
     @Test
-//    @Transactional
-//    @Rollback
+    @Transactional
+    @Rollback
     public void testInsert() {
         val resource = new Resource()
-                .setName("控制台")
+                .setName("系统设置")
+                .setIcon("cog")
+                .setUrl("/sys")
                 .setLevels(1)
-                .setUrl("/")
-                .setNum(1)
-                .setMethod(GET);
+                .setNum(2);
         int res = resourceMapper.insert(resource);
         Assert.assertTrue(SqlHelper.retBool(res));
         Assert.assertTrue(resource.getId() > 0);
-        log.info("admin res {}", resource);
-//
-//        val resource2 = new Resource()
-//                .setName("添加用户")
-//                .setPid(resource.getId())
-//                .setLevels(2)
-//                .setNum(1)
-//                .setUrl("/admin")
-//                .setMethod(POST);
-//        int res2 = resourceMapper.insert(resource2);
-//        Assert.assertTrue(SqlHelper.retBool(res2));
 
-        val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "OPERATOR"));
-        Set<Resource> set = new HashSet<>();
-        set.add(resource);
-//        set.add(resource2);
-        operator.setResources(set);
-        int res3 = roleMapper.relationResource(operator);
+        val resource2 = new Resource()
+                .setPid(resource.getId())
+                .setName("操作员管理")
+                .setIcon("users")
+                .setUrl("/sys/admin")
+                .setLevels(2)
+                .setNum(1);
+        int res2 = resourceMapper.insert(resource2);
+        Assert.assertTrue(SqlHelper.retBool(res2));
+
+        val resource3 = new Resource()
+                .setPid(resource.getId())
+                .setName("角色管理")
+                .setIcon("id-badge")
+                .setUrl("/sys/role")
+                .setLevels(2)
+                .setNum(2);
+        int res3 = resourceMapper.insert(resource3);
         Assert.assertTrue(SqlHelper.retBool(res3));
+
+        val resource4 = new Resource()
+                .setPid(resource.getId())
+                .setName("资源管理")
+                .setIcon("tree")
+                .setUrl("/sys/resource")
+                .setLevels(2)
+                .setNum(3);
+        int res4 = resourceMapper.insert(resource4);
+        Assert.assertTrue(SqlHelper.retBool(res4));
+
+        val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
+        val set = new HashSet<Resource>();
+        set.add(resource);
+        set.add(resource2);
+        set.add(resource3);
+        set.add(resource4);
+        operator.setResources(set);
+        int temp = roleMapper.relationResource(operator);
+        Assert.assertTrue(SqlHelper.retBool(temp));
     }
 
     @Test

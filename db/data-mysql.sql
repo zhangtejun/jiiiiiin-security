@@ -24,10 +24,37 @@ TRUNCATE TABLE mng_resource;
 
 INSERT INTO mng_resource (name, url, method, ismenu) VALUES ('添加管理员', '/admin', 'POST', 0);
 
-INSERT INTO mng_resource (name, icon, url, method, num
+INSERT INTO mng_resource (name, icon, url, num
 	, levels, ismenu, channel)
-VALUES ('首页', 'home', '/index', 'GET', 1
-	, 1, 1, 0);
+VALUES ('首页', 'home', '/index', 1, 1, 1, 0);
+
+INSERT
+    INTO
+        mng_resource
+        ( id, name, icon, url, num, levels )
+    VALUES
+        ( 1061818503436238850, '系统设置', 'cog', '/sys', 2, 1 );
+
+INSERT
+    INTO
+        mng_resource
+        ( id, pid, name, icon, url, num, levels )
+    VALUES
+        ( 1061818504497397761, 1061818503436238850, '操作员管理', 'users', '/sys/admin', 1, 2 );
+
+INSERT
+    INTO
+        mng_resource
+        ( id, pid, name, icon, url, num, levels )
+    VALUES
+        ( 1061818504539340801, 1061818503436238850, '角色管理', 'id-badge', '/sys/role', 2, 2 );
+
+INSERT
+    INTO
+        mng_resource
+        ( id, pid, name, icon, url, num, levels )
+    VALUES
+        ( 1061818504572895234, 1061818503436238850, '资源管理', 'tree', '/sys/resource', 3, 2 );
 
 INSERT INTO mng_resource (name, icon, url, method, num
 	, levels, ismenu, channel)
@@ -50,6 +77,19 @@ VALUES (2, '页面 3', '/demo/page3', 'GET', 3
 	, 2, 1, 0);
 
 TRUNCATE TABLE mng_role_resource;
+
+insert
+into
+    mng_role_resource
+    (resource_id, role_id)
+values
+    (1061818504539340801, 1061277220292595713) , (
+        1061818504572895234, 1061277220292595713
+    ) , (
+        1061818504497397761, 1061277220292595713
+    ) , (
+        1061818503436238850, 1061277220292595713
+    );
 
 INSERT INTO mng_role_resource (role_id, resource_id)
 VALUES (1061277220292595713, 6);
