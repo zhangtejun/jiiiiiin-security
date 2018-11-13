@@ -68,7 +68,7 @@ public class ResourceMapperTest {
                 .setPid(resource.getId())
                 .setName("操作员管理")
                 .setIcon("users")
-                .setUrl("/sys/admin")
+                .setUrl("/mngauth/admin")
                 .setLevels(2)
                 .setNum(1);
         int res2 = resourceMapper.insert(resource2);
@@ -78,7 +78,7 @@ public class ResourceMapperTest {
                 .setPid(resource.getId())
                 .setName("角色管理")
                 .setIcon("id-badge")
-                .setUrl("/sys/role")
+                .setUrl("/mngauth/role")
                 .setLevels(2)
                 .setNum(2);
         int res3 = resourceMapper.insert(resource3);
@@ -88,7 +88,7 @@ public class ResourceMapperTest {
                 .setPid(resource.getId())
                 .setName("资源管理")
                 .setIcon("tree")
-                .setUrl("/sys/resource")
+                .setUrl("/mngauth/resource")
                 .setLevels(2)
                 .setNum(3);
         int res4 = resourceMapper.insert(resource4);
@@ -103,6 +103,29 @@ public class ResourceMapperTest {
         operator.setResources(set);
         int temp = roleMapper.relationResource(operator);
         Assert.assertTrue(SqlHelper.retBool(temp));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testAddBtnResource(){
+        val resourceMngMenu = resourceMapper.selectById(1061818318517747714L);
+        Assert.assertNotNull(resourceMngMenu);
+        val resourceAdd = new Resource()
+                .setPid(resourceMngMenu.getId())
+                .setName("新增资源")
+                .setUrl("/resource/add")
+                .setMethod("POST")
+                .setLevels(3)
+                .setNum(1)
+                .setIsmenu(0);
+        int res4 = resourceMapper.insert(resourceAdd);
+        Assert.assertTrue(SqlHelper.retBool(res4));
+        val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
+        val set = operator.getResources();
+        set.add(resourceAdd);
+        operator.setResources(set);
+        int temp = roleMapper.relationResource(operator);
     }
 
     @Test

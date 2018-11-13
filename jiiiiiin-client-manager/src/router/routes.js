@@ -1,5 +1,5 @@
 import demo from './modules/demo'
-import sys from './modules/sys'
+import mngauth from './modules/mngauth'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
@@ -48,7 +48,7 @@ const frameIn = [
     ]
   },
   demo,
-  sys
+  mngauth
 ]
 
 /**

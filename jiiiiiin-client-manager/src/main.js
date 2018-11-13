@@ -11,14 +11,14 @@ import '@/mock'
 import i18n from './i18n'
 // 核心插件
 import d2Admin from '@/plugin/d2admin'
-
-// 菜单和路由设置
+import D2Crud from '@d2-projects/d2-crud'
+// 路由设置
 import router from './router'
 import { frameInRoutes } from '@/router/routes'
 import ViewPlus from 'vue-viewplus'
 import viewPlusOptions, { mixinConfig as viewPlusMixinConfig } from '@/plugin/vue-viewplus'
 import jsComponents from '@/plugin/vue-viewplus/js-ui-component.js'
-
+import ZkTable from 'vue-table-with-tree-grid'
 const {
   debug,
   errorHandler
@@ -43,6 +43,10 @@ Vue.use(ViewPlus, {
 
 // 核心插件
 Vue.use(d2Admin)
+
+Vue.use(D2Crud, { size: 'small' })
+
+Vue.component(ZkTable.name, ZkTable)
 
 new Vue({
   router,

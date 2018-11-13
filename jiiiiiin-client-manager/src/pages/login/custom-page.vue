@@ -21,7 +21,7 @@
               </el-input>
             </el-form-item>
             <el-form-item prop="code">
-              <el-input type="text" v-model="formLogin.code" placeholder="- - - -">
+              <el-input type="text" v-model="formLogin.code" placeholder="- - -">
                 <template slot="prepend">验证码</template>
                 <template slot="append">
                   <img ref="codeImageDom" class="login-code" :src="validateImgCodeUri" @click="onChangeValidateImgCode">
@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       submitBtnDisabled: false,
-      validateImgCodeUri: `${this.$vp.serverUrl}/code/image`,
+      validateImgCodeUri: `${this.$vp.serverUrl}/code/image?${new Date().getTime()}`,
       // 表单
       formLogin: {
         username: 'admin',

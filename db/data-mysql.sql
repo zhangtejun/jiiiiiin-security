@@ -33,28 +33,35 @@ INSERT
         mng_resource
         ( id, name, icon, url, num, levels )
     VALUES
-        ( 1061818503436238850, '系统设置', 'cog', '/sys', 2, 1 );
+        ( 1061818503436238850, '系统设置', 'cog', '/mngauth', 2, 1 );
 
 INSERT
     INTO
         mng_resource
         ( id, pid, name, icon, url, num, levels )
     VALUES
-        ( 1061818504497397761, 1061818503436238850, '操作员管理', 'users', '/sys/admin', 1, 2 );
+        ( 1061818504497397761, 1061818503436238850, '操作员管理', 'users', '/mngauth/admin', 1, 2 );
 
 INSERT
     INTO
         mng_resource
         ( id, pid, name, icon, url, num, levels )
     VALUES
-        ( 1061818504539340801, 1061818503436238850, '角色管理', 'id-badge', '/sys/role', 2, 2 );
+        ( 1061818504539340801, 1061818503436238850, '角色管理', 'id-badge', '/mngauth/role', 2, 2 );
 
 INSERT
     INTO
         mng_resource
         ( id, pid, name, icon, url, num, levels )
     VALUES
-        ( 1061818504572895234, 1061818503436238850, '资源管理', 'tree', '/sys/resource', 3, 2 );
+        ( 1061818504572895234, 1061818503436238850, '资源管理', 'tree', '/mngauth/resource', 3, 2 );
+
+INSERT
+    INTO
+        mng_resource
+        ( id, pid, name, url, method, num, levels, ismenu )
+    VALUES
+        ( 1061993676089069570, 1061818318517747714, '新增资源', '/resource/add', 'POST', 1, 3, 0 );
 
 INSERT INTO mng_resource (name, icon, url, method, num
 	, levels, ismenu, channel)
@@ -89,7 +96,9 @@ values
         1061818504497397761, 1061277220292595713
     ) , (
         1061818503436238850, 1061277220292595713
-    );
+    ) , (
+        1061993676089069570, 1061277220292595713
+        );
 
 INSERT INTO mng_role_resource (role_id, resource_id)
 VALUES (1061277220292595713, 6);

@@ -80,7 +80,6 @@ CREATE TABLE `mng_resource` (
   `levels` int(65) DEFAULT 1 COMMENT '菜单层级',
   `ismenu` tinyint DEFAULT 1 COMMENT '是否是菜单: 1:是(默认) 0:不是',
   `status` tinyint DEFAULT 1 COMMENT '菜单状态: 1:启用(默认) 0:不启用',
-  `isopen` tinyint DEFAULT 0 COMMENT '是否打开: 1:打开 0:不打开(默认)',
   `channel` tinyint DEFAULT 0 COMMENT '标识渠道，不同的渠道就是不同的资源分组: 0:前端资源(默认) 1:后台资源',
   PRIMARY KEY (`id`),
   key idx_pid(pid)
