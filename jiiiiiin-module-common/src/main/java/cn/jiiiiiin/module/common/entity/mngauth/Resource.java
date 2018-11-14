@@ -1,14 +1,17 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
+import cn.jiiiiiin.module.common.dto.mngauth.Menu;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.val;
 
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <p>
@@ -48,6 +51,9 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "url地址")
     private String url;
 
+    @ApiModelProperty(value = "页面地址")
+    private String path;
+
     @ApiModelProperty(value = "接口类型，如GET(默认)")
     private String method;
 
@@ -63,12 +69,11 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "菜单状态: 1:启用(默认) 0:不启用")
     private Integer status;
 
-    @Deprecated
-    @ApiModelProperty(value = "是否打开: 1:打开 0:不打开(默认)")
-    private Integer isopen;
-
-    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:前端资源(默认) 1:后台资源")
+    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
     private Integer channel;
+
+    @TableField(exist = false)
+    private List<Resource> children;
 
     public static final String PID = "pid";
 
@@ -77,6 +82,8 @@ public class Resource extends BaseEntity<Resource> {
     public static final String ICON = "icon";
 
     public static final String URL = "url";
+
+    public static final String PATH = "PATH";
 
     public static final String NUM = "num";
 
@@ -87,8 +94,6 @@ public class Resource extends BaseEntity<Resource> {
     public static final String METHOD = "method";
 
     public static final String STATUS = "status";
-
-    public static final String ISOPEN = "isopen";
 
     public static final String CHANNEL = "channel";
 
@@ -101,6 +106,31 @@ public class Resource extends BaseEntity<Resource> {
         MENU(Integer ismenu) {
             this.ismenu = ismenu;
         }
+    }
+
+    /**
+     * 递归解析一级节点下面的子节点
+     *
+     * @param resource
+     * @param menuResources
+     * @return
+     */
+    public static Resource parserMenu(Resource resource, Collection<Resource> menuResources) {
+        val children = new ArrayList<Resource>();
+        val pid = resource.getId();
+        menuResources.forEach((item) -> {
+            // 添加子节点
+            if (item.getPid().equals(pid)) {
+                // 递归出子元素
+                val node = parserMenu(item, menuResources);
+                children.add(node);
+            }
+        });
+        if (children.size() > 0) {
+            resource.setChildren(children);
+            resource.getChildren().sort(Comparator.comparingInt(Resource::getNum));
+        }
+        return resource;
     }
 
 }

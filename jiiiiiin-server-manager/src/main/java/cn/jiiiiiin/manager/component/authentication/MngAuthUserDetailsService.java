@@ -70,7 +70,7 @@ public class MngAuthUserDetailsService implements UserDetailsService {
         menuResources.forEach(resource -> {
             // 过滤一级节点
             if (resource.getPid().equals(Resource.IS_ROOT_MENU)) {
-                val node = _sonsTree(resource, menuResources);
+                val node = Menu.parserMenu(resource, menuResources);
                 menus.add(node);
             }
         });
@@ -79,32 +79,6 @@ public class MngAuthUserDetailsService implements UserDetailsService {
         optionalAdmin.setMenus(menus);
         log.debug("响应的授权资源 {}", authorizeResources);
         log.debug("响应的菜单 {}", menus);
-    }
-
-    /**
-     * 解析一级节点下面的子节点
-     *
-     * @param resource
-     * @param menuResources
-     * @return
-     */
-    private Menu _sonsTree(Resource resource, HashSet<Resource> menuResources) {
-        val menu = Menu.MODEL_MAPPER.map(resource, Menu.class);
-        val children = new ArrayList<Menu>();
-        val pid = resource.getId();
-        menuResources.forEach((item) -> {
-            // 添加子节点
-            if (item.getPid().equals(pid)) {
-                // 递归出子元素
-                val node = _sonsTree(item, menuResources);
-                children.add(node);
-            }
-        });
-        if (children.size() > 0) {
-            menu.setChildren(children);
-            menu.getChildren().sort(Comparator.comparingInt(Menu::getNum));
-        }
-        return menu;
     }
 
 }

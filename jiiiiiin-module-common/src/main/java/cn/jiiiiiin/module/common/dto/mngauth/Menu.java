@@ -4,11 +4,12 @@ import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.val;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
 /**
  * 前端所需菜单
@@ -28,18 +29,52 @@ public class Menu implements Serializable {
 
             @Override
             protected void configure() {
-                map().setPath(source.getUrl());
                 map().setTitle(source.getName());
             }
         });
     }
 
-    // TODO 补充 ApiModelProperty
+
+    @ApiModelProperty(value = "url地址")
+    private String url;
+
+    @ApiModelProperty(value = "页面地址")
     private String path;
+
+    @ApiModelProperty(value = "菜单名称")
     private String title;
+
+    @ApiModelProperty(value = "菜单图标")
     private String icon;
-    private List<Menu> children;
+
     @ApiModelProperty(value = "菜单排序号")
     private Integer num;
 
+    private List<Menu> children;
+
+    /**
+     * 递归解析一级节点下面的子节点
+     *
+     * @param resource
+     * @param menuResources
+     * @return
+     */
+    public static Menu parserMenu(Resource resource, Collection<Resource> menuResources) {
+        val menu = Menu.MODEL_MAPPER.map(resource, Menu.class);
+        val children = new ArrayList<Menu>();
+        val pid = resource.getId();
+        menuResources.forEach((item) -> {
+            // 添加子节点
+            if (item.getPid().equals(pid)) {
+                // 递归出子元素
+                val node = parserMenu(item, menuResources);
+                children.add(node);
+            }
+        });
+        if (children.size() > 0) {
+            menu.setChildren(children);
+            menu.getChildren().sort(Comparator.comparingInt(Menu::getNum));
+        }
+        return menu;
+    }
 }

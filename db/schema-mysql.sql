@@ -74,13 +74,14 @@ CREATE TABLE `mng_resource` (
   `pid` bigint(20) DEFAULT 0 COMMENT '菜单父id: 0标识(默认)为根节点',
   `name` varchar(255) DEFAULT NULL COMMENT '菜单名称',
   `icon` varchar(55) DEFAULT NULL COMMENT '菜单图标',
-  `url` varchar(255) NOT NULL COMMENT 'url地址',
+  `url` varchar(255) DEFAULT NULL COMMENT 'url地址',
+  `path` varchar(255) DEFAULT NULL COMMENT '页面地址',
   `method` varchar(6) DEFAULT 'GET' COMMENT '接口类型，如GET(默认)',
   `num` int(65) DEFAULT NULL COMMENT '菜单排序号',
   `levels` int(65) DEFAULT 1 COMMENT '菜单层级',
   `ismenu` tinyint DEFAULT 1 COMMENT '是否是菜单: 1:是(默认) 0:不是',
   `status` tinyint DEFAULT 1 COMMENT '菜单状态: 1:启用(默认) 0:不启用',
-  `channel` tinyint DEFAULT 0 COMMENT '标识渠道，不同的渠道就是不同的资源分组: 0:前端资源(默认) 1:后台资源',
+  `channel` tinyint DEFAULT 0 COMMENT '标识渠道，不同的渠道就是不同的资源分组: 0:内管',
   PRIMARY KEY (`id`),
   key idx_pid(pid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限资源表';

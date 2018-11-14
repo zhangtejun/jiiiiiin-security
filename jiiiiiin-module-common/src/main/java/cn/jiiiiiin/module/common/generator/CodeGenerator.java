@@ -219,7 +219,7 @@ public class CodeGenerator {
             val conf = new Config();
             String _pp;
             try {
-                _pp = rb.getString("generator.project.path");
+                _pp = rb.getString("generator.project.PATH");
             } catch (Exception e) {
                 _pp = System.getProperty("user.dir");
             }

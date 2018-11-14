@@ -54,55 +54,65 @@ public class ResourceMapperTest {
     @Transactional
     @Rollback
     public void testInsert() {
-        val resource = new Resource()
-                .setName("系统设置")
-                .setIcon("cog")
-                .setUrl("/sys")
+        val home = new Resource()
+                .setName("首页")
+                .setIcon("home")
+                .setPath("/index")
                 .setLevels(1)
-                .setNum(2);
-        int res = resourceMapper.insert(resource);
-        Assert.assertTrue(SqlHelper.retBool(res));
-        Assert.assertTrue(resource.getId() > 0);
-
-        val resource2 = new Resource()
-                .setPid(resource.getId())
-                .setName("操作员管理")
-                .setIcon("users")
-                .setUrl("/mngauth/admin")
-                .setLevels(2)
                 .setNum(1);
-        int res2 = resourceMapper.insert(resource2);
-        Assert.assertTrue(SqlHelper.retBool(res2));
+        int homeRes = resourceMapper.insert(home);
+        Assert.assertTrue(SqlHelper.retBool(homeRes));
+        Assert.assertTrue(home.getId() > 0);
 
-        val resource3 = new Resource()
-                .setPid(resource.getId())
-                .setName("角色管理")
-                .setIcon("id-badge")
-                .setUrl("/mngauth/role")
-                .setLevels(2)
-                .setNum(2);
-        int res3 = resourceMapper.insert(resource3);
-        Assert.assertTrue(SqlHelper.retBool(res3));
-
-        val resource4 = new Resource()
-                .setPid(resource.getId())
-                .setName("资源管理")
-                .setIcon("tree")
-                .setUrl("/mngauth/resource")
-                .setLevels(2)
-                .setNum(3);
-        int res4 = resourceMapper.insert(resource4);
-        Assert.assertTrue(SqlHelper.retBool(res4));
-
-        val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
-        val set = new HashSet<Resource>();
-        set.add(resource);
-        set.add(resource2);
-        set.add(resource3);
-        set.add(resource4);
-        operator.setResources(set);
-        int temp = roleMapper.relationResource(operator);
-        Assert.assertTrue(SqlHelper.retBool(temp));
+//        val resource = new Resource()
+//                .setName("系统设置")
+//                .setIcon("cog")
+//                .setUrl("/sys")
+//                .setLevels(1)
+//                .setNum(2);
+//        int res = resourceMapper.insert(resource);
+//        Assert.assertTrue(SqlHelper.retBool(res));
+//        Assert.assertTrue(resource.getId() > 0);
+//
+//        val resource2 = new Resource()
+//                .setPid(resource.getId())
+//                .setName("操作员管理")
+//                .setIcon("users")
+//                .setUrl("/mngauth/admin")
+//                .setLevels(2)
+//                .setNum(1);
+//        int res2 = resourceMapper.insert(resource2);
+//        Assert.assertTrue(SqlHelper.retBool(res2));
+//
+//        val resource3 = new Resource()
+//                .setPid(resource.getId())
+//                .setName("角色管理")
+//                .setIcon("id-badge")
+//                .setUrl("/mngauth/role")
+//                .setLevels(2)
+//                .setNum(2);
+//        int res3 = resourceMapper.insert(resource3);
+//        Assert.assertTrue(SqlHelper.retBool(res3));
+//
+//        val resource4 = new Resource()
+//                .setPid(resource.getId())
+//                .setName("资源管理")
+//                .setIcon("tree")
+//                .setUrl("/mngauth/resource")
+//                .setLevels(2)
+//                .setNum(3);
+//        int res4 = resourceMapper.insert(resource4);
+//        Assert.assertTrue(SqlHelper.retBool(res4));
+//
+//        val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
+//        val set = new HashSet<Resource>();
+//        set.add(resource);
+//        set.add(resource2);
+//        set.add(resource3);
+//        set.add(resource4);
+//        operator.setResources(set);
+//        int temp = roleMapper.relationResource(operator);
+//        Assert.assertTrue(SqlHelper.retBool(temp));
     }
 
     @Test
