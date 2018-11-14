@@ -18,11 +18,11 @@
                 <d2-icon v-if="scope.row.icon" :name="scope.row.icon"/>
                 <span v-else>空</span>
             </template>
-            <template slot="ismenu" slot-scope="scope">
-                <el-tag size="mini" type="[scope.row.ismenu ? '': 'success']"> {{ scope.row.ismenu ? '菜单' : '按钮' }}</el-tag>
+            <template slot="type" slot-scope="scope">
+                <el-tag size="mini" type="[scope.row.type ? '': 'success']"> {{ scope.row.type ? '菜单' : '按钮' }}</el-tag>
             </template>
             <template slot="status" slot-scope="scope">
-                <el-tag size="mini" type="[scope.row.status ? '': 'success']"> {{ scope.row.ismenu ? '启用' : '停用' }}</el-tag>
+                <el-tag size="mini" type="[scope.row.status ? '': 'success']"> {{ scope.row.status ? '启用' : '停用' }}</el-tag>
             </template>
             <template slot="option" slot-scope="scope">
                 <el-button type="primary" plain size="mini" @click="onClickAdd(scope.row)">新增</el-button>
@@ -37,8 +37,8 @@
                 :visible.sync="dialogFormVisible">
             <el-form :model="form">
                 <el-form-item label="类型" :label-width="formLabelWidth">
-                    <el-radio v-model="form.ismenu" label="1">菜单</el-radio>
-                    <el-radio v-model="form.ismenu" label="0">按钮</el-radio>
+                    <el-radio v-model="form.type" label="1">菜单</el-radio>
+                    <el-radio v-model="form.type" label="0">按钮</el-radio>
                 </el-form-item>
                 <el-form-item label="活动名称" :label-width="formLabelWidth">
                     <el-input v-model="form.name" autocomplete="off"></el-input>
@@ -87,9 +87,9 @@ export default {
         },
         {
           label: '类型',
-          prop: 'ismenu',
+          prop: 'type',
           type: 'template',
-          template: 'ismenu',
+          template: 'type',
           width: '70px',
           align: 'center'
         },
