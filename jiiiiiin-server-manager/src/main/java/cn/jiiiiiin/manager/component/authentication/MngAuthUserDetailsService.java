@@ -4,6 +4,8 @@ import cn.jiiiiiin.manager.properties.ManagerProperties;
 import cn.jiiiiiin.module.common.dto.mngauth.Menu;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
+import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
 import cn.jiiiiiin.module.mngauth.component.MngUserDetails;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import cn.jiiiiiin.security.core.authentication.AuthenticationBeanConfig;
@@ -33,13 +35,10 @@ public class MngAuthUserDetailsService implements UserDetailsService {
     @Autowired
     private IAdminService adminService;
 
-    @Autowired
-    private ManagerProperties managerProperties;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 根据channel去获取登录用户的权限信息
-        val optionalAdmin = adminService.signInByUsername(username, managerProperties.getChannel());
+        val optionalAdmin = adminService.signInByUsername(username, ResourceChannelEnum.MNG);
         if (optionalAdmin == null) {
             throw new UsernameNotFoundException("用户名密码不符");
         } else {
@@ -59,7 +58,7 @@ public class MngAuthUserDetailsService implements UserDetailsService {
         val menuResources = new HashSet<Resource>();
         val authorizeResources = new HashSet<Resource>();
         roles.forEach(item -> item.getResources().forEach(resource -> {
-            if (resource.getIsmenu().equals(Resource.MENU.Y.ismenu)) {
+            if (resource.getType().equals(ResourceTypeEnum.MENU)) {
                 menuResources.add(resource);
             } else {
                 authorizeResources.add(resource);

@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.common.mapper.mngauth;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
+import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,5 +23,5 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @param roleId
      * @return
      */
-    Set<Resource> selectByRoleId(@Param("roleId") Long roleId, @Param("channel") Integer channel);
+    Set<Resource> selectByRoleId(@Param("roleId") Long roleId, @Param("channel") ResourceChannelEnum channel);
 }

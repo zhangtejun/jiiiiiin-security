@@ -66,6 +66,12 @@ INSERT
         ( id, pid, name, url, method, num, levels, ismenu )
     VALUES
         ( 1061993676089069570, 1061818318517747714, '新增资源', '/resource/add', 'POST', 1, 3, 0 );
+INSERT
+    INTO
+        mng_resource
+        ( id, pid, name, url, method, num, levels, type )
+    VALUES
+        ( 1062546326157291522, 1061818318517747714, '修改资源', 'resource', 'UPDATE', 2, 3, 0 );
 
 TRUNCATE TABLE mng_role_resource;
 
@@ -82,4 +88,7 @@ values
         1061818503436238850, 1061277220292595713
     ) , (
         1061993676089069570, 1061277220292595713
-        );
+    ) , (
+        1062546326157291522, 1061277220292595713
+    );
+

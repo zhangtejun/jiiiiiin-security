@@ -3,7 +3,7 @@
 <mapper namespace="cn.jiiiiiin.module.common.mapper.mngauth.AdminMapper">
 
     <!-- 开启二级缓存 -->
-    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>-->
+    <!--<cache TYPE="org.mybatis.caches.ehcache.LoggingEhcache"/>-->
     <cache type="org.mybatis.caches.ehcache.EhcacheCache">
         <property name="timeToIdleSeconds" value="3600"/>
         <property name="timeToLiveSeconds" value="3600"/>

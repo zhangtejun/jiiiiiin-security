@@ -315,7 +315,7 @@ public class CodeGenerator {
         if (url.contains("mysql")) {
             res = "com.mysql.jdbc.Driver";
         } else {
-            throw ExceptionUtils.mpe("Unknown type of database!");
+            throw ExceptionUtils.mpe("Unknown TYPE of database!");
         }
         return res;
     }

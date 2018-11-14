@@ -3,6 +3,7 @@ package cn.jiiiiiin.module.mngauth.service.impl;
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
+import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -49,10 +50,10 @@ public class AdminServiceImplTest {
 
     @Test
     public void findByUsername() {
-        val admin = adminService.signInByUsername("user", 1);
+        val admin = adminService.signInByUsername("user", ResourceChannelEnum.MNG);
         Assert.assertEquals("user", admin.getUsername());
         // 测试EHCache缓存
-        val admin2 = adminService.signInByUsername("user", 1);
+//        val admin2 = adminService.signInByUsername("user", ResourceChannelEnum.MNG);
     }
 
 
@@ -63,9 +64,9 @@ public class AdminServiceImplTest {
         val userRole = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "DB_ADMIN"));
         roles.add(adminRole);
         roles.add(userRole);
-        val admin = adminService.signInByUsername("admin", 1);
+        val admin = adminService.signInByUsername("admin", ResourceChannelEnum.MNG);
         admin.setRoles(roles);
-        val res = adminService.relationRole(admin);
+        boolean res = adminService.relationRole(admin);
         Assert.assertTrue(res);
     }
 

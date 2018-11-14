@@ -99,7 +99,7 @@ mybatis-plus:
   #实体扫描，多个package用逗号或者分号分隔
   typeAliasesPackage: cn.jiiiiiin.module.common.entity
   type-aliases-super-type: cn.jiiiiiin.data.orm.entity.BaseEntity
-  typeEnumsPackage: cn.jiiiiiin.module.common.entity.enums
+  typeEnumsPackage: cn.jiiiiiin.module.common.enums.*
   global-config:
     db-config:
         id-type: id_worker
@@ -126,8 +126,7 @@ jiiiiiin:
       sign-out-url: /signOut.html
       # proxy-uri: http://www.pinzhi365.com
 
-manager:
-  channel: 0
+#manager:
 ---
 
 spring:

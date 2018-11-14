@@ -2,6 +2,8 @@ package cn.jiiiiiin.module.common.entity.mngauth;
 
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import cn.jiiiiiin.module.common.dto.mngauth.Menu;
+import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -28,10 +30,6 @@ import java.util.*;
 @ApiModel(value="Resource对象", description="权限资源表")
 public class Resource extends BaseEntity<Resource> {
 
-    /**
-     * {@link Resource#channel}
-     */
-    public static final Integer CHANNEL_SPA = 0;
     /**
      * 根节点
      */
@@ -63,14 +61,14 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "菜单层级")
     private Integer levels;
 
-    @ApiModelProperty(value = "是否是菜单: 1:是(默认) 0:不是")
-    private Integer ismenu;
+    @ApiModelProperty(value = "类型: 1:菜单(默认) 0:按钮")
+    private ResourceTypeEnum type;
 
     @ApiModelProperty(value = "菜单状态: 1:启用(默认) 0:不启用")
     private Integer status;
 
     @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
-    private Integer channel;
+    private ResourceChannelEnum channel;
 
     @TableField(exist = false)
     private List<Resource> children;
@@ -89,24 +87,13 @@ public class Resource extends BaseEntity<Resource> {
 
     public static final String LEVELS = "levels";
 
-    public static final String ISMENU = "ismenu";
+    public static final String TYPE = "TYPE";
 
     public static final String METHOD = "method";
 
     public static final String STATUS = "status";
 
     public static final String CHANNEL = "channel";
-
-    public enum MENU {
-        Y(1),
-        N(0);
-
-        public Integer ismenu;
-
-        MENU(Integer ismenu) {
-            this.ismenu = ismenu;
-        }
-    }
 
     /**
      * 递归解析一级节点下面的子节点

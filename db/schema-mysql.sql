@@ -79,7 +79,7 @@ CREATE TABLE `mng_resource` (
   `method` varchar(6) DEFAULT 'GET' COMMENT '接口类型，如GET(默认)',
   `num` int(65) DEFAULT NULL COMMENT '菜单排序号',
   `levels` int(65) DEFAULT 1 COMMENT '菜单层级',
-  `ismenu` tinyint DEFAULT 1 COMMENT '是否是菜单: 1:是(默认) 0:不是',
+  `type` tinyint DEFAULT 1 COMMENT '类型: 1:菜单(默认) 0:按钮',
   `status` tinyint DEFAULT 1 COMMENT '菜单状态: 1:启用(默认) 0:不启用',
   `channel` tinyint DEFAULT 0 COMMENT '标识渠道，不同的渠道就是不同的资源分组: 0:内管',
   PRIMARY KEY (`id`),

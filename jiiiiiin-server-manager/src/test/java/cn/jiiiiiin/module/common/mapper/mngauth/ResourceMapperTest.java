@@ -5,6 +5,8 @@ import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.dto.mngauth.Menu;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
+import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
 import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlHelper;
@@ -121,28 +123,37 @@ public class ResourceMapperTest {
     public void testAddBtnResource(){
         val resourceMngMenu = resourceMapper.selectById(1061818318517747714L);
         Assert.assertNotNull(resourceMngMenu);
-        val resourceAdd = new Resource()
+//        val resourceAdd = new Resource()
+//                .setPid(resourceMngMenu.getId())
+//                .setName("新增资源")
+//                .setUrl("resource")
+//                .setMethod("POST")
+//                .setLevels(3)
+//                .setNum(1)
+//                .setType(ResourceTypeEnum.BTN);
+        val update = new Resource()
                 .setPid(resourceMngMenu.getId())
-                .setName("新增资源")
-                .setUrl("/resource/add")
-                .setMethod("POST")
+                .setName("修改资源")
+                .setUrl("resource")
+                .setMethod("UPDATE")
                 .setLevels(3)
-                .setNum(1)
-                .setIsmenu(0);
-        int res4 = resourceMapper.insert(resourceAdd);
-        Assert.assertTrue(SqlHelper.retBool(res4));
+                .setNum(2)
+                .setType(ResourceTypeEnum.BTN);
+        int updateres = resourceMapper.insert(update);
+        Assert.assertTrue(SqlHelper.retBool(updateres));
         val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
         val set = operator.getResources();
-        set.add(resourceAdd);
+//        set.add(resourceAdd);
+        set.add(update);
         operator.setResources(set);
         int temp = roleMapper.relationResource(operator);
     }
 
     @Test
     public void testSelectByRoleId() {
-        val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "OPERATOR"));
+        val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
         Assert.assertNotNull(operator);
-        val res = resourceMapper.selectByRoleId(operator.getId(), 1);
+        val res = resourceMapper.selectByRoleId(operator.getId(), ResourceChannelEnum.MNG);
         log.info("testSelectByRoleId {}", res);
         Assert.assertNotNull(res);
         Assert.assertTrue(res.size() > 0);

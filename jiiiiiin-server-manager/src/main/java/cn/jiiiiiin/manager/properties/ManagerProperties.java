@@ -12,8 +12,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 public class ManagerProperties {
 
-    /**
-     * {@link cn.jiiiiiin.module.common.entity.mngauth.Resource#channel}
-     */
-    private Integer channel;
 }

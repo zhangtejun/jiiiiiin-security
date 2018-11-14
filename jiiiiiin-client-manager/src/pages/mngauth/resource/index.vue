@@ -25,12 +25,36 @@
                 <el-tag size="mini" type="[scope.row.status ? '': 'success']"> {{ scope.row.ismenu ? '启用' : '停用' }}</el-tag>
             </template>
             <template slot="option" slot-scope="scope">
-                <el-button type="primary" plain size="mini">新增</el-button>
-                <el-button plain size="mini">修改</el-button>
+                <el-button type="primary" plain size="mini" @click="onClickAdd(scope.row)">新增</el-button>
+                <el-button plain size="mini" @click="onClickUpdate(scope.row)">修改</el-button>
                 <!--根节点才可以删除-->
-                <el-button type="danger" plain size="mini" v-if="!scope.row.children">删除</el-button>
+                <el-button type="danger" plain size="mini" v-if="!scope.row.children" @click="onClickDel(scope.row)">删除</el-button>
             </template>
         </zk-table>
+
+        <el-dialog
+                :title="formMode === 'edit' ? '编辑' : '新增'"
+                :visible.sync="dialogFormVisible">
+            <el-form :model="form">
+                <el-form-item label="类型" :label-width="formLabelWidth">
+                    <el-radio v-model="form.ismenu" label="1">菜单</el-radio>
+                    <el-radio v-model="form.ismenu" label="0">按钮</el-radio>
+                </el-form-item>
+                <el-form-item label="活动名称" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="活动区域" :label-width="formLabelWidth">
+                    <el-select v-model="form.region" placeholder="请选择活动区域">
+                        <el-option label="区域一" value="shanghai"></el-option>
+                        <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            </div>
+        </el-dialog>
     </d2-container>
 </template>
 
@@ -39,6 +63,13 @@ export default {
   name: 'resource',
   data() {
     return {
+      dialogFormVisible: false,
+      formLabelWidth: '120px',
+      formMode: 'add',
+      form: {
+        name: '',
+        region: ''
+      },
       data: [],
       columns: [
         {
@@ -100,9 +131,16 @@ export default {
     };
   },
   methods: {
-    onClickAdd() {
-      alert('add')
-    }
+    onClickAdd(pMenu) {
+      console.log('pMenu', pMenu)
+      this.formMode = 'add'
+      this.dialogFormVisible = true
+    },
+    onClickUpdate() {
+      this.formMode = 'edit'
+      this.dialogFormVisible = true
+    },
+    onClickDel() {}
   },
   created() {
     this.$vp.ajaxGet('resource')
