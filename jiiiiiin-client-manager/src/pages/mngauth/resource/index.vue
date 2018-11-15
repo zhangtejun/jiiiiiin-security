@@ -34,19 +34,49 @@
 
         <el-dialog
                 :title="formMode === 'edit' ? '编辑' : '新增'"
-                :visible.sync="dialogFormVisible">
+                :visible.sync="dialogFormVisible"
+                width="70%"
+                :modal="true">
             <el-form :model="form">
                 <el-form-item label="类型" :label-width="formLabelWidth">
-                    <el-radio v-model="form.type" label="1">菜单</el-radio>
-                    <el-radio v-model="form.type" label="0">按钮</el-radio>
+                    <el-radio v-model="form.type" label="MENU">菜单</el-radio>
+                    <el-radio v-model="form.type" label="BTN">按钮</el-radio>
                 </el-form-item>
-                <el-form-item label="活动名称" :label-width="formLabelWidth">
+                <el-form-item label="名称" :label-width="formLabelWidth" :required="true">
                     <el-input v-model="form.name" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="活动区域" :label-width="formLabelWidth">
-                    <el-select v-model="form.region" placeholder="请选择活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                <el-form-item label="上级菜单" :label-width="formLabelWidth">
+                    <el-input v-model="form.pname" autocomplete="off" disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="路由" :label-width="formLabelWidth">
+                    <el-input v-model="form.path" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="接口" :label-width="formLabelWidth">
+                    <el-input v-model="form.url" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="接口类型" :label-width="formLabelWidth">
+                    <el-input v-model="form.method" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="状态" :label-width="formLabelWidth">
+                    <!--！注意label需要类型匹配-->
+                    <el-radio v-model="form.status" :label="1">启用</el-radio>
+                    <el-radio v-model="form.status" :label="0">停用</el-radio>
+                </el-form-item>
+                <el-form-item label="图标" :label-width="formLabelWidth">
+                    <el-select v-model="form.icon" placeholder="请选择">
+                        <el-option
+                                v-for="item in iconOptions"
+                                :key="item.key"
+                                :value="item.value"
+                                :disabled="item.disabled">
+                            <div v-if="item.disabled">
+                                <span style="float: left">{{ item.label }}</span>
+                            </div>
+                            <div v-else>
+                                <d2-icon :name="item.value" style="width: 30px"/>&nbsp;&nbsp;&nbsp;&nbsp;{{ item.value }}
+                                <!--<span></span>-->
+                            </div>
+                        </el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -59,23 +89,38 @@
 </template>
 
 <script>
+import icon from './data/index'
+
 export default {
   name: 'resource',
   data() {
     return {
+      icon,
       dialogFormVisible: false,
-      formLabelWidth: '120px',
+      formLabelWidth: '80px',
       formMode: 'add',
       form: {
+        channel: '',
+        children: [],
+        icon: '',
+        id: -1,
+        levels: 1,
+        method: 'POST',
         name: '',
-        region: ''
+        num: 1,
+        path: '',
+        pid: 0,
+        pname: '',
+        status: 1,
+        type: 'MENU',
+        url: ''
       },
       data: [],
       columns: [
         {
           label: '名称',
           prop: 'name',
-          minWidth: '50px'
+          minWidth: '100px'
         },
         {
           label: '图标',
@@ -130,15 +175,39 @@ export default {
       ]
     };
   },
+  computed: {
+    iconOptions () {
+      const res = []
+      let idx = 0
+      this.icon.forEach(item => {
+        res.push({
+          label: item.title,
+          disabled: true
+        })
+        item.icon.forEach((icon) => {
+          idx += 1
+          res.push({
+            key: idx,
+            value: icon
+          })
+        })
+      })
+      return res
+    }
+  },
   methods: {
-    onClickAdd(pMenu) {
-      console.log('pMenu', pMenu)
-      this.formMode = 'add'
+    _preHandlerAddOrUpdate(mode, pMenu) {
+      this.form.pid = pMenu.id
+      this.form.pname = pMenu.name
+      this.formMode = mode
+      console.log('AddOrUpdate form', this.form)
       this.dialogFormVisible = true
     },
-    onClickUpdate() {
-      this.formMode = 'edit'
-      this.dialogFormVisible = true
+    onClickAdd(pMenu) {
+      this._preHandlerAddOrUpdate('add', pMenu)
+    },
+    onClickUpdate(pMenu) {
+      this._preHandlerAddOrUpdate('edit', pMenu)
     },
     onClickDel() {}
   },

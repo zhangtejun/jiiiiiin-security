@@ -19,6 +19,8 @@ import ViewPlus from 'vue-viewplus'
 import viewPlusOptions, { mixinConfig as viewPlusMixinConfig } from '@/plugin/vue-viewplus'
 import jsComponents from '@/plugin/vue-viewplus/js-ui-component.js'
 import ZkTable from 'vue-table-with-tree-grid'
+import '@/assets/style/custom.scss'
+
 const {
   debug,
   errorHandler
