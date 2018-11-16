@@ -22,7 +22,7 @@
                 <el-tag size="mini" type="[scope.row.type ? '': 'success']"> {{ scope.row.type ? '菜单' : '按钮' }}</el-tag>
             </template>
             <template slot="status" slot-scope="scope">
-                <el-tag size="mini" type="[scope.row.status ? '': 'success']"> {{ scope.row.status ? '启用' : '停用' }}</el-tag>
+                <el-tag size="mini" type="[scope.row.status === 1 ? '': 'success']"> {{ scope.row.status === 1 ? '启用' : '停用' }}</el-tag>
             </template>
             <template slot="option" slot-scope="scope">
                 <el-button type="primary" plain size="mini" @click="onClickAdd(scope.row)">新增</el-button>
@@ -39,14 +39,20 @@
                 :modal="true">
             <el-form :model="form">
                 <el-form-item label="类型" :label-width="formLabelWidth">
-                    <el-radio v-model="form.type" label="MENU">菜单</el-radio>
-                    <el-radio v-model="form.type" label="BTN">按钮</el-radio>
+                    <el-radio-group v-model="form.type" @change="onChangeType">
+                        <el-radio label="MENU">菜单</el-radio>
+                        <el-radio label="BTN">按钮</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="名称" :label-width="formLabelWidth" :required="true">
                     <el-input v-model="form.name" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="上级菜单" :label-width="formLabelWidth">
+                <el-form-item label="父级菜单" :label-width="formLabelWidth">
                     <el-input v-model="form.pname" autocomplete="off" disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="状态" :label-width="formLabelWidth">
+                    <!--！注意label需要类型匹配-->
+                    <el-switch v-model="form.status" :inactive-value="0" :active-value="1"></el-switch>
                 </el-form-item>
                 <el-form-item label="路由" :label-width="formLabelWidth">
                     <el-input v-model="form.path" autocomplete="off"></el-input>
@@ -57,13 +63,11 @@
                 <el-form-item label="接口类型" :label-width="formLabelWidth">
                     <el-input v-model="form.method" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="状态" :label-width="formLabelWidth">
-                    <!--！注意label需要类型匹配-->
-                    <el-radio v-model="form.status" :label="1">启用</el-radio>
-                    <el-radio v-model="form.status" :label="0">停用</el-radio>
+                <el-form-item label="同级排序" :label-width="formLabelWidth">
+                    <el-input-number v-model="form.num" @change="onChangeNum" :min="1" :max="numMax" label="排序"></el-input-number>
                 </el-form-item>
-                <el-form-item label="图标" :label-width="formLabelWidth">
-                    <el-select v-model="form.icon" placeholder="请选择">
+                <el-form-item label="图标" :label-width="formLabelWidth" v-show="visibleMenuFromField">
+                    <el-select v-model="form.icon" filterable placeholder="请选择">
                         <el-option
                                 v-for="item in iconOptions"
                                 :key="item.key"
@@ -74,7 +78,6 @@
                             </div>
                             <div v-else>
                                 <d2-icon :name="item.value" style="width: 30px"/>&nbsp;&nbsp;&nbsp;&nbsp;{{ item.value }}
-                                <!--<span></span>-->
                             </div>
                         </el-option>
                     </el-select>
@@ -82,7 +85,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button type="primary" @click="onSubmitForm()">确 定</el-button>
             </div>
         </el-dialog>
     </d2-container>
@@ -90,22 +93,39 @@
 
 <script>
 import icon from './data/index'
+import _ from 'lodash'
 
 export default {
   name: 'resource',
   data() {
     return {
       icon,
+      visibleMenuFromField: true,
       dialogFormVisible: false,
       formLabelWidth: '80px',
       formMode: 'add',
+      numMax: 1,
       form: {
         channel: '',
-        children: [],
         icon: '',
         id: -1,
         levels: 1,
-        method: 'POST',
+        method: '',
+        name: '',
+        num: 1,
+        path: '',
+        pid: 0,
+        pname: '',
+        status: 1,
+        type: 'MENU',
+        url: ''
+      },
+      formTempl: {
+        channel: '',
+        icon: '',
+        id: -1,
+        levels: 1,
+        method: '',
         name: '',
         num: 1,
         path: '',
@@ -188,6 +208,7 @@ export default {
           idx += 1
           res.push({
             key: idx,
+            label: icon,
             value: icon
           })
         })
@@ -197,21 +218,47 @@ export default {
   },
   methods: {
     _preHandlerAddOrUpdate(mode, pMenu) {
-      this.form.pid = pMenu.id
-      this.form.pname = pMenu.name
       this.formMode = mode
-      console.log('AddOrUpdate form', this.form)
+      this.numMax = _.isEmpty(pMenu.children) ? 1 : pMenu.children.length + 1
+      if (mode === 'add') {
+        this.form.num = this.numMax
+      }
       this.dialogFormVisible = true
     },
     onClickAdd(pMenu) {
+      this.form = _.clone(this.formTempl)
+      this.form.channel = pMenu.channel
+      this.form.pid = pMenu.id
+      this.form.pname = pMenu.name
+      this.form.level = pMenu.level + 1
       this._preHandlerAddOrUpdate('add', pMenu)
     },
     onClickUpdate(pMenu) {
+      this.form = pMenu
       this._preHandlerAddOrUpdate('edit', pMenu)
+    },
+    onChangeType(value) {
+      this.visibleMenuFromField = value === 'MENU'
+    },
+    onChangeNum() {},
+    onSubmitForm() {
+      // if (this.formMode === 'add') {
+      //   this.$vp.ajaxPost('resource', {
+      //     params: this.form
+      //   }).then(res => {
+      //     // TODO 追加记录到 this.data
+      //   });
+      // }
+      // else {
+      //   // TODO 添加 ajax update
+      // }
+      this.dialogFormVisible = false
+      console.log('submit', this.form)
     },
     onClickDel() {}
   },
   created() {
+    console.log('created form', this.form)
     this.$vp.ajaxGet('resource')
       .then(res => {
         this.data = res
