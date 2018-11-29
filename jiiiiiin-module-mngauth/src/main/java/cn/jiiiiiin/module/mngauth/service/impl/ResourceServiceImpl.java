@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
+import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
@@ -8,9 +9,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.val;
 import lombok.var;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,9 +33,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Autowired
     ResourceMapper resourceMapper;
 
-    @Override
-    public List<Resource> treeAllChildrenNode(Long pid, ResourceChannelEnum channel) {
-        val nodes = resourceMapper.selectAllChildrenNode(pid, channel);
+    private List<Resource> _parseTreeNode(Long pid, List<Resource> nodes) {
         val menus = new ArrayList<Resource>();
         nodes.forEach(resource -> {
             // 过滤一级节点
@@ -47,6 +46,19 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         return menus;
     }
 
+    @Override
+    public List<Resource> treeAllChildrenNode(Long pid, ResourceChannelEnum channel) {
+        val nodes = resourceMapper.selectAllChildrenNode(pid, channel, null);
+        return _parseTreeNode(pid, nodes);
+    }
+
+    @Override
+    public List<Resource> searchTreeAllChildrenNode(Long pid, ResourceChannelEnum channel, StatusEnum status) {
+        val nodes = resourceMapper.selectAllChildrenNode(pid, channel, status);
+        return _parseTreeNode(pid, nodes);
+    }
+
+    @Transactional
     @Override
     public Boolean saveAndSortNum(Resource resource, ResourceChannelEnum channel) {
         val pid = resource.getPid();
@@ -81,6 +93,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 
     }
 
+    @Transactional
     @Override
     public Boolean updateAndSortNum(Resource resource, ResourceChannelEnum channel) {
         val currentNode = resourceMapper.selectById(resource.getId());
@@ -108,7 +121,6 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
                 if (!item.getId().equals(resource.getId())) {
                     val itemNum = item.getNum();
                     if (itemNum > currentNum && itemNum <= modifyNum) {
-                        // TODO 待测试
                         // 处理加大当前待修改节点的排序
                         item.setNum(itemNum - 1);
                     } else if(itemNum >= modifyNum && itemNum < currentNum) {

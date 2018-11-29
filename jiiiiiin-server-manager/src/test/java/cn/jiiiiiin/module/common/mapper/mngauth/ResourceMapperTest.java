@@ -5,8 +5,10 @@ import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.dto.mngauth.Menu;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
+import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -172,5 +174,12 @@ public class ResourceMapperTest {
         });
         val menu = modelMapper.map(resource, Menu.class);
         log.info("menu {}", menu);
+    }
+
+    @Test
+    public void selectAllChildrenNode() {
+        val res = resourceMapper.selectAllChildrenNode(0L, ResourceChannelEnum.MNG, StatusEnum.ENABLE);
+        Assert.assertNotNull(res);
+        log.debug("treeAllChildrenNode {}", JSONObject.toJSON(res));
     }
 }

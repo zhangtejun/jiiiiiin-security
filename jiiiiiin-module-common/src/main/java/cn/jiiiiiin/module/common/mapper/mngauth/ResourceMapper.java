@@ -1,13 +1,12 @@
 package cn.jiiiiiin.module.common.mapper.mngauth;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
+import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -40,9 +39,10 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * 获取`pid`其下的所有子节点
      *
      * @param pid
+     * @param status
      * @return
      */
-    List<Resource> selectAllChildrenNode(@Param("pid") Long pid, @Param("channel") ResourceChannelEnum channel);
+    List<Resource> selectAllChildrenNode(@Param("pid") Long pid, @Param("channel") ResourceChannelEnum channel, @Param("status") StatusEnum status);
 
     /**
      * 查询给定资源下还存在多少一级子节点
@@ -51,4 +51,6 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @return
      */
     Integer selectCountChildren(@Param("pid") Long pid, @Param("channel") ResourceChannelEnum channel);
+
+
 }

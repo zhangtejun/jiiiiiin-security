@@ -3,6 +3,7 @@ package cn.jiiiiiin.module.mngauth.controller;
 
 import cn.jiiiiiin.module.common.controller.BaseController;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
+import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import com.baomidou.mybatisplus.extension.api.R;
@@ -20,6 +21,8 @@ import java.util.List;
  * 权限资源表 前端控制器
  * </p>
  *
+ * TODO 增加校验器
+ *
  * @author jiiiiiin
  * @since 2018-09-27
  */
@@ -30,6 +33,22 @@ public class ResourceController extends BaseController {
 
     @Autowired
     private IResourceService resourceService;
+
+    /**
+     * 获取资源树
+     *
+     * @return
+     */
+    @GetMapping(value = "search/{channel}/{status}")
+    public R<List<Resource>> searchTree(@PathVariable ResourceChannelEnum channel, @PathVariable StatusEnum status) {
+        // 前端需要一个【根节点】才好于进行前端逻辑控制
+        val tree = new ArrayList<Resource>();
+        tree.add(Resource
+                .getRootMenu(channel)
+                .setChildren(resourceService.searchTreeAllChildrenNode(Resource.IS_ROOT_MENU, channel, status))
+        );
+        return success(tree);
+    }
 
     /**
      * 获取资源树
@@ -82,6 +101,13 @@ public class ResourceController extends BaseController {
         return success(resource);
     }
 
+    /**
+     * 删除资源
+     *
+     * @param channel
+     * @param id
+     * @return
+     */
     @DeleteMapping(value = "{channel}/{id}")
     public R<Boolean> del(@PathVariable ResourceChannelEnum channel, @PathVariable Long id) {
         return success(resourceService.delOnlyIsLeafNode(id, channel));

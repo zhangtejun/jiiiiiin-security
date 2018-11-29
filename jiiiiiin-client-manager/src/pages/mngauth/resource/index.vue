@@ -1,5 +1,34 @@
 <template>
     <d2-container>
+        <el-row>
+            <el-col :span="24">
+                <el-form :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
+                    <el-form-item label="渠道" prop="channel">
+                        <el-select v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
+                            <el-option
+                                    v-for="item in channelOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="状态">
+                        <el-switch
+                                v-model="searchForm.status"
+                                inactive-value="STOP"
+                                active-value="ENABLE"
+                                @change="onSearchStatusChange(searchForm.status)">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item></el-form-item>
+                    <el-form-item>
+                        <el-button size="small" type="primary" icon="el-icon-search" @click="onSearch">查询</el-button>
+                        <el-button size="small" icon="el-icon-refresh" @click="onCancelSubmit">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+        </el-row>
         <zk-table
                 ref="table"
                 sum-text="sum"
@@ -45,7 +74,7 @@
                         <el-radio label="BTN">按钮</el-radio>
                     </el-radio-group>
                 </d2-el-form-item>
-                <d2-el-form-item label="名称"  :required="true" prop="name">
+                <d2-el-form-item label="名称" :required="true" prop="name">
                     <el-input v-model="form.name" autocomplete="off"></el-input>
                 </d2-el-form-item>
                 <d2-el-form-item label="父级菜单" >
@@ -115,6 +144,13 @@ export default {
       icon,
       // 默认为【内管】资源
       channel: '0',
+      // TODO 待后台`字典表`完成以下两个options要从后台获取数据
+      channelOptions: [
+        {
+          value: '0',
+          label: '内管'
+        }
+      ],
       methodOptions: [
         {
           value: 'POST',
@@ -139,8 +175,14 @@ export default {
       formTypeRadioStatus: true,
       numMax: 1,
       selectNode: {},
-      ruleForm: {
-        name: ''
+      searchRules: {
+        channel: [
+          { required: true, message: '请选择渠道', trigger: 'change' }
+        ]
+      },
+      searchForm: {
+        channel: '0',
+        status: 'ENABLE'
       },
       rules: {
         name: [
@@ -260,6 +302,26 @@ export default {
     }
   },
   methods: {
+    onChangeSearchChannel() {
+      // TODO 待具有其他渠道 这里需要 同步到 `this.channel`状态
+    },
+    onSearch() {
+      this.$refs.ruleSearchForm.validate((valid) => {
+        if (valid) {
+          this.$vp.ajaxGet(`resource/search/${this.searchForm.channel}/${this.searchForm.status}`).then(res => { this.data = res })
+        }
+      });
+    },
+    onCancelSubmit() {
+      this.searchForm = _.clone({
+        channel: '0',
+        status: 'ENABLE'
+      })
+      this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.data = res })
+    },
+    onSearchStatusChange(item) {
+      console.log('item', item)
+    },
     onTableItemStatusChange(node) {
       this.$vp.ajaxPut('resource', {
         params: node
@@ -386,12 +448,18 @@ export default {
         if (valid) {
           let params = _.clone(this.form)
           delete params.pname
+          if (!_.isEmpty(params.url) && _.isEmpty(params.method)) {
+            this.$vp.toast('接口类型必须填写', {
+              type: 'error'
+            })
+            return
+          }
           if (this.formMode === 'add') {
             delete params.id
             this.$vp.ajaxPostJson('resource', {
               params
             }).then(res => {
-              this._onAddSuccessUpdateTreeData(res)
+              // this._onAddSuccessUpdateTreeData(res)
             });
           } else {
             this.$vp.ajaxPut('resource', {
@@ -402,8 +470,6 @@ export default {
             });
           }
           this.dialogFormVisible = false
-        } else {
-          return false;
         }
       });
     },
@@ -462,8 +528,7 @@ export default {
     }
   },
   created() {
-    this.$vp.ajaxGet(`resource/${this.channel}`)
-      .then(res => { this.data = res })
+    this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.data = res })
   }
 };
 </script>

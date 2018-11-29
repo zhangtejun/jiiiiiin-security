@@ -50,7 +50,14 @@
     </select>
 
     <select id="selectAllChildrenNode" resultType="cn.jiiiiiin.module.common.entity.mngauth.Resource">
-      select * from mng_resource where pids like CONCAT('%',#{pid},'%') and channel = #{channel} order by levels, num asc;
+      select * from mng_resource
+      where
+        pids like CONCAT('%',#{pid},'%')
+        and channel = #{channel}
+        <if test="status != null">
+        and status = #{status}
+        </if>
+        order by levels, num asc;
     </select>
 
     <select id="selectCountChildren" resultType="java.lang.Integer">
