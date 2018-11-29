@@ -1,11 +1,11 @@
 package cn.jiiiiiin.security.browser.controller;
 
-import cn.jiiiiiin.security.core.dict.CommonConstants;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.SocialController;
 import cn.jiiiiiin.security.core.social.support.SocialUserInfo;
-import cn.jiiiiiin.security.core.support.SimpleResponse;
+import com.baomidou.mybatisplus.extension.api.R;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
 import org.apache.commons.lang3.StringUtils;
@@ -42,9 +42,8 @@ import java.io.IOException;
  * @author jiiiiiin
  */
 @RestController
+@Slf4j
 public class BrowserSecurityController extends SocialController {
-
-    final static Logger L = LoggerFactory.getLogger(BrowserSecurityController.class);
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -72,17 +71,17 @@ public class BrowserSecurityController extends SocialController {
      */
     @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
-    public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response, Device device, Model model) throws IOException {
+    public R<String> requireAuthentication(HttpServletRequest request, HttpServletResponse response, Device device, Model model) throws IOException {
         if (device.isNormal()) {
             // 获取到上一个被拦截的请求(原始请求）
             final SavedRequest savedRequest = requestCache.getRequest(request, response);
             if (savedRequest != null) {
                 final String transTarget = savedRequest.getRedirectUrl();
-                L.info("需要进行身份认证的请求是 {}", transTarget);
+                log.info("需要进行身份认证的请求是 {}", transTarget);
             }
             var msg = request.getParameter(WebAttributes.AUTHENTICATION_EXCEPTION);
             // 直接跳转到登录页面
-            L.info("跳转到身份认证页面 {} {}", securityProperties.getBrowser().getSignInUrl(), msg);
+            log.debug("跳转到身份认证页面 {} {}", securityProperties.getBrowser().getSignInUrl(), msg);
             if(StringUtils.isEmpty(msg)){
                 msg = "访问的服务需要身份认证";
             }
@@ -90,7 +89,7 @@ public class BrowserSecurityController extends SocialController {
             redirectStrategy.sendRedirect(request, response, url);
             return null;
         }else {
-            return SimpleResponse.newInstance("访问的服务需要身份认证");
+            return R.failed("访问的服务需要身份认证");
         }
     }
 

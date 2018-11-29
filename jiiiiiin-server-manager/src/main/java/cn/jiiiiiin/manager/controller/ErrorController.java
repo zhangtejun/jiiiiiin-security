@@ -17,6 +17,7 @@ import java.security.Principal;
  * @author jiiiiiin
  */
 @Controller
+@Deprecated
 public class ErrorController {
 
     /**

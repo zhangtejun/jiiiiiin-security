@@ -72,6 +72,7 @@ DROP TABLE IF EXISTS `mng_resource`;
 CREATE TABLE `mng_resource` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `pid` bigint(20) DEFAULT 0 COMMENT '菜单父id: 0标识(默认)为根节点',
+  `pids` varchar(255) DEFAULT 0 COMMENT '当前菜单的所有父菜单编号',
   `name` varchar(255) DEFAULT NULL COMMENT '菜单名称',
   `icon` varchar(55) DEFAULT NULL COMMENT '菜单图标',
   `url` varchar(255) DEFAULT NULL COMMENT 'url地址',

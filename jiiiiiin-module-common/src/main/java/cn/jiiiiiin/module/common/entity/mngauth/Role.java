@@ -13,6 +13,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,7 +47,7 @@ public class Role extends BaseEntity<Role> {
     private Long pid;
 
     @TableField(exist = false)
-    private Set<Resource> resources = new HashSet<>();
+    private List<Resource> resources = new LinkedList<>();
 
     public static final String NAME = "name";
 

@@ -72,6 +72,7 @@ export default {
           }, { root: true });
           // 用户登录后从持久化数据加载一系列的设置
           await dispatch('load');
+          commit('d2admin/gray/set', false, { root: true });
           // 更新路由 尝试去获取 cookie 里保存的需要重定向的页面完整地址
           const path = util.cookies.get('redirect');
           // 根据是否存有重定向页面判断如何重定向
@@ -90,6 +91,7 @@ export default {
      * @param {Object} param confirm {Boolean} 是否需要确认
      */
     logout({ commit }, { vm, confirm = false }) {
+      console.log('vm', vm)
       /**
        * @description 注销
        */
@@ -98,7 +100,7 @@ export default {
         util.cookies.remove('token');
         util.cookies.remove('uuid');
         // 跳转路由
-        vm.$vp.psPageReplace('/login');
+        this.psPageReplace('/login');
       }
 
       // 判断是否需要确认
@@ -111,12 +113,8 @@ export default {
         })
           .then(() => {
             vm.$vp.ajaxGet('/signOut')
-              .then(() => {
-                commit('d2admin/gray/set', false, { root: true });
-                logout();
-              })
-              .catch((err) => {
-                vm.$vp.toast(`请求出错，请稍后尝试[${typeof err === 'object' ? err.message : err}]`);
+              .finally(() => {
+                vm.$vp::logout();
               });
           })
           .catch(() => {
@@ -124,7 +122,11 @@ export default {
             vm.$message('放弃注销用户');
           });
       } else {
-        logout();
+        if (_.has(vm, '$vp')) {
+          vm.$vp::logout();
+        } else {
+          vm::logout();
+        }
       }
     },
     /**

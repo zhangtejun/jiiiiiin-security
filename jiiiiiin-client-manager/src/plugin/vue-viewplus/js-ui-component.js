@@ -56,14 +56,13 @@ export default {
     cancelText = '取消',
     hideOnBlur = false
   } = {}) {
-    MessageBox.confirm(
+    return MessageBox.confirm(
       title,
       content, {
         confirmButtonText: confirmText,
         cancelButtonText: cancelText,
         distinguishCancelAndClose: hideOnBlur
       })
-    return this
   },
   /**
    * Loading 加载

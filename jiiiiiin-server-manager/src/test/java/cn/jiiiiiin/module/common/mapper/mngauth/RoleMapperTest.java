@@ -2,12 +2,10 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 
 
 import cn.jiiiiiin.ManagerApp;
-import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.sql.SqlHelper;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.val;
 import org.junit.After;
 import org.junit.Assert;

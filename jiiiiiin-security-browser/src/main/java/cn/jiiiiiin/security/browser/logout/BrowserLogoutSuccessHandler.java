@@ -4,12 +4,10 @@
 package cn.jiiiiiin.security.browser.logout;
 
 import cn.jiiiiiin.security.browser.utils.HttpUtils;
-import cn.jiiiiiin.security.core.support.SimpleResponse;
 import cn.jiiiiiin.security.core.utils.HttpDataUtil;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.Authentication;
@@ -56,7 +54,7 @@ public class BrowserLogoutSuccessHandler implements LogoutSuccessHandler {
     }
 
     protected void respJson(HttpServletResponse response) throws IOException {
-        HttpDataUtil.respJson(response, objectMapper.writeValueAsString(new SimpleResponse("退出成功")));
+        HttpDataUtil.respJson(response, objectMapper.writeValueAsString(R.failed("退出成功")));
     }
 
 }

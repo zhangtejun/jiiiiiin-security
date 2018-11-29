@@ -114,6 +114,13 @@
             <artifactId>guava</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-extension -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.0.6</version>
+        </dependency>
+
     </dependencies>
 
     <build>

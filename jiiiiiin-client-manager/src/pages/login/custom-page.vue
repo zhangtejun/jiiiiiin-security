@@ -9,7 +9,7 @@
       <!-- 表单部分 -->
       <div class="form-group">
         <el-card>
-          <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin" size="default">
+          <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin" size="default" @submit.native.prevent>
             <el-form-item  prop="username">
               <el-input type="text" v-model="formLogin.username" placeholder="用户名">
                 <i slot="prepend" class="fa fa-user-circle-o"></i>
@@ -28,7 +28,7 @@
                 </template>
               </el-input>
             </el-form-item>
-            <el-button size="default" @click="submit" :disabled="submitBtnDisabled" type="primary" class="button-login">登录</el-button>
+            <el-button size="default" native-type="submit" @click="submit" :disabled="submitBtnDisabled" type="primary" class="button-login">登录</el-button>
           </el-form>
         </el-card>
       </div>

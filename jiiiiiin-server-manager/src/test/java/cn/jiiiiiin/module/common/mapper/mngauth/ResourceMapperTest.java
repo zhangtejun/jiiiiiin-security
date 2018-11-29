@@ -7,9 +7,8 @@ import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
-import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.sql.SqlHelper;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.After;
@@ -21,17 +20,11 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.annotation.Transient;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static cn.jiiiiiin.security.core.dict.CommonConstants.GET;
-import static cn.jiiiiiin.security.core.dict.CommonConstants.POST;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ManagerApp.class)
@@ -99,7 +92,7 @@ public class ResourceMapperTest {
 //        val resource4 = new Resource()
 //                .setPid(resource.getId())
 //                .setName("资源管理")
-//                .setIcon("tree")
+//                .setIcon("treeAllChildrenNode")
 //                .setUrl("/mngauth/resource")
 //                .setLevels(2)
 //                .setNum(3);

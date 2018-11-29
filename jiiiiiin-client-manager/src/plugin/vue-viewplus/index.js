@@ -1,11 +1,11 @@
-import router from '@/router/index'
-import store from '@/store/index'
-import _ from 'lodash'
+import router from '@/router/index';
+import store from '@/store/index';
+import _ from 'lodash';
 
 export const mixinConfig = {
   baseUrl: process.env.VUE_APP_SEVER_URL,
   serverUrl: `${process.env.VUE_APP_SEVER_URL}${process.env.VUE_APP_API}`
-}
+};
 
 export default {
   router,
@@ -18,16 +18,16 @@ export default {
         switch (err.code) {
           case 'RUN_EVN_NOT_SUPPORT':
           case 'NOT_SUPPORT_AJAX_JSBRIDGE':
-            console.debug(err)
-            break
+            console.debug(err);
+            break;
           default:
-            console.warn(err)
+            console.warn(err);
         }
       } else {
-        console.error(err.message)
+        console.error(err.message);
       }
     } else {
-      console.error(`err参数错误 ${err}`)
+      console.error(`err参数错误 ${err}`);
     }
   },
   loginStateCheck: {
@@ -38,8 +38,8 @@ export default {
     onLoginStateCheckFail(to, from, next) {
       this.toast('您尚未登录，请先登录', {
         type: 'warning'
-      })
-      next('/login')
+      });
+      next('/login');
     }
   },
   utilHttp: {
@@ -53,42 +53,56 @@ export default {
     errInfoOutDataObj: true,
     defShowLoading: true,
     onParseServerResp(response) {
-      return response.data.code !== 0
+      return response.data.code !== 0;
     },
     onReqErrParseMsg(response, errMsg) {
       switch (errMsg) {
         case '未解析到服务端返回的错误消息':
-          return errMsg
+          return errMsg;
       }
-      return `${errMsg} [服务端]`
+      return `${errMsg} [服务端]`;
+    },
+    onReqErrParseHttpStatusCode(status, response) {
+      switch (status) {
+        case 401:
+          this.confirm('会话超时，请重新登录')
+            .then(() => {
+              store.dispatch('d2admin/account/logout', { vm: this });
+            })
+            .catch(() => {
+              // TODO 修复confirm不能设置取消按钮的问题
+              store.dispatch('d2admin/account/logout', { vm: this });
+            });
+          break;
+      }
     },
     errDialog(content = '错误消息未定义') {
       this.dialog(content, {
         title: '错误消息'
-      })
-      return this
+      });
+      return this;
     },
     loading(loadingHintText) {
-      this.loading(loadingHintText)
+      this.loading(loadingHintText);
     },
     hideLoading() {
-      this.hideLoading()
+      this.hideLoading();
     },
     accessRules: {
       sessionTimeOut: ['role.invalid_user'],
       onSessionTimeOut(response) {
         this.toast('会话超时，请重新登录', {
           type: 'warning'
-        })
-        store.commit('logout')
+        });
+        store.dispatch('d2admin/account/logout', { vm: this });
       },
       unauthorized: ['core_error_unauthorized'],
       onUnauthorized(response) {
-        console.error(`onUnauthorized ${response}`)
+        console.error(`onUnauthorized ${response}`);
         this.toast('您尚未登录，请先登录', {
           type: 'error'
-        })
+        });
       }
     }
   }
-}
+};

@@ -3,7 +3,7 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
-import com.baomidou.mybatisplus.core.toolkit.sql.SqlHelper;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.After;

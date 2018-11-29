@@ -149,6 +149,8 @@ logging:
         mapper: debug
     cn:
       jiiiiiin: debug
+    org:
+      mybatis: debug
 
 swagger:
   enable: true

@@ -1,7 +1,7 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
-import cn.jiiiiiin.module.common.dto.mngauth.Menu;
+import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -27,7 +27,7 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("mng_resource")
-@ApiModel(value="Resource对象", description="权限资源表")
+@ApiModel(value = "Resource对象", description = "权限资源表")
 public class Resource extends BaseEntity<Resource> {
 
     /**
@@ -35,10 +35,21 @@ public class Resource extends BaseEntity<Resource> {
      */
     public static final Long IS_ROOT_MENU = 0L;
 
+    public static Resource getRootMenu(ResourceChannelEnum channel) {
+        return (Resource) new Resource()
+                .setName("根节点")
+                .setStatus(StatusEnum.ENABLE)
+                .setChannel(channel)
+                .setId(Resource.IS_ROOT_MENU);
+    }
+
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "菜单父id: 0标识(默认)为根节点")
     private Long pid;
+
+    @ApiModelProperty(value = "'当前菜单的所有父菜单编号': 默认 0")
+    private String pids;
 
     @ApiModelProperty(value = "菜单名称")
     private String name;
@@ -64,8 +75,8 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "类型: 1:菜单(默认) 0:按钮")
     private ResourceTypeEnum type;
 
-    @ApiModelProperty(value = "菜单状态: 1:启用(默认) 0:不启用")
-    private Integer status;
+    @ApiModelProperty(value = "菜单状态: 1:启用(默认) 0:停用")
+    private StatusEnum status;
 
     @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
     private ResourceChannelEnum channel;
@@ -74,6 +85,8 @@ public class Resource extends BaseEntity<Resource> {
     private List<Resource> children;
 
     public static final String PID = "pid";
+
+    public static final String PIDS = "pids";
 
     public static final String NAME = "name";
 

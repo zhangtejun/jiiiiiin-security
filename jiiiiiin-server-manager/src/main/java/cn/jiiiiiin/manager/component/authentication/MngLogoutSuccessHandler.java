@@ -4,21 +4,12 @@
 package cn.jiiiiiin.manager.component.authentication;
 
 import cn.jiiiiiin.security.browser.logout.BrowserLogoutSuccessHandler;
-import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
-import cn.jiiiiiin.security.core.support.SimpleResponse;
 import cn.jiiiiiin.security.core.utils.HttpDataUtil;
 import com.baomidou.mybatisplus.extension.api.R;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 

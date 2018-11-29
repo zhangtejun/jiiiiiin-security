@@ -2,6 +2,8 @@ package cn.jiiiiiin.data.orm.entity;
 
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -19,10 +21,14 @@ import java.util.Objects;
  */
 @Data
 @Accessors(chain = true)
-public class BaseEntity <T extends Model> extends Model<T> {
+public class BaseEntity<T extends Model> extends Model<T> {
+
     /**
      * 数据库表主键
+     * <p>
+     * http://mp.baomidou.com/guide/faq.html#id-worker-生成主键太长导致-js-精度丢失
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     @Override

@@ -5,8 +5,10 @@ package cn.jiiiiiin.security.browser.session;
 
 import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
-import cn.jiiiiiin.security.core.support.SimpleResponse;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +28,9 @@ import java.io.IOException;
  *
  * @author zhailiang
  */
+@Slf4j
 public class AbstractSessionStrategy {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     /**
      * 跳转的url
      */
@@ -69,7 +71,7 @@ public class AbstractSessionStrategy {
      */
     protected void onSessionInvalid(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        logger.info("session失效");
+        log.info("session失效");
 
         if (createNewSession) {
             request.getSession();
@@ -88,7 +90,7 @@ public class AbstractSessionStrategy {
             } else {
                 targetUrl = destinationUrl;
             }
-            logger.info("跳转到:" + targetUrl);
+            log.info("跳转到:" + targetUrl);
             redirectStrategy.sendRedirect(request, response, targetUrl);
         } else {
             Object result = buildResponseContent(request);
@@ -103,12 +105,12 @@ public class AbstractSessionStrategy {
      * @param request
      * @return
      */
-    protected Object buildResponseContent(HttpServletRequest request) {
-        String message = "session已失效";
+    protected R<String> buildResponseContent(HttpServletRequest request) {
+        var message = "session已失效";
         if (isConcurrency()) {
             message = message + "，有可能是并发登录导致的";
         }
-        return new SimpleResponse(message);
+        return R.failed(message);
     }
 
     /**

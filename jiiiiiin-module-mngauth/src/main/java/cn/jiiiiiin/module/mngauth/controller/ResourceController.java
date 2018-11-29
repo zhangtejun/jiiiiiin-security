@@ -1,19 +1,18 @@
 package cn.jiiiiiin.module.mngauth.controller;
 
 
-import cn.jiiiiiin.module.common.dto.mngauth.Menu;
+import cn.jiiiiiin.module.common.controller.BaseController;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
+import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import com.baomidou.mybatisplus.extension.api.R;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import cn.jiiiiiin.module.common.controller.BaseController;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -24,6 +23,7 @@ import java.util.List;
  * @author jiiiiiin
  * @since 2018-09-27
  */
+@Slf4j
 @RestController
 @RequestMapping("/resource")
 public class ResourceController extends BaseController {
@@ -36,30 +36,67 @@ public class ResourceController extends BaseController {
      *
      * @return
      */
-    @GetMapping
-    public R<List<Resource>> getTree(){
-        val allResource = resourceService.list(null);
-        val menus = new ArrayList<Resource>();
-        allResource.forEach(resource -> {
-            // 过滤一级节点
-            if (resource.getPid().equals(Resource.IS_ROOT_MENU)) {
-                val node = Resource.parserMenu(resource, allResource);
-                menus.add(node);
-            }
-        });
-        menus.sort(Comparator.comparingInt(Resource::getNum));
-        return success(menus);
+    @GetMapping(value = "{channel}")
+    public R<List<Resource>> rootTree(@PathVariable ResourceChannelEnum channel) {
+        // 前端需要一个【根节点】才好于进行前端逻辑控制
+        val tree = new ArrayList<Resource>();
+        tree.add(Resource
+                .getRootMenu(channel)
+                .setChildren(resourceService.treeAllChildrenNode(Resource.IS_ROOT_MENU, channel))
+        );
+        return success(tree);
+    }
+
+
+    /**
+     * 查询对应`id`的节点
+     *
+     * @return
+     */
+    @GetMapping(value = "{channel}/{id}")
+    public R<List<Resource>> qryTree(@PathVariable ResourceChannelEnum channel, @PathVariable Long id) {
+        return success(resourceService.treeAllChildrenNode(id, channel));
     }
 
     /**
      * 创建资源
+     *
      * @param resource
      * @return
      */
     @PostMapping
-    public R<Resource> create(@RequestBody Resource resource){
-        resource.insert();
+    public R<Resource> create(@RequestBody Resource resource) {
+        resourceService.saveAndSortNum(resource, resource.getChannel());
+        return success(resource.setChildren(new ArrayList<>()));
+    }
+
+    /**
+     * 创建资源
+     *
+     * @param resource
+     * @return
+     */
+    @PutMapping
+    public R<Resource> update(@RequestBody Resource resource) {
+        resourceService.updateAndSortNum(resource, resource.getChannel());
         return success(resource);
     }
+
+    @DeleteMapping(value = "{channel}/{id}")
+    public R<Boolean> del(@PathVariable ResourceChannelEnum channel, @PathVariable Long id) {
+        return success(resourceService.delOnlyIsLeafNode(id, channel));
+    }
+
+    /**
+     * 解决接口`path variable`转换枚举问题
+     * https://www.devglan.com/spring-boot/enums-as-request-parameters-in-spring-boot-rest
+     *
+     * @param webdataBinder
+     */
+    @InitBinder
+    public void initBinder(final WebDataBinder webdataBinder) {
+        webdataBinder.registerCustomEditor(ResourceChannelEnum.class, new ResourceChannelEnum.ResourceChannelEnumConverter());
+    }
+
 
 }
