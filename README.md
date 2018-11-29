@@ -14,7 +14,7 @@
 
 ![image-20181106162706851](https://ws3.sinaimg.cn/large/006tNbRwgy1fwyf81a19lj31kw0w0awb.jpg)
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fx7fqg6rh1j31kw0w00xm.jpg)
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxp1lix1goj31c00u0wik.jpg)
 
 # 所用技术栈
 
