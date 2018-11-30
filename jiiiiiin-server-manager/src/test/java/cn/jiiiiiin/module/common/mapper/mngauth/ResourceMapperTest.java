@@ -6,7 +6,7 @@ import cn.jiiiiiin.module.common.dto.mngauth.Menu;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -148,7 +148,7 @@ public class ResourceMapperTest {
     public void testSelectByRoleId() {
         val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
         Assert.assertNotNull(operator);
-        val res = resourceMapper.selectByRoleId(operator.getId(), ResourceChannelEnum.MNG);
+        val res = resourceMapper.selectByRoleId(operator.getId(), ChannelEnum.MNG);
         log.info("testSelectByRoleId {}", res);
         Assert.assertNotNull(res);
         Assert.assertTrue(res.size() > 0);
@@ -178,7 +178,7 @@ public class ResourceMapperTest {
 
     @Test
     public void selectAllChildrenNode() {
-        val res = resourceMapper.selectAllChildrenNode(0L, ResourceChannelEnum.MNG, StatusEnum.ENABLE);
+        val res = resourceMapper.selectAllChildrenNode(0L, ChannelEnum.MNG, StatusEnum.ENABLE);
         Assert.assertNotNull(res);
         log.debug("treeAllChildrenNode {}", JSONObject.toJSON(res));
     }

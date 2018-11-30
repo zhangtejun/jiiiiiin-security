@@ -1,12 +1,10 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
-import cn.jiiiiiin.module.common.entity.mngauth.Resource;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.AdminMapper;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
-import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.NonNull;
@@ -34,7 +32,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     ResourceMapper resourceMapper;
 
     @Override
-    public Admin signInByUsername(@NonNull String username, ResourceChannelEnum channel) {
+    public Admin signInByUsername(@NonNull String username, ChannelEnum channel) {
         log.debug("登录用户名 {}", username);
         val res = adminMapper.selectByUsername(username);
         res.getRoles().forEach(role -> role.setResources(resourceMapper.selectByRoleId(role.getId(), channel)));

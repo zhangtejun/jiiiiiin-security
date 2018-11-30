@@ -23,7 +23,18 @@ export default {
           requiresAuth: false
         }
       }
-    ]
+    ],
+    mng: {
+      // 管理页面列表的table高度
+      // TODO 动态计算当前设备的屏幕高度 - 上下冗余高度
+      listHeight: 650,
+      // 管理页面列表默认查询的渠道标识
+      defChannel: '0',
+      // 管理页面列表默认分页设置
+      defCurrent: 1,
+      defSize: 5,
+      pageSizes: [5, 10, 50, 100]
+    }
   },
   // 版本
   releases: {

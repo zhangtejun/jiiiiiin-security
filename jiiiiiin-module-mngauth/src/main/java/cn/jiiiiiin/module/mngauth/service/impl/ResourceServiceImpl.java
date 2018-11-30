@@ -2,7 +2,7 @@ package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -47,20 +47,20 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     }
 
     @Override
-    public List<Resource> treeAllChildrenNode(Long pid, ResourceChannelEnum channel) {
+    public List<Resource> treeAllChildrenNode(Long pid, ChannelEnum channel) {
         val nodes = resourceMapper.selectAllChildrenNode(pid, channel, null);
         return _parseTreeNode(pid, nodes);
     }
 
     @Override
-    public List<Resource> searchTreeAllChildrenNode(Long pid, ResourceChannelEnum channel, StatusEnum status) {
+    public List<Resource> searchTreeAllChildrenNode(Long pid, ChannelEnum channel, StatusEnum status) {
         val nodes = resourceMapper.selectAllChildrenNode(pid, channel, status);
         return _parseTreeNode(pid, nodes);
     }
 
     @Transactional
     @Override
-    public Boolean saveAndSortNum(Resource resource, ResourceChannelEnum channel) {
+    public Boolean saveAndSortNum(Resource resource, ChannelEnum channel) {
         val pid = resource.getPid();
         if (pid.equals(IS_ROOT_MENU)) {
             // 添加一级菜单
@@ -95,7 +95,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 
     @Transactional
     @Override
-    public Boolean updateAndSortNum(Resource resource, ResourceChannelEnum channel) {
+    public Boolean updateAndSortNum(Resource resource, ChannelEnum channel) {
         val currentNode = resourceMapper.selectById(resource.getId());
         val currentNum = currentNode.getNum();
         val modifyNum = resource.getNum();
@@ -137,8 +137,9 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         }
     }
 
+    @Transactional
     @Override
-    public Boolean delOnlyIsLeafNode(Long id, ResourceChannelEnum channel) {
+    public Boolean delOnlyIsLeafNode(Long id, ChannelEnum channel) {
         // 查询自身是否还存在子节点
         val numb = resourceMapper.selectCountChildren(id, channel);
         var temp = false;
@@ -148,6 +149,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             val node = resourceMapper.selectById(id);
             final List<Resource> children = resourceMapper.selectChildren(node.getPid(), channel);
             if (node.getNum() == children.size()) {
+                // 删除关联资源
+                resourceMapper.deleteRelationRoleRecords(id);
                 // 删除最后一个节点
                 temp = SqlHelper.delBool(resourceMapper.deleteById(id));
             } else {

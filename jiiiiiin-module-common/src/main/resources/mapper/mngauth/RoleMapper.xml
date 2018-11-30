@@ -3,21 +3,20 @@
 <mapper namespace="cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper">
 
     <!-- 开启二级缓存 -->
-    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>-->
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.jiiiiiin.module.common.entity.mngauth.Role">
         <result column="id" property="id" />
         <result column="name" property="name" />
         <result column="authority_name" property="authorityName" />
-        <result column="num" property="num" />
-        <result column="pid" property="pid" />
+        <result column="channel" property="channel"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        name
+        name, authority_name, channel
     </sql>
 
     <insert id="relationResource">

@@ -16,7 +16,15 @@ export default {
     // 当前页面
     current: '',
     // 需要缓存的页面 name
-    keepAlive: []
+    keepAlive: [],
+    // 管理页面列表的table高度
+    listHeight: setting.page.mng.listHeight,
+    // 管理页面列表默认查询的渠道标识
+    defChannel: setting.page.mng.defChannel,
+    // 管理页面列表默认分页设置
+    defCurrent: setting.page.mng.defCurrent,
+    defSize: setting.page.mng.defSize,
+    pageSizes: setting.page.mng.pageSizes
   },
   actions: {
     /**

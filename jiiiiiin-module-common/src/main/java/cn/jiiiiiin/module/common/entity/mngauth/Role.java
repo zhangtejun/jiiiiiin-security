@@ -1,21 +1,18 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
+import cn.jiiiiiin.module.common.enums.common.StatusEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -37,14 +34,11 @@ public class Role extends BaseEntity<Role> {
     @ApiModelProperty(value = "角色名称")
     private String name;
 
-    @ApiModelProperty(value = "角色名称")
+    @ApiModelProperty(value = "角色标识")
     private String authorityName;
 
-    @ApiModelProperty(value = "序号")
-    private Integer num;
-
-    @ApiModelProperty(value = "父角色id")
-    private Long pid;
+    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
+    private ChannelEnum channel;
 
     @TableField(exist = false)
     private List<Resource> resources = new LinkedList<>();
@@ -53,8 +47,6 @@ public class Role extends BaseEntity<Role> {
 
     public static final String AUTHORITY_NAME = "authority_name";
 
-    public static final String NUM = "num";
-
-    public static final String PID = "pid";
+    public static final String CHANNEL = "channel";
 
 }

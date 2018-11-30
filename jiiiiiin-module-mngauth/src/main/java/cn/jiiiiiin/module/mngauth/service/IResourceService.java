@@ -2,7 +2,7 @@ package cn.jiiiiiin.module.mngauth.service;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public interface IResourceService extends IService<Resource> {
      * @param channel
      * @return
      */
-    Boolean saveAndSortNum(Resource resource, ResourceChannelEnum channel);
+    Boolean saveAndSortNum(Resource resource, ChannelEnum channel);
 
     /**
      * 注意：
@@ -36,7 +36,7 @@ public interface IResourceService extends IService<Resource> {
      * @param channel
      * @return
      */
-    Boolean updateAndSortNum(Resource resource, ResourceChannelEnum channel);
+    Boolean updateAndSortNum(Resource resource, ChannelEnum channel);
 
     /**
      * 通过父节点id获取其下的所有资源
@@ -47,7 +47,7 @@ public interface IResourceService extends IService<Resource> {
      * @param channel
      * @return
      */
-    List<Resource> treeAllChildrenNode(Long pid, ResourceChannelEnum channel);
+    List<Resource> treeAllChildrenNode(Long pid, ChannelEnum channel);
 
     /**
      * 通过父节点id查询其下的匹配资源
@@ -56,7 +56,7 @@ public interface IResourceService extends IService<Resource> {
      * @param status
      * @return
      */
-    List<Resource> searchTreeAllChildrenNode(Long pid, ResourceChannelEnum channel, StatusEnum status);
+    List<Resource> searchTreeAllChildrenNode(Long pid, ChannelEnum channel, StatusEnum status);
 
     /**
      * 检测待删除的节点是否为叶子节点,并检查父节点下面的子节点的排序
@@ -65,6 +65,6 @@ public interface IResourceService extends IService<Resource> {
      * @param channel
      * @return
      */
-    Boolean delOnlyIsLeafNode(Long id, ResourceChannelEnum channel);
+    Boolean delOnlyIsLeafNode(Long id, ChannelEnum channel);
 
 }

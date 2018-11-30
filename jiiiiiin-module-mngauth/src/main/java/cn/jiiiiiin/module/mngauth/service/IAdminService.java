@@ -1,13 +1,9 @@
 package cn.jiiiiiin.module.mngauth.service;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.NonNull;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -31,7 +27,7 @@ public interface IAdminService extends IService<Admin> {
      * @param channel  {@link cn.jiiiiiin.module.common.entity.mngauth.Resource#channel}
      * @return
      */
-    Admin signInByUsername(@NonNull String username, ResourceChannelEnum channel);
+    Admin signInByUsername(@NonNull String username, ChannelEnum channel);
 
     /**
      * spring 事务：

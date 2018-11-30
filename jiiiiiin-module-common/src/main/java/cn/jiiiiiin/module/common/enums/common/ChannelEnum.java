@@ -1,4 +1,4 @@
-package cn.jiiiiiin.module.common.enums.mngauth;
+package cn.jiiiiiin.module.common.enums.common;
 
 import com.baomidou.mybatisplus.core.enums.IEnum;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -14,13 +14,13 @@ import java.util.Arrays;
  * @author hubin
  * @since 2018-08-15
  */
-public enum ResourceChannelEnum implements IEnum<Integer> {
+public enum ChannelEnum implements IEnum<Integer> {
     MNG(0, "内管");
 
     private int value;
     private String desc;
 
-    ResourceChannelEnum(final int value, final String desc) {
+    ChannelEnum(final int value, final String desc) {
         this.value = value;
         this.desc = desc;
     }
@@ -30,8 +30,8 @@ public enum ResourceChannelEnum implements IEnum<Integer> {
         return value;
     }
 
-    public static ResourceChannelEnum fromValue(Integer value) {
-        for (ResourceChannelEnum item : values()) {
+    public static ChannelEnum fromValue(Integer value) {
+        for (ChannelEnum item : values()) {
             if (item.value == value) {
                 return item;
             }
@@ -44,7 +44,7 @@ public enum ResourceChannelEnum implements IEnum<Integer> {
         @Override
         public void setAsText(final String text) throws IllegalArgumentException {
             if (NumberUtils.isNumber(text)) {
-                setValue(ResourceChannelEnum.fromValue(Integer.valueOf(text)));
+                setValue(ChannelEnum.fromValue(Integer.valueOf(text)));
             } else {
                 throw new IllegalArgumentException(String.format("待转换的渠道参数%s不是正确的数值类型", text));
             }

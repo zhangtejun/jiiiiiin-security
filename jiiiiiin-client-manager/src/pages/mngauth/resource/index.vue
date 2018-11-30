@@ -41,6 +41,7 @@
                 </el-popover>
             </el-col>
         </el-row>
+
         <zk-table
                 ref="table"
                 sum-text="sum"
@@ -147,16 +148,16 @@ import icon from './data/index'
 import _ from 'lodash'
 
 export default {
-  name: 'resource',
+  name: 'mngauth-resource',
   components: {
     'd2-el-form-item': () => import('./components/d2-el-form-item')
   },
   data() {
     return {
       icon,
+      // TODO 待后台`字典表`完成以下两个options要从后台获取数据
       // 默认为【内管】资源
       channel: '0',
-      // TODO 待后台`字典表`完成以下两个options要从后台获取数据
       channelOptions: [
         {
           value: '0',

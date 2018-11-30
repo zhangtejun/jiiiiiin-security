@@ -2,7 +2,7 @@ package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -43,13 +43,13 @@ public class IResourceServiceTest {
                 .setNum(1)
                 .setLevels(2)
                 .setName("测试排序");
-        val res = resourceService.saveAndSortNum(newResource, ResourceChannelEnum.MNG);
+        val res = resourceService.saveAndSortNum(newResource, ChannelEnum.MNG);
         Assert.assertTrue(res);
     }
 
     @Test
     public void tree() {
-        val res = resourceService.treeAllChildrenNode(0L, ResourceChannelEnum.MNG);
+        val res = resourceService.treeAllChildrenNode(0L, ChannelEnum.MNG);
         Assert.assertNotNull(res);
         log.debug("treeAllChildrenNode {}", JSONObject.toJSON(res));
     }

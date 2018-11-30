@@ -3,12 +3,11 @@ package cn.jiiiiiin.module.mngauth.service.impl;
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.val;
-import org.apache.commons.collections.CollectionUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,10 +48,10 @@ public class AdminServiceImplTest {
 
     @Test
     public void findByUsername() {
-        val admin = adminService.signInByUsername("user", ResourceChannelEnum.MNG);
+        val admin = adminService.signInByUsername("user", ChannelEnum.MNG);
         Assert.assertEquals("user", admin.getUsername());
         // 测试EHCache缓存
-//        val admin2 = adminService.signInByUsername("user", ResourceChannelEnum.MNG);
+//        val admin2 = adminService.signInByUsername("user", ChannelEnum.MNG);
     }
 
 
@@ -64,7 +62,7 @@ public class AdminServiceImplTest {
         val userRole = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "DB_ADMIN"));
         roles.add(adminRole);
         roles.add(userRole);
-        val admin = adminService.signInByUsername("admin", ResourceChannelEnum.MNG);
+        val admin = adminService.signInByUsername("admin", ChannelEnum.MNG);
         admin.setRoles(roles);
         boolean res = adminService.relationRole(admin);
         Assert.assertTrue(res);

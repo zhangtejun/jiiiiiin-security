@@ -13,3 +13,13 @@
 .mng-list-title-hint-btn{
   float: right;
 }
+
+body{
+  #app {
+    .mng-list {
+      .d2-container-full__footer {
+        border: none;
+      }
+    }
+  }
+}

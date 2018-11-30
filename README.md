@@ -16,6 +16,8 @@
 
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxp1lix1goj31c00u0wik.jpg)
 
+资源管理页面截图（支持前端Vue Router `path`关联）
+
 # 所用技术栈
 
 ### 后台

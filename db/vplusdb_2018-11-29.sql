@@ -63,9 +63,8 @@ CREATE TABLE `mng_resource` (
   `num` int(65) DEFAULT NULL COMMENT '菜单排序号',
   `levels` int(65) DEFAULT '1' COMMENT '菜单层级',
   `type` tinyint(4) DEFAULT '1' COMMENT '类型: 1:菜单(默认) 0:按钮',
-  `status` tinyint(4) DEFAULT '1' COMMENT '菜单状态:  1:启用   0:不启用',
-  `isopen` tinyint(4) DEFAULT '0' COMMENT '是否打开:    1:打开   0:不打开',
-  `channel` tinyint(4) DEFAULT '0' COMMENT '标识渠道，不同的渠道就是不同的资源分组: 0:内管',
+  `status` tinyint(4) DEFAULT '1' COMMENT '菜单状态:  1:启用（默认）0:不启用',
+  `channel` tinyint(4) DEFAULT '0' COMMENT '标识渠道，不同的渠道就是不同的资源分组: 0:内管（默认）',
   `path` varchar(255) DEFAULT NULL COMMENT '页面地址',
   PRIMARY KEY (`id`),
   KEY `idx_pid` (`pid`)
@@ -98,10 +97,9 @@ DROP TABLE IF EXISTS `mng_role`;
 
 CREATE TABLE `mng_role` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `pid` bigint(20) DEFAULT '0' COMMENT '父角色id 0标识为根节点',
   `name` varchar(20) NOT NULL COMMENT '角色名称',
   `authority_name` varchar(10) NOT NULL COMMENT '角色标识',
-  `num` int(11) DEFAULT NULL COMMENT '序号',
+  `channel` tinyint(4) DEFAULT '0' COMMENT '标识渠道，不同的渠道就是不同的资源分组: 0:内管（默认）',
   PRIMARY KEY (`id`),
   KEY `idx_pid` (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';

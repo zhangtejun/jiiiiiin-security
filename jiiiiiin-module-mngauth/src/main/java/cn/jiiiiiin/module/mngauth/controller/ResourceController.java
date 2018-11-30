@@ -4,13 +4,12 @@ package cn.jiiiiiin.module.mngauth.controller;
 import cn.jiiiiiin.module.common.controller.BaseController;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import com.baomidou.mybatisplus.extension.api.R;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -39,8 +38,8 @@ public class ResourceController extends BaseController {
      *
      * @return
      */
-    @GetMapping(value = "search/{channel}/{status}")
-    public R<List<Resource>> searchTree(@PathVariable ResourceChannelEnum channel, @PathVariable StatusEnum status) {
+    @GetMapping("search/{channel}/{status}")
+    public R<List<Resource>> searchTree(@PathVariable ChannelEnum channel, @PathVariable StatusEnum status) {
         // 前端需要一个【根节点】才好于进行前端逻辑控制
         val tree = new ArrayList<Resource>();
         tree.add(Resource
@@ -55,8 +54,8 @@ public class ResourceController extends BaseController {
      *
      * @return
      */
-    @GetMapping(value = "{channel}")
-    public R<List<Resource>> rootTree(@PathVariable ResourceChannelEnum channel) {
+    @GetMapping("{channel}")
+    public R<List<Resource>> rootTree(@PathVariable ChannelEnum channel) {
         // 前端需要一个【根节点】才好于进行前端逻辑控制
         val tree = new ArrayList<Resource>();
         tree.add(Resource
@@ -72,8 +71,8 @@ public class ResourceController extends BaseController {
      *
      * @return
      */
-    @GetMapping(value = "{channel}/{id}")
-    public R<List<Resource>> qryTree(@PathVariable ResourceChannelEnum channel, @PathVariable Long id) {
+    @GetMapping("{channel}/{id}")
+    public R<List<Resource>> qryTree(@PathVariable ChannelEnum channel, @PathVariable Long id) {
         return success(resourceService.treeAllChildrenNode(id, channel));
     }
 
@@ -108,21 +107,9 @@ public class ResourceController extends BaseController {
      * @param id
      * @return
      */
-    @DeleteMapping(value = "{channel}/{id}")
-    public R<Boolean> del(@PathVariable ResourceChannelEnum channel, @PathVariable Long id) {
+    @DeleteMapping("{channel}/{id}")
+    public R<Boolean> del(@PathVariable ChannelEnum channel, @PathVariable Long id) {
         return success(resourceService.delOnlyIsLeafNode(id, channel));
     }
-
-    /**
-     * 解决接口`path variable`转换枚举问题
-     * https://www.devglan.com/spring-boot/enums-as-request-parameters-in-spring-boot-rest
-     *
-     * @param webdataBinder
-     */
-    @InitBinder
-    public void initBinder(final WebDataBinder webdataBinder) {
-        webdataBinder.registerCustomEditor(ResourceChannelEnum.class, new ResourceChannelEnum.ResourceChannelEnumConverter());
-    }
-
 
 }

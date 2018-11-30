@@ -2,7 +2,7 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,7 +24,7 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @param roleId
      * @return
      */
-    List<Resource> selectByRoleId(@Param("roleId") Long roleId, @Param("channel") ResourceChannelEnum channel);
+    List<Resource> selectByRoleId(@Param("roleId") Long roleId, @Param("channel") ChannelEnum channel);
 
     /**
      * 获取`pid`对应的下一级子节点
@@ -33,7 +33,7 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @param channel
      * @return
      */
-    List<Resource> selectChildren(@Param("pid") Long pid, @Param("channel") ResourceChannelEnum channel);
+    List<Resource> selectChildren(@Param("pid") Long pid, @Param("channel") ChannelEnum channel);
 
     /**
      * 获取`pid`其下的所有子节点
@@ -42,7 +42,7 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @param status
      * @return
      */
-    List<Resource> selectAllChildrenNode(@Param("pid") Long pid, @Param("channel") ResourceChannelEnum channel, @Param("status") StatusEnum status);
+    List<Resource> selectAllChildrenNode(@Param("pid") Long pid, @Param("channel") ChannelEnum channel, @Param("status") StatusEnum status);
 
     /**
      * 查询给定资源下还存在多少一级子节点
@@ -50,7 +50,12 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @param pid
      * @return
      */
-    Integer selectCountChildren(@Param("pid") Long pid, @Param("channel") ResourceChannelEnum channel);
+    Integer selectCountChildren(@Param("pid") Long pid, @Param("channel") ChannelEnum channel);
 
 
+    /**
+     * 清理对应的资源和角色关联的记录
+     * @param id
+     */
+    void deleteRelationRoleRecords(Long id);
 }

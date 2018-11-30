@@ -2,7 +2,7 @@ package cn.jiiiiiin.module.common.entity.mngauth;
 
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
-import cn.jiiiiiin.module.common.enums.mngauth.ResourceChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -35,7 +35,7 @@ public class Resource extends BaseEntity<Resource> {
      */
     public static final Long IS_ROOT_MENU = 0L;
 
-    public static Resource getRootMenu(ResourceChannelEnum channel) {
+    public static Resource getRootMenu(ChannelEnum channel) {
         return (Resource) new Resource()
                 .setName("根节点")
                 .setStatus(StatusEnum.ENABLE)
@@ -79,7 +79,7 @@ public class Resource extends BaseEntity<Resource> {
     private StatusEnum status;
 
     @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
-    private ResourceChannelEnum channel;
+    private ChannelEnum channel;
 
     @TableField(exist = false)
     private List<Resource> children;
