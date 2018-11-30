@@ -54,15 +54,21 @@ export default {
     title = '提示',
     confirmText = '确认',
     cancelText = '取消',
-    hideOnBlur = false
+    hideOnBlur = false,
+    type = 'warning'
   } = {}) {
-    return MessageBox.confirm(
-      title,
-      content, {
-        confirmButtonText: confirmText,
-        cancelButtonText: cancelText,
-        distinguishCancelAndClose: hideOnBlur
-      })
+    return new Promise((resolve, reject) => {
+      MessageBox.confirm(
+        title,
+        content, {
+          confirmButtonText: confirmText,
+          cancelButtonText: cancelText,
+          distinguishCancelAndClose: hideOnBlur,
+          type
+        })
+        .then(this::resolve())
+        .catch(this::reject())
+    })
   },
   /**
    * Loading 加载

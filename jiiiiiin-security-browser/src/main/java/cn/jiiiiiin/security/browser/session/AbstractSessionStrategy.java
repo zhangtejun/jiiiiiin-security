@@ -10,8 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -105,12 +103,12 @@ public class AbstractSessionStrategy {
      * @param request
      * @return
      */
-    protected R<String> buildResponseContent(HttpServletRequest request) {
-        var message = "session已失效";
+    protected R<Object> buildResponseContent(HttpServletRequest request) {
+        var message = "会话已失效";
         if (isConcurrency()) {
             message = message + "，有可能是并发登录导致的";
         }
-        return R.failed(message);
+        return R.failed(message).setCode(-2L);
     }
 
     /**

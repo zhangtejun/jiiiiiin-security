@@ -65,14 +65,10 @@ export default {
     onReqErrParseHttpStatusCode(status, response) {
       switch (status) {
         case 401:
-          this.confirm('会话超时，请重新登录')
-            .then(() => {
-              store.dispatch('d2admin/account/logout', { vm: this });
-            })
-            .catch(() => {
-              // TODO 修复confirm不能设置取消按钮的问题
-              store.dispatch('d2admin/account/logout', { vm: this });
-            });
+          this.toast('会话超时，请重新登录', {
+            type: 'warning'
+          });
+          store.dispatch('d2admin/account/logout', { vm: this });
           break;
       }
     },
@@ -89,7 +85,7 @@ export default {
       this.hideLoading();
     },
     accessRules: {
-      sessionTimeOut: ['role.invalid_user'],
+      sessionTimeOut: ['-2'],
       onSessionTimeOut(response) {
         this.toast('会话超时，请重新登录', {
           type: 'warning'

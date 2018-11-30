@@ -32,6 +32,10 @@
         r.pid, r.name, r.icon, r.path, r.url, r.method, r.num, r.levels, r.type
     </sql>
 
+    <delete id="deleteRelationRoleRecords">
+      delete from mng_role_resource where resource_id = #{id}
+    </delete>
+
     <select id="selectByRoleId" resultType="cn.jiiiiiin.module.common.entity.mngauth.Resource" useCache="false">
         select
             <include refid="selectByRoleId_Column_List"/>

@@ -31,8 +31,7 @@ public class RoleController extends BaseController {
 
     @GetMapping("{channel}/{current}/{size}")
     public R<IPage<Role>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size){
-        val page = new Page<Role>(current, size);
-        return R.ok(roleService.page(page, new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
+        return R.ok(roleService.page(new Page<Role>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
 }

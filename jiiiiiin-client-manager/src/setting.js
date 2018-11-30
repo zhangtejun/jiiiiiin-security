@@ -32,8 +32,8 @@ export default {
       defChannel: '0',
       // 管理页面列表默认分页设置
       defCurrent: 1,
-      defSize: 5,
-      pageSizes: [5, 10, 50, 100]
+      defSize: 1,
+      pageSizes: [1, 5, 10, 50, 100]
     }
   },
   // 版本
