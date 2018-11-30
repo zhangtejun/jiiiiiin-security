@@ -1,8 +1,15 @@
 <template>
-  <d2-mng-page @qry-data="qryData" :page="page">
+  <d2-mng-page
+          @qry-data="qryData"
+          @create="onCreate"
+          @update="onUpdate"
+          @del="onDel"
+          :page="page"
+          :select-rows="selectRows"
+          :show-option-box="true">
     <el-form slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
       <el-form-item label="渠道" prop="channel">
-        <el-select v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
+        <el-select size="small" v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
           <el-option
                   v-for="item in channelOptions"
                   :key="item.value"
@@ -10,6 +17,13 @@
                   :value="item.value">
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="标识">
+        <el-input
+                size="small"
+                placeholder="请输入标识"
+                v-model="searchForm.authorityName">
+        </el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="primary" icon="el-icon-search" @click="onSearch">查询</el-button>
@@ -28,33 +42,21 @@
             stripe
             :height="listHeight"
             border
+            @selection-change="handleSelectionChange"
             style="width: 100%">
       <el-table-column
               type="selection"
-              width="55">
+              :width="tableSelectionWidth">
       </el-table-column>
       <el-table-column
               prop="name"
               label="角色名称"
-              width="180">
+              >
       </el-table-column>
       <el-table-column
               prop="authorityName"
-              label="角色名称"
-              width="180">
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
-        </template>
+              label="角色标识"
+              >
       </el-table-column>
     </el-table>
   </d2-mng-page>
@@ -67,6 +69,7 @@ export default {
   name: 'mngauth-role',
   data () {
     return {
+      selectRows: [],
       page: {
         records: [],
         total: 0,
@@ -86,37 +89,47 @@ export default {
         ]
       },
       searchForm: {
-        channel: this.$store.state.d2admin.page.defChannel
+        channel: this.$store.state.d2admin.page.defChannel,
+        authorityName: 'ADMIN'
       }
     }
   },
   computed: {
     ...mapState('d2admin', {
-      listHeight: state => state.page.listHeight
+      listHeight: state => state.page.listHeight,
+      tableSelectionWidth: state => state.page.tableSelectionWidth
     })
   },
   methods: {
     qryData() {
       this.$vp.ajaxGet(`role/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
     },
-    handleEdit(index, row) {
-      console.log(index, row);
-    },
-    handleDelete(index, row) {
-      console.log(index, row);
+    handleSelectionChange(rows) {
+      this.selectRows = rows
     },
     onChangeSearchChannel(idx) {
       this.channel = this.channelOptions[idx].value
       this.qryData()
     },
     onSearch() {
-      this.qryData()
+      this.$refs.ruleSearchForm.validate((valid) => {
+        if (valid) {
+          this.$vp.ajaxGet(`role/${this.channel}/${this.page.current}/${this.page.size}/${this.searchForm.authorityName}`).then(res => { this.page = res })
+        }
+      });
     },
     onCancelSubmit() {
       this.searchForm = _.clone({
         channel: this.channel
       })
       this.qryData()
+    },
+    onCreate() {
+    },
+    onUpdate() {
+    },
+    onDel() {
+      alert(3)
     }
   },
   created() {

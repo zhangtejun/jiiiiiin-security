@@ -37,7 +37,7 @@ public enum ChannelEnum implements IEnum<Integer> {
             }
         }
         throw new IllegalArgumentException(
-                "Unknown enum type " + value + ", Allowed values are " + Arrays.toString(values()));
+                "待查找的渠道 [" + value + "]不存在, 当前所支持的渠道标识： " + Arrays.toString(values()));
     }
 
     public static class ResourceChannelEnumConverter extends PropertyEditorSupport {

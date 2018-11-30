@@ -19,6 +19,8 @@ export default {
     keepAlive: [],
     // 管理页面列表的table高度
     listHeight: setting.page.mng.listHeight,
+    // 管理页面列表的table多选Checkbox列的宽度
+    tableSelectionWidth: setting.page.mng.tableSelectionWidth,
     // 管理页面列表默认查询的渠道标识
     defChannel: setting.page.mng.defChannel,
     // 管理页面列表默认分页设置

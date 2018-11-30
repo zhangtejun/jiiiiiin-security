@@ -4,7 +4,7 @@
             <el-col :span="23">
                 <el-form :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
                     <el-form-item label="渠道" prop="channel">
-                        <el-select v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
+                        <el-select size="small" v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
                             <el-option
                                     v-for="item in channelOptions"
                                     :key="item.value"
