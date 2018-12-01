@@ -34,4 +34,9 @@ public class RoleController extends BaseController {
         return R.ok(roleService.page(new Page<Role>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
+    @GetMapping("{channel}/{current}/{size}/{authorityName}")
+    public R<IPage<Role>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @PathVariable String authorityName){
+        return R.ok(roleService.page(new Page<Role>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).eq(Role.AUTHORITY_NAME, authorityName)));
+    }
+
 }

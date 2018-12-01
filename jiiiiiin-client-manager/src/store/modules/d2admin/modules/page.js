@@ -23,6 +23,12 @@ export default {
     tableSelectionWidth: setting.page.mng.tableSelectionWidth,
     // 管理页面列表默认查询的渠道标识
     defChannel: setting.page.mng.defChannel,
+    channelOptions: [
+      {
+        value: '0',
+        label: '内管'
+      }
+    ],
     // 管理页面列表默认分页设置
     defCurrent: setting.page.mng.defCurrent,
     defSize: setting.page.mng.defSize,

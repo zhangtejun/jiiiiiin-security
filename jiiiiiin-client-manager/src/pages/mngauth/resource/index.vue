@@ -155,15 +155,8 @@ export default {
   data() {
     return {
       icon,
-      // TODO 待后台`字典表`完成以下两个options要从后台获取数据
-      // 默认为【内管】资源
-      channel: '0',
-      channelOptions: [
-        {
-          value: '0',
-          label: '内管'
-        }
-      ],
+      channel: this.$store.state.d2admin.page.defChannel,
+      channelOptions: this.$store.state.d2admin.page.channelOptions,
       methodOptions: [
         {
           value: 'POST',
@@ -295,28 +288,28 @@ export default {
   },
   computed: {
     iconOptions () {
-      const res = []
-      let idx = 0
+      const res = [];
+      let idx = 0;
       this.icon.forEach(item => {
         res.push({
           label: item.title,
           disabled: true
-        })
+        });
         item.icon.forEach((icon) => {
-          idx += 1
+          idx += 1;
           res.push({
             key: idx,
             label: icon,
             value: icon
           })
         })
-      })
+      });
       return res
     }
   },
   methods: {
-    onChangeSearchChannel() {
-      // TODO 待具有其他渠道 这里需要 同步到 `this.channel`状态
+    onChangeSearchChannel(idx) {
+      this.channel = this.channelOptions[idx].value
     },
     onSearch() {
       this.$refs.ruleSearchForm.validate((valid) => {
@@ -329,7 +322,7 @@ export default {
       this.searchForm = _.clone({
         channel: '0',
         status: 'ENABLE'
-      })
+      });
       this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.data = res })
     },
     onTableItemStatusChange(node) {
@@ -341,19 +334,17 @@ export default {
     },
     // 查找对应`item`节点对应的父节点等信息
     _findParentNode(item, treeData, pnode, callback) {
-      const size = treeData.length
+      const size = treeData.length;
       for (let i = 0; i < size; i++) {
-        const node = treeData[i]
+        const node = treeData[i];
         if (node.id === item.id) {
           if (_.isFunction(callback)) {
             this::callback(pnode, treeData, i, node)
           }
           return pnode
         } else {
-          if (_.isEmpty(node.children)) {
-            continue;
-          } else {
-            const temp = this._findParentNode(item, node.children, node, callback)
+          if (!_.isEmpty(node.children)) {
+            const temp = this._findParentNode(item, node.children, node, callback);
             if (!_.isEmpty(temp) || size === i) {
               return temp
             }
@@ -362,19 +353,17 @@ export default {
       }
     },
     _findNode(id, treeData, pnode, callback) {
-      const size = treeData.length
+      const size = treeData.length;
       for (let i = 0; i < size; i++) {
-        const node = treeData[i]
+        const node = treeData[i];
         if (node.id === id) {
           if (_.isFunction(callback)) {
             this::callback(node, pnode, treeData, i)
           }
           return pnode
         } else {
-          if (_.isEmpty(node.children)) {
-            continue;
-          } else {
-            const temp = this._findNode(id, node.children, node, callback)
+          if (!_.isEmpty(node.children)) {
+            const temp = this._findNode(id, node.children, node, callback);
             if (!_.isEmpty(temp) || size === i) {
               return temp
             }
@@ -383,28 +372,28 @@ export default {
       }
     },
     _preHandlerAddOrUpdate(mode, currentSelectNode) {
-      this.formMode = mode
+      this.formMode = mode;
       // 新增currentSelectNode是父节点、更新currentSelectNode是当前节点
-      this.selectNode = currentSelectNode
+      this.selectNode = currentSelectNode;
       // 业务：更新不可以调整资源的`type`
-      this.formTypeRadioStatus = (mode !== 'add')
+      this.formTypeRadioStatus = (mode !== 'add');
       this.dialogFormVisible = true
     },
     onClickAdd(node) {
-      this.form = _.clone(this.formTempl)
-      this.form.channel = node.channel
-      this.form.pid = node.id
-      this.form.pname = node.name
-      this.form.levels = node.levels + 1
-      this.numMax = _.isEmpty(node.children) ? 1 : node.children.length + 1
-      this.form.num = this.numMax
+      this.form = _.clone(this.formTempl);
+      this.form.channel = node.channel;
+      this.form.pid = node.id;
+      this.form.pname = node.name;
+      this.form.levels = node.levels + 1;
+      this.numMax = _.isEmpty(node.children) ? 1 : node.children.length + 1;
+      this.form.num = this.numMax;
       this._preHandlerAddOrUpdate('add', node)
     },
     onClickUpdate(node) {
-      this.form = node
-      const pnode = this._findParentNode(node, this.data)
-      this.form.pname = pnode.name
-      this.numMax = _.isEmpty(pnode.children) ? 1 : pnode.children.length + 1
+      this.form = node;
+      const pnode = this._findParentNode(node, this.data);
+      this.form.pname = pnode.name;
+      this.numMax = _.isEmpty(pnode.children) ? 1 : pnode.children.length + 1;
       this._preHandlerAddOrUpdate('edit', node)
     },
     onChangeType(value) {
@@ -456,16 +445,16 @@ export default {
     onSubmitForm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          let params = _.clone(this.form)
-          delete params.pname
+          let params = _.clone(this.form);
+          delete params.pname;
           if (!_.isEmpty(params.url) && _.isEmpty(params.method)) {
             this.$vp.toast('接口类型必须填写', {
               type: 'error'
-            })
+            });
             return
           }
           if (this.formMode === 'add') {
-            delete params.id
+            delete params.id;
             this.$vp.ajaxPostJson('resource', {
               params
             }).then(res => {
@@ -492,9 +481,9 @@ export default {
      * @private
      */
     _findNodeParentChildren(item, treeData, callback) {
-      const size = treeData.length
+      const size = treeData.length;
       for (let i = 0; i < size; i++) {
-        const node = treeData[i]
+        const node = treeData[i];
         if (node.id === item.id) {
           if (_.isFunction(callback)) {
             this::callback(treeData, i, node)
@@ -502,9 +491,9 @@ export default {
           return treeData
         } else {
           if (_.isEmpty(node.children)) {
-            continue;
+
           } else {
-            const temp = this._findNodeParentChildren(item, node.children, callback)
+            const temp = this._findNodeParentChildren(item, node.children, callback);
             if (!_.isEmpty(temp) || size === i) {
               return temp
             }
@@ -517,7 +506,7 @@ export default {
         .then(res => {
           if (res) {
             this._findNodeParentChildren(item, this.data, (pnodeChildrenData, idx) => {
-              pnodeChildrenData.splice(idx, 1)
+              pnodeChildrenData.splice(idx, 1);
               // 查看父节点是否还有子节点，如果有需要进行`排序`字段修改，**在前台修改之前后台数据库已经被更新**
               if (_.isArray(pnodeChildrenData) && pnodeChildrenData.length > 0) {
                 const delNum = item.num;
@@ -531,7 +520,7 @@ export default {
                   }
                 }
               }
-            })
+            });
             this.$vp.toast(`成功删除【${item.name}】`)
           }
         })

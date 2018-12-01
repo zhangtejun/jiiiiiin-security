@@ -5,6 +5,7 @@
           @update="onUpdate"
           @del="onDel"
           :page="page"
+          :dialog-form-visible="dialogFormVisible"
           :select-rows="selectRows"
           :show-option-box="true">
     <el-form slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
@@ -32,9 +33,7 @@
     </el-form>
 
     <ul slot="hint-msg-box">
-      <li>只可以删除叶子节点</li>
-      <li>点击`重置按钮`可以恢复列表初始化状态</li>
-      <li>直接点击记录的`状态切换开关`可以直接修改节点状态</li>
+      <li>`角色标识`必须唯一</li>
     </ul>
 
     <el-table
@@ -59,6 +58,15 @@
               >
       </el-table-column>
     </el-table>
+
+    <el-form slot="form" :model="form" :rules="rules" ref="form" @submit.native.prevent>
+      <div class="dialog-form-submit-container">
+        <div class="dialog-form-submit-inner-container">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" native-type="submit" @click="onSubmitForm">确 定</el-button>
+        </div>
+      </div>
+    </el-form>
   </d2-mng-page>
 </template>
 
@@ -69,6 +77,28 @@ export default {
   name: 'mngauth-role',
   data () {
     return {
+      dialogFormVisible: false,
+      rules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        ]
+      },
+      form: {
+        channel: '',
+        icon: '',
+        id: -1,
+        levels: 1,
+        method: '',
+        name: '',
+        num: 1,
+        path: '',
+        pid: 0,
+        pname: '',
+        status: 'ENABLE',
+        type: 'MENU',
+        url: ''
+      },
       selectRows: [],
       page: {
         records: [],
@@ -77,12 +107,7 @@ export default {
         current: this.$store.state.d2admin.page.defCurrent
       },
       channel: this.$store.state.d2admin.page.defChannel,
-      channelOptions: [
-        {
-          value: '0',
-          label: '内管'
-        }
-      ],
+      channelOptions: this.$store.state.d2admin.page.channelOptions,
       searchRules: {
         channel: [
           { required: true, message: '请选择渠道', trigger: 'change' }
@@ -101,6 +126,7 @@ export default {
     })
   },
   methods: {
+    onSubmitForm() {},
     qryData() {
       this.$vp.ajaxGet(`role/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
     },
@@ -125,6 +151,7 @@ export default {
       this.qryData()
     },
     onCreate() {
+      this.dialogFormVisible = true
     },
     onUpdate() {
     },

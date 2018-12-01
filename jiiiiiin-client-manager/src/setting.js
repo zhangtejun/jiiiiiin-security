@@ -32,6 +32,13 @@ export default {
       tableSelectionWidth: 45,
       // 管理页面列表默认查询的渠道标识
       defChannel: '0',
+      // TODO 待后台`字典表`完成以下两个options要从后台获取数据
+      channelOptions: [
+        {
+          value: '0',
+          label: '内管'
+        }
+      ],
       // 管理页面列表默认分页设置
       defCurrent: 1,
       // defSize要在pageSizes范围中的某一个值
