@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.mngauth.controller;
 
 
+import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IRoleService;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import cn.jiiiiiin.module.common.controller.BaseController;
+
+import java.util.ArrayList;
 
 /**
  * <p>
@@ -37,6 +40,24 @@ public class RoleController extends BaseController {
     @GetMapping("{channel}/{current}/{size}/{authorityName}")
     public R<IPage<Role>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @PathVariable String authorityName){
         return R.ok(roleService.page(new Page<Role>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).eq(Role.AUTHORITY_NAME, authorityName)));
+    }
+
+    @PostMapping
+    public R<Role> create(@RequestBody Role role) {
+        role.insert();
+        return success(role);
+    }
+
+    /**
+     * 删除资源
+     *
+     * @param channel
+     * @param id
+     * @return
+     */
+    @DeleteMapping("{channel}/{id}")
+    public R<Boolean> del(@PathVariable ChannelEnum channel, @PathVariable Long id) {
+        return success(roleService.remove(channel, id));
     }
 
 }

@@ -149,9 +149,6 @@ import _ from 'lodash'
 
 export default {
   name: 'mngauth-resource',
-  components: {
-    'd2-el-form-item': () => import('./components/d2-el-form-item')
-  },
   data() {
     return {
       icon,
@@ -458,7 +455,7 @@ export default {
             this.$vp.ajaxPostJson('resource', {
               params
             }).then(res => {
-              // this._onAddSuccessUpdateTreeData(res)
+              this._onAddSuccessUpdateTreeData(res)
             });
           } else {
             this.$vp.ajaxPut('resource', {

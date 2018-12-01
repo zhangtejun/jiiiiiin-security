@@ -49,8 +49,7 @@
       </el-table-column>
       <el-table-column
               prop="name"
-              label="角色名称"
-              >
+              label="角色名称">
       </el-table-column>
       <el-table-column
               prop="authorityName"
@@ -61,6 +60,14 @@
 
     <el-form slot="form" :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <div class="dialog-form-submit-container">
+
+        <d2-el-form-item label="角色名称" :required="true" prop="name">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </d2-el-form-item>
+
+        <d2-el-form-item label="角色标识" :required="true" prop="authorityName">
+          <el-input v-model="form.authorityName" autocomplete="off"></el-input>
+        </d2-el-form-item>
         <div class="dialog-form-submit-inner-container">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" native-type="submit" @click="onSubmitForm">确 定</el-button>
@@ -80,24 +87,21 @@ export default {
       dialogFormVisible: false,
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' },
+          { required: true, message: '请输入角色名称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        ],
+        authorityName: [
+          { required: true, message: '请输入角色标识', trigger: 'blur' },
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ]
       },
       form: {
-        channel: '',
-        icon: '',
-        id: -1,
-        levels: 1,
-        method: '',
         name: '',
-        num: 1,
-        path: '',
-        pid: 0,
-        pname: '',
-        status: 'ENABLE',
-        type: 'MENU',
-        url: ''
+        authorityName: ''
+      },
+      formTempl: {
+        name: '',
+        authorityName: ''
       },
       selectRows: [],
       page: {
@@ -126,7 +130,6 @@ export default {
     })
   },
   methods: {
-    onSubmitForm() {},
     qryData() {
       this.$vp.ajaxGet(`role/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
     },
@@ -156,7 +159,25 @@ export default {
     onUpdate() {
     },
     onDel() {
-      alert(3)
+      const item = this.selectRows[0]
+      this.$vp.ajaxDel(`role/${this.channel}/${item.id}`)
+        .then(res => {
+          this.qryData()
+        })
+    },
+    onSubmitForm() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          let params = _.clone(this.form);
+          params.channel = this.channel
+          this.$vp.ajaxPostJson('role', {
+            params
+          }).then(res => {
+            this.qryData()
+          });
+          this.dialogFormVisible = false
+        }
+      })
     }
   },
   created() {

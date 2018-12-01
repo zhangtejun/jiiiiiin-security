@@ -1,7 +1,11 @@
 package cn.jiiiiiin.module.mngauth.service;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRoleService extends IService<Role> {
 
+    Boolean remove(Collection<? extends Serializable> idList);
 }
