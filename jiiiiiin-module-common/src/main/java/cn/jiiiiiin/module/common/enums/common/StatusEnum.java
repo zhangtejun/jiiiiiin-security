@@ -38,13 +38,13 @@ public enum StatusEnum implements IEnum<Integer> {
             }
         }
         throw new IllegalArgumentException(
-                "Unknown enum type " + value + ", Allowed values are " + Arrays.toString(values()));
+                "待查找的状态 [" + value + "]不存在, 当前所支持的状态标识： " + Arrays.toString(values()));
     }
 
     public static class ResourceChannelEnumConverter extends PropertyEditorSupport {
         @Override
         public void setAsText(final String text) throws IllegalArgumentException {
-            if (NumberUtils.isNumber(text)) {
+            if (NumberUtils.isCreatable(text)) {
                 setValue(StatusEnum.fromValue(Integer.valueOf(text)));
             } else {
                 throw new IllegalArgumentException(String.format("待转换的渠道参数%s不是正确的数值类型", text));

@@ -108,7 +108,7 @@ public class ResourceMapperTest {
 //        set.add(resource3);
 //        set.add(resource4);
 //        operator.setResources(set);
-//        int temp = roleMapper.relationResource(operator);
+//        int temp = roleMapper.insertRelationResourceRecords(operator);
 //        Assert.assertTrue(SqlHelper.retBool(temp));
     }
 
@@ -141,7 +141,7 @@ public class ResourceMapperTest {
 //        set.add(resourceAdd);
         set.add(update);
         operator.setResources(set);
-        int temp = roleMapper.relationResource(operator);
+        int temp = roleMapper.insertRelationResourceRecords(operator);
     }
 
     @Test

@@ -19,12 +19,28 @@
         name, authority_name, channel
     </sql>
 
-    <insert id="relationResource">
+    <insert id="insertRelationResourceRecords">
         insert into mng_role_resource(resource_id, role_id) values
         <foreach collection="resources" item="item" index="index"
                  separator=",">
             (#{item.id}, #{id})
         </foreach>
     </insert>
+
+    <delete id="deleteRelationAdminRecords">
+        delete from mng_role_admin
+        where role_id IN
+        <foreach collection="idList" item="outputId" open="(" separator="," close=")">
+            #{outputId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteRelationResourceRecords">
+        delete from mng_role_resource
+        where role_id IN
+        <foreach collection="idList" item="outputId" open="(" separator="," close=")">
+            #{outputId}
+        </foreach>
+    </delete>
 
 </mapper>

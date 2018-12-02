@@ -24,6 +24,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @SpringBootApplication
 @EnableTransactionManagement
+//@MapperScan(value = {"cn.jiiiiiin.module.common.mapper"})
 // @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ManagerApp {
 

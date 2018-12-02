@@ -17,5 +17,19 @@ import java.util.Collection;
  */
 public interface IRoleService extends IService<Role> {
 
+    /**
+     * 批量删除角色及其关联资源记录
+     *
+     * @param idList
+     * @return
+     */
     Boolean remove(Collection<? extends Serializable> idList);
+
+    /**
+     * 添加角色及其关联资源记录
+     * @param role
+     * @param resourceIds
+     * @return
+     */
+    Boolean save(Role role, Long[] resourceIds);
 }

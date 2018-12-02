@@ -9,13 +9,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import cn.jiiiiiin.module.common.controller.BaseController;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * <p>
@@ -25,6 +30,7 @@ import java.util.ArrayList;
  * @author jiiiiiin
  * @since 2018-09-27
  */
+@Slf4j
 @RestController
 @RequestMapping("/role")
 public class RoleController extends BaseController {
@@ -33,31 +39,41 @@ public class RoleController extends BaseController {
     private IRoleService roleService;
 
     @GetMapping("{channel}/{current}/{size}")
-    public R<IPage<Role>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size){
+    public R<IPage<Role>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(roleService.page(new Page<Role>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
     @GetMapping("{channel}/{current}/{size}/{authorityName}")
-    public R<IPage<Role>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @PathVariable String authorityName){
+    public R<IPage<Role>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @PathVariable String authorityName) {
         return R.ok(roleService.page(new Page<Role>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).eq(Role.AUTHORITY_NAME, authorityName)));
     }
 
+    /**
+     * @param role 其中可能包含{@link Role#getResources()}，因为前端控件的原因，下面将会添加资源对应的父节点到需要关联的记录中
+     * @return
+     */
     @PostMapping
     public R<Role> create(@RequestBody Role role) {
-        role.insert();
+        val resourceIdsSet = new HashSet<Long>();
+        role.getResources().forEach(resource -> {
+            for (String pid : resource.getPids().split(",")) {
+                if (NumberUtils.isCreatable(pid)) {
+                    val temp = Long.valueOf(pid);
+                    if (!temp.equals(Resource.IS_ROOT_MENU)) {
+                        resourceIdsSet.add(temp);
+                    }
+                }
+            }
+            resourceIdsSet.add(resource.getId());
+        });
+        Long[] resourceIds = new Long[resourceIdsSet.size()];
+        roleService.save(role, resourceIdsSet.toArray(resourceIds));
         return success(role);
     }
 
-    /**
-     * 删除资源
-     *
-     * @param channel
-     * @param id
-     * @return
-     */
-    @DeleteMapping("{channel}/{id}")
-    public R<Boolean> del(@PathVariable ChannelEnum channel, @PathVariable Long id) {
-        return success(roleService.remove(channel, id));
+    @DeleteMapping
+    public R<Boolean> del(ArrayList<Long> idList) {
+        return success(roleService.remove(idList));
     }
 
 }

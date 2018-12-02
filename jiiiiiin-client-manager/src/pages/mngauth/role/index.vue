@@ -5,7 +5,8 @@
           @update="onUpdate"
           @del="onDel"
           :page="page"
-          :dialog-form-visible="dialogFormVisible"
+          :form-mode.sync="formMode"
+          :dialog-form-visible.sync="dialogFormVisible"
           :select-rows="selectRows"
           :show-option-box="true">
     <el-form slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
@@ -68,6 +69,10 @@
         <d2-el-form-item label="角色标识" :required="true" prop="authorityName">
           <el-input v-model="form.authorityName" autocomplete="off"></el-input>
         </d2-el-form-item>
+
+        <d2-el-form-item label="菜单授权">
+          <el-tree :data="resources" :props="treeProps" @check-change="handleCheckChange" show-checkbox style="margin-top: 10px"></el-tree>
+        </d2-el-form-item>
         <div class="dialog-form-submit-inner-container">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" native-type="submit" @click="onSubmitForm">确 定</el-button>
@@ -84,6 +89,12 @@ export default {
   name: 'mngauth-role',
   data () {
     return {
+      resources: [],
+      treeProps: {
+        children: 'children',
+        label: 'name'
+      },
+      formMode: 'add',
       dialogFormVisible: false,
       rules: {
         name: [
@@ -97,11 +108,13 @@ export default {
       },
       form: {
         name: '',
-        authorityName: ''
+        authorityName: '',
+        resources: []
       },
-      formTempl: {
+      formTmpl: {
         name: '',
-        authorityName: ''
+        authorityName: '',
+        resources: []
       },
       selectRows: [],
       page: {
@@ -130,6 +143,25 @@ export default {
     })
   },
   methods: {
+    /**
+     * @param data 传递给 data 属性的数组中该节点所对应的对象
+     * @param checked 节点本身是否被选中
+     * @param indeterminate 节点的子树中是否有被选中的节点
+     */
+    handleCheckChange(data, checked, indeterminate) {
+      if (checked) {
+        this.form.resources.push(data)
+      } else {
+        if (_.includes(this.form.resources, data)) {
+          _.remove(this.form.resources, item => {
+            return item.id === data.id
+          })
+        }
+      }
+      // this.form.resources.forEach(item => {
+      //   console.log('handleCheckChange', item.name)
+      // })
+    },
     qryData() {
       this.$vp.ajaxGet(`role/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
     },
@@ -154,13 +186,18 @@ export default {
       this.qryData()
     },
     onCreate() {
-      this.dialogFormVisible = true
+      this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
     },
     onUpdate() {
+      this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
+      console.log('update')
     },
     onDel() {
-      const item = this.selectRows[0]
-      this.$vp.ajaxDel(`role/${this.channel}/${item.id}`)
+      this.$vp.ajaxDel(`role`, {
+        params: {
+          idList: this.selectRows
+        }
+      })
         .then(res => {
           this.qryData()
         })
@@ -168,13 +205,16 @@ export default {
     onSubmitForm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          let params = _.clone(this.form);
-          params.channel = this.channel
-          this.$vp.ajaxPostJson('role', {
-            params
-          }).then(res => {
-            this.qryData()
-          });
+          if (this.formMode === 'add') {
+            let params = _.clone(this.form);
+            params.channel = this.channel
+            this.$vp.ajaxPostJson('role', {
+              params
+            }).then(res => {
+              this.qryData()
+            });
+          }
+          this.form = _.clone(this.formTmpl)
           this.dialogFormVisible = false
         }
       })

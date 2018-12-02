@@ -24,9 +24,9 @@
         <slot name="option-box" v-if="showOptionBox">
             <el-row class="mng-list-option-box">
                 <el-col :span="23">
-                    <el-button size="small" type="primary" icon="el-icon-edit" @click="$emit('create')">新增</el-button>
-                    <el-button size="small" icon="el-icon-share" @click="onClickUpdate">修改</el-button>
-                    <el-button size="small" type="danger" icon="el-icon-delete" @click="onClickDel">删除</el-button>
+                    <el-button size="small" type="primary" @click="onClickCreate">新增</el-button>
+                    <el-button size="small" @click="onClickUpdate">修改</el-button>
+                    <el-button size="small" type="danger" @click="onClickDel">删除</el-button>
                 </el-col>
                 <el-col :span="1">
                     <el-popover
@@ -69,6 +69,7 @@
             <el-dialog
                     :title="formMode === 'edit' ? '编辑' : '新增'"
                     :visible.sync="dialogFormVisible"
+                    :before-close="handleClose"
                     width="70%"
                     :modal="true">
                 <slot name="form"></slot>
@@ -84,8 +85,11 @@ import { mapState } from 'vuex'
 export default {
   name: 'd2-mng-page',
   props: {
+    formMode: {
+      type: String,
+      default: 'add'
+    },
     dialogFormVisible: false,
-    formMode: 'add',
     showOptionBox: false,
     selectRows: {
       type: Array,
@@ -122,6 +126,10 @@ export default {
     })
   },
   methods: {
+    handleClose(done) {
+      // 实践二：如何优雅地修改 props https://juejin.im/post/5a3c73c2f265da4310488f20
+      this.$emit('update:dialogFormVisible', false)
+    },
     handleSizeChange(val) {
       this.page.size = val
       // 混合组件实现
@@ -132,9 +140,16 @@ export default {
       // 混合组件实现
       this.qryData()
     },
+    onClickCreate() {
+      this.$emit('update:formMode', 'add')
+      this.$emit('create')
+      this.$emit('update:dialogFormVisible', true)
+    },
     onClickUpdate() {
       if (!_.isEmpty(this.selectRows) || this.selectRows.length === 1) {
+        this.$emit('update:formMode', 'edit')
         this.$emit('update')
+        this.$emit('update:dialogFormVisible', true)
       } else {
         this.$vp.toast('请选择一条需要编辑的记录', { type: 'warning' })
       }

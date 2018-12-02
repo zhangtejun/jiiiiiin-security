@@ -43,7 +43,7 @@ public enum ChannelEnum implements IEnum<Integer> {
     public static class ResourceChannelEnumConverter extends PropertyEditorSupport {
         @Override
         public void setAsText(final String text) throws IllegalArgumentException {
-            if (NumberUtils.isNumber(text)) {
+            if (NumberUtils.isCreatable(text)) {
                 setValue(ChannelEnum.fromValue(Integer.valueOf(text)));
             } else {
                 throw new IllegalArgumentException(String.format("待转换的渠道参数%s不是正确的数值类型", text));

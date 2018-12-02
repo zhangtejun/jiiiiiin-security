@@ -2,6 +2,10 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * <p>
@@ -19,5 +23,21 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @param role
      * @return
      */
-    int relationResource(Role role);
+    int insertRelationResourceRecords(Role role);
+
+    /**
+     * 删除角色id集合对应的用户关联记录
+     *
+     * @param idList
+     * @return
+     */
+    int deleteRelationAdminRecords(@Param("idList") Collection<? extends Serializable> idList);
+
+    /**
+     * 删除角色id集合对应的资源关联记录
+     *
+     * @param idList
+     * @return
+     */
+    int deleteRelationResourceRecords(@Param("idList") Collection<? extends Serializable> idList);
 }
