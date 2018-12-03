@@ -38,6 +38,30 @@ public interface IAdminService extends IService<Admin> {
      * @return
      */
     @Transactional
-    boolean relationRole(@NonNull Admin admin);
+    boolean saveRelationRoleRecords(@NonNull Admin admin);
 
+    /**
+     * 保存用户和关联的角色记录
+     *
+     * @param admin
+     * @return
+     */
+    Boolean saveAdminAndRelationRecords(@NonNull Admin admin);
+
+    /**
+     * 更新用户和关联的角色记录
+     *
+     * @param admin
+     * @return
+     */
+    Boolean updateAdminAndRelationRecords(@NonNull Admin admin);
+
+    /**
+     * 删除和用户相关的记录和用户记录
+     *
+     * @param id
+     * @param channel
+     * @return
+     */
+    Boolean delAdminAndRelationRecords(Long id, ChannelEnum channel);
 }

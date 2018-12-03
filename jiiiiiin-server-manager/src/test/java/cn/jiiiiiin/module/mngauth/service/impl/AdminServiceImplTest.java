@@ -17,9 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -41,22 +44,20 @@ public class AdminServiceImplTest {
     @Autowired
     private RoleMapper roleMapper;
 
-    @Before
-    public void before() {
-        adminService.save(new Admin().setUsername("user").setPassword("admin_pwd"));
-    }
-
+    @Transactional
     @Test
     public void findByUsername() {
-        val admin = adminService.signInByUsername("user", ChannelEnum.MNG);
-        Assert.assertEquals("user", admin.getUsername());
+        new Admin().setUsername("TEMP").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setChannel(ChannelEnum.MNG);
+        val admin = adminService.signInByUsername("TEMP", ChannelEnum.MNG);
+        Assert.assertEquals("TEMP", admin.getUsername());
         // 测试EHCache缓存
 //        val admin2 = adminService.signInByUsername("user", ChannelEnum.MNG);
     }
 
 
+    @Transactional
     @Test
-    public void relationRole() {
+    public void saveRelationRoleRecords() {
         Set<Role> roles = new HashSet<>();
         val adminRole = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
         val userRole = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "DB_ADMIN"));
@@ -64,12 +65,35 @@ public class AdminServiceImplTest {
         roles.add(userRole);
         val admin = adminService.signInByUsername("admin", ChannelEnum.MNG);
         admin.setRoles(roles);
-        boolean res = adminService.relationRole(admin);
-        Assert.assertTrue(res);
+        boolean res = adminService.saveRelationRoleRecords(admin);
+        assertTrue(res);
     }
 
-    @After
-    public void after() {
-        adminService.remove(new QueryWrapper<Admin>().eq("username", "user"));
+    @Test
+    public void saveAdminAndRelationRecords() {
+        val admin = new Admin().setUsername("User1").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setChannel(ChannelEnum.MNG);
+        admin.getRoles().add(roleMapper.selectById("1061277220292595713"));
+        admin.getRoles().add(roleMapper.selectById("1061277221798350849"));
+        val res = adminService.saveAdminAndRelationRecords(admin);
+        assertTrue(res);
     }
+
+    @Test
+    public void updateAdminAndRelationRecords() {
+        val admin = new Admin().setId(1069587774891364354L).selectById();
+        admin.setUsername("User")
+                .setPhone("153989999999")
+                .setEmail("153989999999@163.com");
+        admin.getRoles().add(roleMapper.selectById("1061277220292595713"));
+        val res = adminService.updateAdminAndRelationRecords(admin);
+        assertTrue(res);
+    }
+
+    @Transactional
+    @Test
+    public void delAdminAndRelationRecords() {
+        val res = adminService.delAdminAndRelationRecords(1069587774891364354L, ChannelEnum.MNG);
+        assertTrue(res);
+    }
+
 }

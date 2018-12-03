@@ -36,6 +36,7 @@ CREATE TABLE `mng_admin` (
   `password` varchar(60) NOT NULL COMMENT '密码，加密存储',
   `phone` varchar(20) DEFAULT NULL COMMENT '手机号',
   `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
+  `channel` tinyint DEFAULT 0 COMMENT '标识渠道，不同的渠道就是不同的资源分组: 0:内管',
   PRIMARY KEY (`id`),
   key idx_username(username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';

@@ -4,15 +4,15 @@
 
     <!-- 开启二级缓存 -->
     <!--<cache TYPE="org.mybatis.caches.ehcache.LoggingEhcache"/>-->
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
-        <property name="timeToIdleSeconds" value="3600"/>
-        <property name="timeToLiveSeconds" value="3600"/>
-        <!-- 同ehcache参数maxElementsInMemory -->
-        <property name="maxEntriesLocalHeap" value="1000"/>
-        <!-- 同ehcache参数maxElementsOnDisk -->
-        <property name="maxEntriesLocalDisk" value="10000000"/>
-        <property name="memoryStoreEvictionPolicy" value="LRU"/>
-    </cache>
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache">-->
+        <!--<property name="timeToIdleSeconds" value="3600"/>-->
+        <!--<property name="timeToLiveSeconds" value="3600"/>-->
+        <!--&lt;!&ndash; 同ehcache参数maxElementsInMemory &ndash;&gt;-->
+        <!--<property name="maxEntriesLocalHeap" value="1000"/>-->
+        <!--&lt;!&ndash; 同ehcache参数maxElementsOnDisk &ndash;&gt;-->
+        <!--<property name="maxEntriesLocalDisk" value="10000000"/>-->
+        <!--<property name="memoryStoreEvictionPolicy" value="LRU"/>-->
+    <!--</cache>-->
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.jiiiiiin.module.common.entity.mngauth.Admin">
@@ -22,15 +22,16 @@
         <result column="password" property="password"/>
         <result column="phone" property="phone"/>
         <result column="email" property="email"/>
+        <result column="channel" property="channel"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        create_time, username, password, phone, email
+        create_time, username, password, phone, email, channel
     </sql>
 
-    <insert id="relationRole">
+    <insert id="insertRelationRoleRecords">
         insert into mng_role_admin(role_id, user_id) values
         <foreach collection="roles" item="item" index="index"
                  separator=",">
@@ -49,6 +50,7 @@
         <result column="password" property="password"/>
         <result column="phone" property="phone"/>
         <result column="email" property="email"/>
+        <result column="channel" property="channel"/>
         <collection property="roles" ofType="Role" javaType="list">
             <result column="role_id" property="id"/>
             <result column="name" property="name"/>
@@ -67,6 +69,9 @@
           left join mng_role_admin mra on admin.id = mra.user_id
           left join mng_role role on mra.role_id = role.id
         where admin.username = #{username}
+        <if test="channel != null">
+            and channel = #{channel}
+        </if>
     </select>
 
 </mapper>

@@ -89,7 +89,7 @@ public class ResourceController extends BaseController {
     }
 
     /**
-     * 创建资源
+     * 更新资源
      *
      * @param resource
      * @return

@@ -3,6 +3,7 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -34,7 +35,7 @@ public class AdminMapperTest {
 
     @Test
     public void testSelectByUsername() {
-        val res = adminMapper.selectByUsername("admin");
+        val res = adminMapper.selectByUsername("admin", ChannelEnum.MNG);
         log.info("selectByUsername {}", res);
         Assert.assertNotNull(res);
         Assert.assertNotNull(res.getRoles());
@@ -50,7 +51,7 @@ public class AdminMapperTest {
     @Test
     @Rollback
     public void testClearRelationRoleAdminRecord() {
-        val res = SqlHelper.delBool(adminMapper.clearRelationRoleAdminRecord((Admin) new Admin().setId(1L)));
+        val res = SqlHelper.delBool(adminMapper.clearRelationRoleAdminRecord(1L));
         Assert.assertTrue(res);
     }
 

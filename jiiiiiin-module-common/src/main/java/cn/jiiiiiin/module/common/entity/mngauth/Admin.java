@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
 import cn.jiiiiiin.module.common.dto.mngauth.Menu;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -53,6 +54,9 @@ public class Admin extends BaseEntity<Admin> {
     @TableField(exist = false)
     private Set<Role> roles = new HashSet<>();
 
+    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
+    private ChannelEnum channel;
+
     @ApiModelProperty(value = "前端授权资源")
     @TableField(exist = false)
     private HashSet<Resource> authorizeResources;
@@ -70,4 +74,6 @@ public class Admin extends BaseEntity<Admin> {
     public static final String PHONE = "phone";
 
     public static final String EMAIL = "email";
+
+    public static final String CHANNEL = "channel";
 }
