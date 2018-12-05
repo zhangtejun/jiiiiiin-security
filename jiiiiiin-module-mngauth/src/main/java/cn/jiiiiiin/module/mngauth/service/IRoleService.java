@@ -27,9 +27,20 @@ public interface IRoleService extends IService<Role> {
 
     /**
      * 添加角色及其关联资源记录
+     *
      * @param role
      * @param resourceIds
      * @return
      */
     Boolean save(Role role, Long[] resourceIds);
+
+    Boolean update(Role role, Long[] resourceIds);
+
+    /**
+     * 获取角色和其关联的记录
+     *
+     * @param id
+     * @return
+     */
+    Role getRoleAndRelationRecords(Long id);
 }

@@ -42,5 +42,34 @@
             #{outputId}
         </foreach>
     </delete>
+    
+    <resultMap id="selectRoleAndRelationRecordsResultMap" type="Role">
+        <result column="r_id" property="id" />
+        <result column="r_name" property="name" />
+        <result column="authority_name" property="authorityName" />
+        <result column="r_channel" property="channel"/>
+        <collection property="resources" ofType="Resource" javaType="list">
+            <result column="id" property="id"/>
+            <result column="code" property="code"/>
+            <result column="pid" property="pid"/>
+            <result column="pids" property="pids"/>
+            <result column="name" property="name"/>
+            <result column="path" property="path"/>
+            <result column="url" property="url"/>
+            <result column="method" property="method"/>
+            <result column="levels" property="levels"/>
+            <result column="type" property="type"/>
+            <result column="status" property="status"/>
+            <result column="channel" property="channel"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectRoleAndRelationRecords" resultMap="selectRoleAndRelationRecordsResultMap">
+        SELECT r.id AS r_id, r.name AS r_name, r.authority_name AS authority_name, r.channel AS r_channel, res.*
+        FROM mng_role r
+            LEFT JOIN mng_role_resource rr ON rr.role_id = r.id
+            LEFT JOIN mng_resource res ON res.id = rr.resource_id
+        WHERE r.id = #{id}
+    </select>
 
 </mapper>

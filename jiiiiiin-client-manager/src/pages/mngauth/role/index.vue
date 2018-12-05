@@ -70,8 +70,15 @@
           <el-input v-model="form.authorityName" autocomplete="off"></el-input>
         </d2-el-form-item>
 
-        <d2-el-form-item label="菜单授权">
-          <el-tree :data="resources" :props="treeProps" @check-change="handleCheckChange" show-checkbox style="margin-top: 10px"></el-tree>
+        <d2-el-form-item label="资源授权">
+          <el-tree
+                  :data="resources"
+                  :props="treeProps"
+                  node-key="id"
+                  :default-expanded-keys="expandedKeys"
+                  :default-checked-keys="checkedKeys"
+                  @check-change="handleCheckChange"
+                  show-checkbox style="margin-top: 10px"></el-tree>
         </d2-el-form-item>
         <div class="dialog-form-submit-inner-container">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -117,6 +124,9 @@ export default {
         resources: []
       },
       selectRows: [],
+      // http://element.eleme.io/#/zh-CN/component/tree#mo-ren-zhan-kai-he-mo-ren-xuan-zhong
+      expandedKeys: [],
+      checkedKeys: [],
       page: {
         records: [],
         total: 0,
@@ -149,18 +159,14 @@ export default {
      * @param indeterminate 节点的子树中是否有被选中的节点
      */
     handleCheckChange(data, checked, indeterminate) {
+      console.log('checked', checked, data.name)
       if (checked) {
         this.form.resources.push(data)
       } else {
-        if (_.includes(this.form.resources, data)) {
-          _.remove(this.form.resources, item => {
-            return item.id === data.id
-          })
-        }
+        _.remove(this.form.resources, item => {
+          return item.id === data.id;
+        });
       }
-      // this.form.resources.forEach(item => {
-      //   console.log('handleCheckChange', item.name)
-      // })
     },
     qryData() {
       this.$vp.ajaxGet(`role/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
@@ -186,41 +192,79 @@ export default {
       this.qryData()
     },
     onCreate() {
-      this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
     },
-    onUpdate() {
-      this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
-      console.log('update')
+    onUpdate(item) {
+      this.$vp.ajaxAll([
+        {
+          url: `resource/${this.channel}`,
+          mode: 'GET'
+        }, {
+          url: `role/${item.id}`,
+          mode: 'GET'
+        }
+      ])
+        .then(resArr => {
+          // 这里需要应用手动把axios的data属性解析掉
+          const res = _.map(resArr, (item) => {
+            return item.data;
+          })
+          // 设置`表单 资源树`
+          this.resources = res[0].data
+          this.form = res[1].data
+          // 设置`表单 资源树`当前待更新节点所拥有的资源
+          const temp = []
+          this.form.resources.forEach(item => {
+            temp.push(item.id)
+            this.expandedKeys = temp
+            this.checkedKeys = temp
+          })
+          console.log('this.form', this.form)
+          this.dialogFormVisible = true
+        })
     },
     onDel() {
+      const roles = _.clone(this.selectRows)
       this.$vp.ajaxDel(`role`, {
         params: {
-          idList: this.selectRows
+          roles
         }
-      })
-        .then(res => {
-          this.qryData()
-        })
+      }).then(res => {
+        this.qryData();
+      }).finally(this.selectRows = []);
+    },
+    _submitFinally() {
+      this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
+      this.form = _.clone(this.formTmpl)
+      this.dialogFormVisible = false
     },
     onSubmitForm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          const params = _.clone(this.form);
           if (this.formMode === 'add') {
-            let params = _.clone(this.form);
             params.channel = this.channel
             this.$vp.ajaxPostJson('role', {
               params
             }).then(res => {
               this.qryData()
+            }).finally(() => {
+              this._submitFinally()
+            });
+          } else {
+            this.$vp.ajaxPut('role', {
+              params
+            }).then(res => {
+              this.qryData()
+            }).finally(() => {
+              this._submitFinally()
             });
           }
-          this.form = _.clone(this.formTmpl)
-          this.dialogFormVisible = false
         }
       })
     }
   },
   created() {
+    this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
     this.onCancelSubmit()
   }
 }

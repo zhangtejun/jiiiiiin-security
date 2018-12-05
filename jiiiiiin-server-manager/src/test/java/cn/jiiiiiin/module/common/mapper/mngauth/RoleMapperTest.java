@@ -44,5 +44,4 @@ public class RoleMapperTest {
         int res3 = roleMapper.insert(new Role().setAuthorityName("OPERATOR").setName("部门操作员"));
         Assert.assertTrue(SqlHelper.retBool(res3));
     }
-
 }

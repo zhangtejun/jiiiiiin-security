@@ -70,7 +70,7 @@
           left join mng_role role on mra.role_id = role.id
         where admin.username = #{username}
         <if test="channel != null">
-            and channel = #{channel}
+            and admin.channel = #{channel}
         </if>
     </select>
 

@@ -40,4 +40,6 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return
      */
     int deleteRelationResourceRecords(@Param("idList") Collection<? extends Serializable> idList);
+
+    Role selectRoleAndRelationRecords(Long id);
 }

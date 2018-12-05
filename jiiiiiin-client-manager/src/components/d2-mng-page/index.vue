@@ -146,10 +146,9 @@ export default {
       this.$emit('update:dialogFormVisible', true)
     },
     onClickUpdate() {
-      if (!_.isEmpty(this.selectRows) || this.selectRows.length === 1) {
+      if (!_.isEmpty(this.selectRows) && this.selectRows.length === 1) {
         this.$emit('update:formMode', 'edit')
-        this.$emit('update')
-        this.$emit('update:dialogFormVisible', true)
+        this.$emit('update', this.selectRows[0])
       } else {
         this.$vp.toast('请选择一条需要编辑的记录', { type: 'warning' })
       }

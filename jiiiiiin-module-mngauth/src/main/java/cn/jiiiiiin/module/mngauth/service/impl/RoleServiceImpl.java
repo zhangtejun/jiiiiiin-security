@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -31,11 +32,36 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public Boolean save(Role role, Long[] resourceIds) {
         role.insert();
-        val resList = role.getResources();
+        _parseResrouceIds2RoleProperty(role, resourceIds);
+        _clearRelationResourceRecords(role);
+        return SqlHelper.retBool(roleMapper.insertRelationResourceRecords(role));
+    }
+
+    @Override
+    public Boolean update(Role role, Long[] resourceIds) {
+        role.updateById();
+        _parseResrouceIds2RoleProperty(role, resourceIds);
+        _clearRelationResourceRecords(role);
+        return SqlHelper.retBool(roleMapper.insertRelationResourceRecords(role));
+    }
+
+    private void _parseResrouceIds2RoleProperty(Role role, Long[] resourceIds) {
+        val resList = new ArrayList<Resource>(resourceIds.length);
         for (Long id : resourceIds) {
             resList.add((Resource) new Resource().setId(id));
         }
-        return SqlHelper.retBool(roleMapper.insertRelationResourceRecords(role));
+        role.setResources(resList);
+    }
+
+    private void _clearRelationResourceRecords(Role role) {
+        val idList = new ArrayList<Long>();
+        idList.add(role.getId());
+        roleMapper.deleteRelationResourceRecords(idList);
+    }
+
+    @Override
+    public Role getRoleAndRelationRecords(Long id) {
+        return roleMapper.selectRoleAndRelationRecords(id);
     }
 
     @Transactional

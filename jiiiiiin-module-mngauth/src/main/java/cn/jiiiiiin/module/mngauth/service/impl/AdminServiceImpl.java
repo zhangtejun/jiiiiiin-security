@@ -69,6 +69,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         return SqlHelper.retBool(adminMapper.updateById(currentRecord));
     }
 
+    @Transactional
     @Override
     public Boolean delAdminAndRelationRecords(Long id, ChannelEnum channel) {
         val currentRecord = adminMapper.selectById(id);

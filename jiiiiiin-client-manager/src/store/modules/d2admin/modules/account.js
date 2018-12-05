@@ -73,7 +73,9 @@ export default {
           // 用户登录后从持久化数据加载一系列的设置
           await dispatch('load');
           commit('d2admin/gray/set', false, { root: true });
-          vm.$vp.toast('登录成功')
+          vm.$vp.toast('登录成功', {
+            type: 'success'
+          })
           // 更新路由 尝试去获取 cookie 里保存的需要重定向的页面完整地址
           const path = util.cookies.get('redirect');
           // 根据是否存有重定向页面判断如何重定向

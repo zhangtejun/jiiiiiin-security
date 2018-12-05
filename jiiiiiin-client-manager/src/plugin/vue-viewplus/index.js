@@ -73,6 +73,11 @@ export default {
       }
     },
     errDialog(content = '错误消息未定义') {
+      // 排除一些不需要弹窗（http模块）
+      switch (content) {
+        case '未授权，请登录':
+          return this;
+      }
       this.dialog(content, {
         title: '错误消息'
       });
@@ -85,7 +90,7 @@ export default {
       this.hideLoading();
     },
     accessRules: {
-      sessionTimeOut: ['-2'],
+      sessionTimeOut: [-2],
       onSessionTimeOut(response) {
         this.toast('会话超时，请重新登录', {
           type: 'warning'

@@ -3,7 +3,6 @@ package cn.jiiiiiin.module.mngauth.service.impl;
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
-import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import cn.jiiiiiin.module.mngauth.service.IRoleService;
 import lombok.val;
 import org.junit.After;
@@ -13,16 +12,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ManagerApp.class)
-public class RoleServiceImplTest {
+public class IRoleServiceTest {
 
     @Autowired
     private IRoleService roleService;
@@ -43,7 +43,6 @@ public class RoleServiceImplTest {
         Assert.assertTrue(res);
     }
 
-
     @Transactional
     @Test
     public void remove(){
@@ -51,5 +50,12 @@ public class RoleServiceImplTest {
         idList.add(1069200931105271810L);
         boolean res = roleService.remove(idList);
         Assert.assertTrue(res);
+    }
+
+    @Test
+    public void getRoleAndRelationRecords() {
+        val res = roleService.getRoleAndRelationRecords(1069853648600694786L);
+        assertNotNull(res);
+        assertNotNull(res.getResources());
     }
 }
