@@ -35,6 +35,8 @@
 
     <ul slot="hint-msg-box">
       <li>`角色标识`必须唯一</li>
+      <li>不能创建和系统管理员角色相同角色标识的记录</li>
+      <li>系统管理员角色不允许修改</li>
     </ul>
 
     <el-table
@@ -225,9 +227,7 @@ export default {
           this.resources = res[0].data
           // 更新记录，主要是expandedKeys和checkedKeys
           this._copyRoleDto(row, res[1].data)
-          console.log('this.from1', row, this.from)
           this.form = _.clone(row)
-          console.log('this.from2', row, this.from)
         })
     },
     _copyRoleDto(current, orig) {

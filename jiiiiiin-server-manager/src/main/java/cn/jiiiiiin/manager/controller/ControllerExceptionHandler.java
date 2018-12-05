@@ -1,7 +1,9 @@
 package cn.jiiiiiin.manager.controller;
 
+import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import com.baomidou.mybatisplus.extension.api.R;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,6 +32,12 @@ public class ControllerExceptionHandler {
         log.error("全局异常处理捕获到的错误", e);
         if (e instanceof NullPointerException) {
             return R.failed("服务器内部错误【空指针异常】");
+        } else if (e instanceof BusinessErrException) {
+            val businessErrException = (BusinessErrException) e;
+            val apiResult = new R<String>();
+            apiResult.setCode(businessErrException.getCode());
+            apiResult.setMsg(businessErrException.getMessage());
+            return apiResult;
         } else {
             return R.failed(e.getMessage());
         }

@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import java.util.LinkedList;
@@ -26,8 +27,12 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("mng_role")
-@ApiModel(value="Role对象", description="角色表")
+@ApiModel(value = "Role对象", description = "角色表")
 public class Role extends BaseEntity<Role> {
+
+    public static Boolean isRootRole(@NonNull Role role){
+        return role.getAuthorityName().equals("Admin") || role.getName().equals("系统管理员");
+    }
 
     private static final long serialVersionUID = 1L;
 

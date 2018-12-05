@@ -1,10 +1,15 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
+import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import cn.jiiiiiin.module.common.dto.mngauth.RoleDto;
+import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.module.common.exception.BusinessErrException;
+import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
 import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IRoleService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -36,6 +41,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Autowired
     private RoleMapper roleMapper;
 
+    @Autowired
+    private ResourceMapper resourceMapper;
+
     @Override
     public IPage<RoleDto> pageDto(@NonNull Page<RoleDto> roleDtoPage, @NonNull ChannelEnum channel, String authorityName) {
         return roleMapper.selectPageDto(roleDtoPage, channel, authorityName);
@@ -44,14 +52,22 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Transactional
     @Override
     public Boolean save(Role role, Long[] resourceIds) {
+        _checkRoleUniqueness(role);
         val res = SqlHelper.retBool(roleMapper.insert(role));
         _insertOrUpdateRelationResourceRecords(role, resourceIds);
         return res;
     }
 
+    private void _checkRoleUniqueness(Role role) {
+        if (null != roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, role.getAuthorityName()))) {
+            throw new BusinessErrException(String.format("系统已经存在【%s】角色标识的记录", role.getAuthorityName()));
+        }
+    }
+
     @Transactional
     @Override
     public Boolean update(Role role, Long[] resourceIds) {
+        _checkRoleUniqueness(role);
         val res = SqlHelper.retBool(roleMapper.updateById(role));
         _insertOrUpdateRelationResourceRecords(role, resourceIds);
         return res;
@@ -94,6 +110,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             val temp = role.getResourceIds().split(",");
             role.setCheckedKeys(temp);
             role.setExpandedKeys(temp);
+            // 前端更新角色资源记录时候需要使用资源的`pids`
+            val resources = resourceMapper.selectList(new QueryWrapper<Resource>().in(BaseEntity.ID, temp));
+            resources.forEach(item -> role.getResources().add(item));
         }
         return role;
     }

@@ -52,4 +52,6 @@ public class BaseEntity<T extends Model> extends Model<T> {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public static final String ID = "id";
 }
