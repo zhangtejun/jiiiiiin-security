@@ -22,7 +22,7 @@
 
 资源管理页面截图（支持前端Vue Router `path`关联）
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxvnj6dtv0j31hc0u0dia.jpg)
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg)
 
 角色管理页面截图
 
