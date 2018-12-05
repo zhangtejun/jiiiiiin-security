@@ -2,16 +2,20 @@
 
 一个前后端分离的内管基础项目
 
+# 原则
+
++ 以最少的表结构字段完成一个基础应用，以便在以此完成实际项目时有更多的扩充自由
+
 # 计划
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| RBAC前端权限控制 | 0% | 基于vue-viewplus自定义rbac权限控制模块 |
-| 全面集成vue-viewplus | 20% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
+| 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
 | RBAC后端权限控制 | 90% | [基于Spring Security的后端RBAC权限控制](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master/jiiiiiin-security-authorize) |
-| 操作员管理 | 2% | 权限管理的操作员管理模块 |
+| 全面集成vue-viewplus | 20% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
 | 角色管理 | 95% | 权限管理的角色管理 |
 | 资源管理 | 95% | 权限管理的资源管理模块 |
-| 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
+| 操作员管理 | 2% | 权限管理的操作员管理模块 |
+| RBAC前端权限控制 | 0% | 基于vue-viewplus自定义rbac权限控制模块 |
 
 
 # 功能截图
