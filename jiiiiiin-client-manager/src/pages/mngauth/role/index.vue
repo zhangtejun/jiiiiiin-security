@@ -43,7 +43,24 @@
             :height="listHeight"
             border
             @selection-change="handleSelectionChange"
+            @expand-change="handleExpandChangge"
             style="width: 100%">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="top" inline class="demo-table-expand">
+            <el-form-item label="资源授权">
+              <el-tree
+                      :data="resources"
+                      :props="treeProps"
+                      node-key="id"
+                      :default-expanded-keys="expandedKeys"
+                      :default-checked-keys="checkedKeys"
+                      @check-change="handleTableRowCheckChange"
+                      show-checkbox></el-tree>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column
               type="selection"
               :width="tableSelectionWidth">
@@ -54,8 +71,7 @@
       </el-table-column>
       <el-table-column
               prop="authorityName"
-              label="角色标识"
-              >
+              label="角色标识">
       </el-table-column>
     </el-table>
 
@@ -159,7 +175,6 @@ export default {
      * @param indeterminate 节点的子树中是否有被选中的节点
      */
     handleCheckChange(data, checked, indeterminate) {
-      console.log('checked', checked, data.name)
       if (checked) {
         this.form.resources.push(data)
       } else {
@@ -168,8 +183,53 @@ export default {
         });
       }
     },
+    handleTableRowCheckChange(data, checked, indeterminate) {
+      // 首次展开会通知，data为根节点，这时不做处理
+      if (data.id !== '0') {
+        if (checked) {
+          this.form.resources.push(data)
+        } else {
+          _.remove(this.form.resources, item => {
+            return item.id === data.id;
+          });
+        }
+        const params = _.clone(this.form);
+        this.$vp.ajaxPut('role', {
+          params
+        }).then(res => {
+          this.$vp.toast('授权修改成功', { type: 'success' });
+        })
+      }
+    },
     qryData() {
       this.$vp.ajaxGet(`role/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
+    },
+    handleExpandChangge(row, expandedRows) {
+      this.$vp.ajaxAll([
+        {
+          url: `resource/${this.channel}`,
+          mode: 'GET'
+        }, {
+          url: `role/${row.id}`,
+          mode: 'GET'
+        }
+      ])
+        .then(resArr => {
+          // 这里需要应用手动把axios的data属性解析掉
+          const res = _.map(resArr, (item) => {
+            return item.data;
+          })
+          // 设置`表单 资源树`
+          this.resources = res[0].data
+          this.form = row = res[1].data
+          // 设置`表单 资源树`当前待更新节点所拥有的资源
+          const temp = []
+          row.resources.forEach(item => {
+            temp.push(item.id)
+            this.expandedKeys = temp
+            this.checkedKeys = temp
+          })
+        })
     },
     handleSelectionChange(rows) {
       this.selectRows = rows
@@ -218,7 +278,6 @@ export default {
             this.expandedKeys = temp
             this.checkedKeys = temp
           })
-          console.log('this.form', this.form)
           this.dialogFormVisible = true
         })
     },

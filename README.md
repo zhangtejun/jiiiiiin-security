@@ -5,8 +5,10 @@
 # 计划
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
+| RBAC前端权限控制 | 0% | 基于vue-viewplus自定义rbac权限控制模块 |
+| RBAC后端权限控制 | 90% | 基于Spring Security的后端RBAC权限控制 |
 | 操作员管理 | 2% | 权限管理的操作员管理模块 |
-| 角色管理 | 2% | 权限管理的角色管理 |
+| 角色管理 | 95% | 权限管理的角色管理 |
 | 资源管理 | 95% | 权限管理的资源管理模块 |
 
 
@@ -17,6 +19,10 @@
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxp1lix1goj31c00u0wik.jpg)
 
 资源管理页面截图（支持前端Vue Router `path`关联）
+
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxvnj6dtv0j31hc0u0dia.jpg)
+
+角色管理页面截图
 
 # 所用技术栈
 
