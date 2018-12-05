@@ -90,7 +90,12 @@ export default {
       default: 'add'
     },
     dialogFormVisible: false,
-    onClickCreateModifyDialogFormVisible: true,
+    onClickCreateModifyDialogFormVisible: {
+      type: Boolean,
+      default() {
+        return true
+      }
+    },
     showOptionBox: false,
     selectRows: {
       type: Array,

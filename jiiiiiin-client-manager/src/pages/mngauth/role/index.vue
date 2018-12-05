@@ -1,6 +1,7 @@
 <template>
   <d2-mng-page
           @qry-data="qryData"
+          @create="onCreate"
           @update="onUpdate"
           @del="onDel"
           :page="page"
@@ -90,9 +91,10 @@
           <el-tree
                   :data="resources"
                   :props="treeProps"
+                  :default-expand-all="true"
                   node-key="id"
-                  :default-expanded-keys="expandedKeys"
-                  :default-checked-keys="checkedKeys"
+                  :default-expanded-keys="form.expandedKeys"
+                  :default-checked-keys="form.checkedKeys"
                   @check-change="handleCheckChange"
                   show-checkbox style="margin-top: 10px"></el-tree>
         </d2-el-form-item>
@@ -132,7 +134,10 @@ export default {
       form: {
         name: '',
         authorityName: '',
-        resources: []
+        resources: [],
+        // http://element.eleme.io/#/zh-CN/component/tree#mo-ren-zhan-kai-he-mo-ren-xuan-zhong
+        expandedKeys: [],
+        checkedKeys: []
       },
       formTmpl: {
         name: '',
@@ -140,9 +145,6 @@ export default {
         resources: []
       },
       selectRows: [],
-      // http://element.eleme.io/#/zh-CN/component/tree#mo-ren-zhan-kai-he-mo-ren-xuan-zhong
-      expandedKeys: [],
-      checkedKeys: [],
       page: {
         records: [],
         total: 0,
@@ -185,21 +187,21 @@ export default {
     },
     handleTableRowCheckChange(data, checked, indeterminate) {
       // 首次展开会通知，data为根节点，这时不做处理
-      // if (data.id !== '0') {
-      //   if (checked) {
-      //     this.form.resources.push(data)
-      //   } else {
-      //     _.remove(this.form.resources, item => {
-      //       return item.id === data.id;
-      //     });
-      //   }
-      //   const params = _.clone(this.form);
-      //   this.$vp.ajaxPut('role', {
-      //     params
-      //   }).then(res => {
-      //     this.$vp.toast('授权修改成功', { type: 'success' });
-      //   })
-      // }
+      if (data.id !== '0') {
+        if (checked) {
+          this.form.resources.push(data)
+        } else {
+          _.remove(this.form.resources, item => {
+            return item.id === data.id;
+          });
+        }
+        const params = _.clone(this.form);
+        this.$vp.ajaxPut('role', {
+          params
+        }).then(res => {
+          this.$vp.toast('授权修改成功', { type: 'success' });
+        })
+      }
     },
     qryData() {
       this.$vp.ajaxGet(`role/eleui/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
@@ -210,7 +212,7 @@ export default {
           url: `resource/${this.channel}`,
           mode: 'GET'
         }, {
-          url: `role/${row.id}`,
+          url: `role/eleui/${row.id}`,
           mode: 'GET'
         }
       ])
@@ -222,14 +224,19 @@ export default {
           // 设置`表单 资源树`
           this.resources = res[0].data
           // 更新记录，主要是expandedKeys和checkedKeys
-          const role = res[1].data
-          row.name = role.name
-          row.authorityName = role.authorityName
-          row.channel = role.channel
-          row.resources = role.resources
-          row.expandedKeys = role.expandedKeys
-          row.checkedKeys = role.checkedKeys
+          this._copyRoleDto(row, res[1].data)
+          console.log('this.from1', row, this.from)
+          this.form = _.clone(row)
+          console.log('this.from2', row, this.from)
         })
+    },
+    _copyRoleDto(current, orig) {
+      current.name = orig.name
+      current.authorityName = orig.authorityName
+      current.channel = orig.channel
+      current.resources = orig.resources
+      current.expandedKeys = orig.expandedKeys
+      current.checkedKeys = orig.checkedKeys
     },
     handleSelectionChange(rows) {
       this.selectRows = rows
@@ -252,6 +259,7 @@ export default {
       this.qryData()
     },
     onCreate() {
+      this.form = _.clone(this.formTmpl)
     },
     onUpdate(item) {
       this.$vp.ajaxAll([
@@ -259,7 +267,7 @@ export default {
           url: `resource/${this.channel}`,
           mode: 'GET'
         }, {
-          url: `role/${item.id}`,
+          url: `role/eleui/${item.id}`,
           mode: 'GET'
         }
       ])
@@ -271,13 +279,6 @@ export default {
           // 设置`表单 资源树`
           this.resources = res[0].data
           this.form = res[1].data
-          // 设置`表单 资源树`当前待更新节点所拥有的资源
-          const temp = []
-          this.form.resources.forEach(item => {
-            temp.push(item.id)
-            this.expandedKeys = temp
-            this.checkedKeys = temp
-          })
           this.dialogFormVisible = true
         })
     },

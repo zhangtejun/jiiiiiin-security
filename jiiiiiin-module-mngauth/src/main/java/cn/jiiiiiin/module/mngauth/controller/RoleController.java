@@ -61,32 +61,47 @@ public class RoleController extends BaseController {
     }
 
     @GetMapping("{id}")
-    public R<RoleDto> searchRoleAndRelationRecords(@PathVariable Long id) {
-        val role = roleService.getRoleAndRelationRecords(id);
-        val res = new ModelMapper().map(role, RoleDto.class);
-        val arr = new ArrayList<String>(role.getResources().size());
-        role.getResources().forEach(item -> arr.add(String.valueOf(item.getId())));
-        val temp = new String[arr.size()];
-        val keys = arr.toArray(temp);
-        res.setCheckedKeys(keys);
-        res.setExpandedKeys(keys);
-        return R.ok(res);
+    public R<RoleDto> getRoleAndRelationRecords(@PathVariable Long id) {
+        return R.ok(roleService.getRoleAndRelationRecords(id));
     }
 
-    private Long[] parseResourceIds(@NonNull Role role){
+    /**
+     * 查询角色记录及其关联的element-ui树形控件选择的资源记录
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("eleui/{id}")
+    public R<RoleDto> getRoleAndRelationEleUiResourceRecords(@PathVariable Long id) {
+        return R.ok(roleService.getRoleAndRelationEleUiResourceRecords(id));
+    }
+
+    /**
+     * 因为前端`element-ui`树形控件只能将选中的子节点和完整的父节点（其下节点全部选中的情况）的数据传递上来
+     * 故这里需要依赖{@link Resource#pids}属性，将管理的父节点收集起来
+     * <p>
+     * 1.更新role自己的resources列表，存储真正的资源记录
+     * 2.返回element-ui用户选择的资源记录ids
+     *
+     * @param role
+     * @return
+     */
+    private Long[] parseResourceIds(@NonNull Role role) {
         val resourceIdsSet = new HashSet<Long>();
+        val newResList = new ArrayList<Resource>();
         role.getResources().forEach(resource -> {
             val pids = resource.getPids().split(",");
             for (String pid : pids) {
                 if (NumberUtils.isCreatable(pid)) {
                     val temp = Long.valueOf(pid);
                     if (!temp.equals(Resource.IS_ROOT_MENU)) {
-                        resourceIdsSet.add(temp);
+                        newResList.add((Resource) new Resource().setId(temp));
                     }
                 }
             }
             resourceIdsSet.add(resource.getId());
         });
+        role.getResources().addAll(newResList);
         Long[] resourceIds = new Long[resourceIdsSet.size()];
         return resourceIdsSet.toArray(resourceIds);
     }

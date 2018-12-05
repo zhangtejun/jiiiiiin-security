@@ -45,7 +45,31 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     int deleteRelationResourceRecords(@Param("idList") Collection<? extends Serializable> idList);
 
-    Role selectRoleAndRelationRecords(Long id);
+    RoleDto selectRoleAndRelationRecords(Long id);
+
+    /**
+     * 查询角色和对应的element-ui tree选择记录
+     *
+     * @param id
+     * @return
+     */
+    RoleDto selectRoleAndRelationEleUiResourceRecords(Long id);
 
     IPage<RoleDto> selectPageDto(Page<RoleDto> page, @Param("channel") ChannelEnum channel, @Param("authorityName") String authorityName);
+
+    /**
+     * 通过role id查询对应的角色资源element-ui树形控件选择记录关联表中的资源ids
+     *
+     * @param roleId
+     * @return
+     */
+    String selectEleUiResourceRecords(Long roleId);
+
+    Boolean insertRelationEleUiResourceRecords(@Param("roleId") Long roleId, @Param("resourceIds") String resourceIds);
+
+    Boolean updateRelationEleUiResourceRecords(@Param("roleId") Long roleId, @Param("resourceIds") String resourceIds);
+
+    Boolean deleteRelationResourceEleUiResourceRecord(Long roleId);
+
+    Boolean deleteRelationResourceEleUiResourceRecords(@Param("idList") Collection<? extends Serializable> idList);
 }

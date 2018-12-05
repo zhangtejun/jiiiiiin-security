@@ -27,6 +27,18 @@
         </foreach>
     </insert>
 
+    <select id="selectEleUiResourceRecords" resultType="java.lang.String">
+        select resource_ids from mng_role_resource_for_eleui where role_id = #{roleId}
+    </select>
+
+    <insert id="insertRelationEleUiResourceRecords">
+      insert into mng_role_resource_for_eleui(role_id, resource_ids) values (#{roleId}, #{resourceIds})
+    </insert>
+
+    <update id="updateRelationEleUiResourceRecords">
+        update mng_role_resource_for_eleui set resource_ids = #{resourceIds} where role_id = #{roleId}
+    </update>
+
     <delete id="deleteRelationAdminRecords">
         delete from mng_role_admin
         where role_id IN
@@ -42,8 +54,20 @@
             #{outputId}
         </foreach>
     </delete>
-    
-    <resultMap id="selectRoleAndRelationRecordsResultMap" type="Role">
+
+    <delete id="deleteRelationResourceEleUiResourceRecord">
+      delete from mng_role_resource_for_eleui where role_id = #{roleId}
+    </delete>
+
+    <delete id="deleteRelationResourceEleUiResourceRecords">
+        delete from mng_role_resource_for_eleui
+        where role_id IN
+        <foreach collection="idList" item="outputId" open="(" separator="," close=")">
+            #{outputId}
+        </foreach>
+    </delete>
+
+    <resultMap id="selectRoleAndRelationRecordsResultMap" type="cn.jiiiiiin.module.common.dto.mngauth.RoleDto">
         <result column="r_id" property="id" />
         <result column="r_name" property="name" />
         <result column="authority_name" property="authorityName" />
@@ -70,6 +94,13 @@
             LEFT JOIN mng_role_resource rr ON rr.role_id = r.id
             LEFT JOIN mng_resource res ON res.id = rr.resource_id
         WHERE r.id = #{id}
+    </select>
+
+    <select id="selectRoleAndRelationEleUiResourceRecords"
+            resultType="cn.jiiiiiin.module.common.dto.mngauth.RoleDto">
+        SELECT r.id, r.name, r.authority_name, r.channel, rr.resource_ids AS resource_ids
+         from mng_role r left join mng_role_resource_for_eleui rr on rr.role_id = r.id
+          where r.id = #{id}
     </select>
 
     <select id="selectPageDto" resultType="cn.jiiiiiin.module.common.dto.mngauth.RoleDto">

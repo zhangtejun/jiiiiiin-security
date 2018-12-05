@@ -31,12 +31,18 @@ public interface IRoleService extends IService<Role> {
     /**
      * 添加角色及其关联资源记录
      *
-     * @param role
-     * @param resourceIds
+     * @param role 角色及其资源记录（resources属性）
+     * @param resourceIds element-ui用户选择的资源记录
      * @return
      */
     Boolean save(Role role, Long[] resourceIds);
 
+    /**
+     *
+     * @param role 角色及其资源记录（resources属性）
+     * @param resourceIds element-ui用户选择的资源记录
+     * @return
+     */
     Boolean update(Role role, Long[] resourceIds);
 
     /**
@@ -45,7 +51,9 @@ public interface IRoleService extends IService<Role> {
      * @param id
      * @return
      */
-    Role getRoleAndRelationRecords(Long id);
+    RoleDto getRoleAndRelationRecords(Long id);
 
     IPage<RoleDto> pageDto(Page<RoleDto> roleDtoPage, ChannelEnum channel, String authorityName);
+
+    RoleDto getRoleAndRelationEleUiResourceRecords(Long id);
 }

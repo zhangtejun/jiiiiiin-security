@@ -15,6 +15,12 @@ import lombok.experimental.Accessors;
 @Accessors
 public class RoleDto extends Role {
     private static final long serialVersionUID = 4460132236362989044L;
-    private String[] expandedKeys;
-    private String[] checkedKeys;
+    private String[] expandedKeys = new String[]{};
+    private String[] checkedKeys = new String[]{};
+    /**
+     * element-ui tree选中的资源ids
+     * <p>
+     * mng_role_resource_for_eleui表中的resource_ids记录
+     */
+    private String resourceIds;
 }

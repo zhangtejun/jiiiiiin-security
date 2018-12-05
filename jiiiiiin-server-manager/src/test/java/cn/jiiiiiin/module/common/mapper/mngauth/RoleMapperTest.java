@@ -58,4 +58,11 @@ public class RoleMapperTest {
         assertNotNull(res);
         log.debug("selectPageDto {}", res);
     }
+
+    @Test
+    public void selectRoleAndRelationEleUiResourceRecords() {
+        val res = roleMapper.selectRoleAndRelationEleUiResourceRecords(1070221875956686849L);
+        assertNotNull(res);
+        log.debug("selectRoleAndRelationEleUiResourceRecords {}", res);
+    }
 }
