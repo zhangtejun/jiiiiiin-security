@@ -1,7 +1,6 @@
 <template>
   <d2-mng-page
           @qry-data="qryData"
-          @create="onCreate"
           @update="onUpdate"
           @del="onDel"
           :page="page"
@@ -38,6 +37,7 @@
     </ul>
 
     <el-table
+            ref="table"
             :data="page.records"
             stripe
             :height="listHeight"
@@ -53,8 +53,8 @@
                       :data="resources"
                       :props="treeProps"
                       node-key="id"
-                      :default-expanded-keys="expandedKeys"
-                      :default-checked-keys="checkedKeys"
+                      :default-expanded-keys="props.row.expandedKeys"
+                      :default-checked-keys="props.row.checkedKeys"
                       @check-change="handleTableRowCheckChange"
                       show-checkbox></el-tree>
             </el-form-item>
@@ -185,24 +185,24 @@ export default {
     },
     handleTableRowCheckChange(data, checked, indeterminate) {
       // 首次展开会通知，data为根节点，这时不做处理
-      if (data.id !== '0') {
-        if (checked) {
-          this.form.resources.push(data)
-        } else {
-          _.remove(this.form.resources, item => {
-            return item.id === data.id;
-          });
-        }
-        const params = _.clone(this.form);
-        this.$vp.ajaxPut('role', {
-          params
-        }).then(res => {
-          this.$vp.toast('授权修改成功', { type: 'success' });
-        })
-      }
+      // if (data.id !== '0') {
+      //   if (checked) {
+      //     this.form.resources.push(data)
+      //   } else {
+      //     _.remove(this.form.resources, item => {
+      //       return item.id === data.id;
+      //     });
+      //   }
+      //   const params = _.clone(this.form);
+      //   this.$vp.ajaxPut('role', {
+      //     params
+      //   }).then(res => {
+      //     this.$vp.toast('授权修改成功', { type: 'success' });
+      //   })
+      // }
     },
     qryData() {
-      this.$vp.ajaxGet(`role/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
+      this.$vp.ajaxGet(`role/eleui/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
     },
     handleExpandChangge(row, expandedRows) {
       this.$vp.ajaxAll([
@@ -221,14 +221,14 @@ export default {
           })
           // 设置`表单 资源树`
           this.resources = res[0].data
-          this.form = row = res[1].data
-          // 设置`表单 资源树`当前待更新节点所拥有的资源
-          const temp = []
-          row.resources.forEach(item => {
-            temp.push(item.id)
-            this.expandedKeys = temp
-            this.checkedKeys = temp
-          })
+          // 更新记录，主要是expandedKeys和checkedKeys
+          const role = res[1].data
+          row.name = role.name
+          row.authorityName = role.authorityName
+          row.channel = role.channel
+          row.resources = role.resources
+          row.expandedKeys = role.expandedKeys
+          row.checkedKeys = role.checkedKeys
         })
     },
     handleSelectionChange(rows) {
@@ -241,7 +241,7 @@ export default {
     onSearch() {
       this.$refs.ruleSearchForm.validate((valid) => {
         if (valid) {
-          this.$vp.ajaxGet(`role/${this.channel}/${this.page.current}/${this.page.size}/${this.searchForm.authorityName}`).then(res => { this.page = res })
+          this.$vp.ajaxGet(`role/eleui/${this.channel}/${this.page.current}/${this.page.size}/${this.searchForm.authorityName}`).then(res => { this.page = res })
         }
       });
     },

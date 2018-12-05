@@ -72,4 +72,11 @@
         WHERE r.id = #{id}
     </select>
 
+    <select id="selectPageDto" resultType="cn.jiiiiiin.module.common.dto.mngauth.RoleDto">
+      select * from mng_role where channel = #{channel}
+        <if test="authorityName != null">
+            and authority_name like CONCAT('%',#{authorityName},'%')
+        </if>
+    </select>
+
 </mapper>

@@ -1,11 +1,16 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
+import cn.jiiiiiin.module.common.dto.mngauth.RoleDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IRoleService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import lombok.NonNull;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +33,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Autowired
     private RoleMapper roleMapper;
+
+    @Override
+    public IPage<RoleDto> pageDto(@NonNull Page<RoleDto> roleDtoPage, @NonNull ChannelEnum channel, String authorityName) {
+        return roleMapper.selectPageDto(roleDtoPage, channel, authorityName);
+    }
 
     @Override
     public Boolean save(Role role, Long[] resourceIds) {

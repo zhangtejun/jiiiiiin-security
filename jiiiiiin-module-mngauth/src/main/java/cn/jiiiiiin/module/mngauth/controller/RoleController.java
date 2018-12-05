@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.mngauth.controller;
 
 
+import cn.jiiiiiin.module.common.dto.mngauth.RoleDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
@@ -10,23 +11,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import cn.jiiiiiin.module.common.controller.BaseController;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * <p>
@@ -46,17 +42,35 @@ public class RoleController extends BaseController {
 
     @GetMapping("{channel}/{current}/{size}")
     public R<IPage<Role>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
-        return R.ok(roleService.page(new Page<Role>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
+        return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
     @GetMapping("{channel}/{current}/{size}/{authorityName}")
     public R<IPage<Role>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @PathVariable String authorityName) {
-        return R.ok(roleService.page(new Page<Role>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).eq(Role.AUTHORITY_NAME, authorityName)));
+        return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).eq(Role.AUTHORITY_NAME, authorityName)));
+    }
+
+    @GetMapping("eleui/{channel}/{current}/{size}")
+    public R<IPage<RoleDto>> elementuiTableList(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
+        return R.ok(roleService.pageDto(new Page<>(current, size), channel, null));
+    }
+
+    @GetMapping("eleui/{channel}/{current}/{size}/{authorityName}")
+    public R<IPage<RoleDto>> elementuiTableSearch(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @PathVariable String authorityName) {
+        return R.ok(roleService.pageDto(new Page<>(current, size), channel, authorityName));
     }
 
     @GetMapping("{id}")
-    public R<Role> searchRoleAndRelationRecords(@PathVariable Long id) {
-        return R.ok(roleService.getRoleAndRelationRecords(id));
+    public R<RoleDto> searchRoleAndRelationRecords(@PathVariable Long id) {
+        val role = roleService.getRoleAndRelationRecords(id);
+        val res = new ModelMapper().map(role, RoleDto.class);
+        val arr = new ArrayList<String>(role.getResources().size());
+        role.getResources().forEach(item -> arr.add(String.valueOf(item.getId())));
+        val temp = new String[arr.size()];
+        val keys = arr.toArray(temp);
+        res.setCheckedKeys(keys);
+        res.setExpandedKeys(keys);
+        return R.ok(res);
     }
 
     private Long[] parseResourceIds(@NonNull Role role){

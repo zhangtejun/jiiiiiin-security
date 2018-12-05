@@ -90,6 +90,7 @@ export default {
       default: 'add'
     },
     dialogFormVisible: false,
+    onClickCreateModifyDialogFormVisible: true,
     showOptionBox: false,
     selectRows: {
       type: Array,
@@ -143,7 +144,9 @@ export default {
     onClickCreate() {
       this.$emit('update:formMode', 'add')
       this.$emit('create')
-      this.$emit('update:dialogFormVisible', true)
+      if (this.onClickCreateModifyDialogFormVisible) {
+        this.$emit('update:dialogFormVisible', true);
+      }
     },
     onClickUpdate() {
       if (!_.isEmpty(this.selectRows) && this.selectRows.length === 1) {
@@ -163,9 +166,6 @@ export default {
     qryData() {
       this.$emit('qry-data')
     }
-  },
-  created() {
-    console.log('components page', this.page)
   }
 }
 </script>

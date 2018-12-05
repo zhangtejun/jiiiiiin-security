@@ -10,6 +10,7 @@
 | 操作员管理 | 2% | 权限管理的操作员管理模块 |
 | 角色管理 | 95% | 权限管理的角色管理 |
 | 资源管理 | 95% | 权限管理的资源管理模块 |
+| 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
 
 
 # 功能截图

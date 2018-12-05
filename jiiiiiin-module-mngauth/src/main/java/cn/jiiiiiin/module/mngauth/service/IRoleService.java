@@ -1,7 +1,10 @@
 package cn.jiiiiiin.module.mngauth.service;
 
+import cn.jiiiiiin.module.common.dto.mngauth.RoleDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.io.Serializable;
@@ -43,4 +46,6 @@ public interface IRoleService extends IService<Role> {
      * @return
      */
     Role getRoleAndRelationRecords(Long id);
+
+    IPage<RoleDto> pageDto(Page<RoleDto> roleDtoPage, ChannelEnum channel, String authorityName);
 }

@@ -1,7 +1,11 @@
 package cn.jiiiiiin.module.common.mapper.mngauth;
 
+import cn.jiiiiiin.module.common.dto.mngauth.RoleDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
+import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
@@ -42,4 +46,6 @@ public interface RoleMapper extends BaseMapper<Role> {
     int deleteRelationResourceRecords(@Param("idList") Collection<? extends Serializable> idList);
 
     Role selectRoleAndRelationRecords(Long id);
+
+    IPage<RoleDto> selectPageDto(Page<RoleDto> page, @Param("channel") ChannelEnum channel, @Param("authorityName") String authorityName);
 }
