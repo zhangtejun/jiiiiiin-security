@@ -20,7 +20,7 @@
                                 active-value="ENABLE">
                         </el-switch>
                     </el-form-item>
-                    <el-form-item>
+                    <el-form-item class="search-inner-btn-box">
                         <el-button size="small" type="primary" icon="el-icon-search" @click="onSearch" >查询</el-button>
                         <el-button size="small" icon="el-icon-refresh" @click="onCancelSubmit">重置</el-button>
                     </el-form-item>

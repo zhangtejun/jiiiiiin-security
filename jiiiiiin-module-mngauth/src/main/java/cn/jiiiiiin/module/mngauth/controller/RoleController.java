@@ -46,19 +46,19 @@ public class RoleController extends BaseController {
         return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
-    @GetMapping("{channel}/{current}/{size}/{authorityName}")
-    public R<IPage<Role>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @PathVariable String authorityName) {
-        return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).eq(Role.AUTHORITY_NAME, authorityName)));
+    @PostMapping("search/{channel}/{current}/{size}")
+    public R<IPage<Role>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Role role) {
+        return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).like(Role.AUTHORITY_NAME, role.getAuthorityName())));
     }
 
     @GetMapping("eleui/{channel}/{current}/{size}")
-    public R<IPage<RoleDto>> elementuiTableList(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
+    public R<IPage<RoleDto>> eleuiTableList(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(roleService.pageDto(new Page<>(current, size), channel, null));
     }
 
-    @GetMapping("eleui/{channel}/{current}/{size}/{authorityName}")
-    public R<IPage<RoleDto>> elementuiTableSearch(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @PathVariable String authorityName) {
-        return R.ok(roleService.pageDto(new Page<>(current, size), channel, authorityName));
+    @PostMapping("search/eleui/{channel}/{current}/{size}")
+    public R<IPage<RoleDto>> eleuiTableSearch(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Role role) {
+        return R.ok(roleService.pageDto(new Page<>(current, size), channel, role));
     }
 
     @GetMapping("{id}")

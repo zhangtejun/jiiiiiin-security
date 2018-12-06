@@ -31,6 +31,11 @@
         create_time, username, password, phone, email, channel
     </sql>
 
+    <sql id="Comm_Column_List">
+        id,
+        create_time, username, phone, email, channel
+    </sql>
+
     <insert id="insertRelationRoleRecords">
         insert into mng_role_admin(role_id, user_id) values
         <foreach collection="roles" item="item" index="index"
@@ -39,8 +44,16 @@
         </foreach>
     </insert>
 
-    <delete id="clearRelationRoleAdminRecord">
+    <delete id="deleteRelationRoleAdminRecord">
         delete from mng_role_admin where user_id = #{id}
+    </delete>
+
+    <delete id="deleteRelationRoleAdminRecords">
+        delete from mng_role_admin
+        where user_id IN
+        <foreach collection="idList" item="outputId" open="(" separator="," close=")">
+            #{outputId}
+        </foreach>
     </delete>
 
     <resultMap id="selectByUsernameResultMap" type="Admin">
@@ -71,6 +84,23 @@
         where admin.username = #{username}
         <if test="channel != null">
             and admin.channel = #{channel}
+        </if>
+    </select>
+
+    <select id="selectPageAdminDto" resultType="cn.jiiiiiin.module.common.dto.mngauth.AdminDto">
+        select
+        <include refid="Comm_Column_List"/>,
+        UNIX_TIMESTAMP(create_time) as createTimestamp,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') as createTimeStr
+        from mng_admin where channel = #{channel}
+        <if test="adminDto!= null and adminDto.username != null">
+            and username like CONCAT('%',#{adminDto.username},'%')
+        </if>
+        <if test="adminDto!= null and adminDto.phone != null">
+            and phone like CONCAT('%',#{adminDto.phone},'%')
+        </if>
+        <if test="adminDto!= null and adminDto.email != null">
+            and email like CONCAT('%',#{adminDto.email},'%')
         </if>
     </select>
 

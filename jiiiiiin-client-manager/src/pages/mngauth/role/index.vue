@@ -27,7 +27,7 @@
                 v-model="searchForm.authorityName">
         </el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="search-inner-btn-box">
         <el-button size="small" type="primary" icon="el-icon-search" @click="onSearch">查询</el-button>
         <el-button size="small" icon="el-icon-refresh" @click="onCancelSubmit">重置</el-button>
       </el-form-item>
@@ -248,7 +248,8 @@ export default {
     onSearch() {
       this.$refs.ruleSearchForm.validate((valid) => {
         if (valid) {
-          this.$vp.ajaxGet(`role/eleui/${this.channel}/${this.page.current}/${this.page.size}/${this.searchForm.authorityName}`).then(res => { this.page = res })
+          const params = this.searchForm
+          this.$vp.ajaxPostJson(`role/search/eleui/${this.channel}/${this.page.current}/${this.page.size}`, { params }).then(res => { this.page = res })
         }
       });
     },

@@ -2,6 +2,7 @@ package cn.jiiiiiin.module.mngauth.controller;
 
 
 import cn.jiiiiiin.module.common.controller.BaseController;
+import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
@@ -30,11 +31,16 @@ public class AdminController extends BaseController {
     private IAdminService adminService;
 
     @GetMapping("{channel}/{current}/{size}")
-    public R<IPage<Admin>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
-        return R.ok(adminService.page(new Page<Admin>(current, size), new QueryWrapper<Admin>().eq(Admin.CHANNEL, channel)));
+    public R<IPage<AdminDto>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
+        return R.ok(adminService.pageAdminDto(new Page<AdminDto>(current, size), channel, null));
     }
 
-    @PostMapping("{channel}/{current}/{size}")
+    @PostMapping("search/dto/{channel}/{current}/{size}")
+    public R<IPage<AdminDto>> searchAdminDto(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody AdminDto admin) {
+        return R.ok(adminService.pageAdminDto(new Page<AdminDto>(current, size), channel, admin));
+    }
+
+    @PostMapping("search/{channel}/{current}/{size}")
     public R<IPage<Admin>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Admin admin) {
         val qw = new QueryWrapper<Admin>()
                 .eq(Admin.CHANNEL, channel);
@@ -62,9 +68,15 @@ public class AdminController extends BaseController {
         return success(admin);
     }
 
+    @DeleteMapping("{channel}")
+    public R<Boolean> dels(@PathVariable ChannelEnum channel, @RequestBody String[] ids) {
+//        return success(adminService.removeAdminsAndRelationRecords(ids, channel));
+        return null;
+    }
+
     @DeleteMapping("{channel}/{id}")
     public R<Boolean> del(@PathVariable ChannelEnum channel, @PathVariable Long id) {
-        return success(adminService.delAdminAndRelationRecords(id, channel));
+        return success(adminService.removeAdminAndRelationRecords(id, channel));
     }
 
 }

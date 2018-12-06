@@ -105,8 +105,11 @@
 
     <select id="selectPageDto" resultType="cn.jiiiiiin.module.common.dto.mngauth.RoleDto">
       select * from mng_role where channel = #{channel}
-        <if test="authorityName != null">
-            and authority_name like CONCAT('%',#{authorityName},'%')
+        <if test="role!= null and role.name != null">
+            and name like CONCAT('%',#{role.name},'%')
+        </if>
+        <if test="role!= null and role.authorityName != null">
+            and authority_name like CONCAT('%',#{role.authorityName},'%')
         </if>
     </select>
 

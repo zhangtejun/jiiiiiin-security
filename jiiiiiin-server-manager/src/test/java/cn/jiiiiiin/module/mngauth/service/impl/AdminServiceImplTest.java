@@ -8,9 +8,7 @@ import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.val;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +90,7 @@ public class AdminServiceImplTest {
     @Transactional
     @Test
     public void delAdminAndRelationRecords() {
-        val res = adminService.delAdminAndRelationRecords(1069587774891364354L, ChannelEnum.MNG);
+        val res = adminService.removeAdminAndRelationRecords(1069587774891364354L, ChannelEnum.MNG);
         assertTrue(res);
     }
 

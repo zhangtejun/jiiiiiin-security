@@ -14,9 +14,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import lombok.NonNull;
 import lombok.val;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -45,8 +42,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     private ResourceMapper resourceMapper;
 
     @Override
-    public IPage<RoleDto> pageDto(@NonNull Page<RoleDto> roleDtoPage, @NonNull ChannelEnum channel, String authorityName) {
-        return roleMapper.selectPageDto(roleDtoPage, channel, authorityName);
+    public IPage<RoleDto> pageDto(Page<RoleDto> roleDtoPage, ChannelEnum channel, Role role) {
+        return roleMapper.selectPageDto(roleDtoPage, channel, role);
     }
 
     @Transactional
@@ -77,6 +74,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         _clearRelationResourceRecords(role);
         if (resourceIds.length > 0) {
             // 添加/更新角色资源element-ui树形控件选择记录关联表
+            // String.join(",", List<String>)
             roleMapper.insertRelationEleUiResourceRecords(role.getId(), StringUtils.join(resourceIds, ","));
             // 添加/更新角色资源记录关联表
             roleMapper.insertRelationResourceRecords(role);

@@ -53,7 +53,7 @@ public interface IRoleService extends IService<Role> {
      */
     RoleDto getRoleAndRelationRecords(Long id);
 
-    IPage<RoleDto> pageDto(Page<RoleDto> roleDtoPage, ChannelEnum channel, String authorityName);
+    IPage<RoleDto> pageDto(Page<RoleDto> roleDtoPage, ChannelEnum channel, Role role);
 
     RoleDto getRoleAndRelationEleUiResourceRecords(Long id);
 }

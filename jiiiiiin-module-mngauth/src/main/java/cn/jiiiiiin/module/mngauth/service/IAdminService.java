@@ -1,7 +1,11 @@
 package cn.jiiiiiin.module.mngauth.service;
 
+import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,5 +67,15 @@ public interface IAdminService extends IService<Admin> {
      * @param channel
      * @return
      */
-    Boolean delAdminAndRelationRecords(Long id, ChannelEnum channel);
+    Boolean removeAdminAndRelationRecords(Long id, ChannelEnum channel);
+
+    /**
+     * 批量删除用户和其相关记录
+     * @param idList
+     * @param channel
+     * @return
+     */
+    Boolean removeAdminsAndRelationRecords(String idList, ChannelEnum channel);
+
+    IPage<AdminDto> pageAdminDto(Page<AdminDto> page, ChannelEnum channel, AdminDto adminDto);
 }

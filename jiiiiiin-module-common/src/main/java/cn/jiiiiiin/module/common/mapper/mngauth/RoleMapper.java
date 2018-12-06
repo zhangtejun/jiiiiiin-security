@@ -55,7 +55,7 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     RoleDto selectRoleAndRelationEleUiResourceRecords(Long id);
 
-    IPage<RoleDto> selectPageDto(Page<RoleDto> page, @Param("channel") ChannelEnum channel, @Param("authorityName") String authorityName);
+    IPage<RoleDto> selectPageDto(Page<RoleDto> page, @Param("channel") ChannelEnum channel, @Param("role") Role role);
 
     /**
      * 通过role id查询对应的角色资源element-ui树形控件选择记录关联表中的资源ids

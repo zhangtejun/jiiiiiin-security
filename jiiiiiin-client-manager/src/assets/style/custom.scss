@@ -7,11 +7,12 @@
   width: 160px;
   margin: 0 auto;
 }
-.mng-list-title-hint-btn{
+
+.mng-list-title-hint-btn {
   float: right;
 }
 
-body{
+body {
   #app {
     .mng-list {
       .d2-container-full__footer {
@@ -19,10 +20,26 @@ body{
       }
     }
 
-    .el-table{
-      .el-form-item__label {
-        color: #99a9bf
+    .mng-list {
+
+      .el-form-item {
+        margin-bottom: 2px;
       }
+
+      .search-inner-btn-box{
+      }
+
+      .mng-list-option-box{
+        margin-top: 15px;
+      }
+
+      .el-table {
+        .el-form-item__label {
+          color: #99a9bf
+        }
+
+      }
+
     }
 
   }

@@ -41,7 +41,7 @@ public class MngAuthUserDetailsService implements UserDetailsService {
         if (optionalAdmin == null) {
             throw new UsernameNotFoundException("用户名密码不符");
         } else {
-            _formatResource(optionalAdmin);
+            _parserResource(optionalAdmin);
             return new MngUserDetails(optionalAdmin);
         }
     }
@@ -51,7 +51,7 @@ public class MngAuthUserDetailsService implements UserDetailsService {
      *
      * @param optionalAdmin
      */
-    private void _formatResource(Admin optionalAdmin) {
+    private void _parserResource(Admin optionalAdmin) {
         val roles = optionalAdmin.getRoles();
         // 过滤菜单和授权资源
         val menuResources = new HashSet<Resource>();
