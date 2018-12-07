@@ -14,7 +14,7 @@
 | 全面集成vue-viewplus | 20% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
 | 角色管理 | 95% | 权限管理的角色管理 |
 | 资源管理 | 95% | 权限管理的资源管理模块 |
-| 操作员管理 | 95% | 权限管理的操作员管理模块 |
+| 用户管理 | 95% | 权限管理的操作员管理模块 |
 | RBAC前端权限控制 | 0% | 基于vue-viewplus自定义rbac权限控制模块 |
 
 
@@ -29,6 +29,13 @@
 ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg)
 
 角色管理页面截图
+
+
+![image-20181207163547451](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg)
+
+用户管理页面截图
+
+
 
 # 所用技术栈
 

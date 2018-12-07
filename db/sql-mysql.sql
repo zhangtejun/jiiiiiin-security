@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.24)
 # Database: vplusdb
-# Generation Time: 2018-12-06 02:45:57 +0000
+# Generation Time: 2018-12-07 08:34:01 +0000
 # ************************************************************
 
 
@@ -42,8 +42,7 @@ LOCK TABLES `mng_admin` WRITE;
 
 INSERT INTO `mng_admin` (`id`, `create_time`, `username`, `password`, `phone`, `email`, `channel`)
 VALUES
-	(1,'2018-11-10 23:12:02','admin','$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq','15399999999','15399999999@163.com',0),
-	(1069587774891364354,'2018-12-03 21:42:52','User','$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq','153989999999','153989999999@163.com',0);
+	(1,'2018-11-10 23:12:02','admin','$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq','15399999999','15399999999@163.com',0);
 
 /*!40000 ALTER TABLE `mng_admin` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -78,7 +77,7 @@ LOCK TABLES `mng_resource` WRITE;
 INSERT INTO `mng_resource` (`id`, `pid`, `pids`, `name`, `icon`, `url`, `method`, `num`, `levels`, `type`, `status`, `channel`, `path`)
 VALUES
 	(1061818316563202049,0,'0','权限管理','cog','','',3,1,1,1,0,'/mngauth'),
-	(1061818318412890114,1061818316563202049,'0,1061818316563202049','操作员管理','users','admin','GET',1,2,1,1,0,'/mngauth/admin'),
+	(1061818318412890114,1061818316563202049,'0,1061818316563202049','用户管理','users','admin','GET',1,2,1,1,0,'/mngauth/admin'),
 	(1061818318463221761,1061818316563202049,'0,1061818316563202049','角色管理','id-badge','role','GET',2,2,1,1,0,'/mngauth/role'),
 	(1061818318517747714,1061818316563202049,'0,1061818316563202049','资源管理','tree','resource','GET',3,2,1,1,0,'/mngauth/resource'),
 	(1061993676089069570,1061818318517747714,'0,1061818316563202049,1061818318517747714','新增资源',NULL,'resource','POST',2,3,0,1,0,NULL),
@@ -135,8 +134,7 @@ LOCK TABLES `mng_role_admin` WRITE;
 
 INSERT INTO `mng_role_admin` (`id`, `role_id`, `user_id`)
 VALUES
-	(1,1061277220292595713,1),
-	(9,1061277220292595713,1069587774891364354);
+	(1,1061277220292595713,1);
 
 /*!40000 ALTER TABLE `mng_role_admin` ENABLE KEYS */;
 UNLOCK TABLES;
