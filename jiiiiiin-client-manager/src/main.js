@@ -20,6 +20,7 @@ import viewPlusOptions, { mixinConfig as viewPlusMixinConfig } from '@/plugin/vu
 import jsComponents from '@/plugin/vue-viewplus/js-ui-component.js'
 import ZkTable from 'vue-table-with-tree-grid'
 import '@/assets/style/custom.scss'
+import _ from 'lodash'
 
 const {
   debug,
@@ -57,7 +58,14 @@ new Vue({
   render: h => h(App),
   created() {
     // 处理路由 得到每一级的路由设置
-    this.$store.commit('d2admin/page/init', frameInRoutes)
+    this.$store.commit('d2admin/page/init', frameInRoutes);
+    const menus = this.$vp.cacheLoadFromSessionStore('menus');
+    if (!_.isNil(menus)) {
+      // 设置侧边栏菜单
+      this.$store.commit('d2admin/menu/asideSet', menus);
+      // 初始化菜单搜索功能
+      this.$store.commit('d2admin/search/init', menus);
+    }
   },
   mounted() {
     // 展示系统信息

@@ -60,11 +60,12 @@ export default {
           util.cookies.set('token', res.details.sessionId);
           const menus = _delEmptyChildren(res.principal.admin.menus);
           // 设置顶栏菜单
-          commit('d2admin/menu/headerSet', menus, { root: true });
+          // commit('d2admin/menu/headerSet', menus, { root: true });
           // 设置侧边栏菜单
           commit('d2admin/menu/asideSet', menus, { root: true });
           // 初始化菜单搜索功能
           commit('d2admin/search/init', menus, { root: true });
+          vm.$vp.cacheSaveToSessionStore('menus', menus)
           console.log('menus', menus);
           // 设置 vuex 用户信息
           await dispatch('d2admin/user/set', {
