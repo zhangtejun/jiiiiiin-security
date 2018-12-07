@@ -206,6 +206,7 @@ export default {
       }
     },
     qryData() {
+      this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
       this.$vp.ajaxGet(`role/eleui/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
     },
     handleExpandChangge(row, expandedRows) {
@@ -291,7 +292,8 @@ export default {
         }
       }).then(res => {
         this.qryData();
-      }).finally(this.selectRows = []);
+        this.selectRows = []
+      })
     },
     _submitFinally() {
       this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
@@ -325,7 +327,6 @@ export default {
     }
   },
   created() {
-    this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
     this.onCancelSubmit()
   }
 }

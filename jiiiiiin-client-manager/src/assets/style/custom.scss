@@ -22,8 +22,10 @@ body {
 
     .mng-list {
 
-      .el-form-item {
-        margin-bottom: 2px;
+      .el-form--inline{
+        .el-form-item {
+          margin-bottom: 2px;
+        }
       }
 
       .search-inner-btn-box{

@@ -24,6 +24,7 @@ import cn.jiiiiiin.module.common.controller.BaseController;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * <p>
@@ -41,13 +42,18 @@ public class RoleController extends BaseController {
     @Autowired
     private IRoleService roleService;
 
+    @GetMapping("list/{channel}")
+    public R<List<Role>> page(@PathVariable ChannelEnum channel) {
+        return R.ok(roleService.list(new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
+    }
+
     @GetMapping("{channel}/{current}/{size}")
-    public R<IPage<Role>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
+    public R<IPage<Role>> page(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
     @PostMapping("search/{channel}/{current}/{size}")
-    public R<IPage<Role>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Role role) {
+    public R<IPage<Role>> searchPage(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Role role) {
         return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).like(Role.AUTHORITY_NAME, role.getAuthorityName())));
     }
 

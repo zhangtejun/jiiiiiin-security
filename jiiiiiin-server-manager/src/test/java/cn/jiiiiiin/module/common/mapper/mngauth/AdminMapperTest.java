@@ -52,6 +52,13 @@ public class AdminMapperTest {
     }
 
     @Test
+    public void selectRoleRecordsById() {
+        val res = adminMapper.selectRoleRecordsById(1L);
+        log.info("selectRoleRecordsById res {}", res);
+        Assert.assertNotNull(res);
+    }
+
+    @Test
     @Rollback
     public void testInsert() {
         int res = adminMapper.insert(new Admin().setUsername("admin").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setEmail("15399999999@163.com").setPhone("15399999999"));

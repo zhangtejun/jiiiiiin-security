@@ -2,7 +2,9 @@ package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
+import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import cn.jiiiiiin.module.common.mapper.mngauth.AdminMapper;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
@@ -16,12 +18,17 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * <p>
@@ -41,6 +48,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Autowired
     ResourceMapper resourceMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public Admin signInByUsername(@NonNull String username, ChannelEnum channel) {
         log.debug("登录用户名 {} {}", channel, username);
@@ -49,43 +59,77 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         return res;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean saveRelationRoleRecords(Admin admin) {
         adminMapper.deleteRelationRoleAdminRecord(admin.getId());
         return SqlHelper.retBool(adminMapper.insertRelationRoleRecords(admin));
     }
 
-    @Transactional
-    @Override
-    public Boolean saveAdminAndRelationRecords(Admin admin) {
-        admin.setCreateTime(LocalDateTime.now());
-        val res = SqlHelper.retBool(adminMapper.insert(admin));
-        saveRelationRoleRecords(admin);
-        return res;
+    private void _checkAdminUniqueness(Admin admin) {
+        val temp = adminMapper.selectByUsername(admin.getUsername(), admin.getChannel());
+        if (temp != null) {
+            throw new BusinessErrException(String.format("当前用户名【%s】已经存在，请重新选择一个用户名", admin.getUsername()));
+        }
     }
 
     @Transactional
     @Override
-    public Boolean updateAdminAndRelationRecords(Admin admin) {
+    public Boolean saveAdminAndRelationRecords(AdminDto admin) {
+        _checkAdminUniqueness(admin);
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        admin.setCreateTime(LocalDateTime.now());
+        val res = SqlHelper.retBool(adminMapper.insert(admin));
+        _parseRoleIds2Roles(admin);
+        saveRelationRoleRecords(admin);
+        return res;
+    }
+
+    /**
+     * 前端将添加和修改的用户管理角色ids存储在{@link AdminDto#roleIds}中，
+     * 需要进行转换以便{@link AdminServiceImpl#saveRelationRoleRecords(Admin)}可以完成管理记录
+     *
+     * @param admin
+     */
+    private void _parseRoleIds2Roles(@NonNull AdminDto admin) {
+        // 因为更新的时候前端可能会将`旧的` admin#roles属性传回来，故这里指认roleIds属性
+        val roles = new HashSet<Role>(admin.getRoleIds().length);
+        for (String id : admin.getRoleIds()) {
+            roles.add((Role) new Role().setId(Long.valueOf(id)));
+        }
+        admin.setRoles(roles);
+    }
+
+    @Transactional
+    @Override
+    public Boolean updateAdminAndRelationRecords(AdminDto admin) {
         val currentRecord = adminMapper.selectById(admin.getId());
+        if (!currentRecord.getUsername().equals(admin.getUsername())) {
+            _checkAdminUniqueness(admin);
+        }
         currentRecord.setUsername(admin.getUsername());
-        currentRecord.setPassword(admin.getPassword());
+        // 修改密码规则
+        val pwd = admin.getPassword();
+        if (StringUtils.isNotEmpty(pwd) && !passwordEncoder.matches(pwd, currentRecord.getPassword())) {
+            currentRecord.setPassword(passwordEncoder.encode(pwd));
+        }
         currentRecord.setPhone(admin.getPhone());
         currentRecord.setEmail(admin.getEmail());
+        _parseRoleIds2Roles(admin);
         saveRelationRoleRecords(admin);
         return SqlHelper.retBool(adminMapper.updateById(currentRecord));
     }
 
     @Transactional
     @Override
-    public Boolean removeAdminAndRelationRecords(Long id, ChannelEnum channel) {
+    public Boolean removeAdminAndRelationRecord(Long id) {
         val currentRecord = adminMapper.selectById(id);
         adminMapper.deleteRelationRoleAdminRecord(id);
         return SqlHelper.delBool(adminMapper.deleteById(currentRecord));
     }
 
     @Override
-    public Boolean removeAdminsAndRelationRecords(String idList, ChannelEnum channel) {
+    public Boolean removeAdminsAndRelationRecords(String idList) {
         val ids = Arrays.asList(idList.split(","));
         adminMapper.deleteRelationRoleAdminRecords(ids);
         return SqlHelper.delBool(adminMapper.deleteBatchIds(ids));
@@ -94,5 +138,30 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public IPage<AdminDto> pageAdminDto(Page<AdminDto> page, ChannelEnum channel, AdminDto adminDto) {
         return adminMapper.selectPageAdminDto(page, channel, adminDto);
+    }
+
+    @Override
+    public AdminDto getAdminAndRelationRecords(Long id) {
+        val res = adminMapper.selectRoleRecordsById(id);
+        return adminMapper.selectRoleRecordsById(id);
+    }
+
+    @Override
+    public Boolean updatePwd(AdminDto admin) {
+        val currentRecord = adminMapper.selectById(admin.getId());
+        // 修改密码规则
+        val pwd = admin.getPassword();
+        if (StringUtils.isEmpty(pwd)) {
+            throw new BusinessErrException("密码不能为空");
+        }
+        val length = pwd.length();
+        if (length < 6 || length > 16) {
+            throw new BusinessErrException("密码长度必须在（6~16）位之间");
+        }
+        if (passwordEncoder.matches(pwd, currentRecord.getPassword())) {
+            throw new BusinessErrException("新旧密码相同");
+        }
+        currentRecord.setPassword(passwordEncoder.encode(pwd));
+        return SqlHelper.retBool(adminMapper.updateById(currentRecord));
     }
 }

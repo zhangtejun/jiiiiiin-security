@@ -66,7 +66,7 @@ export default {
       switch (status) {
         case 401:
           this.toast('会话超时，请重新登录', {
-            type: 'warning'
+            type: 'error'
           });
           store.dispatch('d2admin/account/logout', { vm: this });
           break;
@@ -93,7 +93,7 @@ export default {
       sessionTimeOut: [-2],
       onSessionTimeOut(response) {
         this.toast('会话超时，请重新登录', {
-          type: 'warning'
+          type: 'error'
         });
         store.dispatch('d2admin/account/logout', { vm: this });
       },

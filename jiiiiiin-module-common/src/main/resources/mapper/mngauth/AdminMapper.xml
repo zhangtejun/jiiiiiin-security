@@ -32,8 +32,8 @@
     </sql>
 
     <sql id="Comm_Column_List">
-        id,
-        create_time, username, phone, email, channel
+        a.id,
+        a.create_time, a.username, a.phone, a.email, a.channel
     </sql>
 
     <insert id="insertRelationRoleRecords">
@@ -68,8 +68,6 @@
             <result column="role_id" property="id"/>
             <result column="name" property="name"/>
             <result column="authority_name" property="authorityName"/>
-            <result column="num" property="num"/>
-            <result column="pid" property="pid"/>
         </collection>
     </resultMap>
 
@@ -92,7 +90,7 @@
         <include refid="Comm_Column_List"/>,
         UNIX_TIMESTAMP(create_time) as createTimestamp,
         DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') as createTimeStr
-        from mng_admin where channel = #{channel}
+        from mng_admin as a where channel = #{channel}
         <if test="adminDto!= null and adminDto.username != null">
             and username like CONCAT('%',#{adminDto.username},'%')
         </if>
@@ -102,6 +100,34 @@
         <if test="adminDto!= null and adminDto.email != null">
             and email like CONCAT('%',#{adminDto.email},'%')
         </if>
+    </select>
+
+    <resultMap id="selectRoleRecordsByIdResultMap" type="cn.jiiiiiin.module.common.dto.mngauth.AdminDto">
+        <result column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="username" property="username"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="channel" property="channel"/>
+        <result column="createTimestamp" property="createTimestamp"/>
+        <result column="createTimeStr" property="createTimeStr"/>
+        <collection property="roles" ofType="Role" javaType="list">
+            <result column="role_id" property="id"/>
+            <result column="role_name" property="name"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectRoleRecordsById" resultMap="selectRoleRecordsByIdResultMap">
+        select
+        <include refid="Comm_Column_List"/>,
+        UNIX_TIMESTAMP(create_time) as createTimestamp,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') as createTimeStr,
+        role.name as role_name,
+        role.id as role_id
+        from mng_admin as a
+        left join mng_role_admin mra on a.id = mra.user_id
+        left join mng_role role on mra.role_id = role.id
+        where a.id = #{id}
     </select>
 
 </mapper>

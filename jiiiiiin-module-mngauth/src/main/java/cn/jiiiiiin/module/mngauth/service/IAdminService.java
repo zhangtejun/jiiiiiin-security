@@ -50,7 +50,7 @@ public interface IAdminService extends IService<Admin> {
      * @param admin
      * @return
      */
-    Boolean saveAdminAndRelationRecords(@NonNull Admin admin);
+    Boolean saveAdminAndRelationRecords(AdminDto admin);
 
     /**
      * 更新用户和关联的角色记录
@@ -58,24 +58,46 @@ public interface IAdminService extends IService<Admin> {
      * @param admin
      * @return
      */
-    Boolean updateAdminAndRelationRecords(@NonNull Admin admin);
+    Boolean updateAdminAndRelationRecords(AdminDto admin);
 
     /**
      * 删除和用户相关的记录和用户记录
      *
      * @param id
-     * @param channel
      * @return
      */
-    Boolean removeAdminAndRelationRecords(Long id, ChannelEnum channel);
+    Boolean removeAdminAndRelationRecord(Long id);
 
     /**
      * 批量删除用户和其相关记录
+     *
      * @param idList
-     * @param channel
      * @return
      */
-    Boolean removeAdminsAndRelationRecords(String idList, ChannelEnum channel);
+    Boolean removeAdminsAndRelationRecords(String idList);
 
+    /**
+     * 分页查询用户前端显示记录
+     *
+     * @param page
+     * @param channel
+     * @param adminDto
+     * @return
+     */
     IPage<AdminDto> pageAdminDto(Page<AdminDto> page, ChannelEnum channel, AdminDto adminDto);
+
+    /**
+     * 查询用户和管理记录
+     *
+     * @param id
+     * @return
+     */
+    AdminDto getAdminAndRelationRecords(Long id);
+
+    /**
+     * 更新用户的密码
+     * @param admin
+     * @return
+     */
+    Boolean updatePwd(AdminDto admin);
 }

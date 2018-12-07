@@ -54,4 +54,6 @@ public interface AdminMapper extends BaseMapper<Admin> {
     int deleteRelationRoleAdminRecords(@Param("idList") Collection<? extends Serializable> idList);
 
     IPage<AdminDto> selectPageAdminDto(Page<AdminDto> page,  @Param("channel") ChannelEnum channel,  @Param("adminDto") AdminDto adminDto);
+
+    AdminDto selectRoleRecordsById(Long id);
 }

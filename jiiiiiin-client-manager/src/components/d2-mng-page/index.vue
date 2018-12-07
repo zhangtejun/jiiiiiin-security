@@ -27,6 +27,7 @@
                     <el-button size="small" type="primary" @click="onClickCreate">新增</el-button>
                     <el-button size="small" @click="onClickUpdate">修改</el-button>
                     <el-button size="small" type="danger" @click="onClickDel">删除</el-button>
+                    <slot name="option-box-attch-but"></slot>
                 </el-col>
                 <el-col :span="1">
                     <el-popover

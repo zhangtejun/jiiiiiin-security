@@ -48,10 +48,10 @@
     </el-form>
 
     <ul slot="hint-msg-box">
-      <li>`角色名称和角色标识`必须唯一</li>
-      <li>不能创建和系统管理员角色相同角色标识的记录</li>
-      <li>系统管理员角色不允许修改</li>
+      <li>`用户名`必须唯一</li>
+      <li>不能删除登录用户记录</li>
     </ul>
+    <el-button  slot="option-box-attch-but" size="small" @click="onClickModifyPwd">修改用户密码</el-button>
 
     <el-table
             ref="table"
@@ -65,15 +65,8 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="top" inline class="demo-table-expand">
-            <el-form-item label="资源授权">
-              <el-tree
-                      :data="resources"
-                      :props="treeProps"
-                      node-key="id"
-                      :default-expanded-keys="props.row.expandedKeys"
-                      :default-checked-keys="props.row.checkedKeys"
-                      @check-change="handleTableRowCheckChange"
-                      show-checkbox></el-tree>
+            <el-form-item label="授权角色">
+              <el-tag v-for="role in props.row.roles" v-bind:key="role.id" style="margin-right: 10px">{{role.name}}</el-tag>
             </el-form-item>
           </el-form>
         </template>
@@ -107,26 +100,58 @@
           <el-input v-model="form.username" autocomplete="off"></el-input>
         </d2-el-form-item>
 
-        <d2-el-form-item label="密码" :required="true" prop="password">
-          <el-input v-model="form.password" autocomplete="off"></el-input>
+        <d2-el-form-item label="密码" :required="true" prop="password" v-if="formMode === 'add'">
+          <el-input v-model="form.password" autocomplete="off" type="password"></el-input>
         </d2-el-form-item>
 
+        <d2-el-form-item label="资源授权" :required="true" prop="roleIds">
+          <el-select v-model="form.roleIds" multiple placeholder="请选择">
+            <el-option
+                    v-for="item in rolesOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+            </el-option>
+          </el-select>
+        </d2-el-form-item>
         <d2-el-form-item label="手机号">
-          <el-input v-model="form.phone" autocomplete="off"></el-input>
+          <el-input v-model="form.phone" autocomplete="off" type="tel"></el-input>
         </d2-el-form-item>
 
         <d2-el-form-item label="邮箱">
-          <el-input v-model="form.email" autocomplete="off"></el-input>
+          <el-input v-model="form.email" autocomplete="off" type="email"></el-input>
         </d2-el-form-item>
 
-        <d2-el-form-item label="资源授权">
-        </d2-el-form-item>
         <div class="dialog-form-submit-inner-container">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" native-type="submit" @click="onSubmitForm">确 定</el-button>
         </div>
       </div>
     </el-form>
+
+    <el-dialog
+            title="修改密码"
+            :visible.sync="dialogModifyPwdFormVisible"
+            width="70%"
+            :modal="true">
+      <el-form :model="form" :rules="rulesModifyPwd" ref="modifyPwdForm" @submit.native.prevent>
+        <div class="dialog-form-submit-container">
+
+          <d2-el-form-item label="用户名" :required="true" prop="username">
+            <el-input v-model="form.username" autocomplete="off" :disabled="true"></el-input>
+          </d2-el-form-item>
+
+          <d2-el-form-item label="密码" :required="true" prop="password">
+            <el-input v-model="form.password" autocomplete="off" type="password"></el-input>
+          </d2-el-form-item>
+
+          <div class="dialog-form-submit-inner-container">
+            <el-button @click="dialogModifyPwdFormVisible = false">取 消</el-button>
+            <el-button type="primary" native-type="submit" @click="onSubmitModifyPwdForm">确 定</el-button>
+          </div>
+        </div>
+      </el-form>
+    </el-dialog>
   </d2-mng-page>
 </template>
 
@@ -137,20 +162,35 @@ export default {
   name: 'mngauth-role',
   data () {
     return {
+      rolesOptions: [],
       formMode: 'add',
       dialogFormVisible: false,
-      rules: {
+      dialogModifyPwdFormVisible: false,
+      rulesModifyPwd: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 4, max: 16, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        ],
+        roleIds: [{ required: true, message: '请选择授权角色，可以多选', trigger: 'change' }]
+      },
+      chooseRoles: [],
       form: {
         username: '',
         password: '',
         phone: '',
-        email: ''
+        email: '',
+        roleIds: []
       },
       formTmpl: {},
       selectRows: [],
@@ -182,56 +222,68 @@ export default {
     })
   },
   methods: {
-    handleTableRowCheckChange(data, checked, indeterminate) {
-      // 首次展开会通知，data为根节点，这时不做处理
-      // if (data.id !== '0') {
-      //   if (checked) {
-      //     this.form.resources.push(data)
-      //   } else {
-      //     _.remove(this.form.resources, item => {
-      //       return item.id === data.id;
-      //     });
-      //   }
-      //   const params = _.clone(this.form);
-      //   this.$vp.ajaxPut('role', {
-      //     params
-      //   }).then(res => {
-      //     this.$vp.toast('授权修改成功', { type: 'success' });
-      //   })
-      // }
+    onSubmitModifyPwdForm() {
+      this.$refs.modifyPwdForm.validate((valid) => {
+        if (valid) {
+          const params = _.clone(this.form);
+          delete params.roles;
+          delete params.createTime;
+          this.$vp.ajaxPut('admin/pwd', {
+            params
+          }).then(res => {
+            this.qryData();
+          }).finally(() => {
+            this.dialogFormVisible = false
+            this._submitFinally();
+          });
+        }
+      });
+    },
+    _loadRecords(item, callback) {
+      this.$vp.ajaxGet(`admin/${item.id}`)
+        .then(res => {
+          // 解析得到roleIds
+          const roleIds = []
+          res.roles.forEach(item => {
+            roleIds.push(item.id)
+          })
+          res.roleIds = roleIds
+          this._copyDto(item, res)
+          this.form = _.clone(item)
+          callback()
+        })
+    },
+    onClickModifyPwd() {
+      if (!_.isEmpty(this.selectRows) && this.selectRows.length === 1) {
+        const item = this.selectRows[0]
+        this._loadRecords(item, () => { this.dialogModifyPwdFormVisible = true })
+      } else {
+        this.$vp.toast('请选择一条需要编辑的记录', { type: 'warning' })
+      }
     },
     qryData() {
       this.$vp.ajaxGet(`admin/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
+      this.$vp.ajaxGet(`role/list/${this.channel}`).then(res => { this.rolesOptions = res })
     },
     handleExpandChangge(row, expandedRows) {
-      // this.$vp.ajaxAll([
-      //   {
-      //     url: `resource/${this.channel}`,
-      //     mode: 'GET'
-      //   }, {
-      //     url: `role/eleui/${row.id}`,
-      //     mode: 'GET'
-      //   }
-      // ])
-      //   .then(resArr => {
-      //     // 这里需要应用手动把axios的data属性解析掉
-      //     const res = _.map(resArr, (item) => {
-      //       return item.data;
-      //     })
-      //     // 设置`表单 资源树`
-      //     this.resources = res[0].data
-      //     // 更新记录，主要是expandedKeys和checkedKeys
-      //     this._copyRoleDto(row, res[1].data)
-      //     this.form = _.clone(row)
-      //   })
+      this.$vp.ajaxGet(`admin/${row.id}`)
+        .then(res => {
+          this._copyDto(row, res)
+          this.form = _.clone(row)
+        })
     },
-    _copyRoleDto(current, orig) {
-      // current.name = orig.name
-      // current.authorityName = orig.authorityName
-      // current.channel = orig.channel
-      // current.resources = orig.resources
-      // current.expandedKeys = orig.expandedKeys
-      // current.checkedKeys = orig.checkedKeys
+    // 因为不能将一个普通json对象直接覆盖vue的响应式对象，故做此函数
+    _copyDto(current, orig) {
+      current.username = orig.username
+      current.channel = orig.channel
+      current.createTime = orig.createTime
+      current.createTimeStr = orig.createTimeStr
+      current.createTimestamp = orig.createTimestamp
+      current.email = orig.email
+      current.menus = orig.menus
+      current.phone = orig.phone
+      current.roleIds = orig.roleIds
+      current.roles = orig.roles
     },
     handleSelectionChange(rows) {
       this.selectRows = rows
@@ -257,25 +309,7 @@ export default {
       this.form = _.clone(this.formTmpl)
     },
     onUpdate(item) {
-      // this.$vp.ajaxAll([
-      //   {
-      //     url: `resource/${this.channel}`,
-      //     mode: 'GET'
-      //   }, {
-      //     url: `role/eleui/${item.id}`,
-      //     mode: 'GET'
-      //   }
-      // ])
-      //   .then(resArr => {
-      //     // 这里需要应用手动把axios的data属性解析掉
-      //     const res = _.map(resArr, (item) => {
-      //       return item.data;
-      //     })
-      //     // 设置`表单 资源树`
-      //     this.resources = res[0].data
-      //     this.form = res[1].data
-      //     this.dialogFormVisible = true
-      //   })
+      this._loadRecords(item, () => { this.dialogFormVisible = true })
     },
     onDel() {
       const records = _.clone(this.selectRows)
@@ -283,13 +317,10 @@ export default {
       records.forEach(item => {
         ids.push(item.id)
       })
-      this.$vp.ajaxDel(`admin`, {
-        params: {
-          ids
-        }
-      }).then(res => {
+      this.$vp.ajaxDel(`admin/dels/${ids}`).then(res => {
         this.qryData();
-      }).finally(this.selectRows = []);
+        this.selectRows = []
+      })
     },
     _submitFinally() {
       this.form = _.clone(this.formTmpl)
@@ -299,6 +330,7 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           const params = _.clone(this.form);
+          delete params.roles
           if (this.formMode === 'add') {
             params.channel = this.channel
             this.$vp.ajaxPostJson('admin', {
@@ -309,6 +341,9 @@ export default {
               this._submitFinally()
             });
           } else {
+            delete params.createTime
+            // 普通修改不允许修改密码，受限于spring security使用的是单项加密，不能解密回显
+            delete params.password
             this.$vp.ajaxPut('admin', {
               params
             }).then(res => {

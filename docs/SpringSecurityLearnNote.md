@@ -31,6 +31,7 @@
 > [1.权限数据库设计](https://github.com/lenve/vhr/wiki/1.权限数据库设计)
 >
 > [Spring Security 技术栈开发企业级认证与授权笔记](https://github.com/zq99299/essay-note/blob/master/chapter/imooc/spring_security/index.md)
+> [Spring Security 修改密码后 在线用户列表中用户重复](https://techzero.cn/spring-security-after-change-password-duplicate-username-in-online-users.html)
 
 # 关键点
 

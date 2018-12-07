@@ -5,15 +5,25 @@ import cn.jiiiiiin.module.common.controller.BaseController;
 import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.module.common.exception.BusinessErrException;
+import cn.jiiiiiin.module.mngauth.component.MngUserDetails;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import javax.swing.plaf.synth.SynthColorChooserUI;
 
 /**
  * <p>
@@ -32,7 +42,7 @@ public class AdminController extends BaseController {
 
     @GetMapping("{channel}/{current}/{size}")
     public R<IPage<AdminDto>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
-        return R.ok(adminService.pageAdminDto(new Page<AdminDto>(current, size), channel, null));
+        return R.ok(adminService.pageAdminDto(new Page<>(current, size), channel, null));
     }
 
     @PostMapping("search/dto/{channel}/{current}/{size}")
@@ -56,27 +66,74 @@ public class AdminController extends BaseController {
         return R.ok(adminService.page(new Page<Admin>(current, size), qw));
     }
 
+
+    /**
+     * 获取当前登录的管理员信息
+     */
+    @GetMapping("/me")
+    public R<AdminDto> me(@AuthenticationPrincipal UserDetails user) {
+        return success((AdminDto) new AdminDto().setUsername(user.getUsername()));
+    }
+
+    @GetMapping("{id}")
+    public R<AdminDto> getAdminAndRelationRecords(@PathVariable Long id) {
+        return success(adminService.getAdminAndRelationRecords(id));
+    }
+
+    /**
+     * 关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中
+     *
+     * @param admin
+     * @return
+     */
     @PostMapping
-    public R<Admin> create(@RequestBody Admin admin) {
+    public R<AdminDto> create(@RequestBody AdminDto admin) {
         adminService.saveAdminAndRelationRecords(admin);
         return success(admin);
     }
 
+    /**
+     * 关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中
+     *
+     * @param admin
+     * @return
+     */
     @PutMapping
-    public R<Admin> update(@RequestBody Admin admin) {
+    public R<AdminDto> update(@RequestBody AdminDto admin) {
         adminService.updateAdminAndRelationRecords(admin);
         return success(admin);
     }
 
-    @DeleteMapping("{channel}")
-    public R<Boolean> dels(@PathVariable ChannelEnum channel, @RequestBody String[] ids) {
-//        return success(adminService.removeAdminsAndRelationRecords(ids, channel));
-        return null;
+    @PutMapping("pwd")
+    public R<AdminDto> updatePwd(@RequestBody AdminDto admin, @AuthenticationPrincipal UserDetails user) {
+        if(user.getAuthorities().stream().anyMatch(p -> ((GrantedAuthority) p).equals(new SimpleGrantedAuthority("ROLE_ADMIN")))){
+            adminService.updatePwd(admin);
+        }
+        return success(admin);
     }
 
-    @DeleteMapping("{channel}/{id}")
-    public R<Boolean> del(@PathVariable ChannelEnum channel, @PathVariable Long id) {
-        return success(adminService.removeAdminAndRelationRecords(id, channel));
+    @DeleteMapping("dels/{ids}")
+    public R<Boolean> dels(@PathVariable String ids) {
+        _checkHasSelf(ids.split(","));
+        return success(adminService.removeAdminsAndRelationRecords(ids));
+    }
+
+    /**
+     * 检测待操作的用户是否包含登录用户自身，如果存在不允许操作
+     *
+     * @param ids
+     */
+    private void _checkHasSelf(String[] ids) {
+        val userDetails = (MngUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (ArrayUtils.contains(ids, String.valueOf(userDetails.getAdmin().getId()))) {
+            throw new BusinessErrException("当前接口服务，不允许操作登录用户自己");
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public R<Boolean> del(@PathVariable Long id) {
+        _checkHasSelf(new String[]{String.valueOf(id)});
+        return success(adminService.removeAdminAndRelationRecord(id));
     }
 
 }

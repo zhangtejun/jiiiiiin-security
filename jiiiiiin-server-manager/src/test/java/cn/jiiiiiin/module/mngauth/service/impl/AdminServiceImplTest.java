@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.ManagerApp;
+import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
@@ -14,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +44,19 @@ public class AdminServiceImplTest {
     @Autowired
     private RoleMapper roleMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // https://waylau.gitbooks.io/spring-security-tutorial/docs/password-encoder.html
+    @Test
+    public void testBCryptPasswordEncoder() {
+        CharSequence rawPassword = "123456";
+        String encodePasswd = passwordEncoder.encode(rawPassword);
+        boolean isMatch = passwordEncoder.matches(rawPassword, encodePasswd);
+        System.out.println("encodePasswd:" + encodePasswd);
+        System.out.println(isMatch);
+    }
+
     @Transactional
     @Test
     public void findByUsername() {
@@ -69,28 +84,26 @@ public class AdminServiceImplTest {
 
     @Test
     public void saveAdminAndRelationRecords() {
-        val admin = new Admin().setUsername("User1").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setChannel(ChannelEnum.MNG);
-        admin.getRoles().add(roleMapper.selectById("1061277220292595713"));
-        admin.getRoles().add(roleMapper.selectById("1061277221798350849"));
-        val res = adminService.saveAdminAndRelationRecords(admin);
+        val admin = new AdminDto().setRoleIds(new String[]{"1061277220292595713"}).setUsername("test").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setChannel(ChannelEnum.MNG);
+        val res = adminService.saveAdminAndRelationRecords((AdminDto) admin);
         assertTrue(res);
     }
 
     @Test
     public void updateAdminAndRelationRecords() {
-        val admin = new Admin().setId(1069587774891364354L).selectById();
-        admin.setUsername("User")
+        AdminDto admin = (AdminDto) new AdminDto().setId(1069587774891364354L).selectById();
+        admin.setRoleIds(new String[]{"1061277220292595713"})
+                .setUsername("User")
                 .setPhone("153989999999")
                 .setEmail("153989999999@163.com");
-        admin.getRoles().add(roleMapper.selectById("1061277220292595713"));
-        val res = adminService.updateAdminAndRelationRecords(admin);
+        val res = adminService.updateAdminAndRelationRecords((AdminDto) admin);
         assertTrue(res);
     }
 
     @Transactional
     @Test
     public void delAdminAndRelationRecords() {
-        val res = adminService.removeAdminAndRelationRecords(1069587774891364354L, ChannelEnum.MNG);
+        val res = adminService.removeAdminAndRelationRecord(1069587774891364354L);
         assertTrue(res);
     }
 
