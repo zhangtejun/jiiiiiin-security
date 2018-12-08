@@ -112,8 +112,12 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
+import mngPageMixin from '@/mixin/mng-page-mixin'
 export default {
   name: 'mngauth-role',
+  mixins: [
+    mngPageMixin
+  ],
   data () {
     return {
       resources: [],
@@ -202,6 +206,7 @@ export default {
     qryData() {
       this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
       this.$vp.ajaxGet(`role/eleui/${this.channel}/${this.page.current}/${this.page.size}`).then(res => { this.page = res })
+      this.setInitAjaxNum(2)
     },
     handleExpandChangge(row, expandedRows) {
       this.$vp.ajaxAll([

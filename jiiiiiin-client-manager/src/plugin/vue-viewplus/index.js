@@ -7,7 +7,7 @@ export const mixinConfig = {
   serverUrl: `${process.env.VUE_APP_SEVER_URL}${process.env.VUE_APP_API}`
 };
 
-export default {
+const viewPlusOptions = {
   router,
   store,
   debug: process.env.NODE_ENV !== 'production',
@@ -63,14 +63,25 @@ export default {
       return `${errMsg} [服务端]`;
     },
     onReqErrParseHttpStatusCode(status, response) {
+      let res = false;
       switch (status) {
-        case 401:
-          this.toast('会话超时，请重新登录', {
+        case 403:
+          console.log('403')
+          this.toast('权限不足', {
             type: 'error'
           });
-          store.dispatch('d2admin/account/logout', { vm: this });
+          // 要判断是初始化页面发送请求时候出发的`403`很麻烦
+          // store.dispatch('d2admin/page/closeCurrent', { vm: this });
+          res = true;
+          break;
+        case 401:
+          console.log('401 111 onSessionTimeOut', viewPlusOptions)
+          this::viewPlusOptions.utilHttp.accessRules.onSessionTimeOut(response)
+          console.log('401 onSessionTimeOut')
+          res = true;
           break;
       }
+      return res
     },
     errDialog(content = '错误消息未定义') {
       // 排除一些不需要弹窗（http模块）
@@ -92,6 +103,7 @@ export default {
     accessRules: {
       sessionTimeOut: [-2],
       onSessionTimeOut(response) {
+        console.log('def onSessionTimeOut')
         this.toast('会话超时，请重新登录', {
           type: 'error'
         });
@@ -107,3 +119,5 @@ export default {
     }
   }
 };
+
+export default viewPlusOptions

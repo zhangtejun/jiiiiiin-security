@@ -1,4 +1,4 @@
-import { remove, get } from 'lodash'
+import { remove, get, has, isNumber } from 'lodash'
 
 // 设置文件
 import setting from '@/setting.js'
@@ -15,6 +15,8 @@ export default {
     opened: setting.page.opened,
     // 当前页面
     current: '',
+    // 管理页面初始化时候发送请求的数量
+    initAjaxNum: 1,
     // 需要缓存的页面 name
     keepAlive: [],
     // 管理页面列表的table高度
@@ -180,6 +182,13 @@ export default {
         resolve()
       })
     },
+    closeCurrent({ state, commit, dispatch }, { vm }) {
+      state.closeTagName = state.current;
+      return dispatch('close', {
+        tagName: state.current,
+        vm
+      });
+    },
     /**
      * @class opened
      * @description 关闭一个 tag (关闭一个页面)
@@ -224,7 +233,13 @@ export default {
             params,
             query
           }
-          vm.$router.push(routerObj)
+          console.log('routerObj', routerObj)
+          // 从vp#onReqErrParseHttpStatusCode调用
+          if (has(vm, 'options.router')) {
+            vm.options.router.push(routerObj)
+          } else {
+            vm.$router.push(routerObj)
+          }
         }
         // end
         resolve()
@@ -350,6 +365,13 @@ export default {
     }
   },
   mutations: {
+    setInitAjaxNum (state, num) {
+      if (isNumber(num)) {
+        state.initAjaxNum = num;
+      } else {
+        throw Error('setInitAjaxNum 参数不对', num)
+      }
+    },
     /**
      * @class keepAlive
      * @description 从已经打开的页面记录中更新需要缓存的页面记录
