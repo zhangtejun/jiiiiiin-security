@@ -49,22 +49,40 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Transactional
     @Override
     public Boolean save(Role role, Long[] resourceIds) {
-        _checkRoleUniqueness(role);
+        _saveCheckRoleUniqueness(role);
         val res = SqlHelper.retBool(roleMapper.insert(role));
         _insertOrUpdateRelationResourceRecords(role, resourceIds);
         return res;
     }
 
-    private void _checkRoleUniqueness(Role role) {
+    private void _saveCheckRoleUniqueness(Role role) {
         if (null != roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, role.getAuthorityName()))) {
-            throw new BusinessErrException(String.format("系统已经存在【%s】角色标识的记录", role.getAuthorityName()));
+            throw new BusinessErrException(String.format("系统已经存在角色标识为【%s】的记录", role.getAuthorityName()));
         }
+        if (null != roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.NAME, role.getName()))) {
+            throw new BusinessErrException(String.format("系统已经存在角色名字为【%s】的记录", role.getAuthorityName()));
+        }
+    }
+
+    private void _updateCheckRoleUniqueness(Role role) {
+        val currentRecord = roleMapper.selectById(role);
+        if (!currentRecord.getAuthorityName().equals(role.getAuthorityName())) {
+            if (null != roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, role.getAuthorityName()))) {
+                throw new BusinessErrException(String.format("系统已经存在角色标识为【%s】的记录", role.getAuthorityName()));
+            }
+        }
+        if (!currentRecord.getName().equals(role.getName())) {
+            if (null != roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.NAME, role.getName()))) {
+                throw new BusinessErrException(String.format("系统已经存在角色名字为【%s】的记录", role.getAuthorityName()));
+            }
+        }
+
     }
 
     @Transactional
     @Override
     public Boolean update(Role role, Long[] resourceIds) {
-        _checkRoleUniqueness(role);
+        _updateCheckRoleUniqueness(role);
         val res = SqlHelper.retBool(roleMapper.updateById(role));
         _insertOrUpdateRelationResourceRecords(role, resourceIds);
         return res;

@@ -48,11 +48,11 @@ public class MngRbacServiceImpl implements RbacService {
                 // 读取用户所拥有权限的所有URL
                 // 通过用户标识-》用户角色-》角色拥有的资源
 
-                log.debug("hasPermission 服务 判断 {} {} {}", reqURI, reqMethod, roles);
+                log.debug("后端权限校验：hasPermission 服务 判断 {} {} {}", reqURI, reqMethod, roles);
                 val iterator = roles.iterator();
                 while (iterator.hasNext()) {
                     val role = iterator.next();
-                    // 进行权限匹配
+                    // 进行资源匹配
                     val res = role.getResources()
                             .stream()
                             .anyMatch(resource -> antPathMatcher.match(resource.getUrl(), reqURI)
@@ -61,6 +61,10 @@ public class MngRbacServiceImpl implements RbacService {
                         hasPermission = true;
                         break;
                     }
+                }
+
+                if(!hasPermission){
+                    log.debug("后端权限校验：hasPermission 校验失败，权限不足 {} {} {} {}", admin.getUsername(), reqURI, reqMethod, roles);
                 }
             }
         }

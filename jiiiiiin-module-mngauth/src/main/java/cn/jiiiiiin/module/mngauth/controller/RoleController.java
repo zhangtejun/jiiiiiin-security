@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,18 +92,20 @@ public class RoleController extends BaseController {
      * @param role
      * @return
      */
-    private Long[] parseResourceIds(@NonNull Role role) {
+    private Long[] _parseResourceIds(@NonNull Role role) {
         val resourceIdsSet = new HashSet<Long>();
         val newResList = new ArrayList<Resource>();
         role.getResources().forEach(resource -> {
             val pidsStr = resource.getPids();
             if (StringUtils.isNotEmpty(pidsStr)) {
                 val pids = pidsStr.split(",");
-                for (String pid : pids) {
+                for (val pid : pids) {
                     if (NumberUtils.isCreatable(pid)) {
                         val temp = Long.valueOf(pid);
-                        if (!temp.equals(Resource.IS_ROOT_MENU)) {
-                            newResList.add((Resource) new Resource().setId(temp));
+                        val res = new Resource().setId(temp);
+                        // 非根节点 && 非已经存在（防止前端传递重复的记录）
+                        if (!temp.equals(Resource.IS_ROOT_MENU) && !newResList.contains(res)) {
+                            newResList.add((Resource) res);
                         }
                     }
                 }
@@ -125,7 +126,7 @@ public class RoleController extends BaseController {
         if (Role.isRootRole(role)) {
             throw new IllegalArgumentException("不能创建和系统管理员角色相同角色标识的记录");
         } else {
-            roleService.save(role, parseResourceIds(role));
+            roleService.save(role, _parseResourceIds(role));
             return success(role);
         }
     }
@@ -135,7 +136,7 @@ public class RoleController extends BaseController {
         if (Role.isRootRole(role)) {
             throw new IllegalArgumentException("系统管理员角色不允许修改");
         } else {
-            roleService.update(role, parseResourceIds(role));
+            roleService.update(role, _parseResourceIds(role));
             return success(role);
         }
     }

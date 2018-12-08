@@ -8,6 +8,7 @@ import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import cn.jiiiiiin.module.mngauth.component.MngUserDetails;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
+import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
@@ -23,8 +24,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.plaf.synth.SynthColorChooserUI;
-
 /**
  * <p>
  * 用户表 前端控制器
@@ -39,6 +38,9 @@ public class AdminController extends BaseController {
 
     @Autowired
     private IAdminService adminService;
+
+    @Autowired
+    private SimpleGrantedAuthority adminSimpleGrantedAuthority;
 
     @GetMapping("{channel}/{current}/{size}")
     public R<IPage<AdminDto>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
@@ -106,7 +108,7 @@ public class AdminController extends BaseController {
 
     @PutMapping("pwd")
     public R<AdminDto> updatePwd(@RequestBody AdminDto admin, @AuthenticationPrincipal UserDetails user) {
-        if(user.getAuthorities().stream().anyMatch(p -> ((GrantedAuthority) p).equals(new SimpleGrantedAuthority("ROLE_ADMIN")))){
+        if(user.getAuthorities().stream().anyMatch(p -> p.equals(adminSimpleGrantedAuthority))){
             adminService.updatePwd(admin);
         }
         return success(admin);

@@ -46,7 +46,7 @@ public class RoleMapperTest {
         Assert.assertTrue(SqlHelper.retBool(res));
         val adminRole = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
         assertNotNull(adminRole);
-        int res2 = roleMapper.insert(new Role().setAuthorityName(RbacDict.ROLE_DB_ADMIN_AUTHORITY_NAME).setName("数据库管理员"));
+        int res2 = roleMapper.insert(new Role().setAuthorityName("DB").setName("数据库管理员"));
         Assert.assertTrue(SqlHelper.retBool(res2));
         int res3 = roleMapper.insert(new Role().setAuthorityName("OPERATOR").setName("部门操作员"));
         Assert.assertTrue(SqlHelper.retBool(res3));

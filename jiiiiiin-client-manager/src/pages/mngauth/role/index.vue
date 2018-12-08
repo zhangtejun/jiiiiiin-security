@@ -179,7 +179,7 @@ export default {
      * @param indeterminate 节点的子树中是否有被选中的节点
      */
     handleCheckChange(data, checked, indeterminate) {
-      if (checked) {
+      if (checked && !_.isObject(_.find(this.form.resources, item => { return item.id === data.id }))) {
         this.form.resources.push(data)
       } else {
         _.remove(this.form.resources, item => {
@@ -190,13 +190,7 @@ export default {
     handleTableRowCheckChange(data, checked, indeterminate) {
       // 首次展开会通知，data为根节点，这时不做处理
       if (data.id !== '0') {
-        if (checked) {
-          this.form.resources.push(data)
-        } else {
-          _.remove(this.form.resources, item => {
-            return item.id === data.id;
-          });
-        }
+        this.handleCheckChange(data, checked, indeterminate)
         const params = _.clone(this.form);
         this.$vp.ajaxPut('role', {
           params
@@ -314,13 +308,14 @@ export default {
               this._submitFinally()
             });
           } else {
-            this.$vp.ajaxPut('role', {
-              params
-            }).then(res => {
-              this.qryData()
-            }).finally(() => {
-              this._submitFinally()
-            });
+            console.log('submit ', params)
+            // this.$vp.ajaxPut('role', {
+            //   params
+            // }).then(res => {
+            //   this.qryData()
+            // }).finally(() => {
+            //   this._submitFinally()
+            // });
           }
         }
       })
