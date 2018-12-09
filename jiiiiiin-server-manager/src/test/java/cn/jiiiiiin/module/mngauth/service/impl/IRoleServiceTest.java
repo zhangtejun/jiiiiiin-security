@@ -58,4 +58,11 @@ public class IRoleServiceTest {
         assertNotNull(res);
         assertNotNull(res.getResources());
     }
+
+    @Test
+    public void getRoleAndRelationEleUiResourceRecords() {
+        val res = roleService.getRoleAndRelationEleUiResourceRecords(1061277221831905282L);
+        assertNotNull(res);
+        assertNotNull(res.getResources());
+    }
 }

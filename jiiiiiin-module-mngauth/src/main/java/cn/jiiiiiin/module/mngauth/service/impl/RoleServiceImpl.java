@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import lombok.NonNull;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +91,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         return res;
     }
 
-    private void _insertOrUpdateRelationResourceRecords(Role role, Long[] resourceIds) {
+    @Override
+    public Boolean insertRelationResourceRecords(Role role) {
+        return SqlHelper.retBool(roleMapper.insertRelationResourceRecords(role));
+    }
+
+    private void _insertOrUpdateRelationResourceRecords(@NonNull Role role, @NonNull Long[] resourceIds) {
         _clearRelationResourceRecords(role);
         if (resourceIds.length > 0) {
             // 添加/更新角色资源element-ui树形控件选择记录关联表
@@ -123,6 +129,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public RoleDto getRoleAndRelationEleUiResourceRecords(Long id) {
         val role = roleMapper.selectRoleAndRelationEleUiResourceRecords(id);
+        if (role == null) {
+            throw new BusinessErrException("待查询的角色记录不存在");
+        }
         val resIds = role.getResourceIds();
         if (StringUtils.isNotEmpty(resIds)) {
             val temp = role.getResourceIds().split(",");

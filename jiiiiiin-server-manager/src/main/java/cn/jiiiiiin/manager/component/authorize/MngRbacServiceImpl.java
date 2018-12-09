@@ -52,15 +52,16 @@ public class MngRbacServiceImpl implements RbacService {
                 val iterator = roles.iterator();
                 while (iterator.hasNext()) {
                     val role = iterator.next();
+                    // TODO 待修改
                     // 进行资源匹配
-                    val res = role.getResources()
-                            .stream()
-                            .anyMatch(resource -> antPathMatcher.match(resource.getUrl(), reqURI)
-                                    && request.getMethod().equalsIgnoreCase(reqMethod));
-                    if (res) {
-                        hasPermission = true;
-                        break;
-                    }
+//                    val res = role.getResources()
+//                            .stream()
+//                            .anyMatch(resource -> antPathMatcher.match(resource.getUrl(), reqURI)
+//                                    && request.getMethod().equalsIgnoreCase(reqMethod));
+//                    if (res) {
+//                        hasPermission = true;
+//                        break;
+//                    }
                 }
 
                 if(!hasPermission){

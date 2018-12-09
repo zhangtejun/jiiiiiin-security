@@ -59,8 +59,6 @@ CREATE TABLE `mng_resource` (
   `pids` varchar(255) DEFAULT '0' COMMENT '当前菜单的所有父菜单编号',
   `name` varchar(255) DEFAULT NULL COMMENT '菜单名称',
   `icon` varchar(55) DEFAULT NULL COMMENT '菜单图标',
-  `url` varchar(255) DEFAULT '' COMMENT 'url地址',
-  `method` varchar(6) DEFAULT 'GET' COMMENT '接口类型，如GET标识添加',
   `num` int(65) DEFAULT NULL COMMENT '菜单排序号',
   `levels` int(65) DEFAULT '1' COMMENT '菜单层级',
   `type` tinyint(4) DEFAULT '1' COMMENT '类型: 1:菜单(默认) 0:按钮',
@@ -89,6 +87,30 @@ VALUES
 
 /*!40000 ALTER TABLE `mng_resource` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+DROP TABLE IF EXISTS `mng_interface`;
+
+CREATE TABLE `mng_interface` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `url` varchar(255) NOT NULL COMMENT '接口地址',
+  `name` varchar(255) DEFAULT NULL COMMENT '接口名称',
+  `method` varchar(6) DEFAULT 'GET' COMMENT '接口类型，如GET标识添加',
+  `desc` varchar(55) DEFAULT NULL COMMENT '接口描述',
+  `status` tinyint(4) DEFAULT '1' COMMENT '菜单状态:  1:启用   0:不启用',
+  `channel` tinyint(4) DEFAULT '0' COMMENT '标识渠道，不同的渠道就是不同的资源分组: 0:内管',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统接口表';
+
+
+DROP TABLE IF EXISTS `mng_resource_interface`;
+
+CREATE TABLE `mng_resource_interface` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `resource_id` bigint(20) NOT NULL COMMENT '资源主键',
+  `interface_id` bigint(20) NOT NULL COMMENT '接口主键',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资源接口关联表';
 
 
 # Dump of table mng_role

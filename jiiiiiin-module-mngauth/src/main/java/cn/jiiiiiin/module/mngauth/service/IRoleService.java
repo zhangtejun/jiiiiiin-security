@@ -46,6 +46,13 @@ public interface IRoleService extends IService<Role> {
     Boolean update(Role role, Long[] resourceIds);
 
     /**
+     * 插入{@link Role#resources}管理记录
+     * @param role
+     * @return
+     */
+    Boolean insertRelationResourceRecords(Role role);
+
+    /**
      * 获取角色和其关联的记录
      *
      * @param id

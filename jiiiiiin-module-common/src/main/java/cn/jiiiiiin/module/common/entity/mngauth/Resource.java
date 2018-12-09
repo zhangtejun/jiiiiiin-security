@@ -57,14 +57,8 @@ public class Resource extends BaseEntity<Resource> {
     @ApiModelProperty(value = "菜单图标")
     private String icon;
 
-    @ApiModelProperty(value = "url地址")
-    private String url;
-
     @ApiModelProperty(value = "页面地址")
     private String path;
-
-    @ApiModelProperty(value = "接口类型，如GET(默认)")
-    private String method;
 
     @ApiModelProperty(value = "菜单排序号")
     private Integer num;
@@ -92,8 +86,6 @@ public class Resource extends BaseEntity<Resource> {
 
     public static final String ICON = "icon";
 
-    public static final String URL = "url";
-
     public static final String PATH = "PATH";
 
     public static final String NUM = "num";
@@ -101,8 +93,6 @@ public class Resource extends BaseEntity<Resource> {
     public static final String LEVELS = "levels";
 
     public static final String TYPE = "TYPE";
-
-    public static final String METHOD = "method";
 
     public static final String STATUS = "status";
 

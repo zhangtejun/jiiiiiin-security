@@ -129,8 +129,6 @@ public class ResourceMapperTest {
         val update = new Resource()
                 .setPid(resourceMngMenu.getId())
                 .setName("修改资源")
-                .setUrl("resource")
-                .setMethod("UPDATE")
                 .setLevels(3)
                 .setNum(2)
                 .setType(ResourceTypeEnum.BTN);
@@ -161,14 +159,11 @@ public class ResourceMapperTest {
                 .setName("控制台")
                 .setIcon("home")
                 .setLevels(1)
-                .setUrl("/")
-                .setNum(1)
-                .setMethod(GET);
+                .setNum(1);
         modelMapper.addMappings(new PropertyMap<Resource, Menu>() {
 
             @Override
             protected void configure() {
-                map().setPath(source.getUrl());
                 map().setTitle(source.getName());
             }
         });

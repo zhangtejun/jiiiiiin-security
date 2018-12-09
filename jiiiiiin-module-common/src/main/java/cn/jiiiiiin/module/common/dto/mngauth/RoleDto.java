@@ -2,6 +2,7 @@ package cn.jiiiiiin.module.common.dto.mngauth;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -13,6 +14,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors
+@EqualsAndHashCode(callSuper = true)
 public class RoleDto extends Role {
     private static final long serialVersionUID = 4460132236362989044L;
     private String[] expandedKeys = new String[]{};

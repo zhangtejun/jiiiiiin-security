@@ -1,10 +1,15 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
+import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
+import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
+import cn.jiiiiiin.module.mngauth.service.IRoleService;
+import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.val;
@@ -31,7 +36,10 @@ import static cn.jiiiiiin.module.common.entity.mngauth.Resource.IS_ROOT_MENU;
 public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> implements IResourceService {
 
     @Autowired
-    ResourceMapper resourceMapper;
+    private ResourceMapper resourceMapper;
+
+    @Autowired
+    private IRoleService roleService;
 
     private List<Resource> _parseTreeNode(Long pid, List<Resource> nodes) {
         val menus = new ArrayList<Resource>();
@@ -61,6 +69,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Transactional
     @Override
     public Boolean saveAndSortNum(Resource resource, ChannelEnum channel) {
+        var res = false;
         val pid = resource.getPid();
         if (pid.equals(IS_ROOT_MENU)) {
             // 添加一级菜单
@@ -74,7 +83,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         val size = children.size();
         val addNodeNum = resource.getNum();
         if (addNodeNum > size || size == 0) {
-            return SqlHelper.retBool(resourceMapper.insert(resource));
+            res = SqlHelper.retBool(resourceMapper.insert(resource));
         } else {
             final boolean[] update = {false};
             // 需要排序
@@ -88,9 +97,18 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
                 }
             });
             children.add(addNodeNum, resource);
-            return this.saveOrUpdateBatch(children);
+            res = this.saveOrUpdateBatch(children);
         }
 
+        if (res) {
+            // 新增资源都默认加挂到`ROLE_ADMIN`
+            val adminRole = roleService.getOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, RbacDict.ROLE_ADMIN_AUTHORITY_NAME));
+            val resList = new ArrayList<Resource>();
+            resList.add(resource);
+            adminRole.setResources(resList);
+            roleService.insertRelationResourceRecords(adminRole);
+        }
+        return res;
     }
 
     @Transactional
@@ -105,8 +123,6 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
                 .setName(resource.getName())
                 .setStatus(resource.getStatus())
                 .setPath(resource.getPath())
-                .setUrl(resource.getUrl())
-                .setMethod(resource.getMethod())
                 .setIcon(resource.getIcon());
         // 如果没有修改排序
         if (currentNum.equals(modifyNum)) {
@@ -123,7 +139,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
                     if (itemNum > currentNum && itemNum <= modifyNum) {
                         // 处理加大当前待修改节点的排序
                         item.setNum(itemNum - 1);
-                    } else if(itemNum >= modifyNum && itemNum < currentNum) {
+                    } else if (itemNum >= modifyNum && itemNum < currentNum) {
                         // 处理减小当前待修改节点的排序
                         item.setNum(itemNum + 1);
                     }
@@ -142,7 +158,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     public Boolean delOnlyIsLeafNode(Long id, ChannelEnum channel) {
         // 查询自身是否还存在子节点
         val numb = resourceMapper.selectCountChildren(id, channel);
-        var temp = false;
+        Boolean temp;
         if (numb > 0) {
             throw new IllegalStateException("待删除的资源还存在子节点，请先清空其下的子节点在进行改操作！");
         } else {
@@ -176,7 +192,6 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
                 }
                 temp = SqlHelper.delBool(resourceMapper.deleteById(id));
             }
-
         }
         return temp;
     }

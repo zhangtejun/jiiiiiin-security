@@ -52,6 +52,7 @@
         <template slot-scope="props">
           <el-form label-position="top" inline class="demo-table-expand">
             <el-form-item label="资源授权">
+              <span v-show="props.row.authorityName === 'ADMIN'" style="font-style: italic; color: darkred">注：系统管理员默认具有所有资源授权</span>
               <el-tree
                       :data="resources"
                       :props="treeProps"
@@ -59,7 +60,7 @@
                       :default-expanded-keys="props.row.expandedKeys"
                       :default-checked-keys="props.row.checkedKeys"
                       @check-change="handleTableRowCheckChange"
-                      show-checkbox></el-tree>
+                      :show-checkbox="props.row.authorityName !== 'ADMIN'"></el-tree>
             </el-form-item>
           </el-form>
         </template>
@@ -113,6 +114,9 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import mngPageMixin from '@/mixin/mng-page-mixin'
+
+const ADMIN_AUTHORITY_NAME = 'ADMIN'
+
 export default {
   name: 'mngauth-role',
   mixins: [
@@ -262,37 +266,49 @@ export default {
     onCreate() {
       this.form = _.clone(this.formTmpl)
     },
+    _checkAdminRole(item) {
+      if (item.authorityName === ADMIN_AUTHORITY_NAME) {
+        this.$vp.toast('系统管理员不允许修改', { type: 'error' })
+        return true
+      }
+    },
     onUpdate(item) {
-      this.$vp.ajaxAll([
-        {
-          url: `resource/${this.channel}`,
-          mode: 'GET'
-        }, {
-          url: `role/eleui/${item.id}`,
-          mode: 'GET'
-        }
-      ])
-        .then(resArr => {
-          // 这里需要应用手动把axios的data属性解析掉
-          const res = _.map(resArr, (item) => {
-            return item.data;
+      if (!this._checkAdminRole(item)) {
+        this.$vp.ajaxAll([
+          {
+            url: `resource/${this.channel}`,
+            mode: 'GET'
+          }, {
+            url: `role/eleui/${item.id}`,
+            mode: 'GET'
+          }
+        ])
+          .then(resArr => {
+            // 这里需要应用手动把axios的data属性解析掉
+            const res = _.map(resArr, (item) => {
+              return item.data;
+            })
+            // 设置`表单 资源树`
+            this.resources = res[0].data
+            this.form = res[1].data
+            this.dialogFormVisible = true
           })
-          // 设置`表单 资源树`
-          this.resources = res[0].data
-          this.form = res[1].data
-          this.dialogFormVisible = true
-        })
+      }
     },
     onDel() {
       const roles = _.clone(this.selectRows)
-      this.$vp.ajaxDel(`role`, {
-        params: {
-          roles
-        }
-      }).then(res => {
-        this.qryData();
-        this.selectRows = []
-      })
+      if (_.filter(roles, item => item.authorityName === ADMIN_AUTHORITY_NAME).length !== 1) {
+        this.$vp.ajaxDel(`role`, {
+          params: {
+            roles
+          }
+        }).then(res => {
+          this.qryData();
+          this.selectRows = [];
+        });
+      } else {
+        this.$vp.toast('系统管理员不允许删除', { type: 'error' });
+      }
     },
     _submitFinally() {
       this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
