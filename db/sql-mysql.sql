@@ -1,3 +1,22 @@
+-- 表名应全部大写，只包含26个大写字母和“_”。
+--
+-- 数据表的命名格式为：
+--
+-- bth：代表批量数据类（Batch）
+-- mng：表示管理类表（Management）
+-- hty：代表历史数据类（History）
+-- rpt：表示报表类（Report）
+-- sys：代表系统信息类（System）
+-- temp：表示临时表（Temp）
+
+DROP DATABASE IF EXISTS `vplusdb`;
+CREATE DATABASE IF NOT EXISTS `vplusdb` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+
+CREATE USER 'vplus'@'localhost' IDENTIFIED BY '1qaz@WSX';
+GRANT ALL PRIVILEGES ON vplusdb.* TO 'vplus'@'localhost';
+
+USE `vplusdb`;
+
 # ************************************************************
 # Sequel Pro SQL dump
 # Version 4541

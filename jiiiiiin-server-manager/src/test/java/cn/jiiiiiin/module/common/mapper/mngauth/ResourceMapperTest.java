@@ -113,11 +113,11 @@ public class ResourceMapperTest {
     }
 
     @Test
-    @Transactional
-    @Rollback
+//    @Transactional
+//    @Rollback
     public void testAddBtnResource(){
-        val resourceMngMenu = resourceMapper.selectById(1061818318517747714L);
-        Assert.assertNotNull(resourceMngMenu);
+//        val resourceMngMenu = resourceMapper.selectById(1061818318517747714L);
+//        Assert.assertNotNull(resourceMngMenu);
 //        val resourceAdd = new Resource()
 //                .setPid(resourceMngMenu.getId())
 //                .setName("新增资源")
@@ -126,20 +126,30 @@ public class ResourceMapperTest {
 //                .setLevels(3)
 //                .setNum(1)
 //                .setType(ResourceTypeEnum.BTN);
-        val update = new Resource()
-                .setPid(resourceMngMenu.getId())
-                .setName("修改资源")
-                .setLevels(3)
-                .setNum(2)
-                .setType(ResourceTypeEnum.BTN);
-        int updateres = resourceMapper.insert(update);
-        Assert.assertTrue(SqlHelper.retBool(updateres));
+//        val update = new Resource()
+//                .setPid(resourceMngMenu.getId())
+//                .setName("修改资源")
+//                .setLevels(3)
+//                .setNum(2)
+//                .setType(ResourceTypeEnum.BTN);
+//        int updateRes = resourceMapper.insert(update);
+//        Assert.assertTrue(SqlHelper.retBool(updateRes));
+
+        val interfaceMng = new Resource()
+                .setPid(1061818316563202049L)
+                .setPids("0,1061818316563202049")
+                .setName("接口管理")
+                .setLevels(2)
+                .setNum(4)
+                .setType(ResourceTypeEnum.MENU);
+        int interfaceMngRes = resourceMapper.insert(interfaceMng);
+        Assert.assertTrue(SqlHelper.retBool(interfaceMngRes));
+
         val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
         val set = operator.getResources();
-//        set.add(resourceAdd);
-        set.add(update);
-        operator.setResources(set);
+        set.add(interfaceMng);
         int temp = roleMapper.insertRelationResourceRecords(operator);
+        Assert.assertTrue(SqlHelper.retBool(temp));
     }
 
     @Test

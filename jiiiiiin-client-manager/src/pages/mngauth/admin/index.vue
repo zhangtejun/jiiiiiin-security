@@ -95,15 +95,12 @@
 
     <el-form slot="form" :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <div class="dialog-form-submit-container">
-
         <d2-el-form-item label="用户名" :required="true" prop="username">
           <el-input v-model="form.username" autocomplete="off"></el-input>
         </d2-el-form-item>
-
         <d2-el-form-item label="密码" :required="true" prop="password" v-if="formMode === 'add'">
           <el-input v-model="form.password" autocomplete="off" type="password"></el-input>
         </d2-el-form-item>
-
         <d2-el-form-item label="资源授权" :required="true" prop="roleIds">
           <el-select v-model="form.roleIds" multiple placeholder="请选择">
             <el-option
@@ -248,7 +245,7 @@ export default {
             roleIds.push(item.id)
           })
           res.roleIds = roleIds
-          this._copyDto(item, res)
+          this._copy(item, res)
           this.form = _.clone(item)
           callback()
         })
@@ -268,12 +265,12 @@ export default {
     handleExpandChangge(row, expandedRows) {
       this.$vp.ajaxGet(`admin/${row.id}`)
         .then(res => {
-          this._copyDto(row, res)
+          this._copy(row, res)
           this.form = _.clone(row)
         })
     },
     // 因为不能将一个普通json对象直接覆盖vue的响应式对象，故做此函数
-    _copyDto(current, orig) {
+    _copy(current, orig) {
       current.username = orig.username
       current.channel = orig.channel
       current.createTime = orig.createTime

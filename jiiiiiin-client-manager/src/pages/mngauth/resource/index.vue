@@ -100,19 +100,6 @@
                 <d2-el-form-item label="路由" >
                     <el-input v-model="form.path" autocomplete="off"></el-input>
                 </d2-el-form-item>
-                <d2-el-form-item label="接口" >
-                    <el-input v-model="form.url" autocomplete="off"></el-input>
-                </d2-el-form-item>
-                <d2-el-form-item label="接口类型" >
-                    <el-select v-model="form.method" filterable placeholder="请选择">
-                        <el-option
-                                v-for="item in methodOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                </d2-el-form-item>
                 <d2-el-form-item label="同级排序" >
                     <el-input-number v-model="form.num" :min="1" :max="numMax" label="排序"></el-input-number>
                 </d2-el-form-item>
@@ -154,24 +141,6 @@ export default {
       icon,
       channel: this.$store.state.d2admin.page.defChannel,
       channelOptions: this.$store.state.d2admin.page.channelOptions,
-      methodOptions: [
-        {
-          value: 'POST',
-          label: '新增'
-        },
-        {
-          value: 'GET',
-          label: '查询'
-        },
-        {
-          value: 'PUT',
-          label: '更新'
-        },
-        {
-          value: 'DELETE',
-          label: '删除'
-        }
-      ],
       visibleMenuFromField: true,
       dialogFormVisible: false,
       formMode: 'add',
@@ -184,7 +153,7 @@ export default {
         ]
       },
       searchForm: {
-        channel: '0',
+        channel: this.$store.state.d2admin.page.defChannel,
         status: 'ENABLE'
       },
       rules: {
@@ -198,30 +167,26 @@ export default {
         icon: '',
         id: -1,
         levels: 1,
-        method: '',
         name: '',
         num: 1,
         path: '',
         pid: 0,
         pname: '',
         status: 'ENABLE',
-        type: 'MENU',
-        url: ''
+        type: 'MENU'
       },
       formTempl: {
         channel: '',
         icon: '',
         id: -1,
         levels: 1,
-        method: '',
         name: '',
         num: 1,
         path: '',
         pid: 0,
         pname: '',
         status: 'ENABLE',
-        type: 'MENU',
-        url: ''
+        type: 'MENU'
       },
       data: [],
       columns: [
@@ -255,16 +220,6 @@ export default {
         {
           label: '路由',
           prop: 'path'
-        },
-        {
-          label: '接口',
-          prop: 'url'
-        },
-        {
-          label: '接口类型',
-          prop: 'method',
-          width: '75px',
-          align: 'center'
         },
         {
           label: '状态',
@@ -326,7 +281,7 @@ export default {
       this.$vp.ajaxPut('resource', {
         params: node
       }).then(res => {
-        this.$vp.toast('修改成功')
+        this.$vp.toast('修改成功', { type: 'success' })
       });
     },
     // 查找对应`item`节点对应的父节点等信息
@@ -425,8 +380,6 @@ export default {
       current.icon = orig.icon;
       current.num = orig.num;
       current.path = orig.path;
-      current.url = orig.url;
-      current.method = orig.method;
       current.status = orig.status;
     },
     _updateParentChildrenNode(node) {
@@ -444,12 +397,6 @@ export default {
         if (valid) {
           let params = _.clone(this.form);
           delete params.pname;
-          if (!_.isEmpty(params.url) && _.isEmpty(params.method)) {
-            this.$vp.toast('接口类型必须填写', {
-              type: 'error'
-            });
-            return
-          }
           if (this.formMode === 'add') {
             delete params.id;
             this.$vp.ajaxPostJson('resource', {

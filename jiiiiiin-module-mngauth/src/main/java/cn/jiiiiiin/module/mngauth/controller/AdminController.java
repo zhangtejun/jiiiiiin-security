@@ -90,8 +90,11 @@ public class AdminController extends BaseController {
      */
     @PostMapping
     public R<AdminDto> create(@RequestBody AdminDto admin) {
-        adminService.saveAdminAndRelationRecords(admin);
-        return success(admin);
+        if (adminService.saveAdminAndRelationRecords(admin)) {
+            return success(admin);
+        } else {
+            throw new BusinessErrException("添加用户失败");
+        }
     }
 
     /**
@@ -102,13 +105,16 @@ public class AdminController extends BaseController {
      */
     @PutMapping
     public R<AdminDto> update(@RequestBody AdminDto admin) {
-        adminService.updateAdminAndRelationRecords(admin);
-        return success(admin);
+        if (adminService.updateAdminAndRelationRecords(admin)) {
+            return success(admin);
+        } else {
+            throw new BusinessErrException("修改用户记录失败");
+        }
     }
 
     @PutMapping("pwd")
     public R<AdminDto> updatePwd(@RequestBody AdminDto admin, @AuthenticationPrincipal UserDetails user) {
-        if(user.getAuthorities().stream().anyMatch(p -> p.equals(adminSimpleGrantedAuthority))){
+        if (user.getAuthorities().stream().anyMatch(p -> p.equals(adminSimpleGrantedAuthority))) {
             adminService.updatePwd(admin);
         }
         return success(admin);

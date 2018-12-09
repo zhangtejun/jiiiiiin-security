@@ -34,8 +34,10 @@ import java.util.List;
 @ApiModel(value = "Role对象", description = "角色表")
 public class Role extends BaseEntity<Role> {
 
+    public static final Long ROLE_ADMIN_ID = 1061277220292595713L;
+
     public static void checkRootRole(@NonNull Role role, @NonNull String errMsg){
-        if((role.getId() != null && role.getId().equals(1061277220292595713L))
+        if((role.getId() != null && role.getId().equals(ROLE_ADMIN_ID))
                 || "Admin".equals(role.getAuthorityName())
                 || "系统管理员".equals(role.getName())) {
             throw new BusinessErrException(errMsg);
@@ -43,7 +45,7 @@ public class Role extends BaseEntity<Role> {
     }
 
     public static void checkRootRole(@NonNull Collection<? extends Serializable> idList, @NonNull String errMsg){
-        if(idList.stream().anyMatch(p -> p.equals(1061277220292595713L))) {
+        if(idList.stream().anyMatch(p -> p.equals(ROLE_ADMIN_ID))) {
             throw new BusinessErrException(errMsg);
         }
     }

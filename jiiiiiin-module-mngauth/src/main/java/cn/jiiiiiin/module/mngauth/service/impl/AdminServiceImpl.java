@@ -55,7 +55,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     public Admin signInByUsername(@NonNull String username, ChannelEnum channel) {
         log.debug("登录用户名 {} {}", channel, username);
         val res = adminMapper.selectByUsername(username, channel);
-        res.getRoles().forEach(role -> role.setResources(resourceMapper.selectByRoleId(role.getId(), channel)));
+        if (res.getRoles().stream().anyMatch(p -> p.getId().equals(Role.ROLE_ADMIN_ID))) {
+            val adminRole = res.getRoles().stream().filter(p -> p.getId().equals(Role.ROLE_ADMIN_ID)).findFirst().get();
+            adminRole.setResources(resourceMapper.selectByRoleId(adminRole.getId(), channel));
+        } else {
+            res.getRoles().forEach(role -> role.setResources(resourceMapper.selectByRoleId(role.getId(), channel)));
+        }
         return res;
     }
 
