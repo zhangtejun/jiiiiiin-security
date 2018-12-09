@@ -123,22 +123,14 @@ public class RoleController extends BaseController {
      */
     @PostMapping
     public R<Role> create(@RequestBody Role role) {
-        if (Role.isRootRole(role)) {
-            throw new IllegalArgumentException("不能创建和系统管理员角色相同角色标识的记录");
-        } else {
-            roleService.save(role, _parseResourceIds(role));
-            return success(role);
-        }
+        roleService.save(role, _parseResourceIds(role));
+        return success(role);
     }
 
     @PutMapping
     public R<Role> update(@RequestBody Role role) {
-        if (Role.isRootRole(role)) {
-            throw new IllegalArgumentException("系统管理员角色不允许修改");
-        } else {
-            roleService.update(role, _parseResourceIds(role));
-            return success(role);
-        }
+        roleService.update(role, _parseResourceIds(role));
+        return success(role);
     }
 
     @DeleteMapping

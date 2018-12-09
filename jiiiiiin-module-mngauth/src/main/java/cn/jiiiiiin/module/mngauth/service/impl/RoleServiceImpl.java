@@ -49,6 +49,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Transactional
     @Override
     public Boolean save(Role role, Long[] resourceIds) {
+        Role.checkRootRole(role, "不能创建和系统管理员角色相同名称或相同标识的记录");
         _saveCheckRoleUniqueness(role);
         val res = SqlHelper.retBool(roleMapper.insert(role));
         _insertOrUpdateRelationResourceRecords(role, resourceIds);
@@ -82,6 +83,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Transactional
     @Override
     public Boolean update(Role role, Long[] resourceIds) {
+        Role.checkRootRole(role, "系统管理员角色不允许修改");
         _updateCheckRoleUniqueness(role);
         val res = SqlHelper.retBool(roleMapper.updateById(role));
         _insertOrUpdateRelationResourceRecords(role, resourceIds);
@@ -136,6 +138,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Transactional
     @Override
     public Boolean remove(Collection<? extends Serializable> idList) {
+        // 检查是否为`系统管理员角色`
+        Role.checkRootRole(idList, "系统管理员角色不允许删除");
         roleMapper.deleteRelationAdminRecords(idList);
         roleMapper.deleteRelationResourceRecords(idList);
         roleMapper.deleteRelationResourceEleUiResourceRecords(idList);

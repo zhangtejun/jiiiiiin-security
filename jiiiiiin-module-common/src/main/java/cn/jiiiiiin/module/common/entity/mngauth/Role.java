@@ -2,6 +2,7 @@ package cn.jiiiiiin.module.common.entity.mngauth;
 
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
@@ -11,7 +12,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,8 +34,18 @@ import java.util.List;
 @ApiModel(value = "Role对象", description = "角色表")
 public class Role extends BaseEntity<Role> {
 
-    public static Boolean isRootRole(@NonNull Role role){
-        return role.getAuthorityName().equals("Admin") || role.getName().equals("系统管理员");
+    public static void checkRootRole(@NonNull Role role, @NonNull String errMsg){
+        if((role.getId() != null && role.getId().equals(1061277220292595713L))
+                || "Admin".equals(role.getAuthorityName())
+                || "系统管理员".equals(role.getName())) {
+            throw new BusinessErrException(errMsg);
+        }
+    }
+
+    public static void checkRootRole(@NonNull Collection<? extends Serializable> idList, @NonNull String errMsg){
+        if(idList.stream().anyMatch(p -> p.equals(1061277220292595713L))) {
+            throw new BusinessErrException(errMsg);
+        }
     }
 
     private static final long serialVersionUID = 1L;
