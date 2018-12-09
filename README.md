@@ -11,10 +11,11 @@
 | ------ | ------ | ------ |
 | 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
 | RBAC后端权限控制 | 90% | [基于Spring Security的后端RBAC权限控制](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master/jiiiiiin-security-authorize) |
-| 全面集成vue-viewplus | 20% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
-| 角色管理 | 95% | 权限管理的角色管理 |
-| 资源管理 | 95% | 权限管理的资源管理模块 |
-| 用户管理 | 95% | 权限管理的操作员管理模块 |
+| 角色管理 | 95% | 用来管理系统定义的角色 |
+| 资源管理 | 75% | 用来管理系统定义的资源 |
+| 用户管理 | 95% | 用来管理系统存在的用户 |
+| 接口管理 | 95% | 用来管理后台对应的接口集合 |
+| 全面集成vue-viewplus | 60% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
 | RBAC前端权限控制 | 0% | 基于vue-viewplus自定义rbac权限控制模块 |
 
 
