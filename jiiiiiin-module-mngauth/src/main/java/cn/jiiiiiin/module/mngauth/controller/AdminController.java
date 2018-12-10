@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.ApiOperation;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +43,7 @@ public class AdminController extends BaseController {
     @Autowired
     private SimpleGrantedAuthority adminSimpleGrantedAuthority;
 
+    @ApiOperation(value = "用户记录分页查询接口", httpMethod = "GET")
     @GetMapping("{channel}/{current}/{size}")
     public R<IPage<AdminDto>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(adminService.pageAdminDto(new Page<>(current, size), channel, null));

@@ -23,18 +23,21 @@
 
 ![image-20181106162706851](https://ws3.sinaimg.cn/large/006tNbRwgy1fwyf81a19lj31kw0w0awb.jpg)
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxp1lix1goj31c00u0wik.jpg)
+![image-20181207163547451](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg)
 
-资源管理页面截图（支持前端Vue Router `path`关联）
+用户管理页面截图
 
 ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg)
 
 角色管理页面截图
 
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxp1lix1goj31c00u0wik.jpg)
 
-![image-20181207163547451](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg)
+资源管理页面截图（支持前端Vue Router `path`关联）
 
-用户管理页面截图
+![image-20181207163547451](https://ws2.sinaimg.cn/large/006tNbRwgy1fy1fec8jmhj31c00u0juc.jpg)
+
+接口管理页面截图
 
 
 

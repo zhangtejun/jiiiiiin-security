@@ -52,6 +52,7 @@
 
     <ul slot="hint-msg-box">
       <li>`接口名称+接口类型`必须唯一</li>
+      <li>切换表格`状态`开关，可以实时修改记录状态</li>
     </ul>
 
     <el-table
@@ -75,11 +76,20 @@
               label="接口地址">
       </el-table-column>
       <el-table-column
-              prop="method"
-              label="接口类型">
+              label="接口类型"
+              align="center"
+              :width="80">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.method === 'POST'">新增</el-tag>
+          <el-tag v-else-if="scope.row.method === 'GET'" type="success">查询</el-tag>
+          <el-tag v-else-if="scope.row.method === 'PUT'" type="warning">修改</el-tag>
+          <el-tag v-else-if="scope.row.method === 'DELETE'" type="danger">删除</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
-              label="接口状态">
+              label="接口状态"
+              align="center"
+              :width="80">
         <template slot-scope="scope">
           <el-switch v-if="scope.row.id !== '0'" v-model="scope.row.status" inactive-value="STOP" active-value="ENABLE" @change="onTableItemStatusChange(scope.row)"></el-switch>
         </template>
@@ -127,12 +137,12 @@ export default {
     return {
       methodOptions: [
         {
-          value: 'POST',
-          label: '新增'
-        },
-        {
           value: 'GET',
           label: '查询'
+        },
+        {
+          value: 'POST',
+          label: '新增'
         },
         {
           value: 'PUT',
@@ -149,8 +159,8 @@ export default {
       dialogModifyPwdFormVisible: false,
       rules: {
         name: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { required: true, message: '请输入', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ]
       },
       chooseRoles: [],
