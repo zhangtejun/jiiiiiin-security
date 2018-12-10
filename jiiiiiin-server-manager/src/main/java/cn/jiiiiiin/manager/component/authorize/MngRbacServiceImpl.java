@@ -3,11 +3,14 @@
  */
 package cn.jiiiiiin.manager.component.authorize;
 
+import cn.jiiiiiin.module.common.entity.mngauth.Interface;
+import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.mngauth.component.MngUserDetails;
 import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
 import cn.jiiiiiin.security.rbac.component.service.RbacService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.var;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -58,13 +61,19 @@ public class MngRbacServiceImpl implements RbacService {
 //                            .stream()
 //                            .anyMatch(resource -> antPathMatcher.match(resource.getUrl(), reqURI)
 //                                    && request.getMethod().equalsIgnoreCase(reqMethod));
-//                    if (res) {
-//                        hasPermission = true;
-//                        break;
-//                    }
+                    boolean temp;
+                    for (Resource resource : role.getResources()) {
+                        for (Interface anInterface : resource.getInterfaces()) {
+                            temp = antPathMatcher.match(anInterface.getUrl(), reqURI) && reqMethod.equalsIgnoreCase(anInterface.getName());
+                            if (temp) {
+                                hasPermission = true;
+                                break;
+                            }
+                        }
+                    }
                 }
 
-                if(!hasPermission){
+                if (!hasPermission) {
                     log.debug("后端权限校验：hasPermission 校验失败，权限不足 {} {} {} {}", admin.getUsername(), reqURI, reqMethod, roles);
                 }
             }

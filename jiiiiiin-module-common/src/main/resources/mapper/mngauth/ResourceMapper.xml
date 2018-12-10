@@ -8,7 +8,6 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.jiiiiiin.module.common.entity.mngauth.Resource">
         <result column="id" property="id"/>
-        <result column="code" property="code"/>
         <result column="pid" property="pid"/>
         <result column="pids" property="pids"/>
         <result column="name" property="name"/>
@@ -47,15 +46,43 @@
       delete from mng_role_resource where resource_id = #{id}
     </delete>
 
-    <select id="selectByRoleId" resultType="cn.jiiiiiin.module.common.entity.mngauth.Resource" useCache="false">
-        select
-            <include refid="selectByRoleId_Column_List"/>
-            from mng_resource r
+    <!--<select id="selectByRoleId" resultType="cn.jiiiiiin.module.common.entity.mngauth.Resource" useCache="false">-->
+        <!--select-->
+            <!--<include refid="selectByRoleId_Column_List"/>-->
+            <!--from mng_resource r-->
+            <!--left join mng_role_resource mrr on mrr.resource_id = r.id-->
+        <!--where-->
+            <!--mrr.role_id = #{roleId}-->
+            <!--and r.status = 1-->
+            <!--and r.channel = #{channel}-->
+        <!--order by levels,num asc-->
+    <!--</select>-->
+
+    <resultMap id="selectByRoleIdResultMap" type="cn.jiiiiiin.module.common.dto.mngauth.ResourceDto">
+        <result column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="name" property="name"/>
+        <result column="icon" property="icon"/>
+        <result column="path" property="path"/>
+        <result column="levels" property="levels"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <collection property="interfaces" ofType="Interface" javaType="list">
+            <result column="url" property="url"/>
+            <result column="method" property="method"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectByRoleId" resultMap="selectByRoleIdResultMap">
+        select r.*, i.url, i.method from mng_resource r
             left join mng_role_resource mrr on mrr.resource_id = r.id
-        where
+            left join mng_resource_interface ri on ri.`resource_id` = r.id
+            left join mng_interface i on ri.`interface_id` = i.id
+            where
             mrr.role_id = #{roleId}
             and r.status = 1
             and r.channel = #{channel}
+            and i.status = 1
         order by levels,num asc
     </select>
 

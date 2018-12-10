@@ -56,6 +56,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         log.debug("登录用户名 {} {}", channel, username);
         val res = adminMapper.selectByUsername(username, channel);
         if (res.getRoles().stream().anyMatch(p -> p.getId().equals(Role.ROLE_ADMIN_ID))) {
+            // 系统管理员拥有所有访问控制权限和菜单资源
             val adminRole = res.getRoles().stream().filter(p -> p.getId().equals(Role.ROLE_ADMIN_ID)).findFirst().get();
             adminRole.setResources(resourceMapper.selectByRoleId(adminRole.getId(), channel));
         } else {
