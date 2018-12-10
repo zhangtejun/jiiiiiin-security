@@ -1,5 +1,6 @@
 package cn.jiiiiiin.module.mngauth.service;
 
+import cn.jiiiiiin.module.common.dto.mngauth.ResourceDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
@@ -21,10 +22,9 @@ public interface IResourceService extends IService<Resource> {
      * 保存资源并检查父节点下面的子节点的排序
      *
      * @param resource
-     * @param channel
      * @return
      */
-    Boolean saveAndSortNum(Resource resource, ChannelEnum channel);
+    Boolean saveAndSortNumAndRelationInterfaceRecords(ResourceDto resource);
 
     /**
      * 注意：
@@ -33,10 +33,9 @@ public interface IResourceService extends IService<Resource> {
      * 不会修改子节点`children`属性
      *
      * @param resource
-     * @param channel
      * @return
      */
-    Boolean updateAndSortNum(Resource resource, ChannelEnum channel);
+    Boolean updateAndSortNumAndRelationInterfaceRecords(ResourceDto resource);
 
     /**
      * 通过父节点id获取其下的所有资源
@@ -67,4 +66,10 @@ public interface IResourceService extends IService<Resource> {
      */
     Boolean delOnlyIsLeafNode(Long id, ChannelEnum channel);
 
+    /**
+     * 通过资源id查询自身和关联记录
+     * @param id
+     * @return
+     */
+    ResourceDto getResourceAndRelationRecords(Long id);
 }

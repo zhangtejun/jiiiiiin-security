@@ -2,11 +2,13 @@ package cn.jiiiiiin.module.mngauth.controller;
 
 
 import cn.jiiiiiin.module.common.controller.BaseController;
+import cn.jiiiiiin.module.common.dto.mngauth.ResourceDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import com.baomidou.mybatisplus.extension.api.R;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +78,12 @@ public class ResourceController extends BaseController {
         return success(resourceService.treeAllChildrenNode(id, channel));
     }
 
+    @ApiOperation(value="通过id查询资源记录")
+    @GetMapping("qry/{id}")
+    public R<ResourceDto> qry(@PathVariable Long id) {
+        return success(resourceService.getResourceAndRelationRecords(id));
+    }
+
     /**
      * 创建资源
      *
@@ -83,8 +91,9 @@ public class ResourceController extends BaseController {
      * @return
      */
     @PostMapping
-    public R<Resource> create(@RequestBody Resource resource) {
-        resourceService.saveAndSortNum(resource, resource.getChannel());
+    public R<Resource> create(@RequestBody ResourceDto resource) {
+        resourceService.saveAndSortNumAndRelationInterfaceRecords(resource);
+        // 方便vue响应式数据属性定义
         return success(resource.setChildren(new ArrayList<>()));
     }
 
@@ -95,8 +104,8 @@ public class ResourceController extends BaseController {
      * @return
      */
     @PutMapping
-    public R<Resource> update(@RequestBody Resource resource) {
-        resourceService.updateAndSortNum(resource, resource.getChannel());
+    public R<Resource> update(@RequestBody ResourceDto resource) {
+        resourceService.updateAndSortNumAndRelationInterfaceRecords(resource);
         return success(resource);
     }
 

@@ -56,6 +56,12 @@
                 :is-fold="false"
                 :expand-type="false"
                 :selection-type="false">
+            <!--展开存在bug-->
+            <!--[Vue warn]: Duplicate keys detected: '0'. This may cause an update error.-->
+            <!--以上警告是树形插件本身爆出来的，待解决-->
+            <!--<template slot="$expand" slot-scope="scope">-->
+                <!--{{scope.row.name}}-->
+            <!--</template>-->
             <template slot="icon" slot-scope="scope">
                 <d2-icon v-if="scope.row.icon" :name="scope.row.icon"/>
                 <span v-else>空</span>
@@ -68,6 +74,7 @@
                 <!--<el-tag v-else size="mini" type="[scope.row.status === 1 ? '': 'success']"> {{ scope.row.status === 'ENABLE' ? '启用' : '停用' }}</el-tag>-->
             </template>
             <template slot="option" slot-scope="scope">
+                <el-button type="primary" plain size="mini" v-if="scope.row.id !== '0'" @click="onClickQryRelationInterfaceRecords(scope.row)">查看关联接口记录</el-button>
                 <el-button type="primary" plain size="mini" @click="onClickAdd(scope.row)">新增</el-button>
                 <el-button plain size="mini" @click="onClickUpdate(scope.row)" v-if="scope.row.id !== '0'">修改</el-button>
                 <!--根节点才可以删除-->
@@ -76,34 +83,137 @@
         </zk-table>
 
         <el-dialog
+                title="查看关联接口记录"
+                :visible.sync="dialogQryRelationInterfaceRecordsVisible"
+                width="70%"
+                :modal="true">
+            <el-row>
+                <el-col :span="8">
+                    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
+                        <d2-el-form-item label="类型" label-width="100px">
+                            <el-radio-group v-model="form.type" @change="onChangeType" :disabled="true">
+                                <el-radio label="MENU">菜单</el-radio>
+                                <el-radio label="BTN">按钮</el-radio>
+                            </el-radio-group>
+                        </d2-el-form-item>
+                        <d2-el-form-item label="名称" :required="true" prop="name" label-width="100px">
+                            <el-input v-model="form.name" autocomplete="off" disabled="disabled"></el-input>
+                        </d2-el-form-item>
+                        <d2-el-form-item label="父级菜单" label-width="100px">
+                            <el-input v-model="form.pname" autocomplete="off" disabled="disabled"></el-input>
+                        </d2-el-form-item>
+                        <d2-el-form-item label="状态" label-width="100px">
+                            <el-switch v-model="form.status" inactive-value="STOP" active-value="ENABLE" disabled="disabled"></el-switch>
+                        </d2-el-form-item>
+                        <d2-el-form-item label="路由" label-width="100px">
+                            <el-input v-model="form.path" autocomplete="off" disabled="disabled"></el-input>
+                        </d2-el-form-item>
+                        <d2-el-form-item label="同级排序" label-width="100px">
+                            <el-input-number v-model="form.num" :min="1" :max="numMax" label="排序" disabled="disabled"></el-input-number>
+                        </d2-el-form-item>
+                        <d2-el-form-item label="图标" v-show="visibleMenuFromField" label-width="100px">
+                            <el-select v-model="form.icon" filterable placeholder="请选择" disabled="disabled">
+                                <el-option
+                                        v-for="item in iconOptions"
+                                        :key="item.key"
+                                        :value="item.value"
+                                        :disabled="item.disabled">
+                                    <div v-if="item.disabled">
+                                        <span style="float: left">{{ item.label }}</span>
+                                    </div>
+                                    <div v-else>
+                                        <d2-icon :name="item.value" style="width: 30px"/>&nbsp;&nbsp;&nbsp;&nbsp;{{
+                                        item.value }}
+                                    </div>
+                                </el-option>
+                            </el-select>
+                        </d2-el-form-item>
+                    </el-form>
+                </el-col>
+                <el-col :span="15" style="float: right">
+                    <label class="el-form-item__label" style="width: 100px;">关联接口记录:</label>
+                    <el-table
+                            ref="table"
+                            :data="interfacesData"
+                            stripe
+                            border
+                            style="width: 100%">
+                        <el-table-column
+                                prop="name"
+                                :min-width="120"
+                                label="接口名称">
+                        </el-table-column>
+                        <el-table-column
+                                prop="url"
+                                label="接口地址">
+                        </el-table-column>
+                        <el-table-column
+                                label="接口类型"
+                                align="center"
+                                :width="80">
+                            <template slot-scope="scope">
+                                <el-tag v-if="scope.row.method === 'POST'">新增</el-tag>
+                                <el-tag v-else-if="scope.row.method === 'GET'" type="success">查询</el-tag>
+                                <el-tag v-else-if="scope.row.method === 'PUT'" type="warning">修改</el-tag>
+                                <el-tag v-else-if="scope.row.method === 'DELETE'" type="danger">删除</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                label="接口状态"
+                                align="center"
+                                :width="80">
+                            <template slot-scope="scope">
+                                <el-switch v-if="scope.row.id !== '0'" v-model="scope.row.status" inactive-value="STOP" active-value="ENABLE" @change="onTableItemStatusChange(scope.row)"></el-switch>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-col>
+            </el-row>
+            <div class="dialog-form-submit-container">
+                <div class="dialog-form-submit-inner-container">
+                    <el-button type="danger" @click="dialogQryRelationInterfaceRecordsVisible = false">关闭</el-button>
+                </div>
+            </div>
+        </el-dialog>
+
+        <el-dialog
                 :title="formMode === 'edit' ? '编辑' : '新增'"
                 :visible.sync="dialogFormVisible"
                 width="70%"
                 :modal="true">
             <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
-                <d2-el-form-item label="类型" >
+                <d2-el-form-item label="类型" label-width="100px">
                     <el-radio-group v-model="form.type" @change="onChangeType" :disabled="formTypeRadioStatus">
                         <el-radio label="MENU">菜单</el-radio>
                         <el-radio label="BTN">按钮</el-radio>
                     </el-radio-group>
                 </d2-el-form-item>
-                <d2-el-form-item label="名称" :required="true" prop="name">
+                <d2-el-form-item label="名称" :required="true" prop="name" label-width="100px">
                     <el-input v-model="form.name" autocomplete="off"></el-input>
                 </d2-el-form-item>
-                <d2-el-form-item label="父级菜单" >
+                <d2-el-form-item label="父级菜单" label-width="100px">
                     <el-input v-model="form.pname" autocomplete="off" disabled="disabled"></el-input>
                 </d2-el-form-item>
-                <d2-el-form-item label="状态" >
+                <d2-el-form-item label="状态" label-width="100px">
                     <!--！注意label需要类型匹配-->
                     <el-switch v-model="form.status" inactive-value="STOP" active-value="ENABLE"></el-switch>
                 </d2-el-form-item>
-                <d2-el-form-item label="路由" >
+                <d2-el-form-item label="路由" label-width="100px">
                     <el-input v-model="form.path" autocomplete="off"></el-input>
                 </d2-el-form-item>
-                <d2-el-form-item label="同级排序" >
+                <d2-el-form-item label="关联接口记录" label-width="100px">
+                    <el-transfer
+                            :titles="['未关联接口列表', '已关联接口列表']"
+                            filterable
+                            filter-placeholder="请输入接口地址"
+                            v-model="selectInterfaces"
+                            :data="interfacesData">
+                    </el-transfer>
+                </d2-el-form-item>
+                <d2-el-form-item label="同级排序" label-width="100px">
                     <el-input-number v-model="form.num" :min="1" :max="numMax" label="排序"></el-input-number>
                 </d2-el-form-item>
-                <d2-el-form-item label="图标"  v-show="visibleMenuFromField">
+                <d2-el-form-item label="图标"  v-show="visibleMenuFromField" label-width="100px">
                     <el-select v-model="form.icon" filterable placeholder="请选择">
                         <el-option
                                 v-for="item in iconOptions"
@@ -138,6 +248,10 @@ export default {
   name: 'mngauth-resource',
   data() {
     return {
+      dialogQryRelationInterfaceRecordsVisible: false,
+      // 关联的接口记录集合
+      interfacesData: [],
+      selectInterfaces: [],
       icon,
       channel: this.$store.state.d2admin.page.defChannel,
       channelOptions: this.$store.state.d2admin.page.channelOptions,
@@ -173,7 +287,8 @@ export default {
         pid: 0,
         pname: '',
         status: 'ENABLE',
-        type: 'MENU'
+        type: 'MENU',
+        interfacceIds: []
       },
       formTempl: {
         channel: '',
@@ -231,7 +346,7 @@ export default {
         },
         {
           label: '操作',
-          width: '215px',
+          width: '415px',
           type: 'template',
           template: 'option'
         }
@@ -260,6 +375,35 @@ export default {
     }
   },
   methods: {
+    onClickQryRelationInterfaceRecords(row) {
+      this.$vp.ajaxGet(`resource/qry/${row.id}`)
+        .then(res => {
+          if (_.isNil(res.interfaces) || res.interfaces.length === 0) {
+            this.$vp.toast('无关联记录', { type: 'warning' });
+            return;
+          }
+          this.interfacesData = res.interfaces
+          this._copy(row, res)
+          const pnode = this._findParentNode(row, this.data);
+          this.form = res;
+          this.form.pname = pnode.name;
+          this.dialogQryRelationInterfaceRecordsVisible = true
+        })
+    },
+    // 只有更新node才不会为`undefined`
+    generateInterfacesData() {
+      this.interfacesData = []
+      this.$vp.ajaxGet(`interface/list/${this.channel}`).then(res => {
+        res.forEach((item, index) => {
+          this.interfacesData.push({
+            key: item.id,
+            label: item.name,
+            disabled: item.status !== 'ENABLE',
+            id: item.id
+          })
+        })
+      })
+    },
     onChangeSearchChannel(idx) {
       this.channel = this.channelOptions[idx].value
     },
@@ -330,6 +474,7 @@ export default {
       // 业务：更新不可以调整资源的`type`
       this.formTypeRadioStatus = (mode !== 'add');
       this.dialogFormVisible = true
+      this.generateInterfacesData()
     },
     onClickAdd(node) {
       this.form = _.clone(this.formTempl);
@@ -342,11 +487,21 @@ export default {
       this._preHandlerAddOrUpdate('add', node)
     },
     onClickUpdate(node) {
-      this.form = node;
-      const pnode = this._findParentNode(node, this.data);
-      this.form.pname = pnode.name;
-      this.numMax = _.isEmpty(pnode.children) ? 1 : pnode.children.length + 1;
-      this._preHandlerAddOrUpdate('edit', node)
+      this.$vp.ajaxGet(`resource/qry/${node.id}`)
+        .then(res => {
+          if (!_.isNil(res.interfaces) || res.interfaces.length !== 0) {
+            this.selectInterfaces = []
+            res.interfaces.forEach(item => {
+              this.selectInterfaces.push(item.id)
+            })
+          }
+          this._copy(node, res);
+          const pnode = this._findParentNode(node, this.data);
+          this.form = res;
+          this.form.pname = pnode.name;
+          this.numMax = _.isEmpty(pnode.children) ? 1 : pnode.children.length + 1;
+          this._preHandlerAddOrUpdate('edit', node);
+        });
     },
     onChangeType(value) {
       this.visibleMenuFromField = value === 'MENU'
@@ -397,6 +552,7 @@ export default {
         if (valid) {
           let params = _.clone(this.form);
           delete params.pname;
+          params.interfacesIds = this.selectInterfaces
           if (this.formMode === 'add') {
             delete params.id;
             this.$vp.ajaxPostJson('resource', {

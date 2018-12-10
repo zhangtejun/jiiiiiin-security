@@ -1,17 +1,19 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
+import cn.jiiiiiin.module.common.dto.mngauth.ResourceDto;
+import cn.jiiiiiin.module.common.entity.mngauth.Interface;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
-import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import cn.jiiiiiin.module.mngauth.service.IRoleService;
 import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import lombok.NonNull;
 import lombok.val;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import static cn.jiiiiiin.module.common.entity.mngauth.Resource.IS_ROOT_MENU;
@@ -68,7 +71,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 
     @Transactional
     @Override
-    public Boolean saveAndSortNum(Resource resource, ChannelEnum channel) {
+    public Boolean saveAndSortNumAndRelationInterfaceRecords(ResourceDto resource) {
         var res = false;
         val pid = resource.getPid();
         if (pid.equals(IS_ROOT_MENU)) {
@@ -79,7 +82,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             // 设置新增资源的`pids`
             resource.setPids(pNode.getPids().concat(",").concat(String.valueOf(pid)));
         }
-        final List<Resource> children = resourceMapper.selectChildren(pid, channel);
+        final List<Resource> children = resourceMapper.selectChildren(pid, resource.getChannel());
         val size = children.size();
         val addNodeNum = resource.getNum();
         if (addNodeNum > size || size == 0) {
@@ -106,14 +109,39 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             val resList = new ArrayList<Resource>();
             resList.add(resource);
             adminRole.setResources(resList);
-            roleService.insertRelationResourceRecords(adminRole);
+            roleService.saveRelationResourceRecords(adminRole);
+
+            // 插入管理`接口`记录
+            val itfIds = resource.getInterfacesIds();
+            if (itfIds != null && itfIds.length > 0) {
+                resourceMapper.insertRelationInterfaceRecords(_parseInterfacesIds(resource));
+            }
         }
         return res;
     }
 
+    /**
+     * 注意：使用{@link ResourceDto#interfacesIds}作为资源的关联接口记录，而不是使用{@link Resource#interfaces}
+     *
+     * @param resource
+     * @return
+     */
+    private ResourceDto _parseInterfacesIds(@NonNull ResourceDto resource) {
+        val itfIds = resource.getInterfacesIds();
+        val newItf = new HashSet<Interface>();
+        if (itfIds != null && itfIds.length > 0) {
+            for (Long id : resource.getInterfacesIds()) {
+                newItf.add((Interface) new Interface().setId(id));
+            }
+        }
+        resource.setInterfaces(newItf);
+        return resource;
+    }
+
     @Transactional
     @Override
-    public Boolean updateAndSortNum(Resource resource, ChannelEnum channel) {
+    public Boolean updateAndSortNumAndRelationInterfaceRecords(ResourceDto resource) {
+        var res = false;
         val currentNode = resourceMapper.selectById(resource.getId());
         val currentNum = currentNode.getNum();
         val modifyNum = resource.getNum();
@@ -126,9 +154,9 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
                 .setIcon(resource.getIcon());
         // 如果没有修改排序
         if (currentNum.equals(modifyNum)) {
-            return SqlHelper.retBool(resourceMapper.updateById(currentNode));
+            res = SqlHelper.retBool(resourceMapper.updateById(currentNode));
         } else {
-            final List<Resource> children = resourceMapper.selectChildren(currentNode.getPid(), channel);
+            final List<Resource> children = resourceMapper.selectChildren(currentNode.getPid(), currentNode.getChannel());
             // 需要排序
             val childrenLength = children.size();
             var idx = -1;
@@ -149,8 +177,18 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             }
             children.remove(idx);
             children.add(idx, currentNode);
-            return this.saveOrUpdateBatch(children);
+            res = this.saveOrUpdateBatch(children);
         }
+
+        if (res) {
+            // 插入管理`接口`记录
+            val itfIds = resource.getInterfacesIds();
+            if (itfIds != null && itfIds.length > 0) {
+                resourceMapper.deleteRelationInterfaceRecords(currentNode.getId());
+                resourceMapper.insertRelationInterfaceRecords(_parseInterfacesIds(resource));
+            }
+        }
+        return res;
     }
 
     @Transactional
@@ -194,6 +232,11 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             }
         }
         return temp;
+    }
+
+    @Override
+    public ResourceDto getResourceAndRelationRecords(Long id) {
+        return resourceMapper.selectResourceAndRelationRecords(id);
     }
 
 }

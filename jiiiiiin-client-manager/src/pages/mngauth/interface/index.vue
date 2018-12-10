@@ -94,6 +94,10 @@
           <el-switch v-if="scope.row.id !== '0'" v-model="scope.row.status" inactive-value="STOP" active-value="ENABLE" @change="onTableItemStatusChange(scope.row)"></el-switch>
         </template>
       </el-table-column>
+      <el-table-column
+              prop="description"
+              label="接口描述">
+      </el-table-column>
     </el-table>
 
     <el-form slot="form" :model="form" :rules="rules" ref="form" @submit.native.prevent>
@@ -117,6 +121,14 @@
                     :value="item.value">
             </el-option>
           </el-select>
+        </d2-el-form-item>
+        <d2-el-form-item label="接口描述" >
+          <el-input
+                  type="textarea"
+                  :rows="2"
+                  placeholder="请输入内容"
+                  v-model="form.description">
+          </el-input>
         </d2-el-form-item>
 
         <div class="dialog-form-submit-inner-container">
@@ -168,7 +180,7 @@ export default {
         name: '',
         method: '',
         url: '',
-        desc: '',
+        description: '',
         status: 'ENABLE'
       },
       formTmpl: {},

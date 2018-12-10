@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.ManagerApp;
+import cn.jiiiiiin.module.common.dto.mngauth.ResourceDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
@@ -43,7 +44,7 @@ public class IResourceServiceTest {
                 .setNum(1)
                 .setLevels(2)
                 .setName("测试排序");
-        val res = resourceService.saveAndSortNum(newResource, ChannelEnum.MNG);
+        val res = resourceService.saveAndSortNumAndRelationInterfaceRecords((ResourceDto) newResource);
         Assert.assertTrue(res);
     }
 

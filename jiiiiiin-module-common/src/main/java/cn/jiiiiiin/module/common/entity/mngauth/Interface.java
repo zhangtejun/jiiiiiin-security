@@ -58,9 +58,9 @@ public class Interface extends BaseEntity<Interface> {
     private ChannelEnum channel;
 
 
-    public static final String URL = "url";
-
     public static final String NAME = "name";
+
+    public static final String URL = "url";
 
     public static final String METHOD = "method";
 

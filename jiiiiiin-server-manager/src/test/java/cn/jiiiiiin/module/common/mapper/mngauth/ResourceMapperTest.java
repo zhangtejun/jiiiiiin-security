@@ -3,6 +3,8 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.dto.mngauth.Menu;
+import cn.jiiiiiin.module.common.dto.mngauth.ResourceDto;
+import cn.jiiiiiin.module.common.entity.mngauth.Interface;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
@@ -26,7 +28,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+
 import static cn.jiiiiiin.security.core.dict.CommonConstants.GET;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ManagerApp.class)
@@ -58,8 +63,8 @@ public class ResourceMapperTest {
                 .setLevels(1)
                 .setNum(1);
         int homeRes = resourceMapper.insert(home);
-        Assert.assertTrue(SqlHelper.retBool(homeRes));
-        Assert.assertTrue(home.getId() > 0);
+        assertTrue(SqlHelper.retBool(homeRes));
+        assertTrue(home.getId() > 0);
 
 //        val resource = new Resource()
 //                .setName("系统设置")
@@ -108,7 +113,7 @@ public class ResourceMapperTest {
 //        set.add(resource3);
 //        set.add(resource4);
 //        operator.setResources(set);
-//        int temp = roleMapper.insertRelationResourceRecords(operator);
+//        int temp = roleMapper.saveRelationResourceRecords(operator);
 //        Assert.assertTrue(SqlHelper.retBool(temp));
     }
 
@@ -143,13 +148,13 @@ public class ResourceMapperTest {
                 .setNum(4)
                 .setType(ResourceTypeEnum.MENU);
         int interfaceMngRes = resourceMapper.insert(interfaceMng);
-        Assert.assertTrue(SqlHelper.retBool(interfaceMngRes));
+        assertTrue(SqlHelper.retBool(interfaceMngRes));
 
         val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
         val set = operator.getResources();
         set.add(interfaceMng);
         int temp = roleMapper.insertRelationResourceRecords(operator);
-        Assert.assertTrue(SqlHelper.retBool(temp));
+        assertTrue(SqlHelper.retBool(temp));
     }
 
     @Test
@@ -159,7 +164,7 @@ public class ResourceMapperTest {
         val res = resourceMapper.selectByRoleId(operator.getId(), ChannelEnum.MNG);
         log.info("testSelectByRoleId {}", res);
         Assert.assertNotNull(res);
-        Assert.assertTrue(res.size() > 0);
+        assertTrue(res.size() > 0);
     }
 
     @Test
@@ -186,5 +191,22 @@ public class ResourceMapperTest {
         val res = resourceMapper.selectAllChildrenNode(0L, ChannelEnum.MNG, StatusEnum.ENABLE);
         Assert.assertNotNull(res);
         log.debug("treeAllChildrenNode {}", JSONObject.toJSON(res));
+    }
+
+    @Test
+    public void insertRelationInterfaceRecords() {
+        val interfaces = new HashSet<Interface>();
+        interfaces.add((Interface) new Interface().setId(1071771910230102017L));
+        interfaces.add((Interface) new Interface().setId(1071944020369932289L));
+        val resourceDto = new ResourceDto().setInterfaces(interfaces).setId(1062518178556526593L);
+        val res = resourceMapper.insertRelationInterfaceRecords((ResourceDto) resourceDto);
+        assertTrue(res);
+    }
+
+    @Test
+    public void selectResourceAndRelationRecords() {
+        val res = resourceMapper.selectResourceAndRelationRecords(1062518178556526593L);
+        Assert.assertNotNull(res);
+        log.debug("selectResourceAndRelationRecords {}", JSONObject.toJSON(res));
     }
 }

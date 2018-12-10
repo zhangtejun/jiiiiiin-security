@@ -78,6 +78,9 @@ public class Resource extends BaseEntity<Resource> {
     @TableField(exist = false)
     private List<Resource> children;
 
+    @TableField(exist = false)
+    private Set<Interface> interfaces = new HashSet<>();
+
     public static final String PID = "pid";
 
     public static final String PIDS = "pids";

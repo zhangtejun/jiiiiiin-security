@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -34,6 +35,12 @@ public class InterfaceController extends BaseController {
 
     @Autowired
     private IInterfaceService interfaceService;
+
+    @ApiOperation(value = "接口记录列表查询", httpMethod = "GET")
+    @GetMapping("list/{channel}")
+    public R<List<Interface>> list(@PathVariable ChannelEnum channel) {
+        return R.ok(interfaceService.list(new QueryWrapper<Interface>().eq(Interface.CHANNEL, channel)));
+    }
 
     @ApiOperation(value = "接口记录分页查询", httpMethod = "GET")
     @GetMapping("{channel}/{current}/{size}")

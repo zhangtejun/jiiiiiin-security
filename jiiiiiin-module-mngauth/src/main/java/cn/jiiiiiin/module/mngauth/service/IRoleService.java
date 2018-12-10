@@ -50,7 +50,7 @@ public interface IRoleService extends IService<Role> {
      * @param role
      * @return
      */
-    Boolean insertRelationResourceRecords(Role role);
+    Boolean saveRelationResourceRecords(Role role);
 
     /**
      * 获取角色和其关联的记录

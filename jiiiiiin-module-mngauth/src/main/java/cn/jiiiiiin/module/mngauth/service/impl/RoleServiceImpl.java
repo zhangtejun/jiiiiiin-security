@@ -92,7 +92,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-    public Boolean insertRelationResourceRecords(Role role) {
+    public Boolean saveRelationResourceRecords(Role role) {
         return SqlHelper.retBool(roleMapper.insertRelationResourceRecords(role));
     }
 

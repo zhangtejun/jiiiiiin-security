@@ -1,5 +1,6 @@
 package cn.jiiiiiin.module.common.mapper.mngauth;
 
+import cn.jiiiiiin.module.common.dto.mngauth.ResourceDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
@@ -57,5 +58,26 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * 清理对应的资源和角色关联的记录
      * @param id
      */
-    void deleteRelationRoleRecords(Long id);
+    Boolean deleteRelationRoleRecords(Long id);
+
+    /**
+     * 插入关联的接口记录{@link ResourceDto#interfacesIds}
+     * @param resource
+     * @return
+     */
+    Boolean insertRelationInterfaceRecords(ResourceDto resource);
+
+    /**
+     * 通过资源id查询自身和关联记录
+     * @param id
+     * @return
+     */
+    ResourceDto selectResourceAndRelationRecords(Long id);
+
+    /**
+     * 清理资源（id）所关联的接口记录
+     * @param id
+     * @return
+     */
+    Boolean deleteRelationInterfaceRecords(Long id);
 }
