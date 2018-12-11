@@ -211,7 +211,7 @@
                     </el-transfer>
                 </d2-el-form-item>
                 <d2-el-form-item label="同级排序" label-width="100px">
-                    <el-input-number v-model="form.num" :min="1" :max="numMax" label="排序"></el-input-number>
+                    <el-input-number v-model="form.num" label="排序"></el-input-number>
                 </d2-el-form-item>
                 <d2-el-form-item label="图标"  v-show="visibleMenuFromField" label-width="100px">
                     <el-select v-model="form.icon" filterable placeholder="请选择">
@@ -383,12 +383,12 @@ export default {
             return;
           }
           this.interfacesData = res.interfaces
-          console.log('onClickQryRelationInterfaceRecords', res)
+          console.log('onClickQryRelationInterfaceRecords', res.name, res.num)
           this._copy(row, res)
           this.form = res;
           const pnode = this._findParentNode(row, this.data);
           this.form.pname = pnode.name;
-          console.log('onClickQryRelationInterfaceRecords2', this.form)
+          console.log('onClickQryRelationInterfaceRecords2', this.form.name, this.form.num)
           this.dialogQryRelationInterfaceRecordsVisible = true
         })
     },

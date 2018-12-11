@@ -46,7 +46,7 @@
 + 启动后端内管应用
 + 进入前端内管应用：jiiiiiin-client-manager
     - 安装项目依赖：`npm i`
-    - 配置服务端uri：`.env.development`文件下：VUE_APP_SEVER_URL=http://192.168.1.123:9000
+    - 配置服务端uri：`.env.development`文件下：`VUE_APP_SEVER_URL=http://192.168.1.123:9000`
     - 启动前端内管应用：`npm run serve`
 
 # 所用技术栈

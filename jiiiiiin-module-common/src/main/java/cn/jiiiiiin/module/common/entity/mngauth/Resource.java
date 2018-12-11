@@ -89,13 +89,13 @@ public class Resource extends BaseEntity<Resource> {
 
     public static final String ICON = "icon";
 
-    public static final String PATH = "PATH";
+    public static final String PATH = "path";
 
     public static final String NUM = "num";
 
     public static final String LEVELS = "levels";
 
-    public static final String TYPE = "TYPE";
+    public static final String TYPE = "type";
 
     public static final String STATUS = "status";
 
