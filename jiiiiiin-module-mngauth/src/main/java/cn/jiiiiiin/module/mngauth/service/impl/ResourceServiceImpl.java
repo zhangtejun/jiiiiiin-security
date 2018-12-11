@@ -6,6 +6,7 @@ import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import cn.jiiiiiin.module.mngauth.service.IRoleService;
@@ -143,6 +144,9 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     public Boolean updateAndSortNumAndRelationInterfaceRecords(ResourceDto resource) {
         var res = false;
         val currentNode = resourceMapper.selectById(resource.getId());
+        if (currentNode == null) {
+            throw new BusinessErrException(String.format("找不到待更新的资源记录【%s】", resource.getId()));
+        }
         val currentNum = currentNode.getNum();
         val modifyNum = resource.getNum();
         // 设置可更新属性

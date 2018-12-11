@@ -122,7 +122,7 @@
             </el-option>
           </el-select>
         </d2-el-form-item>
-        <d2-el-form-item label="接口描述" >
+        <d2-el-form-item label="接口描述" prop="description">
           <el-input
                   type="textarea"
                   :rows="2"
@@ -173,6 +173,9 @@ export default {
         name: [
           { required: true, message: '请输入', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        description: [
+          { min: 5, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' }
         ]
       },
       chooseRoles: [],

@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/admin")
+@Api
 public class AdminController extends BaseController {
 
     @Autowired
@@ -88,7 +90,7 @@ public class AdminController extends BaseController {
         return success(adminService.getAdminAndRelationRecords(id));
     }
 
-    @ApiOperation(value = "新增用户", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "GET")
+    @ApiOperation(value = "新增用户", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "POST")
     @PostMapping
     public R<AdminDto> create(@RequestBody AdminDto admin) {
         if (adminService.saveAdminAndRelationRecords(admin)) {
@@ -98,7 +100,7 @@ public class AdminController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "更新用户信息", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "GET")
+    @ApiOperation(value = "更新用户信息", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "PUT")
     @PutMapping
     public R<AdminDto> update(@RequestBody AdminDto admin) {
         if (adminService.updateAdminAndRelationRecords(admin)) {
@@ -108,7 +110,7 @@ public class AdminController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "更新用户密码", notes = "只能在用户拥有系统管理员角色权限的状态下使用该接口", httpMethod = "GET")
+    @ApiOperation(value = "更新用户密码", notes = "只能在用户拥有系统管理员角色权限的状态下使用该接口", httpMethod = "PUT")
     @PutMapping("pwd")
     public R<AdminDto> updatePwd(@RequestBody AdminDto admin, @AuthenticationPrincipal UserDetails user) {
         if (user.getAuthorities().stream().anyMatch(p -> p.equals(adminSimpleGrantedAuthority))) {

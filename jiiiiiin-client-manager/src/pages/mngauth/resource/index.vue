@@ -163,7 +163,7 @@
                                 align="center"
                                 :width="80">
                             <template slot-scope="scope">
-                                <el-switch v-if="scope.row.id !== '0'" v-model="scope.row.status" inactive-value="STOP" active-value="ENABLE" @change="onTableItemStatusChange(scope.row)"></el-switch>
+                                <el-switch v-if="scope.row.id !== '0'" v-model="scope.row.status" inactive-value="STOP" active-value="ENABLE" disabled></el-switch>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -383,10 +383,12 @@ export default {
             return;
           }
           this.interfacesData = res.interfaces
+          console.log('onClickQryRelationInterfaceRecords', res)
           this._copy(row, res)
-          const pnode = this._findParentNode(row, this.data);
           this.form = res;
+          const pnode = this._findParentNode(row, this.data);
           this.form.pname = pnode.name;
+          console.log('onClickQryRelationInterfaceRecords2', this.form)
           this.dialogQryRelationInterfaceRecordsVisible = true
         })
     },
@@ -484,6 +486,7 @@ export default {
       this.form.levels = node.levels + 1;
       this.numMax = _.isEmpty(node.children) ? 1 : node.children.length + 1;
       this.form.num = this.numMax;
+      this.interfacesData = []
       this._preHandlerAddOrUpdate('add', node)
     },
     onClickUpdate(node) {

@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -36,47 +38,49 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/role")
+@Api
 public class RoleController extends BaseController {
 
     @Autowired
     private IRoleService roleService;
 
+    @ApiOperation(value = "角色记录列表查询", notes = "查询对应渠道所有角色记录", httpMethod = "GET")
     @GetMapping("list/{channel}")
     public R<List<Role>> page(@PathVariable ChannelEnum channel) {
         return R.ok(roleService.list(new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
+    @ApiOperation(value = "角色记录分页查询", notes = "分页查询对应渠道角色记录", httpMethod = "GET")
     @GetMapping("{channel}/{current}/{size}")
     public R<IPage<Role>> page(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
+    @ApiOperation(value = "角色记录分页检索", notes = "分页检索对应渠道角色记录", httpMethod = "GET")
     @PostMapping("search/{channel}/{current}/{size}")
     public R<IPage<Role>> searchPage(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Role role) {
         return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).like(Role.AUTHORITY_NAME, role.getAuthorityName())));
     }
 
+    @ApiOperation(value = "角色记录（适配eleui）分页查询", notes = "分页查询对应渠道角色记录，适配前端element-ui数据格式要求，提供展开功能所属数据而定义", httpMethod = "GET")
     @GetMapping("eleui/{channel}/{current}/{size}")
     public R<IPage<RoleDto>> eleuiTableList(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(roleService.pageDto(new Page<>(current, size), channel, null));
     }
 
+    @ApiOperation(value = "角色记录（适配eleui）分页检索", notes = "分页检索对应渠道角色记录，适配前端element-ui数据格式要求，提供展开功能所属数据而定义", httpMethod = "GET")
     @PostMapping("search/eleui/{channel}/{current}/{size}")
     public R<IPage<RoleDto>> eleuiTableSearch(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Role role) {
         return R.ok(roleService.pageDto(new Page<>(current, size), channel, role));
     }
 
+    @ApiOperation(value = "角色记录查询", notes = "根据路径参数角色id查询其详细数据", httpMethod = "GET")
     @GetMapping("{id}")
     public R<RoleDto> getRoleAndRelationRecords(@PathVariable Long id) {
         return R.ok(roleService.getRoleAndRelationRecords(id));
     }
 
-    /**
-     * 查询角色记录及其关联的element-ui树形控件选择的资源记录
-     *
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "角色记录（适配eleui）查询", notes = "根据路径参数角色id查询其详细数据，查询角色记录及其关联的element-ui树形控件选择的资源记录", httpMethod = "GET")
     @GetMapping("eleui/{id}")
     public R<RoleDto> getRoleAndRelationEleUiResourceRecords(@PathVariable Long id) {
         return R.ok(roleService.getRoleAndRelationEleUiResourceRecords(id));
@@ -121,20 +125,23 @@ public class RoleController extends BaseController {
      * @param role 其中可能包含{@link Role#getResources()}，因为前端控件的原因，下面将会添加资源对应的父节点到需要关联的记录中
      * @return
      */
+    @ApiOperation(value = "新增角色", notes = "添加角色和其管理的资源记录", httpMethod = "POST")
     @PostMapping
     public R<Role> create(@RequestBody Role role) {
         roleService.save(role, _parseResourceIds(role));
         return success(role);
     }
 
+    @ApiOperation(value = "更新角色信息", notes = "更新角色信息和其管理的资源记录", httpMethod = "PUT")
     @PutMapping
     public R<Role> update(@RequestBody Role role) {
         roleService.update(role, _parseResourceIds(role));
         return success(role);
     }
 
+    @ApiOperation(value = "批量删除角色", notes = "批量删除角色角色和其管理的资源记录", httpMethod = "DELETE")
     @DeleteMapping
-    public R<Boolean> del(@RequestBody Admin data) {
+    public R<Boolean> dels(@RequestBody Admin data) {
         val roles = data.getRoles();
         if (roles.size() > 0) {
             val idList = new HashSet<Long>();
