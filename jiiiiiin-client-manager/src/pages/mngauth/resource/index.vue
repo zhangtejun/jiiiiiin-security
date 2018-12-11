@@ -1,7 +1,7 @@
 <template>
     <d2-container>
         <el-row>
-            <el-col :span="23">
+            <el-col :span="18">
                 <el-form :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
                     <el-form-item label="渠道" prop="channel">
                         <el-select size="small" v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
@@ -25,6 +25,17 @@
                         <el-button size="small" icon="el-icon-refresh" @click="onCancelSubmit">重置</el-button>
                     </el-form-item>
                 </el-form>
+            </el-col>
+            <el-col :span="5">
+                <div style="margin-top: 10px;">
+                    <el-switch
+                            v-model="isFold"
+                            inactive-text="关闭资源树"
+                            active-text="展开资源树"
+                            :inactive-value="false"
+                            :active-value="true">
+                    </el-switch>
+                </div>
             </el-col>
             <el-col :span="1">
                 <el-popover
@@ -53,7 +64,7 @@
                 :border="true"
                 :show-index="false"
                 :tree-type="true"
-                :is-fold="false"
+                :is-fold="isFold"
                 :expand-type="false"
                 :selection-type="false">
             <!--展开存在bug-->
@@ -249,6 +260,7 @@ export default {
   name: 'mngauth-resource',
   data() {
     return {
+      isFold: false,
       dialogQryRelationInterfaceRecordsVisible: false,
       // 关联的接口记录集合
       interfacesData: [],
