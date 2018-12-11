@@ -41,8 +41,8 @@
 
 # 快速开始
 
-+ [导入数据【sql-mysql.sql】]()
-+ [启动redis，配置查看application.yml#redis]()
++ [导入数据【sql-mysql.sql】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/db/sql-mysql.sql)
++ [启动redis，配置查看【application.yml#redis】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L28)
 + 启动后端内管应用
 + 进入前端内管应用：jiiiiiin-client-manager
     - 安装项目依赖：`npm i`
