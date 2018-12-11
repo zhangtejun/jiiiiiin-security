@@ -203,6 +203,7 @@
                 </d2-el-form-item>
                 <d2-el-form-item label="关联接口记录" label-width="100px">
                     <el-transfer
+                            class="mng-resource-dialog-transfer"
                             :titles="['未关联接口列表', '已关联接口列表']"
                             filterable
                             filter-placeholder="请输入接口地址"
@@ -397,7 +398,7 @@ export default {
         res.forEach((item, index) => {
           this.interfacesData.push({
             key: item.id,
-            label: item.name,
+            label: `${item.name} - ${item.url}`,
             disabled: item.status !== 'ENABLE',
             id: item.id
           })
@@ -653,21 +654,25 @@ export default {
         align-items: center;
         flex-direction: column;
         height: 50px;
+
         &:hover {
             .icon {
                 transform: scale(1.1);
             }
+
             .icon-title {
                 color: $color-text-main;
             }
         }
     }
+
     .icon {
         height: 30px;
         width: 30px;
         transition: all .3s;
         cursor: pointer;
     }
+
     .icon-title {
         font-size: 12px;
         margin-top: 3px;

@@ -14,13 +14,15 @@
 
 body {
   #app {
+
+    .el-transfer-panel {
+      width: 40%;
+    }
+
     .mng-list {
       .d2-container-full__footer {
         border: none;
       }
-    }
-
-    .mng-list {
 
       .el-form--inline{
         .el-form-item {
@@ -41,7 +43,6 @@ body {
         }
 
       }
-
     }
 
   }
