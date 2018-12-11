@@ -48,6 +48,7 @@ public class MngRbacServiceImpl implements RbacService {
             if (hasAdminRole) {
                 hasPermission = true;
             } else {
+                // 前端`接口记录`只输入类似：'admin/search/*/*/*'，故这里要进行一个请求uri的replace修改
                 if (StringUtils.isEmpty(replaceContextPath)) {
                     replaceContextPath = request.getContextPath().concat("/");
                 }
@@ -56,16 +57,10 @@ public class MngRbacServiceImpl implements RbacService {
                 // 读取用户所拥有权限的所有URL
                 // 通过用户标识-》用户角色-》角色拥有的资源
 
-                log.debug("后端权限校验：hasPermission 服务 判断 {} {} {}", reqURI, reqMethod, roles);
+                log.debug("内管权限校验开始：{} {} {}", admin.getUsername(), reqURI, reqMethod);
                 val iterator = roles.iterator();
                 while (iterator.hasNext()) {
                     val role = iterator.next();
-                    // TODO 待修改
-                    // 进行资源匹配
-//                    val res = role.getResources()
-//                            .stream()
-//                            .anyMatch(resource -> antPathMatcher.match(resource.getUrl(), reqURI)
-//                                    && request.getMethod().equalsIgnoreCase(reqMethod));
                     boolean temp;
                     for (Resource resource : role.getResources()) {
                         for (Interface anInterface : resource.getInterfaces()) {
@@ -79,7 +74,7 @@ public class MngRbacServiceImpl implements RbacService {
                 }
 
                 if (!hasPermission) {
-                    log.debug("后端权限校验：hasPermission 校验失败，权限不足 {} {} {} {}", admin.getUsername(), reqURI, reqMethod, roles);
+                    log.debug("内管权限校验失败，权限不足 {} {} {} {}", admin.getUsername(), reqURI, reqMethod, roles);
                 }
             }
         }

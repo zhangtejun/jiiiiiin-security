@@ -10,7 +10,7 @@
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
 | 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
-| RBAC后端权限控制 | 90% | [基于Spring Security的后端RBAC权限控制](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master/jiiiiiin-security-authorize) |
+| RBAC后端权限控制 | 95% | [基于Spring Security的后端RBAC权限控制](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master/jiiiiiin-security-authorize) |
 | 角色管理 | 95% | 用来管理系统定义的角色 |
 | 资源管理 | 95% | 用来管理系统定义的资源 |
 | 用户管理 | 95% | 用来管理系统存在的用户 |
@@ -31,15 +31,23 @@
 
 角色管理页面截图
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxp1lix1goj31c00u0wik.jpg)
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy2ty1scr8j31c00u0n1l.jpg)
 
 资源管理页面截图（支持前端Vue Router `path`关联）
 
-![image-20181207163547451](https://ws2.sinaimg.cn/large/006tNbRwgy1fy1fec8jmhj31c00u0juc.jpg)
+![image-20181207163547451](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg)
 
 接口管理页面截图
 
+# 快速开始
 
++ [导入数据【sql-mysql.sql】]()
++ [启动redis，配置查看application.yml#redis]()
++ 启动后端内管应用
++ 进入前端内管应用：jiiiiiin-client-manager
+    - 安装项目依赖：`npm i`
+    - 配置服务端uri：`.env.development`文件下：VUE_APP_SEVER_URL=http://192.168.1.123:9000
+    - 启动前端内管应用：`npm run serve`
 
 # 所用技术栈
 
