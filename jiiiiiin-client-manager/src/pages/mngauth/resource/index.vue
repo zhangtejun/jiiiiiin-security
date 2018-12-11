@@ -109,7 +109,7 @@
                             <el-input v-model="form.path" autocomplete="off" disabled="disabled"></el-input>
                         </d2-el-form-item>
                         <d2-el-form-item label="同级排序" label-width="100px">
-                            <el-input-number v-model="form.num" :min="1" :max="numMax" label="排序" disabled="disabled"></el-input-number>
+                            <el-input-number v-model="form.num" label="排序" disabled="disabled"></el-input-number>
                         </d2-el-form-item>
                         <d2-el-form-item label="图标" v-show="visibleMenuFromField" label-width="100px">
                             <el-select v-model="form.icon" filterable placeholder="请选择" disabled="disabled">
@@ -211,7 +211,7 @@
                     </el-transfer>
                 </d2-el-form-item>
                 <d2-el-form-item label="同级排序" label-width="100px">
-                    <el-input-number v-model="form.num" label="排序"></el-input-number>
+                    <el-input-number v-model="form.num" :min="1" :max="numMax" label="排序"></el-input-number>
                 </d2-el-form-item>
                 <d2-el-form-item label="图标"  v-show="visibleMenuFromField" label-width="100px">
                     <el-select v-model="form.icon" filterable placeholder="请选择">
