@@ -7,7 +7,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="cn.jiiiiiin.module.common.entity.mngauth.Interface">
-    <result column="id" property="id" />
+        <result column="id" property="id" />
         <result column="url" property="url" />
         <result column="name" property="name" />
         <result column="method" property="method" />
@@ -21,5 +21,11 @@
         id,
         url, name, method, description, status, channel
     </sql>
+
+    <select id="selectByResourceId" resultType="cn.jiiiiiin.module.common.entity.mngauth.Interface">
+        select name, url, method from mng_interface i
+          left join mng_resource_interface ri on ri.interface_id = i.id
+          where ri.resource_id = #{resourceId}
+    </select>
 
 </mapper>

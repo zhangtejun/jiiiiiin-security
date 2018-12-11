@@ -43,17 +43,19 @@ public class AdminController extends BaseController {
     @Autowired
     private SimpleGrantedAuthority adminSimpleGrantedAuthority;
 
-    @ApiOperation(value = "用户记录分页查询接口", httpMethod = "GET")
+    @ApiOperation(value = "用户记录分页查询", httpMethod = "GET")
     @GetMapping("{channel}/{current}/{size}")
     public R<IPage<AdminDto>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(adminService.pageAdminDto(new Page<>(current, size), channel, null));
     }
 
+    @ApiOperation(value = "用户【AdminDto】记录分页检索", httpMethod = "GET")
     @PostMapping("search/dto/{channel}/{current}/{size}")
     public R<IPage<AdminDto>> searchAdminDto(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody AdminDto admin) {
         return R.ok(adminService.pageAdminDto(new Page<AdminDto>(current, size), channel, admin));
     }
 
+    @ApiOperation(value = "用户记录分页检索", httpMethod = "GET")
     @PostMapping("search/{channel}/{current}/{size}")
     public R<IPage<Admin>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Admin admin) {
         val qw = new QueryWrapper<Admin>()
@@ -74,22 +76,19 @@ public class AdminController extends BaseController {
     /**
      * 获取当前登录的管理员信息
      */
+    @ApiOperation(value = "登录用户自身记录查询", httpMethod = "GET")
     @GetMapping("/me")
     public R<AdminDto> me(@AuthenticationPrincipal UserDetails user) {
         return success((AdminDto) new AdminDto().setUsername(user.getUsername()));
     }
 
+    @ApiOperation(value = "用户记录查询", httpMethod = "GET")
     @GetMapping("{id}")
     public R<AdminDto> getAdminAndRelationRecords(@PathVariable Long id) {
         return success(adminService.getAdminAndRelationRecords(id));
     }
 
-    /**
-     * 关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中
-     *
-     * @param admin
-     * @return
-     */
+    @ApiOperation(value = "新增用户", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "GET")
     @PostMapping
     public R<AdminDto> create(@RequestBody AdminDto admin) {
         if (adminService.saveAdminAndRelationRecords(admin)) {
@@ -99,12 +98,7 @@ public class AdminController extends BaseController {
         }
     }
 
-    /**
-     * 关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中
-     *
-     * @param admin
-     * @return
-     */
+    @ApiOperation(value = "更新用户信息", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "GET")
     @PutMapping
     public R<AdminDto> update(@RequestBody AdminDto admin) {
         if (adminService.updateAdminAndRelationRecords(admin)) {
@@ -114,6 +108,7 @@ public class AdminController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "更新用户密码", notes = "只能在用户拥有系统管理员角色权限的状态下使用该接口", httpMethod = "GET")
     @PutMapping("pwd")
     public R<AdminDto> updatePwd(@RequestBody AdminDto admin, @AuthenticationPrincipal UserDetails user) {
         if (user.getAuthorities().stream().anyMatch(p -> p.equals(adminSimpleGrantedAuthority))) {
@@ -122,6 +117,7 @@ public class AdminController extends BaseController {
         return success(admin);
     }
 
+    @ApiOperation(value="批量删除用户记录", notes = "根据路径参数解析待删除的用户记录id集合，登录用户自身不能删除自己的记录", httpMethod = "DELETE")
     @DeleteMapping("dels/{ids}")
     public R<Boolean> dels(@PathVariable String ids) {
         _checkHasSelf(ids.split(","));
@@ -140,6 +136,7 @@ public class AdminController extends BaseController {
         }
     }
 
+    @ApiOperation(value="删除用户记录", notes = "根据路径参数用户记录id删除对应用户，登录用户自身不能删除自己的记录", httpMethod = "DELETE")
     @DeleteMapping("{id}")
     public R<Boolean> del(@PathVariable Long id) {
         _checkHasSelf(new String[]{String.valueOf(id)});

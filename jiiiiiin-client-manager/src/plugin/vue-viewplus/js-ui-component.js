@@ -17,7 +17,7 @@ export default {
    */
   toast(msg = '默认消息', {
     time = 2000,
-    type = 'info'
+    type = 'success'
   } = {}) {
     Message({
       message: msg,

@@ -6,6 +6,7 @@ import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import cn.jiiiiiin.module.common.mapper.mngauth.AdminMapper;
+import cn.jiiiiiin.module.common.mapper.mngauth.InterfaceMapper;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -46,7 +47,10 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     AdminMapper adminMapper;
 
     @Autowired
-    ResourceMapper resourceMapper;
+    private ResourceMapper resourceMapper;
+
+    @Autowired
+    private InterfaceMapper interfaceMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -58,9 +62,17 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         if (res.getRoles().stream().anyMatch(p -> p.getId().equals(Role.ROLE_ADMIN_ID))) {
             // 系统管理员拥有所有访问控制权限和菜单资源
             val adminRole = res.getRoles().stream().filter(p -> p.getId().equals(Role.ROLE_ADMIN_ID)).findFirst().get();
-            adminRole.setResources(resourceMapper.selectByRoleId(adminRole.getId(), channel));
+            val resources = resourceMapper.selectByRoleId(adminRole.getId(), channel);
+            // 查询资源关联的接口
+            resources.forEach(resource -> resource.setInterfaces(interfaceMapper.selectByResourceId(resource.getId())));
+            adminRole.setResources(resources);
         } else {
-            res.getRoles().forEach(role -> role.setResources(resourceMapper.selectByRoleId(role.getId(), channel)));
+            res.getRoles().forEach(role -> {
+                val resources = resourceMapper.selectByRoleId(role.getId(), channel);
+                // 查询资源关联的接口
+                resources.forEach(resource -> resource.setInterfaces(interfaceMapper.selectByResourceId(resource.getId())));
+                role.setResources(resources);
+            });
         }
         return res;
     }

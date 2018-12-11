@@ -159,12 +159,12 @@ public class ResourceMapperTest {
 
     @Test
     public void testSelectByRoleId() {
-        val operator = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
-        Assert.assertNotNull(operator);
-        val res = resourceMapper.selectByRoleId(operator.getId(), ChannelEnum.MNG);
-        log.info("testSelectByRoleId {}", res);
+        val role = roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, "ADMIN"));
+        Assert.assertNotNull(role);
+        val res = resourceMapper.selectByRoleId(role.getId(), ChannelEnum.MNG);
         Assert.assertNotNull(res);
         assertTrue(res.size() > 0);
+        log.info("testSelectByRoleId {}", JSONObject.toJSON(res));
     }
 
     @Test
@@ -209,4 +209,5 @@ public class ResourceMapperTest {
         Assert.assertNotNull(res);
         log.debug("selectResourceAndRelationRecords {}", JSONObject.toJSON(res));
     }
+
 }

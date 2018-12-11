@@ -547,28 +547,40 @@ export default {
           });
       });
     },
+    // 业务逻辑校验
+    _businessValid(params) {
+      let res = true
+      const { type, path } = params;
+      if (type === 'MENU' && _.isEmpty(path)) {
+        this.$vp.toast('菜单资源必须填写前端路由页面路径', { type: 'warning' })
+        res = false;
+      }
+      return res
+    },
     onSubmitForm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          let params = _.clone(this.form);
-          delete params.pname;
-          params.interfacesIds = this.selectInterfaces
-          if (this.formMode === 'add') {
-            delete params.id;
-            this.$vp.ajaxPostJson('resource', {
-              params
-            }).then(res => {
-              this._onAddSuccessUpdateTreeData(res)
-            });
-          } else {
-            this.$vp.ajaxPut('resource', {
-              params
-            }).then(res => {
-              // 修改当前节点信息
-              this._updateParentChildrenNode(params)
-            });
+          if (this._businessValid(this.form)) {
+            let params = _.clone(this.form);
+            delete params.pname;
+            params.interfacesIds = this.selectInterfaces;
+            if (this.formMode === 'add') {
+              delete params.id;
+              this.$vp.ajaxPostJson('resource', {
+                params
+              }).then(res => {
+                this._onAddSuccessUpdateTreeData(res);
+              });
+            } else {
+              this.$vp.ajaxPut('resource', {
+                params
+              }).then(res => {
+                // 修改当前节点信息
+                this._updateParentChildrenNode(params);
+              });
+            }
+            this.dialogFormVisible = false;
           }
-          this.dialogFormVisible = false
         }
       });
     },

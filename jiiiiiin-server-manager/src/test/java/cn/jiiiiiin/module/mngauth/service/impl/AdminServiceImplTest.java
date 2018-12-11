@@ -7,7 +7,9 @@ import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,6 +35,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 // 声明为spring boot的测试用例
 @SpringBootTest(classes = ManagerApp.class)
+@Slf4j
 public class AdminServiceImplTest {
 
     @Autowired
@@ -60,11 +63,12 @@ public class AdminServiceImplTest {
     @Transactional
     @Test
     public void findByUsername() {
-        new Admin().setUsername("TEMP").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setChannel(ChannelEnum.MNG);
-        val admin = adminService.signInByUsername("TEMP", ChannelEnum.MNG);
-        Assert.assertEquals("TEMP", admin.getUsername());
+//        new Admin().setUsername("TEMP").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setChannel(ChannelEnum.MNG);
+//        val admin = adminService.signInByUsername("TEMP", ChannelEnum.MNG);
+//        Assert.assertEquals("TEMP", admin.getUsername());
         // 测试EHCache缓存
-//        val admin2 = adminService.signInByUsername("user", ChannelEnum.MNG);
+        val admin2 = adminService.signInByUsername("admin", ChannelEnum.MNG);
+        log.debug("findByUsername res: {}", JSONObject.toJSONString(admin2));
     }
 
 

@@ -27,7 +27,7 @@ export default {
     mng: {
       // 管理页面列表的table高度
       // TODO 动态计算当前设备的屏幕高度 - 上下冗余高度
-      listHeight: 550,
+      listHeight: 630,
       // 管理页面列表的table多选Checkbox列的宽度
       tableSelectionWidth: 45,
       // 管理页面列表默认查询的渠道标识
@@ -42,7 +42,7 @@ export default {
       // 管理页面列表默认分页设置
       defCurrent: 1,
       // defSize要在pageSizes范围中的某一个值
-      defSize: 5,
+      defSize: 10,
       pageSizes: [5, 10, 50, 100]
     }
   },

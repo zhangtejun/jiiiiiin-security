@@ -14,6 +14,7 @@ import lombok.var;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 public class MngRbacServiceImpl implements RbacService {
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
+    private String replaceContextPath;
 
     /**
      * 需要读取用户所拥有权限的所有URL
@@ -46,7 +48,10 @@ public class MngRbacServiceImpl implements RbacService {
             if (hasAdminRole) {
                 hasPermission = true;
             } else {
-                val reqURI = request.getRequestURI();
+                if (StringUtils.isEmpty(replaceContextPath)) {
+                    replaceContextPath = request.getContextPath().concat("/");
+                }
+                val reqURI = request.getRequestURI().replace(replaceContextPath, "");
                 val reqMethod = request.getMethod();
                 // 读取用户所拥有权限的所有URL
                 // 通过用户标识-》用户角色-》角色拥有的资源
@@ -64,7 +69,7 @@ public class MngRbacServiceImpl implements RbacService {
                     boolean temp;
                     for (Resource resource : role.getResources()) {
                         for (Interface anInterface : resource.getInterfaces()) {
-                            temp = antPathMatcher.match(anInterface.getUrl(), reqURI) && reqMethod.equalsIgnoreCase(anInterface.getName());
+                            temp = antPathMatcher.match(anInterface.getUrl(), reqURI) && reqMethod.equalsIgnoreCase(anInterface.getMethod());
                             if (temp) {
                                 hasPermission = true;
                                 break;
