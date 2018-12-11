@@ -22,6 +22,14 @@
         url, name, method, description, status, channel
     </sql>
 
+    <delete id="deleteRelationRecords">
+        delete from mng_resource_interface
+        where interface_id IN
+        <foreach collection="idList" item="outputId" open="(" separator="," close=")">
+            #{outputId}
+        </foreach>
+    </delete>
+
     <select id="selectByResourceId" resultType="cn.jiiiiiin.module.common.entity.mngauth.Interface">
         select name, url, method from mng_interface i
           left join mng_resource_interface ri on ri.interface_id = i.id

@@ -329,14 +329,13 @@ export default {
               this._submitFinally()
             });
           } else {
-            console.log('submit ', params)
-            // this.$vp.ajaxPut('role', {
-            //   params
-            // }).then(res => {
-            //   this.qryData()
-            // }).finally(() => {
-            //   this._submitFinally()
-            // });
+            this.$vp.ajaxPut('role', {
+              params
+            }).then(res => {
+              this.qryData()
+            }).finally(() => {
+              this._submitFinally()
+            });
           }
         }
       })

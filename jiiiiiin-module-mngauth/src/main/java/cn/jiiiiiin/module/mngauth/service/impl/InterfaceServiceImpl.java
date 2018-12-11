@@ -8,7 +8,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.val;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * <p>
@@ -20,6 +24,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class InterfaceServiceImpl extends ServiceImpl<InterfaceMapper, Interface> implements IInterfaceService {
+
+    @Autowired
+    private InterfaceMapper interfaceMapper;
 
     /**
      * `接口名称+接口类型`必须唯一
@@ -44,5 +51,11 @@ public class InterfaceServiceImpl extends ServiceImpl<InterfaceMapper, Interface
         } else {
             throw new BusinessErrException("待新增或更新的接口已经存在接口地址和类型相同的一条记录，请检查");
         }
+    }
+
+    @Override
+    public boolean removeByIds(Collection<? extends Serializable> idList) {
+        interfaceMapper.deleteRelationRecords(idList);
+        return super.removeByIds(idList);
     }
 }

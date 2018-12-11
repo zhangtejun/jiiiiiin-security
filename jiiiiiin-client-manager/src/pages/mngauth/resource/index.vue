@@ -201,7 +201,7 @@
                 <d2-el-form-item label="路由" label-width="100px">
                     <el-input v-model="form.path" autocomplete="off"></el-input>
                 </d2-el-form-item>
-                <d2-el-form-item label="关联接口记录" label-width="100px">
+                <d2-el-form-item label="接口记录管理" label-width="100px">
                     <el-transfer
                             class="mng-resource-dialog-transfer"
                             :titles="['未关联接口列表', '已关联接口列表']"
