@@ -383,12 +383,10 @@ export default {
             return;
           }
           this.interfacesData = res.interfaces
-          console.log('onClickQryRelationInterfaceRecords', res.name, res.num)
           this._copy(row, res)
           this.form = res;
           const pnode = this._findParentNode(row, this.data);
           this.form.pname = pnode.name;
-          console.log('onClickQryRelationInterfaceRecords2', this.form.name, this.form.num)
           this.dialogQryRelationInterfaceRecordsVisible = true
         })
     },
@@ -475,8 +473,8 @@ export default {
       this.selectNode = currentSelectNode;
       // 业务：更新不可以调整资源的`type`
       this.formTypeRadioStatus = (mode !== 'add');
-      this.dialogFormVisible = true
       this.generateInterfacesData()
+      this.dialogFormVisible = true
     },
     onClickAdd(node) {
       this.form = _.clone(this.formTempl);
@@ -486,7 +484,7 @@ export default {
       this.form.levels = node.levels + 1;
       this.numMax = _.isEmpty(node.children) ? 1 : node.children.length + 1;
       this.form.num = this.numMax;
-      this.interfacesData = []
+      this.selectInterfaces = []
       this._preHandlerAddOrUpdate('add', node)
     },
     onClickUpdate(node) {
