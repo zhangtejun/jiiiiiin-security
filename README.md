@@ -31,7 +31,7 @@
 
 角色管理页面截图
 
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy2ty1scr8j31c00u0n1l.jpg)
+![image-20181211214925677](https://ws4.sinaimg.cn/large/006tNbRwgy1fy358731qtj31c00u04lx.jpg)
 
 资源管理页面截图（支持前端Vue Router `path`关联）
 
