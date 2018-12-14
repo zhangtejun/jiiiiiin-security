@@ -1,9 +1,15 @@
 package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.ManagerApp;
+import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.module.mngauth.controller.RoleController;
+import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import cn.jiiiiiin.module.mngauth.service.IRoleService;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.After;
 import org.junit.Assert;
@@ -22,10 +28,17 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ManagerApp.class)
+@Slf4j
 public class IRoleServiceTest {
 
     @Autowired
     private IRoleService roleService;
+
+    @Autowired
+    private IResourceService resourceService;
+
+    @Autowired
+    private RoleController roleController;
 
     @Before
     public void setUp() throws Exception {
@@ -35,11 +48,24 @@ public class IRoleServiceTest {
     public void tearDown() throws Exception {
     }
 
+//    @Test
+//    public void parseResourceIds(){
+////        assertTrue(new Resource().setNum(1).setId(1L).equals(new Resource().setNum(2).setId(1L)));
+//        val role = roleService.getById(1061277221831905282L);
+//        role.getResources().add(resourceService.getById(1061818318463221761L));
+//        role.getResources().add(resourceService.getById(1061818318412890114L));
+//        roleController._parseResourceIds(role);
+//        log.debug("role.getResources() {} {}",role.getResources().size(), JSONObject.toJSON(role.getResources()));
+//        assertTrue(role.getResources().size() == 3);
+//    }
+
+    @Transactional
     @Test
     public void save(){
         Role role = new Role().setAuthorityName("USER1").setName("用户1").setChannel(ChannelEnum.MNG);
-        Long[] resourceIds = new Long[]{1066671419766624257L, 1062518178556526593L, 1061818316563202049L};
-        val res = roleService.save(role, resourceIds);
+        role.getResources()
+                .add((Resource) new Resource().setId(1066671419766624257L));
+        val res = roleService.save(role);
         Assert.assertTrue(res);
     }
 
@@ -59,10 +85,4 @@ public class IRoleServiceTest {
         assertNotNull(res.getResources());
     }
 
-    @Test
-    public void getRoleAndRelationEleUiResourceRecords() {
-        val res = roleService.getRoleAndRelationEleUiResourceRecords(1061277221831905282L);
-        assertNotNull(res);
-        assertNotNull(res.getResources());
-    }
 }

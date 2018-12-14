@@ -131,13 +131,13 @@ public class ResourceMapperTest {
 //                .setLevels(3)
 //                .setNum(1)
 //                .setType(ResourceTypeEnum.BTN);
-//        val update = new Resource()
+//        val updateSelfAndRelationRecords = new Resource()
 //                .setPid(resourceMngMenu.getId())
 //                .setName("修改资源")
 //                .setLevels(3)
 //                .setNum(2)
 //                .setType(ResourceTypeEnum.BTN);
-//        int updateRes = resourceMapper.insert(update);
+//        int updateRes = resourceMapper.insert(updateSelfAndRelationRecords);
 //        Assert.assertTrue(SqlHelper.retBool(updateRes));
 
         val interfaceMng = new Resource()

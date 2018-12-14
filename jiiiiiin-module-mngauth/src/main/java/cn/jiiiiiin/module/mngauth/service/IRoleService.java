@@ -32,18 +32,16 @@ public interface IRoleService extends IService<Role> {
      * 添加角色及其关联资源记录
      *
      * @param role 角色及其资源记录（resources属性）
-     * @param resourceIds element-ui用户选择的资源记录
      * @return
      */
-    Boolean save(Role role, Long[] resourceIds);
+    Boolean saveSelfAndRelationRecords(Role role);
 
     /**
      *
      * @param role 角色及其资源记录（resources属性）
-     * @param resourceIds element-ui用户选择的资源记录
      * @return
      */
-    Boolean update(Role role, Long[] resourceIds);
+    Boolean updateSelfAndRelationRecords(Role role);
 
     /**
      * 插入{@link Role#resources}管理记录
@@ -62,5 +60,4 @@ public interface IRoleService extends IService<Role> {
 
     IPage<RoleDto> pageDto(Page<RoleDto> roleDtoPage, ChannelEnum channel, Role role);
 
-    RoleDto getRoleAndRelationEleUiResourceRecords(Long id);
 }

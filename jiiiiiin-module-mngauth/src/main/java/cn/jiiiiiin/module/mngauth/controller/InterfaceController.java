@@ -56,6 +56,9 @@ public class InterfaceController extends BaseController {
         if (StringUtils.isNotEmpty(itf.getName())) {
             qw.like(Interface.NAME, itf.getName());
         }
+        if (StringUtils.isNotEmpty(itf.getUrl())) {
+            qw.like(Interface.URL, itf.getUrl());
+        }
         if (StringUtils.isNotEmpty(itf.getMethod())) {
             qw.eq(Interface.METHOD, itf.getMethod());
         }

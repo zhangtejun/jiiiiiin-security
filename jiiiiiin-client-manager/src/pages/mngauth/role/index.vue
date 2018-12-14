@@ -54,8 +54,10 @@
             <el-form-item label="资源授权">
               <span v-show="props.row.authorityName === 'ADMIN'" style="font-style: italic; color: darkred">注：系统管理员默认具有所有资源授权</span>
               <el-tree
+                      ref="tableTree"
                       :data="resources"
                       :props="treeProps"
+                      :check-strictly="true"
                       node-key="id"
                       :default-expanded-keys="props.row.expandedKeys"
                       :default-checked-keys="props.row.checkedKeys"
@@ -92,8 +94,10 @@
 
         <d2-el-form-item label="资源授权">
           <el-tree
+                  ref="formTree"
                   :data="resources"
                   :props="treeProps"
+                  :check-strictly="true"
                   :default-expand-all="true"
                   node-key="id"
                   :default-expanded-keys="form.expandedKeys"
@@ -186,20 +190,61 @@ export default {
      * @param checked 节点本身是否被选中
      * @param indeterminate 节点的子树中是否有被选中的节点
      */
-    handleCheckChange(data, checked, indeterminate) {
-      if (checked && !_.isObject(_.find(this.form.resources, item => { return item.id === data.id }))) {
-        this.form.resources.push(data)
+    handleCheckChange(data, checked, indeterminate, isTableTree = false) {
+      if (checked && !_.isObject(_.find(this.form.resources, item => {
+        return item.id === data.id;
+      }))) {
+        // 检测并选中data的父节点
+        const { id, pids, name } = data;
+        if (!_.isNil(pids)) {
+          const item = pids.split(',').reverse()[0];
+          this.form.checkedKeys.push(item);
+          if (isTableTree) {
+            this.$refs.tableTree.setCheckedKeys(this.form.checkedKeys);
+          } else {
+            this.$refs.formTree.setCheckedKeys(this.form.checkedKeys);
+          }
+        }
+        this.form.checkedKeys.push(id);
+        if (isTableTree) {
+          this.$refs.tableTree.setCheckedKeys(this.form.checkedKeys);
+        } else {
+          this.$refs.formTree.setCheckedKeys(this.form.checkedKeys);
+        }
+        // 重新设置，不然会存在children
+        this.form.resources.push({ id, pids, name });
       } else {
-        _.remove(this.form.resources, item => {
-          return item.id === data.id;
+        // 检测如果节点下面还勾选了子节点则不允许取消
+        const id = data.id;
+        let temp = false;
+        this.form.resources.forEach(item => {
+          if (!_.isNil(item.pids) && item.pids.indexOf(id) !== -1) {
+            temp = true;
+          }
         });
+        if (temp) {
+          // 初次点击更新时防止下面内容弹出
+          if (!checked) {
+            this.$vp.toast('当前节点下还有被选中的子节点，不允许取消', { type: 'warning' });
+            if (isTableTree) {
+              this.$refs.tableTree.setCheckedKeys(this.form.checkedKeys);
+            } else {
+              this.$refs.formTree.setCheckedKeys(this.form.checkedKeys);
+            }
+          }
+        } else {
+          _.remove(this.form.resources, item => {
+            return item.id === id;
+          });
+        }
       }
     },
     handleTableRowCheckChange(data, checked, indeterminate) {
       // 首次展开会通知，data为根节点，这时不做处理
       if (data.id !== '0') {
-        this.handleCheckChange(data, checked, indeterminate)
+        this.handleCheckChange(data, checked, indeterminate, true)
         const params = _.clone(this.form);
+        params.resources.forEach(item => console.log(item.name, item))
         this.$vp.ajaxPut('role', {
           params
         }).then(res => {
@@ -218,7 +263,7 @@ export default {
           url: `resource/${this.channel}`,
           mode: 'GET'
         }, {
-          url: `role/eleui/${row.id}`,
+          url: `role/${row.id}`,
           mode: 'GET'
         }
       ])
@@ -279,7 +324,7 @@ export default {
             url: `resource/${this.channel}`,
             mode: 'GET'
           }, {
-            url: `role/eleui/${item.id}`,
+            url: `role/${item.id}`,
             mode: 'GET'
           }
         ])
@@ -311,7 +356,6 @@ export default {
       }
     },
     _submitFinally() {
-      this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.resources = res })
       this.form = _.clone(this.formTmpl)
       this.dialogFormVisible = false
     },
@@ -329,6 +373,8 @@ export default {
               this._submitFinally()
             });
           } else {
+            // console.log('update', params)
+            params.resources.forEach(item => console.log(item.name, item))
             this.$vp.ajaxPut('role', {
               params
             }).then(res => {

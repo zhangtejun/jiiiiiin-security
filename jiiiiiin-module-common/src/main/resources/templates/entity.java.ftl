@@ -8,8 +8,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 <#if entityLombokModel>
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+<#--import lombok.Data;-->
+<#--import lombok.EqualsAndHashCode;-->
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 </#if>
 
@@ -22,7 +24,9 @@ import lombok.experimental.Accessors;
  * @since ${date}
  */
 <#if entityLombokModel>
-@Data
+@Getter
+@Setter
+<#--@Data-->
     <#if superEntityClass??>
 @EqualsAndHashCode(callSuper = true)
     <#else>

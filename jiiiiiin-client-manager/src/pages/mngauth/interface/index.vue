@@ -27,6 +27,9 @@
                 v-model="searchForm.name">
         </el-input>
       </el-form-item>
+      <d2-el-form-item label="接口地址" >
+        <el-input size="small" v-model="searchForm.url" placeholder="请输入接口地址"></el-input>
+      </d2-el-form-item>
       <el-form-item label="接口类型" prop="method">
         <el-select size="small" v-model="searchForm.method" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
           <el-option

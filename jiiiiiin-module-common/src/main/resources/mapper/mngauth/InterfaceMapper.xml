@@ -33,7 +33,7 @@
     <select id="selectByResourceId" resultType="cn.jiiiiiin.module.common.entity.mngauth.Interface">
         select name, url, method from mng_interface i
           left join mng_resource_interface ri on ri.interface_id = i.id
-          where ri.resource_id = #{resourceId}
+          where ri.resource_id = #{resourceId} and i.status = 1
     </select>
 
 </mapper>

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -49,11 +50,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Transactional
     @Override
-    public Boolean save(Role role, Long[] resourceIds) {
+    public Boolean saveSelfAndRelationRecords(Role role) {
         Role.checkRootRole(role, "不能创建和系统管理员角色相同名称或相同标识的记录");
         _saveCheckRoleUniqueness(role);
         val res = SqlHelper.retBool(roleMapper.insert(role));
-        _insertOrUpdateRelationResourceRecords(role, resourceIds);
+        _insertOrUpdateRelationResourceRecords(role);
         return res;
     }
 
@@ -83,11 +84,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Transactional
     @Override
-    public Boolean update(Role role, Long[] resourceIds) {
+    public Boolean updateSelfAndRelationRecords(Role role) {
         Role.checkRootRole(role, "系统管理员角色不允许修改");
         _updateCheckRoleUniqueness(role);
         val res = SqlHelper.retBool(roleMapper.updateById(role));
-        _insertOrUpdateRelationResourceRecords(role, resourceIds);
+        _insertOrUpdateRelationResourceRecords(role);
         return res;
     }
 
@@ -96,13 +97,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         return SqlHelper.retBool(roleMapper.insertRelationResourceRecords(role));
     }
 
-    private void _insertOrUpdateRelationResourceRecords(@NonNull Role role, @NonNull Long[] resourceIds) {
+    /**
+     * 添加/更新角色资源记录关联表
+     * @param role
+     */
+    private void _insertOrUpdateRelationResourceRecords(@NonNull Role role) {
         _clearRelationResourceRecords(role);
-        if (resourceIds.length > 0) {
-            // 添加/更新角色资源element-ui树形控件选择记录关联表
-            // String.join(",", List<String>)
-            roleMapper.insertRelationEleUiResourceRecords(role.getId(), StringUtils.join(resourceIds, ","));
-            // 添加/更新角色资源记录关联表
+        // 过滤根节点
+        role.setResources(role.getResources().stream().filter(p -> !p.getId().equals(Resource.IS_ROOT_MENU)).collect(Collectors.toList()));
+        if (role.getResources().size() > 0) {
             roleMapper.insertRelationResourceRecords(role);
         }
     }
@@ -111,36 +114,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         val idList = new ArrayList<Long>();
         idList.add(role.getId());
         roleMapper.deleteRelationResourceRecords(idList);
-        roleMapper.deleteRelationResourceEleUiResourceRecord(role.getId());
     }
 
     @Override
     public RoleDto getRoleAndRelationRecords(Long id) {
         val role = roleMapper.selectRoleAndRelationRecords(id);
+        // 设置前端element-ui tree展开属性数据
         val arr = new ArrayList<String>(role.getResources().size());
         role.getResources().forEach(item -> arr.add(String.valueOf(item.getId())));
         val temp = new String[arr.size()];
         val keys = arr.toArray(temp);
         role.setCheckedKeys(keys);
         role.setExpandedKeys(keys);
-        return role;
-    }
-
-    @Override
-    public RoleDto getRoleAndRelationEleUiResourceRecords(Long id) {
-        val role = roleMapper.selectRoleAndRelationEleUiResourceRecords(id);
-        if (role == null) {
-            throw new BusinessErrException("待查询的角色记录不存在");
-        }
-        val resIds = role.getResourceIds();
-        if (StringUtils.isNotEmpty(resIds)) {
-            val temp = role.getResourceIds().split(",");
-            role.setCheckedKeys(temp);
-            role.setExpandedKeys(temp);
-            // 前端更新角色资源记录时候需要使用资源的`pids`
-            val resources = resourceMapper.selectList(new QueryWrapper<Resource>().in(BaseEntity.ID, temp));
-            resources.forEach(item -> role.getResources().add(item));
-        }
         return role;
     }
 
@@ -151,7 +136,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         Role.checkRootRole(idList, "系统管理员角色不允许删除");
         roleMapper.deleteRelationAdminRecords(idList);
         roleMapper.deleteRelationResourceRecords(idList);
-        roleMapper.deleteRelationResourceEleUiResourceRecords(idList);
         return SqlHelper.delBool(roleMapper.deleteBatchIds(idList));
     }
 

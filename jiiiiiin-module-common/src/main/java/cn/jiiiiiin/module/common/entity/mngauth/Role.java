@@ -1,18 +1,16 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
-import cn.jiiiiiin.module.common.enums.common.StatusEnum;
+import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -27,8 +25,8 @@ import java.util.List;
  * @author jiiiiiin
  * @since 2018-09-27
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @Accessors(chain = true)
 @TableName("mng_role")
 @ApiModel(value = "Role对象", description = "角色表")

@@ -2,6 +2,7 @@ package cn.jiiiiiin.module.common.mapper.mngauth;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Interface;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -31,5 +32,5 @@ public interface InterfaceMapper extends BaseMapper<Interface> {
      * @param idList
      * @return
      */
-    Boolean deleteRelationRecords(Collection<? extends Serializable> idList);
+    Boolean deleteRelationRecords(@Param("idList") Collection<? extends Serializable> idList);
 }

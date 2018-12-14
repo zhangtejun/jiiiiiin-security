@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -21,6 +22,7 @@ import java.util.Objects;
  */
 @Data
 @Accessors(chain = true)
+@Slf4j
 public class BaseEntity<T extends Model> extends Model<T> {
 
     /**

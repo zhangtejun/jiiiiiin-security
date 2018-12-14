@@ -8,10 +8,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
-import lombok.val;
 
 import java.util.*;
 
@@ -23,8 +21,8 @@ import java.util.*;
  * @author jiiiiiin
  * @since 2018-09-27
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @Accessors(chain = true)
 @TableName("mng_resource")
 @ApiModel(value = "Resource对象", description = "权限资源表")

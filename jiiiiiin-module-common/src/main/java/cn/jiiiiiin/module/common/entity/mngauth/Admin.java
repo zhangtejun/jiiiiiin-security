@@ -17,6 +17,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -27,8 +29,8 @@ import lombok.experimental.Accessors;
  * @author jiiiiiin
  * @since 2018-09-27
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @Accessors(chain = true)
 @TableName("mng_admin")
 @ApiModel(value="Admin对象", description="用户表")

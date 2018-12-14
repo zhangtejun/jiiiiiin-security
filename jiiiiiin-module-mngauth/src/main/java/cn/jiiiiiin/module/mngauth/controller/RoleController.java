@@ -7,6 +7,7 @@ import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IRoleService;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,45 +82,34 @@ public class RoleController extends BaseController {
         return R.ok(roleService.getRoleAndRelationRecords(id));
     }
 
-    @ApiOperation(value = "角色记录（适配eleui）查询", notes = "根据路径参数角色id查询其详细数据，查询角色记录及其关联的element-ui树形控件选择的资源记录", httpMethod = "GET")
-    @GetMapping("eleui/{id}")
-    public R<RoleDto> getRoleAndRelationEleUiResourceRecords(@PathVariable Long id) {
-        return R.ok(roleService.getRoleAndRelationEleUiResourceRecords(id));
-    }
-
     /**
-     * 因为前端`element-ui`树形控件只能将选中的子节点和完整的父节点（其下节点全部选中的情况）的数据传递上来
-     * 故这里需要依赖{@link Resource#pids}属性，将管理的父节点收集起来
-     * <p>
-     * 1.更新role自己的resources列表，存储真正的资源记录
-     * 2.返回element-ui用户选择的资源记录ids
+     * 是否关联选择资源的父级资源
      *
      * @param role
      * @return
      */
-    private Long[] _parseResourceIds(@NonNull Role role) {
-        val resourceIdsSet = new HashSet<Long>();
-        val newResList = new ArrayList<Resource>();
-        role.getResources().forEach(resource -> {
-            val pidsStr = resource.getPids();
-            if (StringUtils.isNotEmpty(pidsStr)) {
-                val pids = pidsStr.split(",");
-                for (val pid : pids) {
-                    if (NumberUtils.isCreatable(pid)) {
-                        val temp = Long.valueOf(pid);
-                        val res = new Resource().setId(temp);
-                        // 非根节点 && 非已经存在（防止前端传递重复的记录）
-                        if (!temp.equals(Resource.IS_ROOT_MENU) && !newResList.contains(res)) {
-                            newResList.add((Resource) res);
+    private void _parseResourceIds(@NonNull Role role) {
+        val newResList = new HashSet<Resource>();
+        role.getResources().stream()
+                .filter(item -> !item.getId().equals(Resource.IS_ROOT_MENU))
+                .forEach(resource -> {
+                    val pidsStr = resource.getPids();
+                    if (StringUtils.isNotEmpty(pidsStr)) {
+                        val pids = pidsStr.split(",");
+                        for (val pid : pids) {
+                            // 非根节点
+                            if (NumberUtils.isCreatable(pid) && !pid.equals(String.valueOf(Resource.IS_ROOT_MENU))) {
+                                val temp = Long.valueOf(pid);
+                                val res = new Resource().setId(temp);
+                                newResList.add((Resource) res);
+                            }
                         }
                     }
-                }
-            }
-            resourceIdsSet.add(resource.getId());
-        });
-        role.getResources().addAll(newResList);
-        Long[] resourceIds = new Long[resourceIdsSet.size()];
-        return resourceIdsSet.toArray(resourceIds);
+                    newResList.add(resource);
+                });
+        List<Resource> list = new ArrayList<>(newResList.size());
+        list.addAll(newResList);
+        role.setResources(list);
     }
 
     /**
@@ -128,14 +119,15 @@ public class RoleController extends BaseController {
     @ApiOperation(value = "新增角色", notes = "添加角色和其管理的资源记录", httpMethod = "POST")
     @PostMapping
     public R<Role> create(@RequestBody Role role) {
-        roleService.save(role, _parseResourceIds(role));
+        roleService.saveSelfAndRelationRecords(role);
         return success(role);
     }
 
     @ApiOperation(value = "更新角色信息", notes = "更新角色信息和其管理的资源记录", httpMethod = "PUT")
     @PutMapping
     public R<Role> update(@RequestBody Role role) {
-        roleService.update(role, _parseResourceIds(role));
+        _parseResourceIds(role);
+        roleService.updateSelfAndRelationRecords(role);
         return success(role);
     }
 

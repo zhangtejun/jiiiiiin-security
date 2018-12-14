@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.Objects;
@@ -24,7 +26,8 @@ import java.util.Objects;
  * @author jiiiiiin
  * @since 2018-12-09
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @TableName("mng_interface")
 @ApiModel(value="Interface对象", description="系统接口表")
