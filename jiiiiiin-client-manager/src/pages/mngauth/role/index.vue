@@ -38,7 +38,6 @@
       <li>不能创建和系统管理员角色相同角色标识的记录</li>
       <li>系统管理员角色不允许修改</li>
     </ul>
-    <!--@expand-change="handleExpandChangge"-->
     <el-table
             ref="table"
             :data="page.records"
@@ -46,26 +45,27 @@
             :height="listHeight"
             border
             @selection-change="handleSelectionChange"
+            @expand-change="handleExpandChangge"
             style="width: 100%">
-      <!--<el-table-column type="expand">-->
-        <!--<template slot-scope="props">-->
-          <!--<el-form label-position="top" inline class="demo-table-expand">-->
-            <!--<el-form-item label="资源授权">-->
-              <!--<span v-show="props.row.authorityName === 'ADMIN'" style="font-style: italic; color: darkred">注：系统管理员默认具有所有资源授权</span>-->
-              <!--<el-tree-->
-                      <!--ref="tableTree"-->
-                      <!--:data="resources"-->
-                      <!--:props="treeProps"-->
-                      <!--:check-strictly="true"-->
-                      <!--node-key="id"-->
-                      <!--:default-expanded-keys="props.row.expandedKeys"-->
-                      <!--:default-checked-keys="props.row.checkedKeys"-->
-                      <!--@check-change="handleTableRowCheckChange"-->
-                      <!--:show-checkbox="props.row.authorityName !== 'ADMIN'"></el-tree>-->
-            <!--</el-form-item>-->
-          <!--</el-form>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="top" inline class="demo-table-expand">
+            <el-form-item label="资源授权">
+              <span v-show="props.row.authorityName === 'ADMIN'" style="font-style: italic; color: darkred">注：系统管理员默认具有所有资源授权</span>
+              <el-tree
+                      ref="tableTree"
+                      :data="resources"
+                      :props="treeProps"
+                      :check-strictly="true"
+                      node-key="id"
+                      :default-expanded-keys="props.row.expandedKeys"
+                      :default-checked-keys="props.row.checkedKeys"
+                      @check-change="handleTableRowCheckChange"
+                      :show-checkbox="props.row.authorityName !== 'ADMIN'"></el-tree>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column
               type="selection"
               :width="tableSelectionWidth">
@@ -145,17 +145,13 @@ export default {
         ]
       },
       form: {
+        id: '',
         name: '',
         authorityName: '',
         resources: [],
         // http://element.eleme.io/#/zh-CN/component/tree#mo-ren-zhan-kai-he-mo-ren-xuan-zhong
         expandedKeys: [],
         checkedKeys: []
-      },
-      formTmpl: {
-        name: '',
-        authorityName: '',
-        resources: []
       },
       selectRows: [],
       page: {
@@ -190,7 +186,6 @@ export default {
      * @param indeterminate 节点的子树中是否有被选中的节点
      */
     handleCheckChange(data, checked, indeterminate) {
-      console.log(data.name, checked, this.form)
       const { id, pids, name } = data;
       if (checked && !_.isObject(_.find(this.form.resources, item => { return item.id === id; })) && !_.isObject(_.find(this.form.checkedKeys, item => { return item.id === id; }))) {
         // 检测并选中data的父节点
@@ -229,17 +224,58 @@ export default {
         }
       }
     },
+    _updateRoleRelationResourceRecords() {
+      const params = _.clone(this.tableTreeForm);
+      params.resources.forEach(item => console.log(item.name, item))
+      this.$vp.ajaxPut('role', {
+        params
+      }).then(res => {
+        this.$vp.toast('授权修改成功', { type: 'success' });
+      })
+    },
+    // 如果两棵树的代码进行了抽象就很容易出错，还有一点，如果不需要和模板进行绑定的值，可以不需要定义在data里面减少开支
     handleTableRowCheckChange(data, checked, indeterminate) {
       // 首次展开会通知，data为根节点，这时不做处理
       if (data.id !== '0') {
-        this.handleCheckChange(data, checked, indeterminate, true)
-        const params = _.clone(this.form);
-        params.resources.forEach(item => console.log(item.name, item))
-        this.$vp.ajaxPut('role', {
-          params
-        }).then(res => {
-          this.$vp.toast('授权修改成功', { type: 'success' });
-        })
+        const { id, pids, name } = data;
+        if (checked && !_.isObject(_.find(this.tableTreeForm.resources, item => { return item.id === id; })) && !_.isObject(_.find(this.tableTreeForm.checkedKeys, item => { return item.id === id; }))) {
+          // 检测并选中data的父节点
+          if (!_.isNil(pids) && pids !== '0') {
+            const tempId = pids.split(',').reverse()[0];
+            if (!_.isObject(_.find(this.tableTreeForm.checkedKeys, item => { return item.id === tempId; }))) {
+              this.tableTreeForm.checkedKeys.push(tempId);
+            }
+          }
+          this.tableTreeForm.checkedKeys.push(id);
+          this.$refs.tableTree.setCheckedKeys(this.tableTreeForm.checkedKeys);
+          // 重新设置，不然会存在children
+          this.tableTreeForm.resources.push({ id, pids, name });
+          this._updateRoleRelationResourceRecords()
+        } else if (!checked) {
+          // 检测如果节点下面还勾选了子节点则不允许取消
+          const id = data.id;
+          let temp = false;
+          this.tableTreeForm.resources.forEach(item => {
+            if (!_.isNil(item.pids) && item.pids.indexOf(id) !== -1) {
+              temp = true;
+            }
+          });
+          if (temp) {
+            // 初次点击更新时防止下面内容弹出
+            if (!checked) {
+              this.$vp.toast('当前节点下还有被选中的子节点，不允许取消', { type: 'warning' });
+              this.$refs.tableTree.setCheckedKeys(this.tableTreeForm.checkedKeys);
+            }
+          } else {
+            _.remove(this.tableTreeForm.resources, item => {
+              return item.id === id;
+            });
+            _.remove(this.tableTreeForm.checkedKeys, item => {
+              return item === id;
+            });
+            this._updateRoleRelationResourceRecords()
+          }
+        }
       }
     },
     qryData() {
@@ -248,6 +284,13 @@ export default {
       this.setInitAjaxNum(2)
     },
     handleExpandChangge(row, expandedRows) {
+      if (!_.isNil(this.prevExpandedRow) && this.prevExpandedRow.id !== row.id) {
+        // 防止等下面ajax更新`this._copyRoleDto(row, res[1].data)`导致表单中的tree触发`check-change`事件导致问题
+        this.resources = []
+        // 收缩上一次展开的角色对应的资源树，防止共用`this.form`到时的问题
+        this.$refs.table.toggleRowExpansion(this.prevExpandedRow, false)
+      }
+      this.prevExpandedRow = row
       this.$vp.ajaxAll([
         {
           url: `resource/${this.channel}`,
@@ -266,7 +309,7 @@ export default {
           this.resources = res[0].data
           // 更新记录，主要是expandedKeys和checkedKeys
           this._copyRoleDto(row, res[1].data)
-          this.form = _.clone(row)
+          this.tableTreeForm = _.clone(row)
         })
     },
     _copyRoleDto(current, orig) {
@@ -326,7 +369,6 @@ export default {
             // 设置`表单 资源树`
             this.resources = res[0].data
             this.form = res[1].data
-            console.log('onUpdate', this.form)
             this.dialogFormVisible = true
           })
       }
@@ -379,6 +421,14 @@ export default {
     }
   },
   created() {
+    this.formTmpl = {
+      id: '',
+      name: '',
+      authorityName: '',
+      resources: [],
+      expandedKeys: [],
+      checkedKeys: []
+    };
     this.onCancelSubmit()
   }
 }
