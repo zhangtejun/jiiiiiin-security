@@ -226,7 +226,6 @@ export default {
     },
     _updateRoleRelationResourceRecords() {
       const params = _.clone(this.tableTreeForm);
-      params.resources.forEach(item => console.log(item.name, item))
       this.$vp.ajaxPut('role', {
         params
       }).then(res => {
@@ -406,8 +405,6 @@ export default {
               this._submitFinally()
             });
           } else {
-            console.log('update', params)
-            params.resources.forEach(item => console.log(item.name, item))
             this.$vp.ajaxPut('role', {
               params
             }).then(res => {
