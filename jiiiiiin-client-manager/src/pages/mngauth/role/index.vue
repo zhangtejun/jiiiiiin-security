@@ -38,7 +38,7 @@
       <li>不能创建和系统管理员角色相同角色标识的记录</li>
       <li>系统管理员角色不允许修改</li>
     </ul>
-
+    <!--@expand-change="handleExpandChangge"-->
     <el-table
             ref="table"
             :data="page.records"
@@ -46,27 +46,26 @@
             :height="listHeight"
             border
             @selection-change="handleSelectionChange"
-            @expand-change="handleExpandChangge"
             style="width: 100%">
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="top" inline class="demo-table-expand">
-            <el-form-item label="资源授权">
-              <span v-show="props.row.authorityName === 'ADMIN'" style="font-style: italic; color: darkred">注：系统管理员默认具有所有资源授权</span>
-              <el-tree
-                      ref="tableTree"
-                      :data="resources"
-                      :props="treeProps"
-                      :check-strictly="true"
-                      node-key="id"
-                      :default-expanded-keys="props.row.expandedKeys"
-                      :default-checked-keys="props.row.checkedKeys"
-                      @check-change="handleTableRowCheckChange"
-                      :show-checkbox="props.row.authorityName !== 'ADMIN'"></el-tree>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
+      <!--<el-table-column type="expand">-->
+        <!--<template slot-scope="props">-->
+          <!--<el-form label-position="top" inline class="demo-table-expand">-->
+            <!--<el-form-item label="资源授权">-->
+              <!--<span v-show="props.row.authorityName === 'ADMIN'" style="font-style: italic; color: darkred">注：系统管理员默认具有所有资源授权</span>-->
+              <!--<el-tree-->
+                      <!--ref="tableTree"-->
+                      <!--:data="resources"-->
+                      <!--:props="treeProps"-->
+                      <!--:check-strictly="true"-->
+                      <!--node-key="id"-->
+                      <!--:default-expanded-keys="props.row.expandedKeys"-->
+                      <!--:default-checked-keys="props.row.checkedKeys"-->
+                      <!--@check-change="handleTableRowCheckChange"-->
+                      <!--:show-checkbox="props.row.authorityName !== 'ADMIN'"></el-tree>-->
+            <!--</el-form-item>-->
+          <!--</el-form>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
       <el-table-column
               type="selection"
               :width="tableSelectionWidth">
@@ -190,30 +189,22 @@ export default {
      * @param checked 节点本身是否被选中
      * @param indeterminate 节点的子树中是否有被选中的节点
      */
-    handleCheckChange(data, checked, indeterminate, isTableTree = false) {
-      if (checked && !_.isObject(_.find(this.form.resources, item => {
-        return item.id === data.id;
-      }))) {
+    handleCheckChange(data, checked, indeterminate) {
+      console.log(data.name, checked, this.form)
+      const { id, pids, name } = data;
+      if (checked && !_.isObject(_.find(this.form.resources, item => { return item.id === id; })) && !_.isObject(_.find(this.form.checkedKeys, item => { return item.id === id; }))) {
         // 检测并选中data的父节点
-        const { id, pids, name } = data;
-        if (!_.isNil(pids)) {
-          const item = pids.split(',').reverse()[0];
-          this.form.checkedKeys.push(item);
-          if (isTableTree) {
-            this.$refs.tableTree.setCheckedKeys(this.form.checkedKeys);
-          } else {
-            this.$refs.formTree.setCheckedKeys(this.form.checkedKeys);
+        if (!_.isNil(pids) && pids !== '0') {
+          const tempId = pids.split(',').reverse()[0];
+          if (!_.isObject(_.find(this.form.checkedKeys, item => { return item.id === tempId; }))) {
+            this.form.checkedKeys.push(tempId);
           }
         }
         this.form.checkedKeys.push(id);
-        if (isTableTree) {
-          this.$refs.tableTree.setCheckedKeys(this.form.checkedKeys);
-        } else {
-          this.$refs.formTree.setCheckedKeys(this.form.checkedKeys);
-        }
+        this.$refs.formTree.setCheckedKeys(this.form.checkedKeys);
         // 重新设置，不然会存在children
         this.form.resources.push({ id, pids, name });
-      } else {
+      } else if (!checked) {
         // 检测如果节点下面还勾选了子节点则不允许取消
         const id = data.id;
         let temp = false;
@@ -226,15 +217,14 @@ export default {
           // 初次点击更新时防止下面内容弹出
           if (!checked) {
             this.$vp.toast('当前节点下还有被选中的子节点，不允许取消', { type: 'warning' });
-            if (isTableTree) {
-              this.$refs.tableTree.setCheckedKeys(this.form.checkedKeys);
-            } else {
-              this.$refs.formTree.setCheckedKeys(this.form.checkedKeys);
-            }
+            this.$refs.formTree.setCheckedKeys(this.form.checkedKeys);
           }
         } else {
           _.remove(this.form.resources, item => {
             return item.id === id;
+          });
+          _.remove(this.form.checkedKeys, item => {
+            return item === id;
           });
         }
       }
@@ -336,6 +326,7 @@ export default {
             // 设置`表单 资源树`
             this.resources = res[0].data
             this.form = res[1].data
+            console.log('onUpdate', this.form)
             this.dialogFormVisible = true
           })
       }
@@ -373,7 +364,7 @@ export default {
               this._submitFinally()
             });
           } else {
-            // console.log('update', params)
+            console.log('update', params)
             params.resources.forEach(item => console.log(item.name, item))
             this.$vp.ajaxPut('role', {
               params

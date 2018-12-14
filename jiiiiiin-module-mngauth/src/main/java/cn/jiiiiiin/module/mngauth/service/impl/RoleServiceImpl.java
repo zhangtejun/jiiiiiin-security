@@ -69,6 +69,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     private void _updateCheckRoleUniqueness(Role role) {
         val currentRecord = roleMapper.selectById(role);
+        if (currentRecord == null){
+            throw new BusinessErrException(String.format("系统不存在角色标识为【%s】的记录", role.getAuthorityName()));
+        }
         if (!currentRecord.getAuthorityName().equals(role.getAuthorityName())) {
             if (null != roleMapper.selectOne(new QueryWrapper<Role>().eq(Role.AUTHORITY_NAME, role.getAuthorityName()))) {
                 throw new BusinessErrException(String.format("系统已经存在角色标识为【%s】的记录", role.getAuthorityName()));
