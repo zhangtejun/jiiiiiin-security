@@ -138,7 +138,6 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 // 配置退出之后，删除浏览器cookie中的对应字段，这里是删除会话id
                 .deleteCookies("JSESSIONID")
                 .and()
-                // TODO 设置为配置 条件判断设置
                 .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(authenticationEntryPoint)

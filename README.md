@@ -15,6 +15,7 @@
 | 资源管理 | 95% | 用来管理系统定义的资源 |
 | 用户管理 | 95% | 用来管理系统存在的用户 |
 | 接口管理 | 95% | 用来管理后台对应的接口集合 |
+| 会话并发控制 | 95% | [使用SpringSecurity concurrency-control实现应用中同一用户在同时只能有一个是终端（渠道）成功登录应用]() |
 | 全面集成vue-viewplus | 60% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
 | RBAC前端权限控制 | 0% | 基于vue-viewplus自定义rbac权限控制模块 |
 

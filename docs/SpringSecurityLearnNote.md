@@ -32,7 +32,7 @@
 >
 > [Spring Security 技术栈开发企业级认证与授权笔记](https://github.com/zq99299/essay-note/blob/master/chapter/imooc/spring_security/index.md)
 > [Spring Security 修改密码后 在线用户列表中用户重复](https://techzero.cn/spring-security-after-change-password-duplicate-username-in-online-users.html)
-
+> [Spring Security 重复登录配置无效的问题](https://blog.csdn.net/a919423654/article/details/61915746)
 # 关键点
 
 ## 代码结构

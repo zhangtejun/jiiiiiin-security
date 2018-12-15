@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.mngauth.component;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
+@EqualsAndHashCode(of = "admin")
 public class MngUserDetails implements UserDetails {
 
     private static final long serialVersionUID = -8362660409491439833L;

@@ -31,6 +31,7 @@ import lombok.experimental.Accessors;
  */
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true, of = {"username"})
 @Accessors(chain = true)
 @TableName("mng_admin")
 @ApiModel(value="Admin对象", description="用户表")
