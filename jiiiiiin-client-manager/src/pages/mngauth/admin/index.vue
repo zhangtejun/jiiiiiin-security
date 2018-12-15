@@ -177,7 +177,7 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 4, max: 16, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { min: 4, max: 16, message: '长度在 4 到 10 个字符', trigger: 'blur' }
         ],
         roleIds: [{ required: true, message: '请选择授权角色，可以多选', trigger: 'change' }]
       },

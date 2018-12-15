@@ -332,30 +332,6 @@ VALUES
 UNLOCK TABLES;
 
 
-# Dump of table mng_role_resource_for_eleui
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `mng_role_resource_for_eleui`;
-
-CREATE TABLE `mng_role_resource_for_eleui` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `role_id` bigint(20) NOT NULL COMMENT '角色主键',
-  `resource_ids` varchar(255) NOT NULL DEFAULT '' COMMENT 'element-ui tree选中的资源ids',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色资源element-ui树形控件选择记录关联表';
-
-LOCK TABLES `mng_role_resource_for_eleui` WRITE;
-/*!40000 ALTER TABLE `mng_role_resource_for_eleui` DISABLE KEYS */;
-
-INSERT INTO `mng_role_resource_for_eleui` (`id`, `role_id`, `resource_ids`)
-VALUES
-	(17,1061277220292595713,'1062518178556526593,1066671419766624257,1061818316563202049'),
-	(50,1061277221831905282,'1062518178556526593,1061818318412890114,1061818316563202049');
-
-/*!40000 ALTER TABLE `mng_role_resource_for_eleui` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
 # Dump of table persistent_logins
 # ------------------------------------------------------------
 

@@ -19,8 +19,6 @@ public class MngAuthAuthAuthorizeConfigProvider implements AuthorizeConfigProvid
      */
     @Override
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
-        config
-                .antMatchers("/admin").hasRole("ADMIN");
         return false;
     }
 

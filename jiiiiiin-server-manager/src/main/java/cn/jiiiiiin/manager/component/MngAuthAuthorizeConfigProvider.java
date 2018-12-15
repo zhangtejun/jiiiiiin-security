@@ -17,15 +17,11 @@ public class MngAuthAuthorizeConfigProvider implements AuthorizeConfigProvider {
     @Override
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
         config
-//                .antMatchers("/hello").hasRole("ADMIN")
-//                .antMatchers("/hello").permitAll()
-                .antMatchers("/admin").permitAll()
                 .antMatchers(
                         // TODO 判断是否是develop模式
                         // Druid监控的配置
                         "/druid", "/druid/*", "/druid/**"
-                )
-                .permitAll();
+                ).permitAll();
         return false;
     }
 

@@ -3,19 +3,15 @@
  */
 package cn.jiiiiiin.security.rbac.component.service.impl;
 
-import cn.jiiiiiin.security.rbac.component.service.RbacService;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import cn.jiiiiiin.security.rbac.component.service.RBACService;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zhailiang
  */
-public class RbacServiceImpl implements RbacService {
+public class RBACServiceImpl implements RBACService {
 
     /**
      * 需要读取用户所拥有权限的所有URL

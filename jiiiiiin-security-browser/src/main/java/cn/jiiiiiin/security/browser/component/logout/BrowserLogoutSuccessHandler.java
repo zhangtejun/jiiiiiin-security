@@ -1,7 +1,7 @@
 /**
  *
  */
-package cn.jiiiiiin.security.browser.logout;
+package cn.jiiiiiin.security.browser.component.logout;
 
 import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import cn.jiiiiiin.security.core.utils.HttpDataUtil;

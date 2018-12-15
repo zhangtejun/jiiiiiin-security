@@ -5,12 +5,12 @@ package cn.jiiiiiin.manager.component.authorize;
 
 import cn.jiiiiiin.module.common.entity.mngauth.Interface;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
+import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.mngauth.component.MngUserDetails;
 import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
-import cn.jiiiiiin.security.rbac.component.service.RbacService;
+import cn.jiiiiiin.security.rbac.component.service.RBACService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import lombok.var;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @Component("rbacService")
-public class MngRbacServiceImpl implements RbacService {
+public class MngRBACServiceImpl implements RBACService {
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
     private String replaceContextPath;
@@ -58,9 +58,7 @@ public class MngRbacServiceImpl implements RbacService {
                 // 通过用户标识-》用户角色-》角色拥有的资源
 
                 log.debug("内管权限校验开始：{} {} {}", admin.getUsername(), reqURI, reqMethod);
-                val iterator = roles.iterator();
-                while (iterator.hasNext()) {
-                    val role = iterator.next();
+                for (Role role : roles) {
                     boolean temp;
                     for (Resource resource : role.getResources()) {
                         for (Interface anInterface : resource.getInterfaces()) {

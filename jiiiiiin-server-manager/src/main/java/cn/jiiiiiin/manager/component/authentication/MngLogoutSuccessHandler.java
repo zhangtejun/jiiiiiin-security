@@ -3,7 +3,7 @@
  */
 package cn.jiiiiiin.manager.component.authentication;
 
-import cn.jiiiiiin.security.browser.logout.BrowserLogoutSuccessHandler;
+import cn.jiiiiiin.security.browser.component.logout.BrowserLogoutSuccessHandler;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.utils.HttpDataUtil;
 import com.baomidou.mybatisplus.extension.api.R;

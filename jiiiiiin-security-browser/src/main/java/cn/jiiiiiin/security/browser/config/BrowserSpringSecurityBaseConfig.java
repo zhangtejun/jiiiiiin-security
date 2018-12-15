@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.InvalidSessionStrategy;
@@ -30,8 +31,6 @@ import org.springframework.social.security.SpringSocialConfigurer;
  */
 @Configuration
 public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapter {
-
-    final static Logger L = LoggerFactory.getLogger(BrowserSpringSecurityBaseConfig.class);
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -62,6 +61,9 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
 
     @Autowired
     private LogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
 
     @Autowired
     private PersistentTokenRepository persistentTokenRepository;
@@ -138,7 +140,8 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 .and()
                 // TODO 设置为配置 条件判断设置
                 .exceptionHandling()
-                .accessDeniedPage("/403")
+                .accessDeniedPage()
+                .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .rememberMe()

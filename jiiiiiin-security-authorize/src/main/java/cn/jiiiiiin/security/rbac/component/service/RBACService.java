@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhailiang
  * @author jiiiiiin
  */
-public interface RbacService {
+public interface RBACService {
 
     /**
      * 判断当前请求是否能通过鉴权

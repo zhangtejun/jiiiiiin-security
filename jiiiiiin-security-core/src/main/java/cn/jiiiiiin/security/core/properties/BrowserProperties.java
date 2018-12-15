@@ -34,6 +34,11 @@ public class BrowserProperties {
     private String signOutUrl = "/signOut.html";
 
     /**
+     * 权限校验失败时候显示的页面
+     */
+    private String errorPage = "/403.html";
+
+    /**
      * '记住我'功能的有效时间，单位（秒），默认1小时
      */
     private int rememberMeSeconds = 3600;

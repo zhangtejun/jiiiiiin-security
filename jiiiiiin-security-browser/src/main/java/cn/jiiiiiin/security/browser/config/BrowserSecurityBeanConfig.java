@@ -6,7 +6,7 @@ package cn.jiiiiiin.security.browser.config;
 import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticationFailureHandler;
 import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticationSuccessHandler;
 import cn.jiiiiiin.security.browser.component.authentication.BrowserLoginUrlAuthenticationEntryPoint;
-import cn.jiiiiiin.security.browser.logout.BrowserLogoutSuccessHandler;
+import cn.jiiiiiin.security.browser.component.authorize.BrowserAccessDeniedHandler;
 import cn.jiiiiiin.security.browser.session.CustomExpiredSessionStrategy;
 import cn.jiiiiiin.security.browser.session.CustomInvalidSessionStrategy;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
@@ -17,11 +17,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
+import cn.jiiiiiin.security.browser.component.logout.BrowserLogoutSuccessHandler;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 /**
  * 浏览器环境下扩展点配置，配置在这里的bean，业务系统都可以通过声明同类型或同名的bean来覆盖安全
@@ -71,6 +76,19 @@ public class BrowserSecurityBeanConfig {
     @ConditionalOnMissingBean(LogoutSuccessHandler.class)
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new BrowserLogoutSuccessHandler(securityProperties.getBrowser().getSignOutUrl());
+    }
+
+    /**
+     * 权限校验失败时候的处理策略配置
+     *
+     * @return
+     * @see org.springframework.security.web.access.ExceptionTranslationFilter#doFilter(ServletRequest, ServletResponse, FilterChain)
+     * @see org.springframework.security.web.access.AccessDeniedHandlerImpl
+     */
+    @Bean
+    @ConditionalOnMissingBean(AccessDeniedHandler.class)
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new BrowserAccessDeniedHandler(securityProperties.getBrowser().getErrorPage());
     }
 
     @Bean
