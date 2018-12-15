@@ -140,7 +140,6 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 .and()
                 // TODO 设置为配置 条件判断设置
                 .exceptionHandling()
-                .accessDeniedPage()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
