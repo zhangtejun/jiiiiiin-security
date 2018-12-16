@@ -34,6 +34,7 @@ const _parseAuthorizePaths = function(resources) {
   });
   return res;
 }
+
 const _parseAuthorizeInterfaces = function(interfaes) {
   const res = [];
   interfaes.forEach(resource => {
@@ -42,6 +43,18 @@ const _parseAuthorizeInterfaces = function(interfaes) {
       res.push(path);
     }
   });
+  return res;
+}
+
+const _parseUserRoleIsSuperAdminStatus = function(roles) {
+  let res = false;
+  for (let i = 0; i < roles.length; i++) {
+    const role = roles[i];
+    res = role.authorityName === 'ADMIN';
+    if (res) {
+      break;
+    }
+  }
   return res;
 }
 
@@ -89,6 +102,9 @@ export default {
           const authorizeInterfaces = _parseAuthorizeInterfaces(res.principal.admin.authorizeInterfaces);
           vm.$vp.rabcUpdateAuthorizeInterfaces(authorizeInterfaces)
           console.log('authorizeInterfaces', authorizeInterfaces)
+          const isSuperAdminStatus = _parseUserRoleIsSuperAdminStatus(res.principal.admin.roles);
+          vm.$vp.rabcUpdateSuperAdminStatus(isSuperAdminStatus)
+          console.log('isSuperAdminStatus', isSuperAdminStatus)
           // 设置顶栏菜单
           // commit('d2admin/menu/headerSet', menus, { root: true });
           // 设置侧边栏菜单

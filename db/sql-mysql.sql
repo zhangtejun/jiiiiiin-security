@@ -17,7 +17,6 @@ GRANT ALL PRIVILEGES ON vplusdb.* TO 'vplus'@'localhost';
 
 USE `vplusdb`;
 
-
 # ************************************************************
 # Sequel Pro SQL dump
 # Version 4541
@@ -27,7 +26,7 @@ USE `vplusdb`;
 #
 # Host: 127.0.0.1 (MySQL 5.7.24)
 # Database: vplusdb
-# Generation Time: 2018-12-14 09:59:09 +0000
+# Generation Time: 2018-12-16 15:20:29 +0000
 # ************************************************************
 
 
@@ -326,9 +325,36 @@ VALUES
 	(226,1061277220292595713,1072485142741721090),
 	(684,1061277221798350849,1062518178556526593),
 	(685,1061277221798350849,1061818316563202049),
-	(686,1061277221831905282,1061818316563202049);
+	(695,1061277221831905282,1061818318412890114),
+	(696,1061277221831905282,1072423117311217666),
+	(697,1061277221831905282,1062518178556526593),
+	(698,1061277221831905282,1061818316563202049);
 
 /*!40000 ALTER TABLE `mng_role_resource` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table mng_role_resource_for_eleui
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `mng_role_resource_for_eleui`;
+
+CREATE TABLE `mng_role_resource_for_eleui` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `role_id` bigint(20) NOT NULL COMMENT '角色主键',
+  `resource_ids` varchar(255) NOT NULL DEFAULT '' COMMENT 'element-ui tree选中的资源ids',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色资源element-ui树形控件选择记录关联表';
+
+LOCK TABLES `mng_role_resource_for_eleui` WRITE;
+/*!40000 ALTER TABLE `mng_role_resource_for_eleui` DISABLE KEYS */;
+
+INSERT INTO `mng_role_resource_for_eleui` (`id`, `role_id`, `resource_ids`)
+VALUES
+	(17,1061277220292595713,'1062518178556526593,1066671419766624257,1061818316563202049'),
+	(50,1061277221831905282,'1062518178556526593,1061818318412890114,1061818316563202049');
+
+/*!40000 ALTER TABLE `mng_role_resource_for_eleui` ENABLE KEYS */;
 UNLOCK TABLES;
 
 

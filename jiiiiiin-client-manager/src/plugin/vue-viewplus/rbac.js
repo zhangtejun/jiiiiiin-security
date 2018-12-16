@@ -3,7 +3,15 @@
  */
 import _ from 'lodash';
 
-let _installed, _publicPaths, _authorizedPaths, _onLoginStateCheckFail, _authorizeInterfaces;
+let _installed, _publicPaths, _authorizedPaths, _onLoginStateCheckFail, _authorizeInterfaces
+
+/**
+ * 是否是【超级管理员】
+ * 如果登录用户是这个`角色`，那么就无需进行各种授权控制检测
+ * @type {boolean}
+ * @private
+ */
+let _superAdminStatus = false
 
 console.log('_authorizeInterfaces', _authorizeInterfaces)
 
@@ -28,6 +36,10 @@ const _compare = function(rule, path) {
  */
 const _rbacPathCheck = function(to, from, next) {
   console.log('_rbacPathCheck', to.path)
+  if (_superAdminStatus) {
+    next();
+    return;
+  }
   // 默认认为所有资源都需要进行权限控制
   let isAllow = false
   const path = to.path;
@@ -66,6 +78,9 @@ const _rbacPathCheck = function(to, from, next) {
 };
 
 const rbacModel = {
+  rabcUpdateSuperAdminStatus(status) {
+    _superAdminStatus = status;
+  },
   /**
    * 向`LoginStateCheck#authorizedPaths`中添加授权路径集合
    * 如：登录完成之后，将用户被授权可以访问的页面`paths`添加到`LoginStateCheck#authorizedPaths`中

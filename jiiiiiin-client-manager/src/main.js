@@ -51,7 +51,7 @@ ViewPlus.mixin(Vue, rbacModule, {
   installed() {
     console.log('rabcCheck module installed', this)
   },
-  publicPaths: ['/login'],
+  publicPaths: ['/login', '/index'],
   onLoginStateCheckFail(to, from, next) {
     NProgress.done()
     this.dialog(`您无权访问【${to.path}】页面`)
