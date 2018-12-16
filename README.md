@@ -19,7 +19,7 @@
 | 会话集群共享 | 95% | [使用SpringSecurity与Redis实现session的共享存储和集群部署](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-security-browser/src/main/java/cn/jiiiiiin/security/browser/config/BrowserSpringSecurityBaseConfig.java#L123) |
 | d2-mng-page | 100% | [自定义管理页面组件（统一管理：分页、检索、table、编辑）,为了统一审美](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/components/d2-mng-page/index.vue) |
 | 全面集成vue-viewplus | 60% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
-| RBAC前端权限控制 | 3% | 基于vue-viewplus自定义rbac权限控制模块 |
+| RBAC前端权限控制 | 30% | [基于vue-viewplus自定义rbac权限控制模块](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js) |
 
 
 # 功能截图
