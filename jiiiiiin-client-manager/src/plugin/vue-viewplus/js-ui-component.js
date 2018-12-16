@@ -36,13 +36,12 @@ export default {
     buttonText = '确认',
     hideOnBlur = false
   } = {}) {
-    MessageBox.alert(
+    return MessageBox.alert(
       content,
       title, {
         confirmButtonText: buttonText,
         distinguishCancelAndClose: hideOnBlur
       })
-    return this
   },
   /**
    * > http://element.eleme.io/#/zh-CN/component/message-box

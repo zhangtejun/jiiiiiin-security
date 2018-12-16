@@ -1,7 +1,9 @@
 package cn.jiiiiiin.manager.component.authentication;
 
+import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.dto.mngauth.Menu;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
+import cn.jiiiiiin.module.common.entity.mngauth.Interface;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
@@ -10,6 +12,7 @@ import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import cn.jiiiiiin.security.core.authentication.AuthenticationBeanConfig;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,8 +44,10 @@ public class MngAuthUserDetailsService implements UserDetailsService {
         if (optionalAdmin == null) {
             throw new UsernameNotFoundException("用户名密码不符");
         } else {
-            _parserResource(optionalAdmin);
-            return new MngUserDetails(optionalAdmin);
+            val modelMapper = new ModelMapper();
+            val adminDto = modelMapper.map(optionalAdmin, AdminDto.class);
+            _parserResource(adminDto);
+            return new MngUserDetails(adminDto);
         }
     }
 
@@ -51,16 +56,21 @@ public class MngAuthUserDetailsService implements UserDetailsService {
      *
      * @param optionalAdmin
      */
-    private void _parserResource(Admin optionalAdmin) {
+    private void _parserResource(AdminDto optionalAdmin) {
         val roles = optionalAdmin.getRoles();
         // 过滤菜单和授权资源
         val menuResources = new HashSet<Resource>();
+        // 用户具有的资源
         val authorizeResources = new HashSet<Resource>();
+        // 用户具有的接口集合
+        val authorizeInterfaces = new HashSet<Interface>();
         roles.forEach(item -> item.getResources().forEach(resource -> {
+            authorizeResources.add(resource);
+            resource.getInterfaces().forEach(ife -> {
+                authorizeInterfaces.add(ife);
+            });
             if (resource.getType().equals(ResourceTypeEnum.MENU)) {
                 menuResources.add(resource);
-            } else {
-                authorizeResources.add(resource);
             }
         }));
 
@@ -74,8 +84,10 @@ public class MngAuthUserDetailsService implements UserDetailsService {
         });
         menus.sort(Comparator.comparingInt(Menu::getNum));
         optionalAdmin.setAuthorizeResources(authorizeResources);
+        optionalAdmin.setAuthorizeInterfaces(authorizeInterfaces);
         optionalAdmin.setMenus(menus);
         log.debug("响应的授权资源 {}", authorizeResources);
+        log.debug("响应的授权接口集合 {}", authorizeInterfaces);
         log.debug("响应的菜单 {}", menus);
     }
 

@@ -41,6 +41,7 @@
 require('particles.js')
 import config from './config/default'
 import { mapActions } from 'vuex'
+import NProgress from 'nprogress'
 export default {
   data() {
     return {
@@ -48,8 +49,8 @@ export default {
       validateImgCodeUri: `${this.$vp.serverUrl}/code/image?${new Date().getTime()}`,
       // 表单
       formLogin: {
-        username: 'admin',
-        password: 'admin',
+        username: 'test',
+        password: 'test',
         code: ''
       },
       // 校验
@@ -114,6 +115,10 @@ export default {
         }
       })
     }
+  },
+  created() {
+    // 防止多次请求导致的重复调用会话超时函数，重复请求当前页面，导致进度条不会消失的bug
+    NProgress.done()
   }
 }
 </script>

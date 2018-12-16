@@ -1,5 +1,6 @@
 package cn.jiiiiiin.module.mngauth.component;
 
+import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,9 +22,9 @@ public class MngUserDetails implements UserDetails {
 
     private static final long serialVersionUID = -8362660409491439833L;
 
-    private Admin admin;
+    private AdminDto admin;
 
-    public MngUserDetails(Admin admin) {
+    public MngUserDetails(AdminDto admin) {
         this.admin = admin;
     }
 

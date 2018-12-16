@@ -16,32 +16,49 @@ import D2Crud from '@d2-projects/d2-crud'
 import router from './router'
 import { frameInRoutes } from '@/router/routes'
 import ViewPlus from 'vue-viewplus'
-import viewPlusOptions, { mixinConfig as viewPlusMixinConfig } from '@/plugin/vue-viewplus'
-import jsComponents from '@/plugin/vue-viewplus/js-ui-component.js'
+import viewPlusOptions, { mixinConfig as constConfigModule } from '@/plugin/vue-viewplus'
+import jsUIModule from '@/plugin/vue-viewplus/js-ui-component.js'
+import rbacModule from '@/plugin/vue-viewplus/rbac.js'
 import ZkTable from 'vue-table-with-tree-grid'
 import '@/assets/style/custom.scss'
 import _ from 'lodash'
+import NProgress from 'nprogress';
 
 const {
   debug,
   errorHandler
 } = viewPlusOptions
 
-ViewPlus.mixin(Vue, viewPlusMixinConfig, {
+ViewPlus.mixin(Vue, constConfigModule, {
   debug,
   errorHandler,
-  moduleName: '自定义常量模块'
+  moduleName: '自定义常量'
 })
 
-ViewPlus.mixin(Vue, jsComponents, {
+ViewPlus.mixin(Vue, jsUIModule, {
   debug,
   errorHandler,
-  moduleName: '自定义jsComponents模块'
+  moduleName: '自定义jsComponents'
 })
 
-Vue.use(ViewPlus, {
-  store,
-  ...viewPlusOptions
+Vue.use(ViewPlus, viewPlusOptions)
+
+ViewPlus.mixin(Vue, rbacModule, {
+  debug,
+  errorHandler,
+  moduleName: '自定义RBAC',
+  router,
+  installed() {
+    console.log('rabcCheck module installed', this)
+  },
+  publicPaths: ['/login'],
+  onLoginStateCheckFail(to, from, next) {
+    NProgress.done()
+    this.dialog(`您无权访问【${to.path}】页面`)
+      .then(() => {
+        next(false)
+      })
+  }
 })
 
 // 核心插件

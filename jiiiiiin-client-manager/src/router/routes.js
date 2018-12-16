@@ -3,7 +3,7 @@ import mngauth from './modules/mngauth'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
-const meta = { requiresAuth: true }
+const meta = {}
 
 /**
  * 在主框架内显示

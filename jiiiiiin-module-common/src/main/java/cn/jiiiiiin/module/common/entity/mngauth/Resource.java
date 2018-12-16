@@ -24,6 +24,7 @@ import java.util.*;
 @Getter
 @Setter
 @Accessors(chain = true)
+@ToString
 @TableName("mng_resource")
 @ApiModel(value = "Resource对象", description = "权限资源表")
 public class Resource extends BaseEntity<Resource> {

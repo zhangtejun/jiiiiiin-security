@@ -30,18 +30,6 @@ const viewPlusOptions = {
       console.error(`err参数错误 ${err}`);
     }
   },
-  loginStateCheck: {
-    isLogined: false,
-    checkPaths: [
-      /^(\/admin.+)$/
-    ],
-    onLoginStateCheckFail(to, from, next) {
-      this.toast('您尚未登录，请先登录', {
-        type: 'warning'
-      });
-      next('/login');
-    }
-  },
   utilHttp: {
     baseURL: mixinConfig.serverUrl,
     headers: {
@@ -88,6 +76,10 @@ const viewPlusOptions = {
       switch (content) {
         case '未授权，请登录':
           return this;
+        case 'Bad credentials':
+          // https://www.cnblogs.com/jifeng/archive/2012/06/09/2542928.html
+          content = '用户名或密码错误，请重试'
+          break
       }
       this.dialog(content, {
         title: '错误消息'

@@ -24,6 +24,27 @@ function _delEmptyChildren(menus) {
   return res;
 }
 
+const _parseAuthorizePaths = function(resources) {
+  const res = [];
+  resources.forEach(resource => {
+    const path = resource.path;
+    if (!_.isEmpty(path)) {
+      res.push(path);
+    }
+  });
+  return res;
+}
+const _parseAuthorizeInterfaces = function(interfaes) {
+  const res = [];
+  interfaes.forEach(resource => {
+    const path = resource.url;
+    if (!_.isEmpty(path)) {
+      res.push(path);
+    }
+  });
+  return res;
+}
+
 export default {
   namespaced: true,
   actions: {
@@ -56,9 +77,18 @@ export default {
           // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
           // token 代表用户当前登录状态 建议在网络请求中携带 token
           // 如有必要 token 需要定时更新，默认保存一天
+          // TODO 已经修改： 一下两个配置 只是为了d2-admin存储和显示log使用，和登录状态无关
           util.cookies.set('uuid', `${res.principal.admin.username}-uuid`);
-          util.cookies.set('token', res.details.sessionId);
+          // util.cookies.set('token', res.details.sessionId);
+          // 修改用户登录状态
+          vm.$vp.modifyLoginState(true)
           const menus = _delEmptyChildren(res.principal.admin.menus);
+          const authorizeResources = _parseAuthorizePaths(res.principal.admin.authorizeResources);
+          vm.$vp.rabcUpdateAuthorizedPaths(authorizeResources)
+          console.log('authorizeResources', authorizeResources)
+          const authorizeInterfaces = _parseAuthorizeInterfaces(res.principal.admin.authorizeInterfaces);
+          vm.$vp.rabcUpdateAuthorizeInterfaces(authorizeInterfaces)
+          console.log('authorizeInterfaces', authorizeInterfaces)
           // 设置顶栏菜单
           // commit('d2admin/menu/headerSet', menus, { root: true });
           // 设置侧边栏菜单
@@ -66,7 +96,6 @@ export default {
           // 初始化菜单搜索功能
           commit('d2admin/search/init', menus, { root: true });
           vm.$vp.cacheSaveToSessionStore('menus', menus)
-          console.log('menus', menus);
           // 设置 vuex 用户信息
           await dispatch('d2admin/user/set', {
             name: res.name
@@ -95,7 +124,6 @@ export default {
      * @param {Object} param confirm {Boolean} 是否需要确认
      */
     logout({ commit }, { vm, confirm = false }) {
-      console.log('vm', vm)
       /**
        * @description 注销
        */
@@ -105,6 +133,8 @@ export default {
         util.cookies.remove('uuid');
         // 跳转路由
         this.psPageReplace('/login');
+        // 修改用户登录状态
+        this.modifyLoginState(false)
       }
 
       // 判断是否需要确认
