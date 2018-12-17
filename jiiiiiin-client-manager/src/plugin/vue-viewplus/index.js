@@ -1,6 +1,5 @@
 import router from '@/router/index';
 import store from '@/store/index';
-import _ from 'lodash';
 
 export const mixinConfig = {
   baseUrl: process.env.VUE_APP_SEVER_URL,
@@ -13,21 +12,15 @@ const viewPlusOptions = {
   debug: process.env.NODE_ENV !== 'production',
   runNative: false,
   errorHandler(err) {
-    if (_.isError(err)) {
-      if (err.code) {
-        switch (err.code) {
-          case 'RUN_EVN_NOT_SUPPORT':
-          case 'NOT_SUPPORT_AJAX_JSBRIDGE':
-            console.debug(err);
-            break;
-          default:
-            console.warn(err);
-        }
-      } else {
-        console.error(err.message);
+    if (err.code) {
+      switch (err.code) {
+        case 'RUN_EVN_NOT_SUPPORT':
+          break
+        default:
+          console.error('收到v+全局错误处理通知', err);
       }
     } else {
-      console.error(`err参数错误 ${err}`);
+      console.error('收到v+全局错误处理通知', err);
     }
   },
   utilHttp: {

@@ -3,7 +3,10 @@
  */
 import _ from 'lodash';
 
-let _installed, _publicPaths, _authorizedPaths, _onLoginStateCheckFail, _authorizeInterfaces
+let _debug, _errorHandler, _installed, _onLoginStateCheckFail, _modifyLoginState
+let _publicPaths = []
+let _authorizedPaths = []
+let _authorizeInterfaces = []
 
 /**
  * 是否是【超级管理员】
@@ -12,8 +15,6 @@ let _installed, _publicPaths, _authorizedPaths, _onLoginStateCheckFail, _authori
  * @private
  */
 let _superAdminStatus = false
-
-console.log('_authorizeInterfaces', _authorizeInterfaces)
 
 const _compare = function(rule, path) {
   let temp = false
@@ -40,70 +41,128 @@ const _rbacPathCheck = function(to, from, next) {
     next();
     return;
   }
-  // 默认认为所有资源都需要进行权限控制
-  let isAllow = false
-  const path = to.path;
-  // 先检测公共页面集合
-  const publicPathsLength = _publicPaths.length
-  for (let i = publicPathsLength; i--;) {
-    const rule = _publicPaths[i];
-    isAllow = _compare(rule, path)
-    if (isAllow) {
-      break;
-    }
-  }
-  // 非公共页面 && 已经登录
-  if (!isAllow && this.isLogin()) {
-    // 检测已授权页面集合
-    const authorizedPathsLength = _authorizedPaths.length;
-    for (let i = authorizedPathsLength; i--;) {
-      const rule = _authorizedPaths[i];
-      isAllow = _compare(rule, path);
+  try {
+    // 默认认为所有资源都需要进行权限控制
+    let isAllow = false
+    const path = to.path;
+    // 先检测公共页面集合
+    const publicPathsLength = _publicPaths.length
+    for (let i = publicPathsLength; i--;) {
+      const rule = _publicPaths[i];
+      isAllow = _compare(rule, path)
       if (isAllow) {
         break;
       }
     }
-  }
+    // 非公共页面 && 已经登录
+    if (!isAllow && this.isLogin()) {
+      // 检测已授权页面集合
+      const authorizedPathsLength = _authorizedPaths.length;
+      for (let i = authorizedPathsLength; i--;) {
+        const rule = _authorizedPaths[i];
+        isAllow = _compare(rule, path);
+        if (isAllow) {
+          break;
+        }
+      }
+    }
 
-  if (isAllow) {
-    next();
-  } else {
-    if (_.isFunction(_onLoginStateCheckFail)) {
-      console.error(`[v+] RBAC模块检测：用户无权访问【${path}】，回调onLoginStateCheckFail钩子`);
-      this::_onLoginStateCheckFail(to, from, next);
+    if (isAllow) {
+      next();
     } else {
-      next(new Error('check_authorize_paths_fail'));
+      if (_.isFunction(_onLoginStateCheckFail)) {
+        if (_debug) {
+          console.error(`[v+] RBAC模块检测：用户无权访问【${path}】，回调onLoginStateCheckFail钩子`);
+        }
+        this::_onLoginStateCheckFail(to, from, next);
+      } else {
+        next(new Error('check_authorize_paths_fail'));
+      }
+    }
+  } catch (e) {
+    if (_debug) {
+      console.error(`[v+] RBAC模块检测出错: ${e.message}`);
+    }
+    if (_.isFunction(_errorHandler)) {
+      this::_errorHandler(e)
     }
   }
 };
 
+const _restoreState = function() {
+  _publicPaths = this.cacheLoadFromSessionStore('PUBLIC_PATHS', [])
+  _authorizedPaths = this.cacheLoadFromSessionStore('AUTHORIZED_PATHS', [])
+  _authorizeInterfaces = this.cacheLoadFromSessionStore('AUTHORIZED_INTERFACES', [])
+  _superAdminStatus = this.cacheLoadFromSessionStore('AUTHORIZED_SUPER_ADMIN_STATUS', false)
+}
+
 const rbacModel = {
+  /**
+   * 代理`$vp#login-state-check`模块的同名方法，以实现在登出、会话超时踢出的时候清理本模块维护的登录之后设置的状态
+   * @param status
+   */
+  modifyLoginState(status = false) {
+    this::_modifyLoginState(status)
+    if (!status) {
+      this::rbacModel.rabcUpdateSuperAdminStatus(false)
+      this::rbacModel.rabcUpdateAuthorizedPaths([])
+      this::rbacModel.rabcUpdateAuthorizeInterfaces([])
+      this::rbacModel.rabcUpdatePublicPaths([])
+    }
+  },
   rabcUpdateSuperAdminStatus(status) {
     _superAdminStatus = status;
+    this.cacheSaveToSessionStore('AUTHORIZED_SUPER_ADMIN_STATUS', _superAdminStatus)
   },
   /**
-   * 向`LoginStateCheck#authorizedPaths`中添加授权路径集合
+   * 添加授权路径集合
    * 如：登录完成之后，将用户被授权可以访问的页面`paths`添加到`LoginStateCheck#authorizedPaths`中
    * @param paths
    */
   rabcAddAuthorizedPaths(paths) {
-    _authorizedPaths = _.concat(_authorizedPaths, paths);
+    this::rbacModel.rabcUpdateAuthorizedPaths(_.concat(_authorizedPaths, paths))
   },
   /**
-   * 更新`LoginStateCheck#authorizedPaths`授权路径集合
+   * 更新授权路径集合
    * @param paths
    */
   rabcUpdateAuthorizedPaths(paths) {
-    _authorizedPaths = paths;
+    _authorizedPaths = [...new Set(paths)]
+    this.cacheSaveToSessionStore('AUTHORIZED_PATHS', _authorizedPaths)
   },
   /**
-   * 更新`LoginStateCheck#authorizeInterfaces`授权接口集合
+   * 更新授权接口集合
    * @param interfaces
    */
   rabcUpdateAuthorizeInterfaces(interfaces) {
-    _authorizeInterfaces = interfaces;
+    _authorizeInterfaces = [...new Set(interfaces)]
+    this.cacheSaveToSessionStore('AUTHORIZED_INTERFACES', _authorizeInterfaces)
+  },
+  /**
+   * 添加授权接口集合
+   * @param paths
+   */
+  rabcAddAuthorizeInterfaces(paths) {
+    this::rbacModel.rabcUpdateAuthorizeInterfaces(_.concat(_authorizeInterfaces, paths))
+  },
+  /**
+   * 更新公共路径集合
+   * @param paths
+   */
+  rabcUpdatePublicPaths(paths) {
+    _publicPaths = [...new Set(paths)];
+    this.cacheSaveToSessionStore('PUBLIC_PATHS', _publicPaths)
+  },
+  /**
+   * 添加公共路径集合
+   * @param paths
+   */
+  rabcAddPublicPaths(paths) {
+    this::rbacModel.rabcUpdatePublicPaths(_.concat(_publicPaths, paths))
   },
   install(Vue, {
+    debug = false,
+    errorHandler = null,
     router = null,
     installed = null,
     /**
@@ -124,11 +183,16 @@ const rbacModel = {
      */
     onLoginStateCheckFail = null
   } = {}) {
+    _debug = debug
+    _errorHandler = errorHandler
     _installed = installed
-    _publicPaths = publicPaths;
-    _authorizedPaths = authorizedPaths;
+    _modifyLoginState = this.modifyLoginState
+    // 恢复模块状态
+    this:: _restoreState()
+    this::rbacModel.rabcAddPublicPaths(publicPaths)
+    this::rbacModel.rabcAddAuthorizedPaths(authorizedPaths)
+    this::rbacModel.rabcAddAuthorizeInterfaces(authorizeInterfaces)
     _onLoginStateCheckFail = onLoginStateCheckFail;
-    _authorizeInterfaces = authorizeInterfaces;
     router.beforeEach((to, from, next) => {
       this::_rbacPathCheck(to, from, next);
     });
