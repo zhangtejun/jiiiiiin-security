@@ -36,7 +36,7 @@ const _compare = function(rule, path) {
  * @private
  */
 const _rbacPathCheck = function(to, from, next) {
-  console.log('_rbacPathCheck', to.path)
+  console.log('_rbacPathCheck', to.path, _authorizedPaths)
   if (_superAdminStatus) {
     next();
     return;
@@ -55,6 +55,7 @@ const _rbacPathCheck = function(to, from, next) {
       }
     }
     // 非公共页面 && 已经登录
+    console.log('this.isLogin()', this.isLogin(), this)
     if (!isAllow && this.isLogin()) {
       // 检测已授权页面集合
       const authorizedPathsLength = _authorizedPaths.length;
@@ -94,6 +95,58 @@ const _restoreState = function() {
   _authorizedPaths = this.cacheLoadFromSessionStore('AUTHORIZED_PATHS', [])
   _authorizeInterfaces = this.cacheLoadFromSessionStore('AUTHORIZED_INTERFACES', [])
   _superAdminStatus = this.cacheLoadFromSessionStore('AUTHORIZED_SUPER_ADMIN_STATUS', false)
+}
+
+/**
+ * 校验给定接口列表是否包含于用户授权接口集合中，如果是则返回`true`标识权限校验通过
+ * @param urls
+ * @returns {boolean}
+ * @private
+ */
+const _checkPermissionByUrl = function(urls) {
+  let voter = []
+  urls.forEach(url => {
+    voter.push(_authorizeInterfaces.includes(url))
+  })
+  return !voter.includes(false)
+}
+
+const _checkPermissionByAlias = function(urls) {
+}
+
+/**
+ * v-access:url.[disable]="['admin', 'admin/*']"
+ * value: ['admin', 'admin/*']
+ * arg: url
+ * @param Vue
+ * @private
+ */
+const _createRBACDirective = function(Vue) {
+  Vue.directive('access', {
+    bind: function(el, { value, arg, modifiers }) {
+      // console.log(value, arg, modifiers)
+      let isAllow = false
+      switch (arg) {
+        case 'url':
+          isAllow = _checkPermissionByUrl(value)
+          break
+        default:
+          isAllow = _checkPermissionByAlias(value)
+      }
+
+      if (!isAllow) {
+        if (_debug) {
+          console.error(`[v+] RBAC access权限检测不通过：用户无权访问【${value}】`);
+        }
+        if (_.has(modifiers, 'disable')) {
+          el.disabled = true;
+          el.style.opacity = '0.5'
+        } else {
+          el.style.display = 'none';
+        }
+      }
+    }
+  })
 }
 
 const rbacModel = {
@@ -196,6 +249,7 @@ const rbacModel = {
     router.beforeEach((to, from, next) => {
       this::_rbacPathCheck(to, from, next);
     });
+    this::_createRBACDirective(Vue)
   },
   installed() {
     if (_.isFunction(_installed)) {
