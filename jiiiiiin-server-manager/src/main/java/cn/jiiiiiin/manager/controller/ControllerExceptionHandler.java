@@ -29,7 +29,8 @@ public class ControllerExceptionHandler {
     // 标识返回的状态码
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public R<String> handlerUserNotExistException(Exception e) {
-        log.error("全局异常处理捕获到的错误", e);
+        log.error("全局异常处理捕获到的错误 {}", e.getClass().getSimpleName());
+        log.error("错误堆栈--》", e);
         if (e instanceof NullPointerException) {
             return R.failed("服务器内部错误【空指针异常】");
         } else if (e instanceof BusinessErrException) {

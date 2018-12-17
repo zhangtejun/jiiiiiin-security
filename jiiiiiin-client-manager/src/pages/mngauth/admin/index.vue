@@ -9,7 +9,7 @@
           :dialog-form-visible.sync="dialogFormVisible"
           :select-rows="selectRows"
           :show-option-box="true">
-    <el-form v-access:url="['admin/search/*/*/*/aaa']" slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
+    <el-form v-access:url="['admin/search/*/*/*']" slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
       <el-form-item label="渠道" prop="channel">
         <el-select size="small" v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
           <el-option

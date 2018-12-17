@@ -112,6 +112,7 @@ const _checkPermissionByUrl = function(urls) {
 }
 
 const _checkPermissionByAlias = function(urls) {
+  throw new Error('TODO 待开发')
 }
 
 /**
