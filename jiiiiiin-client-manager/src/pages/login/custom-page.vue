@@ -28,7 +28,7 @@
                 </template>
               </el-input>
             </el-form-item>
-            <el-button v-access="'LOGIN'" size="default" native-type="submit" @click="submit" :disabled="submitBtnDisabled" type="primary" class="button-login">登录</el-button>
+            <el-button size="default" native-type="submit" @click="submit" :disabled="submitBtnDisabled" type="primary" class="button-login">登录</el-button>
           </el-form>
         </el-card>
       </div>

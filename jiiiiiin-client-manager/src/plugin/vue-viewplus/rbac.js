@@ -7,7 +7,7 @@ let _debug, _errorHandler, _installed, _onLoginStateCheckFail, _modifyLoginState
 let _publicPaths = []
 let _authorizedPaths = []
 let _authorizeInterfaces = []
-let _authorizeResourceAlies = ['LOGIN']
+let _authorizeResourceAlias = []
 
 /**
  * 是否是【超级管理员】
@@ -99,24 +99,16 @@ const _restoreState = function() {
 }
 
 /**
- * 校验给定接口列表是否包含于用户授权接口集合中，如果是则返回`true`标识权限校验通过
+ * 校验给定指令显示声明所需列表是否包含于身份认证用户所具有的权限集合中，如果是则返回`true`标识权限校验通过
  * @param urls
+ * @param _authorizeInterfaces
  * @returns {boolean}
  * @private
  */
-const _checkPermissionByUrl = function(urls) {
+const _checkPermission = function(urls, authorizeCollection) {
   let voter = []
   urls.forEach(url => {
-    voter.push(_authorizeInterfaces.includes(url))
-  })
-  return !voter.includes(false)
-}
-
-const _checkPermissionByAlias = function(alias) {
-  console.log('_checkPermissionByAlias', alias)
-  let voter = []
-  alias.forEach(falg => {
-    voter.push(_authorizeResourceAlies.includes(falg))
+    voter.push(authorizeCollection.includes(url))
   })
   return !voter.includes(false)
 }
@@ -147,12 +139,13 @@ const _createRBACDirective = function(Vue) {
   Vue.directive('access', {
     bind: function(el, { value, arg, modifiers }) {
       let isAllow = false
+      const statementAuth = _parseAccessDirectiveValue2Arr(value)
       switch (arg) {
         case 'url':
-          isAllow = _checkPermissionByUrl(_parseAccessDirectiveValue2Arr(value))
+          isAllow = _checkPermission(statementAuth, _authorizeInterfaces)
           break
         default:
-          isAllow = _checkPermissionByAlias(_parseAccessDirectiveValue2Arr(value))
+          isAllow = _checkPermission(statementAuth, _authorizeResourceAlias)
       }
 
       if (!isAllow) {
