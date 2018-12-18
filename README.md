@@ -67,6 +67,8 @@
 | mng_role_resource |【角色资源关联表】，用户、角色、资源都可以由业务人员进行关联操作 |
 | mng_interface |【系统接口表】，使用`channel`字段可以区分不同业务系统的接口，如这里`0`标识内管，使用`url+method`来区分后台的某一个接口 |
 | mng_resource_interface | 【资源接口关联表】，`mng_resource`和`mng_interface`是多对多关系，因为某一个接口，比如`查询资源树`接口在角色管理列表和资源管理列表两个页面都会被调用，且存在一个资源记录会调用多个接口，故我觉得这样来设计表机构，多加这一张表，才能更清晰的将意思表达到位，且方便维护 |
+| persistent_logins | [spring security 记住用户所涉及表](https://docs.spring.io/spring-security/site/docs/3.0.x/reference/remember-me.html)|
+| springsocial_UserConnection | [spring social 第三方授权信息关联表](https://docs.spring.io/spring-social/docs/2.0.0.M4/reference/htmlsingle/#section_jdbcConnectionFactory)|
 
 
 # 所用技术栈
