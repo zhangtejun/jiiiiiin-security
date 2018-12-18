@@ -37,7 +37,6 @@ const _compare = function(rule, path) {
  * @private
  */
 const _rbacPathCheck = function(to, from, next) {
-  console.log('_rbacPathCheck', to.path, _authorizedPaths, _publicPaths)
   if (_superAdminStatus) {
     next();
     return;
@@ -56,7 +55,6 @@ const _rbacPathCheck = function(to, from, next) {
       }
     }
     // 非公共页面 && 已经登录
-    console.log('this.isLogin()', this.isLogin(), this)
     if (!isAllow && this.isLogin()) {
       // 检测已授权页面集合
       const authorizedPathsLength = _authorizedPaths.length;
@@ -95,19 +93,20 @@ const _restoreState = function() {
   _publicPaths = this.cacheLoadFromSessionStore('PUBLIC_PATHS', [])
   _authorizedPaths = this.cacheLoadFromSessionStore('AUTHORIZED_PATHS', [])
   _authorizeInterfaces = this.cacheLoadFromSessionStore('AUTHORIZED_INTERFACES', [])
+  _authorizeResourceAlias = this.cacheLoadFromSessionStore('AUTHORIZED_RESOURCE_ALIAS', [])
   _superAdminStatus = this.cacheLoadFromSessionStore('AUTHORIZED_SUPER_ADMIN_STATUS', false)
 }
 
 /**
  * 校验给定指令显示声明所需列表是否包含于身份认证用户所具有的权限集合中，如果是则返回`true`标识权限校验通过
- * @param urls
- * @param _authorizeInterfaces
+ * @param statementAuth
+ * @param authorizeCollection
  * @returns {boolean}
  * @private
  */
-const _checkPermission = function(urls, authorizeCollection) {
+const _checkPermission = function(statementAuth, authorizeCollection) {
   let voter = []
-  urls.forEach(url => {
+  statementAuth.forEach(url => {
     voter.push(authorizeCollection.includes(url))
   })
   return !voter.includes(false)
@@ -124,14 +123,20 @@ const _parseAccessDirectiveValue2Arr = function(value) {
   }
   return params
 }
+
 /**
- * 推荐使用资源标识配置：`v-access[.disable]="'LOGIN'"` 前提需要注入身份认证用户所拥有的**授权资源标识集合**
- * 传统使用接口配置：`v-access:url[.disable]="'admin'"` 前提需要注入身份认证用户所拥有的**授权接口集合**
+ * 推荐使用资源标识配置：`v-access:alias[.disable]="'LOGIN'"` 前提需要注入身份认证用户所拥有的**授权资源标识集合**，因为这种方式可以较少比较的次数
+ * 传统使用接口配置：`v-access:[url][.disable]="'admin'"` 前提需要注入身份认证用户所拥有的**授权接口集合**
  * 两种都支持数组配置
- * v-access[.disable]="['LOGIN', 'WELCOME']"
- * v-access:url[.disable]="['admin', 'admin/*']"
+ * v-access:alias[.disable]="['LOGIN', 'WELCOME']"
+ * v-access:[url][.disable]="['admin', 'admin/*']"
+ * 默认使用url模式，因为这种方式比较通用
+ * v-access="['admin', 'admin/*']"
  * <p>
  *   其中`[.disbale]`用来标明在检测用户不具有对当前声明的权限时，将会把当前声明指令的`el`元素添加`el.disabled = true`，默认则是影藏元素：`el.style.display = 'none'`
+ * <p>
+ *   举例：`<el-form v-access="['admin/search']" slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">...</el-form>`
+ *   上面这个检索表单需要登录用户具有访问`'admin/search'`接口的权限，才会显示
  * @param Vue
  * @private
  */
@@ -141,11 +146,13 @@ const _createRBACDirective = function(Vue) {
       let isAllow = false
       const statementAuth = _parseAccessDirectiveValue2Arr(value)
       switch (arg) {
-        case 'url':
-          isAllow = _checkPermission(statementAuth, _authorizeInterfaces)
-          break
-        default:
+        case 'alias':
           isAllow = _checkPermission(statementAuth, _authorizeResourceAlias)
+          break
+        // 默认使用url模式
+        case 'url':
+        default:
+          isAllow = _checkPermission(statementAuth, _authorizeInterfaces)
       }
 
       if (!isAllow) {
@@ -207,10 +214,25 @@ const rbacModel = {
   },
   /**
    * 添加授权接口集合
-   * @param paths
+   * @param interfaces
    */
-  rabcAddAuthorizeInterfaces(paths) {
-    this::rbacModel.rabcUpdateAuthorizeInterfaces(_.concat(_authorizeInterfaces, paths))
+  rabcAddAuthorizeInterfaces(interfaces) {
+    this::rbacModel.rabcUpdateAuthorizeInterfaces(_.concat(_authorizeInterfaces, interfaces))
+  },
+  /**
+   * 更新资源别名集合
+   * @param alias
+   */
+  rabcUpdateAuthorizeResourceAlias(alias) {
+    _authorizeResourceAlias = [...new Set(alias)]
+    this.cacheSaveToSessionStore('AUTHORIZED_RESOURCE_ALIAS', _authorizeResourceAlias)
+  },
+  /**
+   * 添加资源别名集合
+   * @param alias
+   */
+  rabcAddAuthorizeResourceAlias(alias) {
+    this::rbacModel.rabcUpdateAuthorizeResourceAlias(_.concat(_authorizeResourceAlias, alias))
   },
   /**
    * 更新公共路径集合
@@ -228,25 +250,67 @@ const rbacModel = {
     this::rbacModel.rabcUpdatePublicPaths(_.concat(_publicPaths, paths))
   },
   install(Vue, {
+    /**
+     * 参考：http://jiiiiiin.cn/vue-viewplus/#/global_configuration?id=debug-
+     */
     debug = false,
+    /**
+     * 参考：http://jiiiiiin.cn/vue-viewplus/#/global_configuration?id=errorhandler-
+     */
     errorHandler = null,
+    /**
+     * 参考：http://jiiiiiin.cn/vue-viewplus/#/global_configuration?id=router-
+     */
     router = null,
+    /**
+     * 参考：http://jiiiiiin.cn/vue-viewplus/#/global_configuration?id=installed
+     */
     installed = null,
     /**
-     * 用户拥有访问权限的路由path路径集合
+     * [*] 系统公共路由path路径集合，即可以让任何人访问的页面路径
      * {Array<Object>}
      * <p>
-     * 数组中的item，必须要是一个**正则表达式字面量**，如`[/^((\/Interbus)(?!\/SubMenu)\/.+)$/]`
+     *   比如登录页面的path，因为登录之前我们是无法判断用户是否可以访问某个页面的，故需要这个配置，当然如果需要这个配置也可以在初始化插件之前从服务器端获取，这样前后端动态性就更高，但是一般没有这种需求：）
+     * <p>
+     * 数组中的item，可以是一个**正则表达式字面量**，如`[/^((\/Interbus)(?!\/SubMenu)\/.+)$/]`，也可以是一个字符串
+     * <p>
+     * 匹配规则：如果在`LoginStateCheck#publicPaths`**系统公共路由path路径集合**中，那么就直接跳过权限校验
+     */
+    publicPaths = [],
+    /**
+     * [*] 登录用户拥有访问权限的路由path路径集合
+     * {Array<Object>}
+     * <p>
+     * 数组中的item，可以是一个**正则表达式字面量**，如`[/^((\/Interbus)(?!\/SubMenu)\/.+)$/]`，也可以是一个字符串
      * <p>
      * 匹配规则：如果在`LoginStateCheck#authorizedPaths`**需要身份认证规则集**中，那么就需要查看用户是否登录，如果没有登录就拒绝访问
      */
     authorizedPaths = [],
-    publicPaths = [],
+    /**
+     * [*] 登录用户拥有访问权限的资源别名集合
+     * {Array<Object>}
+     * <p>
+     * 数组中的item，可以是一个**正则表达式字面量**，如`[/^((\/Interbus)(?!\/SubMenu)\/.+)$/]`，也可以是一个字符串
+     * <p>
+     * 匹配规则：因为如果都用`LoginStateCheck#authorizeInterfaces`接口进行匹配，可能有一种情况，访问一个资源，其需要n个接口，那么我们在配置配置权限指令：v-access="[n, n....]"的时候就需要声明所有需要的接口，就会需要对比多次，
+     * 当我们系统的接口集合很大的时候，势必会成为一个瓶颈，故我们可以为资源声明一个别名，这个别名则可以代表这n个接口，这样的话就从n+减少到n次匹配；
+     */
+    authorizeResourceAlias = [],
+    /**
+     * [*] 登录用户拥有访问权限的后台接口集合
+     * {Array<Object>}
+     * <p>
+     *   TODO 将会用于在发送ajax请求之前，对待请求的接口和当前集合进行匹配，如果匹配失败说明用户就没有请求权限，则直接不发送后台请求，减少后端不必要的资源浪费
+     * <p>
+     * 数组中的item，可以是一个**正则表达式字面量**，如`[/^((\/Interbus)(?!\/SubMenu)\/.+)$/]`，也可以是一个字符串
+     * <p>
+     * 匹配规则：将会用于在发送ajax请求之前，对待请求的接口和当前集合进行匹配，如果匹配失败说明用户就没有请求权限，则直接不发送后台请求，减少后端不必要的资源浪费
+     */
     authorizeInterfaces = [],
     /**
-     * [*] `$vp#onLoginStateCheckFail(to, from, next)`
+     * [*] `$vp::onLoginStateCheckFail(to, from, next)`
      * <p>
-     * 身份认证检查失败时被回调
+     * 权限检查失败时被回调
      */
     onLoginStateCheckFail = null
   } = {}) {
@@ -259,6 +323,7 @@ const rbacModel = {
     this::rbacModel.rabcAddPublicPaths(publicPaths)
     this::rbacModel.rabcAddAuthorizedPaths(authorizedPaths)
     this::rbacModel.rabcAddAuthorizeInterfaces(authorizeInterfaces)
+    this::rbacModel.rabcAddAuthorizeResourceAlias(authorizeResourceAlias)
     _onLoginStateCheckFail = onLoginStateCheckFail;
     router.beforeEach((to, from, next) => {
       this::_rbacPathCheck(to, from, next);
@@ -269,7 +334,6 @@ const rbacModel = {
     if (_.isFunction(_installed)) {
       this::_installed()
     }
-    console.log('todo rabc installed', _publicPaths, _authorizedPaths, _authorizeInterfaces)
   }
 };
 
