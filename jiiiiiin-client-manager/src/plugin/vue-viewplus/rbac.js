@@ -7,6 +7,7 @@ let _debug, _errorHandler, _installed, _onLoginStateCheckFail, _modifyLoginState
 let _publicPaths = []
 let _authorizedPaths = []
 let _authorizeInterfaces = []
+let _authorizeResourceAlies = ['LOGIN']
 
 /**
  * 是否是【超级管理员】
@@ -36,7 +37,7 @@ const _compare = function(rule, path) {
  * @private
  */
 const _rbacPathCheck = function(to, from, next) {
-  console.log('_rbacPathCheck', to.path, _authorizedPaths)
+  console.log('_rbacPathCheck', to.path, _authorizedPaths, _publicPaths)
   if (_superAdminStatus) {
     next();
     return;
@@ -111,28 +112,47 @@ const _checkPermissionByUrl = function(urls) {
   return !voter.includes(false)
 }
 
-const _checkPermissionByAlias = function(urls) {
-  throw new Error('TODO 待开发')
+const _checkPermissionByAlias = function(alias) {
+  console.log('_checkPermissionByAlias', alias)
+  let voter = []
+  alias.forEach(falg => {
+    voter.push(_authorizeResourceAlies.includes(falg))
+  })
+  return !voter.includes(false)
 }
 
+const _parseAccessDirectiveValue2Arr = function(value) {
+  let params = []
+  if (_.isString(value)) {
+    params.push(value)
+  } else if (_.isArray(value)) {
+    params = value
+  } else {
+    throw new Error('access 配置的授权标识符不正确，请检查')
+  }
+  return params
+}
 /**
- * v-access:url.[disable]="['admin', 'admin/*']"
- * value: ['admin', 'admin/*']
- * arg: url
+ * 推荐使用资源标识配置：`v-access[.disable]="'LOGIN'"` 前提需要注入身份认证用户所拥有的**授权资源标识集合**
+ * 传统使用接口配置：`v-access:url[.disable]="'admin'"` 前提需要注入身份认证用户所拥有的**授权接口集合**
+ * 两种都支持数组配置
+ * v-access[.disable]="['LOGIN', 'WELCOME']"
+ * v-access:url[.disable]="['admin', 'admin/*']"
+ * <p>
+ *   其中`[.disbale]`用来标明在检测用户不具有对当前声明的权限时，将会把当前声明指令的`el`元素添加`el.disabled = true`，默认则是影藏元素：`el.style.display = 'none'`
  * @param Vue
  * @private
  */
 const _createRBACDirective = function(Vue) {
   Vue.directive('access', {
     bind: function(el, { value, arg, modifiers }) {
-      // console.log(value, arg, modifiers)
       let isAllow = false
       switch (arg) {
         case 'url':
-          isAllow = _checkPermissionByUrl(value)
+          isAllow = _checkPermissionByUrl(_parseAccessDirectiveValue2Arr(value))
           break
         default:
-          isAllow = _checkPermissionByAlias(value)
+          isAllow = _checkPermissionByAlias(_parseAccessDirectiveValue2Arr(value))
       }
 
       if (!isAllow) {
@@ -256,6 +276,7 @@ const rbacModel = {
     if (_.isFunction(_installed)) {
       this::_installed()
     }
+    console.log('todo rabc installed', _publicPaths, _authorizedPaths, _authorizeInterfaces)
   }
 };
 

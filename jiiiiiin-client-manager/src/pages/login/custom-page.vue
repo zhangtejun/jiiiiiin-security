@@ -28,7 +28,7 @@
                 </template>
               </el-input>
             </el-form-item>
-            <el-button size="default" native-type="submit" @click="submit" :disabled="submitBtnDisabled" type="primary" class="button-login">登录</el-button>
+            <el-button v-access="'LOGIN'" size="default" native-type="submit" @click="submit" :disabled="submitBtnDisabled" type="primary" class="button-login">登录</el-button>
           </el-form>
         </el-card>
       </div>
@@ -49,8 +49,8 @@ export default {
       validateImgCodeUri: `${this.$vp.serverUrl}/code/image?${new Date().getTime()}`,
       // 表单
       formLogin: {
-        username: 'test',
-        password: 'test',
+        username: 'admin',
+        password: 'admin',
         code: ''
       },
       // 校验
