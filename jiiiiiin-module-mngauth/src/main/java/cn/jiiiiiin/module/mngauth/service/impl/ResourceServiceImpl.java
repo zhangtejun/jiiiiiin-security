@@ -4,8 +4,8 @@ import cn.jiiiiiin.module.common.dto.mngauth.ResourceDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Interface;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
-import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import cn.jiiiiiin.module.common.mapper.mngauth.ResourceMapper;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.NonNull;
 import lombok.val;
 import lombok.var;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,9 +71,28 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         return _parseTreeNode(pid, nodes);
     }
 
+    private void _checkUniqueness(@NonNull Resource resource) {
+        if (StringUtils.isBlank(resource.getName())) {
+            throw new BusinessErrException("资源名称不能为空");
+        }
+    }
+
     @Transactional
     @Override
     public Boolean saveAndSortNumAndRelationInterfaceRecords(ResourceDto resource) {
+        _checkUniqueness(resource);
+        // 检测是否存在重复的`name`|`alias`记录
+        val existRecord = this.getOne(new QueryWrapper<Resource>().eq(Resource.CHANNEL, resource.getChannel()).eq(Resource.NAME, resource.getName()));
+        if (existRecord != null) {
+            throw new BusinessErrException(String.format("资源名称已经存在于当前渠道【%s】，请检查", resource.getChannel()));
+        }
+        if (!StringUtils.isBlank(resource.getAlias())) {
+            // 检测是否存在重复的`alias`记录
+            val existRecord2 = this.getOne(new QueryWrapper<Resource>().eq(Resource.CHANNEL, resource.getChannel()).eq(Resource.ALIAS, resource.getAlias()));
+            if (existRecord2 != null) {
+                throw new BusinessErrException(String.format("资源别名已经存在于当前渠道【%s】，请检查", resource.getChannel()));
+            }
+        }
         var res = false;
         val pid = resource.getPid();
         if (pid.equals(IS_ROOT_MENU)) {
@@ -83,6 +103,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             // 设置新增资源的`pids`
             resource.setPids(pNode.getPids().concat(",").concat(String.valueOf(pid)));
         }
+        // 检测排序
         final List<Resource> children = resourceMapper.selectChildren(pid, resource.getChannel());
         val size = children.size();
         val addNodeNum = resource.getNum();
@@ -142,17 +163,34 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Transactional
     @Override
     public Boolean updateAndSortNumAndRelationInterfaceRecords(ResourceDto resource) {
-        var res = false;
+        _checkUniqueness(resource);
         val currentNode = resourceMapper.selectById(resource.getId());
         if (currentNode == null) {
             throw new BusinessErrException(String.format("找不到待更新的资源记录【%s】", resource.getId()));
         }
+        if (!resource.getName().equals(currentNode.getName())) {
+            // 检测是否存在重复的`name`记录
+            val existRecord = this.getOne(new QueryWrapper<Resource>().eq(Resource.CHANNEL, resource.getChannel()).eq(Resource.NAME, resource.getName()));
+            if (existRecord != null) {
+                throw new BusinessErrException(String.format("资源名称已经存在于当前渠道【%s】，请检查", resource.getChannel()));
+            }
+        }
+        if (!StringUtils.isBlank(resource.getAlias()) && !resource.getAlias().equals(currentNode.getAlias())) {
+            // 检测是否存在重复的`alias`记录
+            val existRecord = this.getOne(new QueryWrapper<Resource>().eq(Resource.CHANNEL, resource.getChannel()).eq(Resource.ALIAS, resource.getAlias()));
+            if (existRecord != null) {
+                throw new BusinessErrException(String.format("资源别名已经存在于当前渠道【%s】，请检查", resource.getChannel()));
+            }
+        }
+
+        var res = false;
         val currentNum = currentNode.getNum();
         val modifyNum = resource.getNum();
         // 设置可更新属性
         currentNode
                 .setNum(modifyNum)
                 .setName(resource.getName())
+                .setAlias(resource.getAlias())
                 .setStatus(resource.getStatus())
                 .setPath(resource.getPath())
                 .setIcon(resource.getIcon());

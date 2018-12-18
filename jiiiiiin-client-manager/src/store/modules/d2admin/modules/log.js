@@ -47,8 +47,6 @@ export default {
         user: rootState.d2admin.user.info,
         // 当前用户的 uuid
         uuid: util.cookies.get('uuid'),
-        // 当前的 token
-        token: util.cookies.get('token'),
         // 当前地址
         url: get(window, 'location.href', ''),
         // 当前时间

@@ -50,10 +50,6 @@
           :value="props.row.uuid"/>
         <expand-item
           :type="props.row.type"
-          title="token"
-          :value="props.row.token"/>
-        <expand-item
-          :type="props.row.type"
           title="页面地址"
           :value="props.row.url"/>
         <expand-item

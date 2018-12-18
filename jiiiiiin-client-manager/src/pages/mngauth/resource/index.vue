@@ -44,6 +44,8 @@
                         width="400"
                         trigger="hover">
                     <ul>
+                        <li>资源名称必填</li>
+                        <li>资源名称或资源别名再同一渠道必须唯一</li>
                         <li>只可以删除叶子节点</li>
                         <li>点击`重置按钮`可以恢复列表初始化状态</li>
                         <li>直接点击记录的`状态切换开关`可以直接修改节点状态</li>
@@ -109,6 +111,9 @@
                         </d2-el-form-item>
                         <d2-el-form-item label="名称" :required="true" prop="name" label-width="100px">
                             <el-input v-model="form.name" autocomplete="off" disabled="disabled"></el-input>
+                        </d2-el-form-item>
+                        <d2-el-form-item label="别名" label-width="100px">
+                            <el-input v-model="form.alias" autocomplete="off" disabled="disabled"></el-input>
                         </d2-el-form-item>
                         <d2-el-form-item label="父级菜单" label-width="100px">
                             <el-input v-model="form.pname" autocomplete="off" disabled="disabled"></el-input>
@@ -201,6 +206,9 @@
                 </d2-el-form-item>
                 <d2-el-form-item label="名称" :required="true" prop="name" label-width="100px">
                     <el-input v-model="form.name" autocomplete="off"></el-input>
+                </d2-el-form-item>
+                <d2-el-form-item label="别名" label-width="100px">
+                    <el-input v-model="form.alias" autocomplete="off"></el-input>
                 </d2-el-form-item>
                 <d2-el-form-item label="父级菜单" label-width="100px">
                     <el-input v-model="form.pname" autocomplete="off" disabled="disabled"></el-input>
@@ -295,6 +303,7 @@ export default {
         id: -1,
         levels: 1,
         name: '',
+        alias: '',
         num: 1,
         path: '',
         pid: 0,
@@ -303,24 +312,16 @@ export default {
         type: 'MENU',
         interfacceIds: []
       },
-      formTempl: {
-        channel: '',
-        icon: '',
-        id: -1,
-        levels: 1,
-        name: '',
-        num: 1,
-        path: '',
-        pid: 0,
-        pname: '',
-        status: 'ENABLE',
-        type: 'MENU'
-      },
       data: [],
       columns: [
         {
           label: '名称',
           prop: 'name',
+          minWidth: '100px'
+        },
+        {
+          label: '别名',
+          prop: 'alias',
           minWidth: '100px'
         },
         {
@@ -546,6 +547,7 @@ export default {
     },
     _copy(current, orig) {
       current.name = orig.name;
+      current.alias = orig.alias;
       current.icon = orig.icon;
       current.num = orig.num;
       current.path = orig.path;
@@ -653,6 +655,20 @@ export default {
     }
   },
   created() {
+    this.formTempl = {
+      channel: '',
+      icon: '',
+      id: -1,
+      levels: 1,
+      name: '',
+      alias: '',
+      num: 1,
+      path: '',
+      pid: 0,
+      pname: '',
+      status: 'ENABLE',
+      type: 'MENU'
+    }
     this.$vp.ajaxGet(`resource/${this.channel}`).then(res => { this.data = res })
   }
 };

@@ -44,34 +44,37 @@ public class Resource extends BaseEntity<Resource> {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "菜单父id: 0标识(默认)为根节点")
+    @ApiModelProperty(value = "资源父id: 0标识(默认)为根节点")
     private Long pid;
 
-    @ApiModelProperty(value = "'当前菜单的所有父菜单编号': 默认 0")
+    @ApiModelProperty(value = "当前资源的所有父节点id集合: 0(默认)")
     private String pids;
 
-    @ApiModelProperty(value = "菜单名称")
+    @ApiModelProperty(value = "资源名称")
     private String name;
 
-    @ApiModelProperty(value = "菜单图标")
+    @ApiModelProperty(value = "资源别名，用于唯一标识当前资源，方便前端进行权限控制，生成规则建议使用：渠道标识+大写英文")
+    private String alias;
+
+    @ApiModelProperty(value = "资源图标")
     private String icon;
 
-    @ApiModelProperty(value = "页面地址")
+    @ApiModelProperty(value = "资源前端路由地址")
     private String path;
 
-    @ApiModelProperty(value = "菜单排序号")
+    @ApiModelProperty(value = "资源排序号")
     private Integer num;
 
-    @ApiModelProperty(value = "菜单层级")
+    @ApiModelProperty(value = "资源层级")
     private Integer levels;
 
-    @ApiModelProperty(value = "类型: 1:菜单(默认) 0:按钮")
+    @ApiModelProperty(value = "资源类型: 1:菜单(默认) 0:按钮")
     private ResourceTypeEnum type;
 
-    @ApiModelProperty(value = "菜单状态: 1:启用(默认) 0:停用")
+    @ApiModelProperty(value = "资源状态: 1:启用(默认) 0:停用")
     private StatusEnum status;
 
-    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
+    @ApiModelProperty(value = "渠道标识，不同的渠道就是不同的资源分组: 0:内管")
     private ChannelEnum channel;
 
     @TableField(exist = false)
@@ -85,6 +88,8 @@ public class Resource extends BaseEntity<Resource> {
     public static final String PIDS = "pids";
 
     public static final String NAME = "name";
+
+    public static final String ALIAS = "alias";
 
     public static final String ICON = "icon";
 

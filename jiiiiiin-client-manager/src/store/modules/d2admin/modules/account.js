@@ -85,14 +85,10 @@ export default {
         imageCode
       })
         .then(async res => {
-          // 设置 cookie 一定要存 uuid 和 token 两个 cookie
+          // 设置 cookie 一定要存 uuid
           // 整个系统依赖这两个数据进行校验和存储
           // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
-          // token 代表用户当前登录状态 建议在网络请求中携带 token
-          // 如有必要 token 需要定时更新，默认保存一天
-          // TODO 已经修改： 一下两个配置 只是为了d2-admin存储和显示log使用，和登录状态无关
           util.cookies.set('uuid', `${res.principal.admin.username}-uuid`);
-          // util.cookies.set('token', res.details.sessionId);
           // 修改用户登录状态
           vm.$vp.modifyLoginState(true)
           const menus = _delEmptyChildren(res.principal.admin.menus);
@@ -145,7 +141,6 @@ export default {
        */
       function logout() {
         // 删除cookie
-        util.cookies.remove('token');
         util.cookies.remove('uuid');
         // 跳转路由
         this.psPageReplace('/login');
