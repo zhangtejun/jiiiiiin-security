@@ -25,13 +25,21 @@ function _delEmptyChildren(menus) {
 }
 
 const _parseAuthorizePaths = function(resources) {
-  const res = [];
+  const res = {};
+  const paths = [];
+  const aliasArr = [];
   resources.forEach(resource => {
     const path = resource.path;
+    const alias = resource.alias;
     if (!_.isEmpty(path)) {
-      res.push(path);
+      paths.push(path);
+    }
+    if (!_.isEmpty(alias)) {
+      aliasArr.push(alias);
     }
   });
+  res.paths = paths
+  res.alias = aliasArr
   return res;
 }
 
@@ -93,14 +101,12 @@ export default {
           vm.$vp.modifyLoginState(true)
           const menus = _delEmptyChildren(res.principal.admin.menus);
           const authorizeResources = _parseAuthorizePaths(res.principal.admin.authorizeResources);
-          vm.$vp.rabcUpdateAuthorizedPaths(authorizeResources)
-          console.log('authorizeResources', authorizeResources)
+          vm.$vp.rabcUpdateAuthorizedPaths(authorizeResources.paths)
+          vm.$vp.rabcUpdateAuthorizeResourceAlias(authorizeResources.alias)
           const authorizeInterfaces = _parseAuthorizeInterfaces(res.principal.admin.authorizeInterfaces);
           vm.$vp.rabcUpdateAuthorizeInterfaces(authorizeInterfaces)
-          console.log('authorizeInterfaces', authorizeInterfaces)
           const isSuperAdminStatus = _parseUserRoleIsSuperAdminStatus(res.principal.admin.roles);
           vm.$vp.rabcUpdateSuperAdminStatus(isSuperAdminStatus)
-          console.log('isSuperAdminStatus', isSuperAdminStatus)
           // 设置顶栏菜单
           // commit('d2admin/menu/headerSet', menus, { root: true });
           // 设置侧边栏菜单
