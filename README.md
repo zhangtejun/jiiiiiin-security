@@ -23,7 +23,7 @@
 | ------ | ------ | ------ |
 | 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
 | RBAC后端权限控制 | 100% | [基于Spring Security的后端RBAC权限控制](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master/jiiiiiin-security-authorize) |
-| RBAC前端权限控制 | 90% | [1.基于vue-viewplus，实现了一个自定义模块](http://jiiiiiin.cn/vue-viewplus/#/global_api?id=mixin-) <br> [2.实现前端页面可访问性控制，通过路由拦截，判断用户待访问页面是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L250) <br> [3.实现可见页面的局部UI组件的**可使用性或可见性**控制，基于自定义`v-access`指令，对比声明的接口或资源别是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L124)|
+| RBAC前端权限控制 | 100% | [1.基于vue-viewplus，实现了一个自定义模块](http://jiiiiiin.cn/vue-viewplus/#/global_api?id=mixin-) <br> [2.实现前端页面可访问性控制，通过路由拦截，判断用户待访问页面是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L250) <br> [3.实现可见页面的局部UI组件的**可使用性或可见性**控制，基于自定义`v-access`指令，对比声明的接口或资源别是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L124)|
 | 全面集成vue-viewplus | 70% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
 | 会话并发控制 | 100% | [使用SpringSecurity#concurrency-control实现应用中同一用户在同时只能有一个是终端（渠道）成功登录应用，后登录终端会导致前一个会话失效](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-security-browser/src/main/java/cn/jiiiiiin/security/browser/config/BrowserSpringSecurityBaseConfig.java#L123) |
 | 会话集群共享 | 100% | [使用Spring Session与Redis实现会话的共享存储和集群部署](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L20) |
@@ -70,45 +70,12 @@
 | persistent_logins | [spring security 记住用户所涉及表](https://docs.spring.io/spring-security/site/docs/3.0.x/reference/remember-me.html)|
 | springsocial_UserConnection | [spring social 第三方授权信息关联表](https://docs.spring.io/spring-social/docs/2.0.0.M4/reference/htmlsingle/#section_jdbcConnectionFactory)|
 
-+ 关于前端`rbac`权限控制
++ 关于前端`rbac`权限控制，详见下面两个链接：
 
     - [Vue 前端应用实现RBAC权限控制的一种方式](https://juejin.im/post/5c19a282f265da61137f372c)
 
-    - 配置：
+    - 详细配置和api可以点击：[vue-viewplus-自定义RBAC权限控制模块](http://jiiiiiin.cn/vue-viewplus/#/rbac)
     
-    ```js
-      import router from './router'
-              import ViewPlus from 'vue-viewplus'
-              import rbacModule from '@/plugin/vue-viewplus/rbac.js'
-            
-              ViewPlus.mixin(Vue, rbacModule, {
-                // 是否为调试模式
-                debug: true,
-                errorHandler(err) {
-                  // 当`vue-viewplus`捕获到插件中抛出异常会回调这个全局错误处理函数
-                  console.error(err)
-                },
-                // 当前`rbacModule`作为`vue-viewplus`的自定义混合模块，这里取一个名字，以便观察注入插件情况
-                moduleName: '自定义RBAC',
-                router,
-                // [*] 系统公共路由path路径集合，即可以让任何人访问的页面路径
-                publicPaths: ['/login'],
-                // 权限检查失败时被回调
-                onPathCheckFail(to, from, next) {
-                  this.dialog(`您无权访问【${to.path}】页面`)
-                    .then(() => {
-                      // 防止用户被踢出之后，被权限拦截导致访问不了任何页面，故这里进行登录状态监测
-                      if (this.isLogin()) {
-                        next(false);
-                      } else {
-                        next('/login');
-                      }
-                    })
-                }
-              })
-    ```
-    
-    详细配置和解释可以点击：[vue-viewplus-自定义RBAC权限控制模块](http://jiiiiiin.cn/vue-viewplus/#/rbac)
 
 # 所用技术栈
 
