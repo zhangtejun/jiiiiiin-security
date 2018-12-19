@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 
-let _debug, _errorHandler, _installed, _onLoginStateCheckFail, _modifyLoginState, _isRESTfulInterfaces
+let _debug, _errorHandler, _installed, _onPathCheckFail, _modifyLoginState, _isRESTfulInterfaces, _onAjaxReqCheckFail
 let _publicPaths = []
 let _authorizedPaths = []
 let _authorizeInterfaces = []
@@ -70,11 +70,11 @@ const _rbacPathCheck = function(to, from, next) {
     if (isAllow) {
       next();
     } else {
-      if (_.isFunction(_onLoginStateCheckFail)) {
+      if (_.isFunction(_onPathCheckFail)) {
         if (_debug) {
-          console.error(`[v+] RBAC模块检测：用户无权访问【${path}】，回调onLoginStateCheckFail钩子`);
+          console.error(`[v+] RBAC模块检测：用户无权访问【${path}】，回调onPathCheckFail钩子`);
         }
-        this::_onLoginStateCheckFail(to, from, next);
+        this::_onPathCheckFail(to, from, next);
       } else {
         next(new Error('check_authorize_paths_fail'));
       }
@@ -200,6 +200,47 @@ const _createRBACDirective = function(Vue) {
       }
     }
   })
+}
+
+/**
+ * 用于在发送ajax请求之前，对待请求的接口和当前集合进行匹配，如果匹配失败说明用户就没有请求权限，则直接不发送后台请求，减少后端不必要的资源浪费
+ * @private
+ */
+const _rbacAjaxCheck = function() {
+  this.getAjaxInstance().interceptors.request.use(
+    (config) => {
+      console.log('req', config)
+      const { url, method } = config
+      const statementAuth = []
+      let isAllow
+      if (_isRESTfulInterfaces) {
+        const _method = _.toUpper(method)
+        statementAuth.push({ url, method: _method });
+        isAllow = _checkPermissionRESTful(statementAuth, _authorizeInterfaces)
+        // TODO 因为拦截到的请求`{url: "admin/0/1/10", method: "GET"}` 没有找到类似java中org.springframework.util.AntPathMatcher;
+        // 那样能匹配`{url: "admin/*/*/*", method: "GET"}`，的方法`temp = antPathMatcher.match(anInterface.getUrl(), reqURI)`
+        // 故这个需求暂时没法实现 ：）
+        console.log('statementAuth', isAllow, statementAuth, _authorizeInterfaces)
+      } else {
+        isAllow = _checkPermission(statementAuth, _authorizeInterfaces)
+      }
+      if (isAllow) {
+        return config;
+      } else {
+        if (_debug) {
+          console.warn(`[v+] RBAC ajax权限检测不通过：用户无权发送请求【${method}-${url}】`);
+        }
+        if (_.isFunction(_onAjaxReqCheckFail)) {
+          this::_onAjaxReqCheckFail(config);
+        } else {
+          throw new Error('check_authorize_ajax_req_fail');
+        }
+      }
+    },
+    error => {
+      return Promise.reject(error)
+    }
+  )
 }
 
 const rbacModel = {
@@ -365,11 +406,17 @@ const rbacModel = {
      */
     isRESTfulInterfaces = true,
     /**
-     * [*] `$vp::onLoginStateCheckFail(to, from, next)`
+     * [*] `$vp::onPathCheckFail(to, from, next)`
      * <p>
-     * 权限检查失败时被回调
+     * 访问前端页面时权限检查失败时被回调
      */
-    onLoginStateCheckFail = null
+    onPathCheckFail = null,
+    /**
+     * [*] `$vp::onPathCheckFail(to, from, next)`
+     * <p>
+     * 发送ajax请求时权限检查失败时被回调
+     */
+    onAjaxReqCheckFail = null
   } = {}) {
     _debug = debug
     _errorHandler = errorHandler
@@ -382,11 +429,14 @@ const rbacModel = {
     this::rbacModel.rabcAddAuthorizedPaths(authorizedPaths)
     this::rbacModel.rabcAddAuthorizeInterfaces(authorizeInterfaces)
     this::rbacModel.rabcAddAuthorizeResourceAlias(authorizeResourceAlias)
-    _onLoginStateCheckFail = onLoginStateCheckFail;
+    _onPathCheckFail = onPathCheckFail;
+    _onAjaxReqCheckFail = onAjaxReqCheckFail;
     router.beforeEach((to, from, next) => {
       this::_rbacPathCheck(to, from, next);
     });
     this::_createRBACDirective(Vue)
+    // TODO 因为路径匹配的原因占时不支持
+    // this::_rbacAjaxCheck()
   },
   installed() {
     if (_.isFunction(_installed)) {

@@ -94,7 +94,7 @@
                 // [*] 系统公共路由path路径集合，即可以让任何人访问的页面路径
                 publicPaths: ['/login'],
                 // 权限检查失败时被回调
-                onLoginStateCheckFail(to, from, next) {
+                onPathCheckFail(to, from, next) {
                   this.dialog(`您无权访问【${to.path}】页面`)
                     .then(() => {
                       // 防止用户被踢出之后，被权限拦截导致访问不了任何页面，故这里进行登录状态监测

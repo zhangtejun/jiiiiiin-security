@@ -49,7 +49,7 @@ ViewPlus.mixin(Vue, rbacModule, {
   moduleName: '自定义RBAC',
   router,
   publicPaths: ['/login'],
-  onLoginStateCheckFail(to, from, next) {
+  onPathCheckFail(to, from, next) {
     NProgress.done()
     const title = to.meta.title
     console.log('title', title)
