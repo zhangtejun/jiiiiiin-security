@@ -184,6 +184,10 @@ const rbacModel = {
       this::rbacModel.rabcUpdatePublicPaths([])
     }
   },
+  /**
+   * 【可选】有些系统存在一个超级用户角色，其可以访问任何资源、页面，故如果设置，针对这个登录用户将不会做任何权限校验，以便节省前端资源
+   * @param status
+   */
   rabcUpdateSuperAdminStatus(status) {
     _superAdminStatus = status;
     this.cacheSaveToSessionStore('AUTHORIZED_SUPER_ADMIN_STATUS', _superAdminStatus)
@@ -287,7 +291,7 @@ const rbacModel = {
      */
     authorizedPaths = [],
     /**
-     * [*] 登录用户拥有访问权限的资源别名集合
+     * [可选] 登录用户拥有访问权限的资源别名集合
      * {Array<Object>}
      * <p>
      * 数组中的item，可以是一个**正则表达式字面量**，如`[/^((\/Interbus)(?!\/SubMenu)\/.+)$/]`，也可以是一个字符串
@@ -300,7 +304,8 @@ const rbacModel = {
      * [*] 登录用户拥有访问权限的后台接口集合
      * {Array<Object>}
      * <p>
-     *   TODO 将会用于在发送ajax请求之前，对待请求的接口和当前集合进行匹配，如果匹配失败说明用户就没有请求权限，则直接不发送后台请求，减少后端不必要的资源浪费
+     *   1.在`v-access`指令配置为url（默认）校验格式时，将会使用该集合和指令声明的待审查授权接口列表进行匹配，如果匹配成功，则指令校验通过，否则校验不通过，会将对应dom元素进行处理
+     *   2.TODO 将会用于在发送ajax请求之前，对待请求的接口和当前集合进行匹配，如果匹配失败说明用户就没有请求权限，则直接不发送后台请求，减少后端不必要的资源浪费
      * <p>
      * 数组中的item，可以是一个**正则表达式字面量**，如`[/^((\/Interbus)(?!\/SubMenu)\/.+)$/]`，也可以是一个字符串
      * <p>
