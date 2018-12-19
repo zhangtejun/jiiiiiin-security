@@ -120,27 +120,24 @@ const _checkPermission = function(statementAuth, authorizeCollection) {
  * @private
  */
 const _checkPermissionRESTful = function(statementAuth, authorizeCollection) {
-  console.log('_checkPermissionRESTful', statementAuth, authorizeCollection)
   let voter = []
   const expectedSize = statementAuth.length
   const size = authorizeCollection.length
   for (let i = 0; i < size; i++) {
     const itf = authorizeCollection[i]
     if (_.find(statementAuth, itf)) {
-      console.log('statementAuth', itf)
       voter.push(true)
       // 移除判断成功的声明权限对象
       statementAuth.splice(i, 1)
     }
   }
-  console.log('_checkPermissionRESTfulvoter', voter, voter.length, expectedSize)
   // 如果投票得到的true含量和需要判断的声明权限长度一致，则标识校验通过
   return voter.length === expectedSize
 }
 
 const _parseAccessDirectiveValue2Arr = function(value) {
   let params = []
-  if (_.isString(value)) {
+  if (_.isString(value) || _.isPlainObject(value)) {
     params.push(value)
   } else if (_.isArray(value)) {
     params = value
@@ -156,6 +153,8 @@ const _parseAccessDirectiveValue2Arr = function(value) {
  * 两种都支持数组配置
  * v-access:alias[.disable]="['LOGIN', 'WELCOME']"
  * v-access:[url][.disable]="['admin', 'admin/*']"
+ * 针对于RESTful类型接口：
+ * v-access="[{url: 'admin/search/*', method: 'POST'}]"
  * 默认使用url模式，因为这种方式比较通用
  * v-access="['admin', 'admin/*']"
  * <p>
@@ -344,7 +343,16 @@ const rbacModel = {
      * <p>
      * 匹配规则：将会用于在发送ajax请求之前，对待请求的接口和当前集合进行匹配，如果匹配失败说明用户就没有请求权限，则直接不发送后台请求，减少后端不必要的资源浪费
      * <p>
-     *   注意
+     *   注意需要根据`isRESTfulInterfaces`属性的值，来判断当前集合的数据类型：
+     *
+     * 如果`isRESTfulInterfaces`设置为`false`，则使用下面的格式：
+     * ```json
+     * ["admin/dels/*", ...]
+     * ```
+     * 如果`isRESTfulInterfaces`设置为`true`，**注意这是默认设置**，则使用下面的格式：
+     * ```json
+     * [[{url: "admin/dels/*", method: "DELETE"}, ...]]
+     * ```
      */
     authorizeInterfaces = [],
     /**

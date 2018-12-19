@@ -117,11 +117,12 @@ export default {
     },
     // 添加按钮的`access`权限规则
     createAccessRule: {
-      type: [String, Array],
+      type: [String, Array, Object],
       default() {
         return []
       }
     },
+    // 采用别名模式
     updateAccessRule: {
       type: [String, Array],
       default() {
@@ -129,7 +130,7 @@ export default {
       }
     },
     delAccessRule: {
-      type: [String, Array],
+      type: [String, Array, Object],
       default() {
         return []
       }

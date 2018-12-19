@@ -107,8 +107,6 @@ export default {
           vm.$vp.rabcUpdateAuthorizedPaths(authorizeResources.paths)
           vm.$vp.rabcUpdateAuthorizeResourceAlias(authorizeResources.alias)
           const authorizeInterfaces = _parseAuthorizeInterfaces(res.principal.admin.authorizeInterfaces);
-          console.log('res.principal.admin.authorizeInterfaces', res.principal.admin.authorizeInterfaces)
-          console.log('authorizeInterfaces', authorizeInterfaces)
           vm.$vp.rabcUpdateAuthorizeInterfaces(authorizeInterfaces)
           const isSuperAdminStatus = _parseUserRoleIsSuperAdminStatus(res.principal.admin.roles);
           vm.$vp.rabcUpdateSuperAdminStatus(isSuperAdminStatus)
