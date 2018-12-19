@@ -83,7 +83,9 @@
     
 + [springboot](https://github.com/spring-projects/spring-boot)
 
-+ [spring security](https://github.com/spring-projects/spring-security)
++ [spring-security](https://github.com/spring-projects/spring-security)
+
++ [spring-session](https://github.com/spring-projects/spring-session/projects)
 
 + [mybatis-plus](https://github.com/baomidou/mybatis-plus)
 
