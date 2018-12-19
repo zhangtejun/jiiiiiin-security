@@ -45,10 +45,11 @@ const _parseAuthorizePaths = function(resources) {
 
 const _parseAuthorizeInterfaces = function(interfaes) {
   const res = [];
-  interfaes.forEach(resource => {
-    const path = resource.url;
-    if (!_.isEmpty(path)) {
-      res.push(path);
+  interfaes.forEach(({ url, method } = {}) => {
+    if (!_.isEmpty(url) && !_.isEmpty(method)) {
+      res.push({
+        url, method
+      });
     }
   });
   return res;
@@ -101,9 +102,13 @@ export default {
           vm.$vp.modifyLoginState(true)
           const menus = _delEmptyChildren(res.principal.admin.menus);
           const authorizeResources = _parseAuthorizePaths(res.principal.admin.authorizeResources);
+          // console.log('resources', res.principal.admin.authorizeResources)
+          // console.log('authorizeResources', authorizeResources)
           vm.$vp.rabcUpdateAuthorizedPaths(authorizeResources.paths)
           vm.$vp.rabcUpdateAuthorizeResourceAlias(authorizeResources.alias)
           const authorizeInterfaces = _parseAuthorizeInterfaces(res.principal.admin.authorizeInterfaces);
+          console.log('res.principal.admin.authorizeInterfaces', res.principal.admin.authorizeInterfaces)
+          console.log('authorizeInterfaces', authorizeInterfaces)
           vm.$vp.rabcUpdateAuthorizeInterfaces(authorizeInterfaces)
           const isSuperAdminStatus = _parseUserRoleIsSuperAdminStatus(res.principal.admin.roles);
           vm.$vp.rabcUpdateSuperAdminStatus(isSuperAdminStatus)

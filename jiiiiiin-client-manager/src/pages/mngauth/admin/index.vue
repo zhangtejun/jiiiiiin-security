@@ -2,6 +2,9 @@
   <d2-mng-page
           @qry-data="qryData"
           @create="onCreate"
+          :create-access-rule="[{url: 'admin', method: 'GET'}]"
+          update-access-rule="MNG_ADMIN_UPDATE"
+          :del-access-rule="[{url: 'admin/dels/*', method: 'DELETE'}]"
           @update="onUpdate"
           @del="onDel"
           :page="page"
@@ -9,7 +12,7 @@
           :dialog-form-visible.sync="dialogFormVisible"
           :select-rows="selectRows"
           :show-option-box="true">
-    <el-form v-access="['admin/search/*/*/*']" slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
+    <el-form v-access="[{url: 'admin/search/*/*/*', method: 'POST'}]" slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
       <el-form-item label="渠道" prop="channel">
         <el-select size="small" v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
           <el-option
@@ -51,7 +54,7 @@
       <li>`用户名`必须唯一</li>
       <li>不能删除登录用户记录</li>
     </ul>
-    <el-button  slot="option-box-attch-but" size="small" @click="onClickModifyPwd">修改用户密码</el-button>
+    <el-button v-access="[{url: 'admin/pwd', method: 'UPDATE'}]" slot="option-box-attch-but" size="small" @click="onClickModifyPwd">修改用户密码</el-button>
 
     <el-table
             ref="table"

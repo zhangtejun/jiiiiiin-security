@@ -24,9 +24,9 @@
         <slot name="option-box" v-if="showOptionBox">
             <el-row class="mng-list-option-box">
                 <el-col :span="23">
-                    <el-button size="small" type="primary" @click="onClickCreate">新增</el-button>
-                    <el-button size="small" @click="onClickUpdate">修改</el-button>
-                    <el-button size="small" type="danger" @click="onClickDel">删除</el-button>
+                    <el-button v-access="createAccessRule" size="small" type="primary" @click="onClickCreate">新增</el-button>
+                    <el-button v-access:alias="updateAccessRule" size="small" @click="onClickUpdate">修改</el-button>
+                    <el-button v-access="delAccessRule" size="small" type="danger" @click="onClickDel">删除</el-button>
                     <slot name="option-box-attch-but"></slot>
                 </el-col>
                 <el-col :span="1">
@@ -113,6 +113,25 @@ export default {
           size: this.$store.state.d2admin.page.defSize,
           current: this.$store.state.d2admin.page.defCurrent
         }
+      }
+    },
+    // 添加按钮的`access`权限规则
+    createAccessRule: {
+      type: [String, Array],
+      default() {
+        return []
+      }
+    },
+    updateAccessRule: {
+      type: [String, Array],
+      default() {
+        return []
+      }
+    },
+    delAccessRule: {
+      type: [String, Array],
+      default() {
+        return []
       }
     }
   },

@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 
-let _debug, _errorHandler, _installed, _onLoginStateCheckFail, _modifyLoginState
+let _debug, _errorHandler, _installed, _onLoginStateCheckFail, _modifyLoginState, _isRESTfulInterfaces
 let _publicPaths = []
 let _authorizedPaths = []
 let _authorizeInterfaces = []
@@ -112,6 +112,32 @@ const _checkPermission = function(statementAuth, authorizeCollection) {
   return !voter.includes(false)
 }
 
+/**
+ * {@link _checkPermission} 附加了对接口类型的校验
+ * @param statementAuth
+ * @param authorizeCollection
+ * @returns {boolean}
+ * @private
+ */
+const _checkPermissionRESTful = function(statementAuth, authorizeCollection) {
+  console.log('_checkPermissionRESTful', statementAuth, authorizeCollection)
+  let voter = []
+  const expectedSize = statementAuth.length
+  const size = authorizeCollection.length
+  for (let i = 0; i < size; i++) {
+    const itf = authorizeCollection[i]
+    if (_.find(statementAuth, itf)) {
+      console.log('statementAuth', itf)
+      voter.push(true)
+      // 移除判断成功的声明权限对象
+      statementAuth.splice(i, 1)
+    }
+  }
+  console.log('_checkPermissionRESTfulvoter', voter, voter.length, expectedSize)
+  // 如果投票得到的true含量和需要判断的声明权限长度一致，则标识校验通过
+  return voter.length === expectedSize
+}
+
 const _parseAccessDirectiveValue2Arr = function(value) {
   let params = []
   if (_.isString(value)) {
@@ -143,6 +169,9 @@ const _parseAccessDirectiveValue2Arr = function(value) {
 const _createRBACDirective = function(Vue) {
   Vue.directive('access', {
     bind: function(el, { value, arg, modifiers }) {
+      if (_superAdminStatus) {
+        return;
+      }
       let isAllow = false
       const statementAuth = _parseAccessDirectiveValue2Arr(value)
       switch (arg) {
@@ -152,12 +181,16 @@ const _createRBACDirective = function(Vue) {
         // 默认使用url模式
         case 'url':
         default:
-          isAllow = _checkPermission(statementAuth, _authorizeInterfaces)
+          if (_isRESTfulInterfaces) {
+            isAllow = _checkPermissionRESTful(statementAuth, _authorizeInterfaces)
+          } else {
+            isAllow = _checkPermission(statementAuth, _authorizeInterfaces)
+          }
       }
 
       if (!isAllow) {
         if (_debug) {
-          console.error(`[v+] RBAC access权限检测不通过：用户无权访问【${value}】`);
+          console.warn(`[v+] RBAC access权限检测不通过：用户无权访问【${_.isObject(value) ? JSON.stringify(value) : value}】`);
         }
         if (_.has(modifiers, 'disable')) {
           el.disabled = true;
@@ -310,8 +343,19 @@ const rbacModel = {
      * 数组中的item，可以是一个**正则表达式字面量**，如`[/^((\/Interbus)(?!\/SubMenu)\/.+)$/]`，也可以是一个字符串
      * <p>
      * 匹配规则：将会用于在发送ajax请求之前，对待请求的接口和当前集合进行匹配，如果匹配失败说明用户就没有请求权限，则直接不发送后台请求，减少后端不必要的资源浪费
+     * <p>
+     *   注意
      */
     authorizeInterfaces = [],
+    /**
+     * [*] 声明`authorizeInterfaces`集合存储的是RESTful类型的接口还是常规接口
+     * 1. 如果是（true），则`authorizeInterfaces`集合需要存储的结构就是:
+     * [{url: 'admin/dels/*', method: 'DELETE'}]
+     * 即进行接口匹配的时候会校验类型
+     * 2. 如果不是（false），则`authorizeInterfaces`集合需要存储的结构就是，即不区分接口类型:
+     * ['admin/dels/*']
+     */
+    isRESTfulInterfaces = true,
     /**
      * [*] `$vp::onLoginStateCheckFail(to, from, next)`
      * <p>
@@ -323,6 +367,7 @@ const rbacModel = {
     _errorHandler = errorHandler
     _installed = installed
     _modifyLoginState = this.modifyLoginState
+    _isRESTfulInterfaces = isRESTfulInterfaces
     // 恢复模块状态
     this:: _restoreState()
     this::rbacModel.rabcAddPublicPaths(publicPaths)
