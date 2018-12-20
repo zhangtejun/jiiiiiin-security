@@ -9,6 +9,8 @@ import store from '@/store/index'
 
 import util from '@/libs/util.js'
 
+import { handlerVueNavigationUrlKey } from '@/plugin/vue-viewplus/util.adapter';
+
 // 路由数据
 import routes from './routes'
 
@@ -38,9 +40,8 @@ router.afterEach(to => {
   // 需要的信息
   const app = router.app
   const { name, params, query, fullPath } = to
-  const tempFullPath = fullPath.replace(/\?VNK=[\w]*/, '').substring(1)
   // 多页控制 打开新的页面
-  app.$store.dispatch('d2admin/page/open', { name, params, query, fullPath: tempFullPath })
+  app.$store.dispatch('d2admin/page/open', { name, params, query, fullPath: handlerVueNavigationUrlKey(fullPath) })
   // 更改标题
   util.title(to.meta.title)
 })

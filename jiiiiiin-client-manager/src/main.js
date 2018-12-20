@@ -20,6 +20,9 @@ import ZkTable from 'vue-table-with-tree-grid'
 import '@/assets/style/custom.scss'
 import _ from 'lodash'
 import NProgress from 'nprogress';
+import { handlerVueNavigationUrlKey } from '@/plugin/vue-viewplus/util.adapter';
+
+import { mapState } from 'vuex';
 
 Vue.use(ViewPlus, viewPlusOptions)
 
@@ -43,7 +46,6 @@ ViewPlus.mixin(Vue, rbacModule, {
   onPathCheckFail(to, from, next) {
     NProgress.done()
     const title = to.meta.title
-    console.log('title', title)
     this.dialog(`您无权访问【${_.isNil(title) ? to.path : title}】页面`)
       .then(() => {
         // 防止用户被踢出之后，被权限拦截导致访问不了任何页面，故这里进行登录状态监测
@@ -55,7 +57,7 @@ ViewPlus.mixin(Vue, rbacModule, {
           next({
             name: 'login',
             query: {
-              redirect: to.fullPath
+              redirect: handlerVueNavigationUrlKey(to.fullPath)
             }
           });
         }
@@ -73,6 +75,12 @@ new Vue({
   store,
   i18n,
   render: h => h(App),
+  computed: {
+    ...mapState('d2admin/page', [
+      'opened',
+      'current'
+    ])
+  },
   created() {
     // // 处理路由 得到每一级的路由设置
     this.$store.commit('d2admin/page/init', frameInRoutes);

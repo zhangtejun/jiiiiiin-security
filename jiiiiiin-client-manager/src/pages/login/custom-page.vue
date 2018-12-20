@@ -162,7 +162,6 @@ export default {
             this.$store.commit('d2admin/menu/headerSet', menus, { root: true });
             // 设置侧边栏菜单
             this.$store.commit('d2admin/menu/asideSet', menus, { root: true });
-            console.log('menus', menus)
             // 初始化菜单搜索功能
             this.$store.commit('d2admin/search/init', menus, { root: true });
             this.$vp.cacheSaveToSessionStore('menus', menus);
@@ -170,7 +169,6 @@ export default {
               type: 'success'
             });
             // 重定向对象不存在则返回顶层路径
-            console.log('this.$route.query.redirect', this.$route.query.redirect)
             this.$router.replace(this.$route.query.redirect || '/')
           })
           this.$refs.codeImageDom.click()

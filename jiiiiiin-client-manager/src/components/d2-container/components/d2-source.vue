@@ -31,7 +31,6 @@ export default {
     // 点击按钮的时候跳转到源代码
     handleClick () {
       const file = this.filename.split('?')[0]
-      console.log('file', file)
       const url = file
         ? `https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/${file}`
         : 'https://github.com/Jiiiiiin/jiiiiiin-security'

@@ -49,7 +49,6 @@ const viewPlusOptions = {
       let res = false;
       switch (status) {
         case 403:
-          console.log('403')
           this.toast('权限不足', {
             type: 'error'
           });
