@@ -35,30 +35,17 @@
 
 # 功能截图
 
-![image-20181106162706851](https://ws3.sinaimg.cn/large/006tNbRwgy1fwyf81a19lj31kw0w0awb.jpg)
+以下是部分功能截图
 
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg)
-
-用户管理页面截图
-
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg)
-
-角色管理页面截图
-
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg)
-
-资源管理页面截图
-
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg)
-
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7ui2yu4cj31c00u0438.jpg)
-
-接口管理页面截图
+|  |  |  |
+| ------ | ------ | ------ |
+| ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fwyf81a19lj31kw0w0awb.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg) | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg) |
+| ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg) | ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7ui2yu4cj31c00u0438.jpg) |
 
 
 # 表结构和权限说明
 
-| 表名称 | 简介 | 
+| 表名称 | 简介 |
 | ------ | ------ |
 | mng_admin |【用户表】，使用`channel`字段可以区分不同业务系统的用户，如这里`0`标识内管 |
 | mng_role |【角色表】，使用`channel`字段可以区分不同业务系统的角色，如这里`0`标识内管 |
@@ -80,7 +67,7 @@
 # 所用技术栈
 
 ### 后台
-    
+
 + [springboot](https://github.com/spring-projects/spring-boot)
 
 + [spring-security](https://github.com/spring-projects/spring-security)
@@ -90,7 +77,7 @@
 + [mybatis-plus](https://github.com/baomidou/mybatis-plus)
 
 ### 前端    
-    
+
 + [vue](https://github.com/vuejs/vue)
 
 + [ElemeFE/element](https://github.com/ElemeFE/element)
@@ -102,4 +89,4 @@
 <a href="https://github.com/d2-projects/d2-admin" target="_blank"><img src="https://raw.githubusercontent.com/FairyEver/d2-admin/master/doc/image/d2-admin@2x.png" width="200"></a>
 
   
-  
+
