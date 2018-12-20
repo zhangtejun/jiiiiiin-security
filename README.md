@@ -3,6 +3,7 @@
 一个前后端分离的内管基础项目
 
 + [MyBatis-Plus优秀案例之一](https://mp.baomidou.com/guide/#%E4%BC%98%E7%A7%80%E6%A1%88%E4%BE%8B)
++ [d2-admin优秀案例之一]()
 
 # 原则
 
@@ -15,7 +16,9 @@
 + 启动后端内管应用
 + 进入前端内管应用：jiiiiiin-client-manager
     - 安装项目依赖：`npm i`
-    - 配置服务端uri：`.env.development`文件下：`VUE_APP_SEVER_URL=http://192.168.1.123:9000`
+    - 配置服务端uri：
+        
+        `.env.development`文件下：`VUE_APP_SEVER_URL=http://192.168.1.123:9000`
     - 启动前端内管应用：`npm run serve`
 
 # 计划
@@ -63,6 +66,23 @@
 
     - 详细配置和api可以点击：[vue-viewplus-自定义RBAC权限控制模块](http://jiiiiiin.cn/vue-viewplus/#/rbac)
     
+# 项目结构说明
+
+```bash
+.
+├── db 存放数据库脚本
+├── docs 存放一些做项目时候的笔记
+├── jiiiiiin-security-app 针对JWT Token的安全模块（目前没有依赖）
+├── jiiiiiin-security-browser 针对Session的安全层模块
+├── jiiiiiin-security-core 安全层基础模块（处理Spring-Security相关基础配置）
+├── jiiiiiin-security-authorize 后端RBAC抽象模块
+├── jiiiiiin-data-orm orm层模块（目前主要针对Mybatis-Plus）
+├── jiiiiiin-module-common 应用通用模块
+├── jiiiiiin-module-mngauth 管理模块
+├── jiiiiiin-server-manager 内管后端应用
+├── jiiiiiin-client-manager 内管前端应用（Vue项目，依赖d2-admin模块（1.6.9最新））
+├── pom.xml 公共pom
+```
 
 # 所用技术栈
 
