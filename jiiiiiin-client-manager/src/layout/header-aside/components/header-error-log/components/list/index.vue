@@ -161,7 +161,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~@/assets/style/public.scss';
 .d2-error-log-list__expand-group {
   .d2-error-log-list__expand {
     padding-left: 20px;

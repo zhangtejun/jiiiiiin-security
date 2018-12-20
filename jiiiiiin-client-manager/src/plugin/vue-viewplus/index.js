@@ -7,6 +7,8 @@ export const mixinConfig = {
 };
 
 const viewPlusOptions = {
+  baseUrl: mixinConfig.baseUrl,
+  serverUrl: mixinConfig.serverUrl,
   router,
   store,
   debug: process.env.NODE_ENV !== 'production',

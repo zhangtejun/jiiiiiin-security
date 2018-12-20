@@ -1,4 +1,4 @@
-import { remove, get, has, isNumber } from 'lodash'
+import { get, isNumber } from 'lodash'
 
 // 设置文件
 import setting from '@/setting.js'
@@ -15,10 +15,10 @@ export default {
     opened: setting.page.opened,
     // 当前页面
     current: '',
-    // 管理页面初始化时候发送请求的数量
-    initAjaxNum: 1,
     // 需要缓存的页面 name
     keepAlive: [],
+    // 管理页面初始化时候发送请求的数量
+    initAjaxNum: 1,
     // 管理页面列表的table高度
     listHeight: setting.page.mng.listHeight,
     // 管理页面列表的table多选Checkbox列的宽度
@@ -182,13 +182,6 @@ export default {
         resolve()
       })
     },
-    closeCurrent({ state, commit, dispatch }, { vm }) {
-      state.closeTagName = state.current;
-      return dispatch('close', {
-        tagName: state.current,
-        vm
-      });
-    },
     /**
      * @class opened
      * @description 关闭一个 tag (关闭一个页面)
@@ -233,13 +226,7 @@ export default {
             params,
             query
           }
-          console.log('routerObj', routerObj)
-          // 从vp#onReqErrParseHttpStatusCode调用
-          if (has(vm, 'options.router')) {
-            vm.options.router.push(routerObj)
-          } else {
-            vm.$router.push(routerObj)
-          }
+          vm.$router.push(routerObj)
         }
         // end
         resolve()

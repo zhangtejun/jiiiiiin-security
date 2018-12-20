@@ -88,6 +88,9 @@ export default {
       'current'
     ])
   },
+  created() {
+    console.log('opened', this.opened)
+  },
   methods: {
     ...mapActions('d2admin/page', [
       'close',

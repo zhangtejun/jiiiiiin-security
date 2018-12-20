@@ -9,12 +9,11 @@ import store from '@/store/index'
 import i18n from './i18n'
 // 核心插件
 import d2Admin from '@/plugin/d2admin'
-
 // 菜单和路由设置
 import router from './router'
 import { frameInRoutes } from '@/router/routes'
 import ViewPlus from 'vue-viewplus'
-import viewPlusOptions, { mixinConfig as constConfigModule } from '@/plugin/vue-viewplus'
+import viewPlusOptions from '@/plugin/vue-viewplus'
 import jsUIModule from '@/plugin/vue-viewplus/js-ui-component.js'
 import rbacModule from '@/plugin/vue-viewplus/rbac.js'
 import ZkTable from 'vue-table-with-tree-grid'
@@ -22,24 +21,18 @@ import '@/assets/style/custom.scss'
 import _ from 'lodash'
 import NProgress from 'nprogress';
 
+Vue.use(ViewPlus, viewPlusOptions)
+
 const {
   debug,
   errorHandler
 } = viewPlusOptions
-
-ViewPlus.mixin(Vue, constConfigModule, {
-  debug,
-  errorHandler,
-  moduleName: '自定义常量'
-})
 
 ViewPlus.mixin(Vue, jsUIModule, {
   debug,
   errorHandler,
   moduleName: '自定义jsComponents'
 })
-
-Vue.use(ViewPlus, viewPlusOptions)
 
 ViewPlus.mixin(Vue, rbacModule, {
   debug,
@@ -57,7 +50,14 @@ ViewPlus.mixin(Vue, rbacModule, {
         if (this.isLogin()) {
           next(false);
         } else {
-          next('/login');
+          // 没有登录的时候跳转到登录界面
+          // 携带上登陆成功之后需要跳转的页面完整路径
+          next({
+            name: 'login',
+            query: {
+              redirect: to.fullPath
+            }
+          });
         }
       })
   }
@@ -74,7 +74,7 @@ new Vue({
   i18n,
   render: h => h(App),
   created() {
-    // 处理路由 得到每一级的路由设置
+    // // 处理路由 得到每一级的路由设置
     this.$store.commit('d2admin/page/init', frameInRoutes);
     const menus = this.$vp.cacheLoadFromSessionStore('menus');
     if (!_.isNil(menus)) {

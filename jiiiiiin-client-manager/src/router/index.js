@@ -38,8 +38,9 @@ router.afterEach(to => {
   // 需要的信息
   const app = router.app
   const { name, params, query, fullPath } = to
+  const tempFullPath = fullPath.replace(/\?VNK=[\w]*/, '').substring(1)
   // 多页控制 打开新的页面
-  app.$store.dispatch('d2admin/page/open', { name, params, query, fullPath })
+  app.$store.dispatch('d2admin/page/open', { name, params, query, fullPath: tempFullPath })
   // 更改标题
   util.title(to.meta.title)
 })

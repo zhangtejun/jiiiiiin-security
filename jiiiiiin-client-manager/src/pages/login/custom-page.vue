@@ -1,10 +1,5 @@
 <template>
   <div class="page-login">
-    <!--<div class="page-login&#45;&#45;layer page-login&#45;&#45;layer-area">-->
-      <!--<ul class="circles">-->
-        <!--<li v-for="n in 10" :key="n"></li>-->
-      <!--</ul>-->
-    <!--</div>-->
     <div
             class="page-login--layer page-login--layer-time"
             flex="main:center cross:center">
@@ -84,7 +79,7 @@ export default {
       timeInterval: null,
       time: dayjs().format('HH:mm:ss'),
       submitBtnDisabled: false,
-      validateImgCodeUri: `${this.$vp.serverUrl}/code/image?${new Date().getTime()}`,
+      validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image?${new Date().getTime()}`,
       // 表单
       formLogin: {
         username: 'admin',
@@ -164,9 +159,10 @@ export default {
             const isSuperAdminStatus = parseUserRoleIsSuperAdminStatus(res.principal.admin.roles);
             this.$vp.rabcUpdateSuperAdminStatus(isSuperAdminStatus);
             // 设置顶栏菜单
-            // commit('d2admin/menu/headerSet', menus, { root: true });
+            this.$store.commit('d2admin/menu/headerSet', menus, { root: true });
             // 设置侧边栏菜单
             this.$store.commit('d2admin/menu/asideSet', menus, { root: true });
+            console.log('menus', menus)
             // 初始化菜单搜索功能
             this.$store.commit('d2admin/search/init', menus, { root: true });
             this.$vp.cacheSaveToSessionStore('menus', menus);
@@ -174,6 +170,7 @@ export default {
               type: 'success'
             });
             // 重定向对象不存在则返回顶层路径
+            console.log('this.$route.query.redirect', this.$route.query.redirect)
             this.$router.replace(this.$route.query.redirect || '/')
           })
           this.$refs.codeImageDom.click()
