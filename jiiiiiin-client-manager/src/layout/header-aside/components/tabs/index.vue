@@ -7,7 +7,7 @@
           :x="contentmenuX"
           :y="contentmenuY">
           <d2-contextmenu-list
-            :menulist="tagName === 'index' ? contextmenuListIndex : contextmenuList"
+            :menulist="tagName === '/index' ? contextmenuListIndex : contextmenuList"
             @rowClick="contextmenuClick"/>
         </d2-contextmenu>
         <el-tabs
@@ -19,10 +19,10 @@
           @edit="handleTabsEdit"
           @contextmenu.native="handleContextmenu">
           <el-tab-pane
-            v-for="(page, index) in opened"
-            :key="index"
+            v-for="page in opened"
+            :key="page.fullPath"
             :label="page.meta.title || '未命名'"
-            :name="page.name"/>
+            :name="page.fullPath"/>
         </el-tabs>
       </div>
     </div>
@@ -79,7 +79,7 @@ export default {
         { icon: 'times', title: '关闭其它', value: 'other' },
         { icon: 'times-circle', title: '关闭全部', value: 'all' }
       ],
-      tagName: 'index'
+      tagName: '/index'
     }
   },
   computed: {
@@ -163,7 +163,7 @@ export default {
      */
     handleClick (tab, event) {
       // 找到点击的页面在 tag 列表里是哪个
-      const page = this.opened.find(page => page.name === tab.name)
+      const page = this.opened.find(page => page.fullPath === tab.name)
       const { name, params, query } = page
       if (page) {
         this.$router.push({ name, params, query })
@@ -173,8 +173,6 @@ export default {
      * @description 点击 tab 上的删除按钮触发这里 首页的删除按钮已经隐藏 因此这里不用判断是 index
      */
     handleTabsEdit (tagName, action) {
-      console.log('handleTabsEdit', this.opened)
-      console.log('handleTabsEdit', tagName, action)
       if (action === 'remove') {
         this.close({
           tagName,

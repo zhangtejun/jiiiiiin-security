@@ -1,3 +1,3 @@
-import customPage from './custom-page'
+import page from './custom-page'
 
-export default customPage
+export default page

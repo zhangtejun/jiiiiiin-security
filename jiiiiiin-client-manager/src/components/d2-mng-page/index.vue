@@ -1,5 +1,5 @@
 <template>
-    <d2-container class="mng-list">
+    <d2-container class="mng-list" :filename="filename">
         <slot name="search-box">
             <el-row>
                 <el-col :span="showOptionBox? 24 : 23">
@@ -86,6 +86,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'd2-mng-page',
   props: {
+    filename: String,
     formMode: {
       type: String,
       default: 'add'

@@ -5,14 +5,12 @@ import Vue from 'vue'
 import App from './App'
 // store
 import store from '@/store/index'
-// 模拟数据
-import '@/mock'
 // 多国语
 import i18n from './i18n'
 // 核心插件
 import d2Admin from '@/plugin/d2admin'
-import D2Crud from '@d2-projects/d2-crud'
-// 路由设置
+
+// 菜单和路由设置
 import router from './router'
 import { frameInRoutes } from '@/router/routes'
 import ViewPlus from 'vue-viewplus'
@@ -67,8 +65,6 @@ ViewPlus.mixin(Vue, rbacModule, {
 
 // 核心插件
 Vue.use(d2Admin)
-
-Vue.use(D2Crud, { size: 'small' })
 
 Vue.component(ZkTable.name, ZkTable)
 

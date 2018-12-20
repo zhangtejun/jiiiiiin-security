@@ -1,6 +1,6 @@
 import layoutHeaderAside from '@/layout/header-aside'
 
-const meta = { }
+const meta = { requiresAuth: true }
 
 export default {
   path: '/demo',

@@ -1,5 +1,6 @@
 <template>
   <d2-mng-page
+          :filename="filename"
           @qry-data="qryData"
           @create="onCreate"
           :create-access-rule="{url: 'admin', method: 'POST'}"
@@ -162,6 +163,7 @@ export default {
   name: 'mngauth-role',
   data () {
     return {
+      filename: __filename,
       rolesOptions: [],
       formMode: 'add',
       dialogFormVisible: false,
