@@ -2,8 +2,10 @@ package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
+import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import cn.jiiiiiin.module.common.mapper.mngauth.AdminMapper;
 import cn.jiiiiiin.module.common.mapper.mngauth.InterfaceMapper;
@@ -62,7 +64,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         if (res.getRoles().stream().anyMatch(p -> p.getId().equals(Role.ROLE_ADMIN_ID))) {
             // 系统管理员拥有所有访问控制权限和菜单资源
             val adminRole = res.getRoles().stream().filter(p -> p.getId().equals(Role.ROLE_ADMIN_ID)).findFirst().get();
-            val resources = resourceMapper.selectByRoleId(adminRole.getId(), channel);
+            val resources = resourceMapper.selectList(new QueryWrapper<Resource>().eq(Resource.CHANNEL, channel).eq(Resource.STATUS, StatusEnum.ENABLE).orderByAsc(Resource.LEVELS, Resource.NUM));
             // 查询资源关联的接口
             resources.forEach(resource -> resource.setInterfaces(interfaceMapper.selectByResourceId(resource.getId())));
             adminRole.setResources(resources);
@@ -173,8 +175,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             throw new BusinessErrException("密码不能为空");
         }
         val length = pwd.length();
-        if (length < 6 || length > 16) {
-            throw new BusinessErrException("密码长度必须在（6~16）位之间");
+        if (length < 4 || length > 16) {
+            throw new BusinessErrException("密码长度必须在（4~16）位之间");
         }
         if (passwordEncoder.matches(pwd, currentRecord.getPassword())) {
             throw new BusinessErrException("新旧密码相同");

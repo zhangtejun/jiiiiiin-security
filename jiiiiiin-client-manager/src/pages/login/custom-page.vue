@@ -94,7 +94,7 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 4, max: 16, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { min: 4, max: 16, message: '长度在 4 到 16 个字符', trigger: 'blur' }
         ],
         code: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
       }
@@ -159,7 +159,7 @@ export default {
             const isSuperAdminStatus = parseUserRoleIsSuperAdminStatus(res.principal.admin.roles);
             this.$vp.rabcUpdateSuperAdminStatus(isSuperAdminStatus);
             // 设置顶栏菜单
-            this.$store.commit('d2admin/menu/headerSet', menus, { root: true });
+            // this.$store.commit('d2admin/menu/headerSet', menus, { root: true });
             // 设置侧边栏菜单
             this.$store.commit('d2admin/menu/asideSet', menus, { root: true });
             // 初始化菜单搜索功能
