@@ -254,7 +254,6 @@ const rbacModel = {
       this::rbacModel.rabcUpdateSuperAdminStatus(false)
       this::rbacModel.rabcUpdateAuthorizedPaths([])
       this::rbacModel.rabcUpdateAuthorizeInterfaces([])
-      this::rbacModel.rabcUpdatePublicPaths([])
     }
   },
   /**
