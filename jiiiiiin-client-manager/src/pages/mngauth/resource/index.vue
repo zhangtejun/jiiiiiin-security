@@ -1,7 +1,7 @@
 <template>
-    <d2-container>
+    <d2-container :filename="filename">
         <el-row>
-            <el-col :span="18">
+            <el-col :span="18" v-access="{url: 'resource/search/*/*', method: 'GET'}">
                 <el-form :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
                     <el-form-item label="渠道" prop="channel">
                         <el-select size="small" v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
@@ -87,11 +87,11 @@
                 <!--<el-tag v-else size="mini" type="[scope.row.status === 1 ? '': 'success']"> {{ scope.row.status === 'ENABLE' ? '启用' : '停用' }}</el-tag>-->
             </template>
             <template slot="option" slot-scope="scope">
-                <el-button type="primary" plain size="mini" v-if="scope.row.id !== '0'" @click="onClickQryRelationInterfaceRecords(scope.row)">查看关联接口记录</el-button>
-                <el-button type="primary" plain size="mini" @click="onClickAdd(scope.row)">新增</el-button>
-                <el-button plain size="mini" @click="onClickUpdate(scope.row)" v-if="scope.row.id !== '0'">修改</el-button>
+                <el-button v-access="{url: 'resource/qry/*', method: 'GET'}" type="primary" plain size="mini" v-if="scope.row.id !== '0'" @click="onClickQryRelationInterfaceRecords(scope.row)">查看关联接口记录</el-button>
+                <el-button v-access="{url: 'resource', method: 'POST'}" type="primary" plain size="mini" @click="onClickAdd(scope.row)">新增</el-button>
+                <el-button v-access="{url: 'resource', method: 'UPDATE'}" plain size="mini" @click="onClickUpdate(scope.row)" v-if="scope.row.id !== '0'">修改</el-button>
                 <!--根节点才可以删除-->
-                <el-button type="danger" plain size="mini" v-if="scope.row.id !== '0' && (!scope.row.children || (scope.row.children && scope.row.children.length === 0))" @click.stop.prevent="onClickDel(scope.row, $event)">删除</el-button>
+                <el-button v-access="{url: 'resource', method: 'DELETE'}" type="danger" plain size="mini" v-if="scope.row.id !== '0' && (!scope.row.children || (scope.row.children && scope.row.children.length === 0))" @click.stop.prevent="onClickDel(scope.row, $event)">删除</el-button>
             </template>
         </zk-table>
 
@@ -268,6 +268,7 @@ export default {
   name: 'mngauth-resource',
   data() {
     return {
+      filename: __filename,
       isFold: false,
       dialogQryRelationInterfaceRecordsVisible: false,
       // 关联的接口记录集合
