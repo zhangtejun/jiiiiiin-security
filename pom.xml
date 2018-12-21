@@ -12,11 +12,10 @@
         <module>jiiiiiin-security-browser</module>
         <module>jiiiiiin-security-app</module>
         <module>jiiiiiin-security-authorize</module>
-        <module>jiiiiiin-security-demo</module>
-        <module>jiiiiiin-server-manager</module>
         <module>jiiiiiin-data-orm</module>
         <module>jiiiiiin-module-common</module>
         <module>jiiiiiin-module-mngauth</module>
+        <module>jiiiiiin-server-manager</module>
     </modules>
     <packaging>pom</packaging>
 
