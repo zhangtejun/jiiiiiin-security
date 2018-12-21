@@ -1,15 +1,19 @@
 <template>
   <d2-mng-page
+          :filename="filename"
           @qry-data="qryData"
           @create="onCreate"
+          :create-access-rule="{url: 'role', method: 'POST'}"
           @update="onUpdate"
+          update-access-rule="MNG_ROLE_UPDATE"
           @del="onDel"
+          :del-access-rule="[{url: 'role', method: 'DELETE'}]"
           :page="page"
           :form-mode.sync="formMode"
           :dialog-form-visible.sync="dialogFormVisible"
           :select-rows="selectRows"
           :show-option-box="true">
-    <el-form slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
+    <el-form v-access="{url: 'role/search/eleui/*/*/*', method: 'GET'}" slot="search-inner-box" :inline="true" :model="searchForm" :rules="searchRules" ref="ruleSearchForm" class="demo-form-inline">
       <el-form-item label="渠道" prop="channel">
         <el-select size="small" v-model="searchForm.channel" placeholder="请选择" :required="true" @change="onChangeSearchChannel">
           <el-option
@@ -127,6 +131,7 @@ export default {
   ],
   data () {
     return {
+      filename: __filename,
       resources: [],
       treeProps: {
         children: 'children',
