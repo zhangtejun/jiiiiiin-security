@@ -17,7 +17,6 @@ GRANT ALL PRIVILEGES ON vplusdb.* TO 'vplus'@'localhost';
 
 USE `vplusdb`;
 
-
 # ************************************************************
 # Sequel Pro SQL dump
 # Version 4541
@@ -27,7 +26,7 @@ USE `vplusdb`;
 #
 # Host: 127.0.0.1 (MySQL 5.7.24)
 # Database: vplusdb
-# Generation Time: 2018-12-21 09:01:20 +0000
+# Generation Time: 2018-12-21 14:20:21 +0000
 # ************************************************************
 
 
@@ -63,7 +62,8 @@ LOCK TABLES `mng_admin` WRITE;
 INSERT INTO `mng_admin` (`id`, `create_time`, `username`, `password`, `phone`, `email`, `channel`)
 VALUES
 	(1,'2018-11-10 23:12:02','admin','$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq','15399999999','15399999999@163.com',0),
-	(1070971226366672898,'2018-12-07 17:20:13','test','$2a$10$hOjcuglGIU.6qWJnxwTe3O7gnJjcxml.pEM12u9eXdND2tuCCx4Xq','','',0);
+	(1070971226366672898,'2018-12-07 17:20:13','test','$2a$10$hOjcuglGIU.6qWJnxwTe3O7gnJjcxml.pEM12u9eXdND2tuCCx4Xq','177777777777','177777777777@qq.com',0),
+	(1076119654352572418,'2018-12-21 22:18:14','ppp','$2a$10$mwqEPbYTmOXmuixv0KhdJeIp5gkRy30BUT4qK92ZL6NmnVxgHkkjW','','',0);
 
 /*!40000 ALTER TABLE `mng_admin` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -155,7 +155,7 @@ LOCK TABLES `mng_resource` WRITE;
 
 INSERT INTO `mng_resource` (`id`, `pid`, `pids`, `name`, `icon`, `num`, `levels`, `type`, `status`, `channel`, `path`, `alias`)
 VALUES
-	(1061818316563202049,0,'0','权限管理','cog',2,1,1,0,0,'/mngauth',NULL),
+	(1061818316563202049,0,'0','权限管理','cog',2,1,1,1,0,'/mngauth',NULL),
 	(1061818318412890114,1061818316563202049,'0,1061818316563202049','用户管理','users',1,2,1,1,0,'/mngauth/admin','MNG_USERMNG'),
 	(1061818318463221761,1061818316563202049,'0,1061818316563202049','角色管理','id-badge',2,2,1,1,0,'/mngauth/role','MNG_ROLEMNG'),
 	(1061818318517747714,1061818316563202049,'0,1061818316563202049','资源管理','tree',3,2,1,1,0,'/mngauth/resource',NULL),
@@ -279,7 +279,8 @@ LOCK TABLES `mng_role_admin` WRITE;
 INSERT INTO `mng_role_admin` (`id`, `role_id`, `user_id`)
 VALUES
 	(1,1061277220292595713,1),
-	(32,1061277221831905282,1070971226366672898);
+	(34,1061277221831905282,1070971226366672898),
+	(38,1061277220292595713,1076119654352572418);
 
 /*!40000 ALTER TABLE `mng_role_admin` ENABLE KEYS */;
 UNLOCK TABLES;
