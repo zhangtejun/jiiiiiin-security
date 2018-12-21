@@ -86,7 +86,11 @@ import { mapState } from 'vuex'
 export default {
   name: 'd2-mng-page',
   props: {
-    filename: String,
+    // 针对d2-admin 查看源码功能的属性配置
+    filename: {
+      type: String,
+      default: __filename
+    },
     formMode: {
       type: String,
       default: 'add'

@@ -70,7 +70,8 @@ const viewPlusOptions = {
       switch (content) {
         case '未授权，请登录':
           return this;
-        case 'Bad credentials':
+        case 'Bad credentials [服务端]':
+          // 临时处理，待解决SpringSecurity这种特殊情况
           // https://www.cnblogs.com/jifeng/archive/2012/06/09/2542928.html
           content = '用户名或密码错误，请重试'
           break
