@@ -57,6 +57,7 @@ const viewPlusOptions = {
           res = true;
           break;
         case 401:
+          // TODO 待测试
           console.log('401 111 onSessionTimeOut', viewPlusOptions)
           this::viewPlusOptions.utilHttp.accessRules.onSessionTimeOut(response)
           console.log('401 onSessionTimeOut')
@@ -95,6 +96,7 @@ const viewPlusOptions = {
           type: 'error'
         });
         store.dispatch('d2admin/account/logout', { vm: this });
+        store.dispatch('d2admin/page/closeAll', { vm: router.app });
       },
       unauthorized: ['core_error_unauthorized'],
       onUnauthorized(response) {

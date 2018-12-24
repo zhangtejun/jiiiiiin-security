@@ -1,4 +1,4 @@
-import { get, isNumber } from 'lodash'
+import { get, isNumber, isNil } from 'lodash'
 
 // 设置文件
 import setting from '@/setting.js'
@@ -336,7 +336,8 @@ export default {
         // 持久化
         await dispatch('opend2db')
         // 关闭所有的标签页后需要判断一次现在是不是在首页
-        if (vm.$route.name !== 'index') {
+        // 因为在退出登录的时候回主动关闭所有tabs，这个时候没有vm实例
+        if (!isNil(vm) && vm.$route.name !== 'index') {
           vm.$router.push({
             name: 'index'
           })

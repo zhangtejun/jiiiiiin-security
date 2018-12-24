@@ -55,7 +55,7 @@ export default {
      * @param {Object} param vm {Object} vue 实例
      * @param {Object} param confirm {Boolean} 是否需要确认
      */
-    logout({ commit }, { vm, confirm = false }) {
+    logout({ commit, dispatch }, { vm, confirm = false }) {
       /**
        * @description 注销
        */
@@ -66,6 +66,7 @@ export default {
         this.psPageReplace('/login');
         // 修改用户登录状态
         this.modifyLoginState(false)
+        dispatch('d2admin/page/closeAll', null, { root: true });
       }
 
       // 判断是否需要确认
