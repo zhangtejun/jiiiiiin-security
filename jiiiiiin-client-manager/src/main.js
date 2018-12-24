@@ -44,24 +44,31 @@ ViewPlus.mixin(Vue, rbacModule, {
   router,
   publicPaths: ['/login'],
   onPathCheckFail(to, from, next) {
-    NProgress.done()
-    const title = to.meta.title
-    this.dialog(`您无权访问【${_.isNil(title) ? to.path : title}】页面`)
-      .then(() => {
-        // 防止用户被踢出之后，被权限拦截导致访问不了任何页面，故这里进行登录状态监测
-        if (this.isLogin()) {
-          next(false);
-        } else {
-          // 没有登录的时候跳转到登录界面
-          // 携带上登陆成功之后需要跳转的页面完整路径
-          next({
-            name: 'login',
-            query: {
-              redirect: handlerVueNavigationUrlKey(to.fullPath)
-            }
-          });
-        }
-      })
+    NProgress.done();
+    const { path } = to;
+    console.log('xxxx', path)
+    if ((path === '/' || path === '/index') && !router.app.$vp.isLogin()) {
+      this.toast('请先登录', { type: 'warning' })
+      next('/login');
+    } else {
+      const title = to.meta.title;
+      this.dialog(`您无权访问【${_.isNil(title) ? to.path : title}】页面`)
+        .then(() => {
+          // 防止用户被踢出之后，被权限拦截导致访问不了任何页面，故这里进行登录状态监测
+          if (this.isLogin()) {
+            next(false);
+          } else {
+            // 没有登录的时候跳转到登录界面
+            // 携带上登陆成功之后需要跳转的页面完整路径
+            next({
+              name: 'login',
+              query: {
+                redirect: handlerVueNavigationUrlKey(to.fullPath)
+              }
+            });
+          }
+        });
+    }
   }
 })
 
@@ -82,7 +89,7 @@ new Vue({
     ])
   },
   created() {
-    // // 处理路由 得到每一级的路由设置
+    // 处理路由 得到每一级的路由设置
     this.$store.commit('d2admin/page/init', frameInRoutes);
     const menus = this.$vp.cacheLoadFromSessionStore('menus');
     if (!_.isNil(menus)) {

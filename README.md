@@ -5,6 +5,8 @@
 + [MyBatis-Plus优秀案例之一](https://mp.baomidou.com/guide/#%E4%BC%98%E7%A7%80%E6%A1%88%E4%BE%8B)
 + [d2-admin优秀案例之一](https://github.com/d2-projects/d2-admin#open-source-backend-implementation)
 
+[![视频演示](https://asciinema.org/a/42383.png)](https://asciinema.org/a/42383)
+
 # 原则
 
 + 以最少的表结构字段完成一个基础应用，以便在以此完成实际项目时有更多的扩充自由
@@ -60,8 +62,10 @@
 | persistent_logins | [spring security 记住用户所涉及表](https://docs.spring.io/spring-security/site/docs/3.0.x/reference/remember-me.html)|
 | springsocial_UserConnection | [spring social 第三方授权信息关联表](https://docs.spring.io/spring-social/docs/2.0.0.M4/reference/htmlsingle/#section_jdbcConnectionFactory)|
 
-+ 关于前端`rbac`权限控制，详见下面两个链接：
++ 关于前端`rbac`权限控制，详见下面链接：
 
+    - [前端如何配合后端完成RBAC权限控制](https://juejin.im/post/5c1f8d6c6fb9a049e06353aa)
+    
     - [Vue 前端应用实现RBAC权限控制的一种方式](https://juejin.im/post/5c19a282f265da61137f372c)
 
     - 详细配置和api可以点击：[vue-viewplus-自定义RBAC权限控制模块](http://jiiiiiin.cn/vue-viewplus/#/rbac)

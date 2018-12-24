@@ -26,12 +26,17 @@ const router = new VueRouter({
  * 权限验证
  */
 router.beforeEach((to, from, next) => {
-  // 进度条
-  NProgress.start()
-  // 关闭搜索面板
-  store.commit('d2admin/search/set', false)
-  // 权限控制交给`vue-viewplus#rabc`模块
-  next()
+  const { path } = to;
+  if (path === '/' && !router.app.$vp.isLogin()) {
+    next('/login');
+  } else {
+    // 进度条
+    NProgress.start();
+    // 关闭搜索面板
+    store.commit('d2admin/search/set', false);
+    // 权限控制交给`vue-viewplus#rabc`模块
+    next();
+  }
 })
 
 router.afterEach(to => {
