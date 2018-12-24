@@ -66,7 +66,7 @@
                 :border="true"
                 :show-index="false"
                 :tree-type="true"
-                :is-fold="isFold"
+                :is-fold="!isFold"
                 :expand-type="false"
                 :selection-type="false">
             <!--展开存在bug-->
@@ -269,7 +269,7 @@ export default {
   data() {
     return {
       filename: __filename,
-      isFold: false,
+      isFold: true,
       dialogQryRelationInterfaceRecordsVisible: false,
       // 关联的接口记录集合
       interfacesData: [],
