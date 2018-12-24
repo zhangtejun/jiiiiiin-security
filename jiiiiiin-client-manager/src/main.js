@@ -46,7 +46,6 @@ ViewPlus.mixin(Vue, rbacModule, {
   onPathCheckFail(to, from, next) {
     NProgress.done();
     const { path } = to;
-    console.log('xxxx', path)
     if ((path === '/' || path === '/index') && !router.app.$vp.isLogin()) {
       this.toast('请先登录', { type: 'warning' })
       next('/login');

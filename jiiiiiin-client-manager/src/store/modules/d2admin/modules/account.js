@@ -108,7 +108,8 @@ export default {
         // DB -> store 加载页面过渡效果设置
         await dispatch('d2admin/transition/load', null, { root: true });
         // DB -> store 持久化数据加载上次退出时的多页列表
-        await dispatch('d2admin/page/openedLoad', null, { root: true });
+        // 因为内管项目权限可能随时在变，所以上一次可以打开的页面，下一次不一定有权限能打开，故不需要这个功能
+        // await dispatch('d2admin/page/openedLoad', null, { root: true });
         // DB -> store 持久化数据加载侧边栏折叠状态
         await dispatch('d2admin/menu/asideCollapseLoad', null, { root: true });
         // DB -> store 持久化数据加载全局尺寸

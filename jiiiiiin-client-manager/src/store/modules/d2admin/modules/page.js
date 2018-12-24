@@ -38,6 +38,7 @@ export default {
   },
   actions: {
     /**
+     * 因为当前为内管项目权限可能随时在变，所以上一次可以打开的页面，下一次不一定有权限能打开，故不需要这个功能
      * @class opened
      * @description 从持久化数据载入分页列表
      * @param {Object} state vuex state
