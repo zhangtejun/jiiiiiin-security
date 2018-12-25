@@ -5,8 +5,6 @@
 + [MyBatis-Plus优秀案例之一](https://mp.baomidou.com/guide/#%E4%BC%98%E7%A7%80%E6%A1%88%E4%BE%8B)
 + [d2-admin优秀案例之一](https://github.com/d2-projects/d2-admin#open-source-backend-implementation)
 
-[![视频演示](https://asciinema.org/a/42383.png)](https://asciinema.org/a/42383)
-
 # 原则
 
 + 以最少的表结构字段完成一个基础应用，以便在以此完成实际项目时有更多的扩充自由
