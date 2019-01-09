@@ -1,5 +1,7 @@
 ### 参考：
 
+> [Spring Security参考手册](https://www.cnblogs.com/prpl/p/9170836.html)
+
 > [Spring Security 技术栈开发企业级认证与授权](https://coding.imooc.com/class/134.html)
 
 > [Spring Security Tutorial 《Spring Security 教程》](https://waylau.gitbooks.io/spring-security-tutorial/content/)

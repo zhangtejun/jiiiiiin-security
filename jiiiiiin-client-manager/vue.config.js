@@ -2,6 +2,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const path = require('path')
 const merge = require('webpack-merge')
 const devServerConfig = require('./dev-server.config.js')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 // 拼接路径
 function resolve(dir) {
@@ -131,5 +132,8 @@ module.exports = {
         .add('@/mock')
         .end()
     }
+    config
+      .plugin('lodash-webpack-plugin')
+      .use(LodashModuleReplacementPlugin)
   }
 }

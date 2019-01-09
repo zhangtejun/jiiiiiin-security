@@ -2,5 +2,8 @@ module.exports = {
   presets: [
     '@vue/app'
   ],
-  plugins: ['@babel/plugin-proposal-function-bind']
+  plugins: [
+    'lodash',
+    '@babel/plugin-proposal-function-bind'
+  ]
 }

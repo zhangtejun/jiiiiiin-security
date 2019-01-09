@@ -88,8 +88,4 @@ public interface SecurityConstants {
      */
     String LOGOUT_URL = "/signOut";
 
-    /**
-     * 授权匹配时候需要放开的静态资源：js
-     */
-    String STATIC_RESOURCES_JS = "/js/**";
 }
