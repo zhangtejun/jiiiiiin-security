@@ -12,7 +12,7 @@
 # 快速开始
 
 [![Watch the video](https://ws1.sinaimg.cn/large/006tNc79gy1fzasel64onj316w08ewg1.jpg)](https://www.youtube.com/embed/eemHJEvsTog)
-[高清一点的视频下载地址](https://pan.baidu.com/s/1ZZmw7idemDWD0-tnmb1GHA)
+[高清一点的视频下载地址，百度网盘，直接下载到本地会比较清楚，转码之后就比较不清晰](https://pan.baidu.com/s/1ZZmw7idemDWD0-tnmb1GHA)
 
 + [导入数据【sql-mysql.sql】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/db/sql-mysql.sql)
 + [启动redis，配置查看【application.yml#redis】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L28)
