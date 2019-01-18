@@ -11,13 +11,20 @@
 
 # 快速开始
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eemHJEvsTog" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+视频演示
+
+
 + [导入数据【sql-mysql.sql】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/db/sql-mysql.sql)
 + [启动redis，配置查看【application.yml#redis】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L28)
+
 + 启动后端内管应用
+
 + 进入前端内管应用：jiiiiiin-client-manager
     - 安装项目依赖：`npm i`
     - 配置服务端uri：
-        
+      
         `.env.development`文件下：`VUE_APP_SEVER_URL=http://192.168.1.123:9000`
     - 启动前端内管应用：`npm run serve`
 
@@ -119,5 +126,4 @@
 
 + [Spring Security开发安全的REST服务](https://coding.imooc.com/class/134.html)
 
-  
 
