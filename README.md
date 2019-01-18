@@ -11,7 +11,7 @@
 
 # 快速开始
 
-[![Watch the video](https://ws2.sinaimg.cn/large/006tNc79gy1fzas8fk48uj31bv0u0tc3.jpg)](https://www.youtube.com/embed/eemHJEvsTog)
+[![Watch the video](https://ws1.sinaimg.cn/large/006tNc79gy1fzasel64onj316w08ewg1.jpg)](https://www.youtube.com/embed/eemHJEvsTog)
 
 视频演示
 
