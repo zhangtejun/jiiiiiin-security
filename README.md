@@ -11,7 +11,7 @@
 
 # 快速开始
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/eemHJEvsTog" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Watch the video](https://ws2.sinaimg.cn/large/006tNc79gy1fzas8fk48uj31bv0u0tc3.jpg)](https://www.youtube.com/embed/eemHJEvsTog)
 
 视频演示
 
