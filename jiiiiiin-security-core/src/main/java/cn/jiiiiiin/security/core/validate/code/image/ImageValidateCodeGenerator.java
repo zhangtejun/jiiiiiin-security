@@ -4,6 +4,7 @@ import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.validate.code.ValidateCodeGenerator;
 import com.google.code.kaptcha.Producer;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -16,9 +17,8 @@ import java.awt.image.BufferedImage;
  *
  * @author jiiiiiin
  */
+@Slf4j
 public class ImageValidateCodeGenerator implements ValidateCodeGenerator {
-
-    final static Logger L = LoggerFactory.getLogger(ImageValidateCodeGenerator.class);
 
     private final SecurityProperties securityProperties;
 
@@ -37,7 +37,7 @@ public class ImageValidateCodeGenerator implements ValidateCodeGenerator {
         final BufferedImage bi = captchaProducer.createImage(capText);
         final ImageCode imageCode = new ImageCode(capText, bi, expireIn);
 
-        L.info("图形验证码 {} 有效期 {}", capText, expireIn);
+        log.info("图形验证码 {} 有效期 {}", capText, expireIn);
         return imageCode;
     }
 }

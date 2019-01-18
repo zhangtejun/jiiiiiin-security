@@ -134,6 +134,8 @@ module.exports = {
     }
     config
       .plugin('lodash-webpack-plugin')
-      .use(LodashModuleReplacementPlugin)
+      .use(new LodashModuleReplacementPlugin({
+        shorthands: true
+      }))
   }
 }

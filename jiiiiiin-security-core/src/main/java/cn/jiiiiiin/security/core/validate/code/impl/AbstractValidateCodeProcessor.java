@@ -5,6 +5,7 @@ package cn.jiiiiiin.security.core.validate.code.impl;
 
 import cn.jiiiiiin.security.core.validate.code.*;
 import cn.jiiiiiin.security.core.validate.code.entity.ValidateCode;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,8 @@ import java.util.Map;
  *
  * @author zhailiang
  */
+@Slf4j
 public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> implements ValidateCodeProcessor {
-
-    final static Logger L = LoggerFactory.getLogger(AbstractValidateCodeProcessor.class);
 
     private static final String VALIDATECODEPROCESSOR_CLASSNAME_SEPARATOR = ValidateCodeProcessor.class.getSimpleName();
 
@@ -33,8 +33,6 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      */
     @Autowired
     private Map<String, ValidateCodeGenerator> validateCodeGenerators;
-
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
     @Autowired
     private ValidateCodeRepository validateCodeRepository;
@@ -126,7 +124,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
             throw new ValidateCodeException("获取验证码的值失败");
         }
 
-        L.info("验证码 imageCode::code {} validateCode {}", cacheRealValidateCode, validateCode);
+        log.info("验证码 imageCode::code {} validateCode {}", cacheRealValidateCode, validateCode);
         if (StringUtils.isBlank(validateCode)) {
             throw new ValidateCodeException("验证码不能为空");
         }

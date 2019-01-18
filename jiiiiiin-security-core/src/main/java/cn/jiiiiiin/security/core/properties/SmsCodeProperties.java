@@ -1,5 +1,6 @@
 package cn.jiiiiiin.security.core.properties;
 
+import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.validate.code.ValidateCodeController;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,8 +23,8 @@ public class SmsCodeProperties {
      */
     private String length = "4";
     /**
-     * 验证码有效期
-     * 请求时候会检测是否在请求参数中携带 {@link ValidateCodeController#REQ_EXPIRE_IN}
+     * 验证码有效期(单位秒)
+     * 请求时候会检测是否在请求参数中携带 {@link SecurityConstants#REQ_EXPIRE_IN}
      * 如果携带则覆盖配置项
      */
     private int expireIn = 60;

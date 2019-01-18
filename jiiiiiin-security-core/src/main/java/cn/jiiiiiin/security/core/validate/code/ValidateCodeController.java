@@ -23,8 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class ValidateCodeController {
 
-    final static Logger L = LoggerFactory.getLogger(ValidateCodeController.class);
-
     @Autowired
     private ValidateCodeProcessorHolder validateCodeProcessorHolder;
 
