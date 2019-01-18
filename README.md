@@ -13,7 +13,7 @@
 
 [![Watch the video](https://ws1.sinaimg.cn/large/006tNc79gy1fzasel64onj316w08ewg1.jpg)](https://www.youtube.com/embed/eemHJEvsTog)
 
-视频演示
+[高清一点的视频下载地址](https://pan.baidu.com/s/1ZZmw7idemDWD0-tnmb1GHA)
 
 
 + [导入数据【sql-mysql.sql】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/db/sql-mysql.sql)
