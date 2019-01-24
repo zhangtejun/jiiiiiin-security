@@ -28,7 +28,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     // 标识返回的状态码
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public R<String> handlerUserNotExistException(Exception e) {
+    public R<String> handlerException(Exception e) {
         log.error("全局异常处理捕获到的错误 {}", e.getClass().getSimpleName());
         log.error("错误堆栈--》", e);
         if (e instanceof NullPointerException) {

@@ -49,9 +49,9 @@ spring:
       # 数据库访问配置, 使用druid数据源
       type: com.alibaba.druid.pool.DruidDataSource
       # 连接池配置
-      initial-size: 5
-      min-idle: 5
-      max-active: 20
+      initial-size: 2
+      min-idle: 2
+      max-active: 5
       # 连接等待超时时间
       max-wait: 30000
       # 配置检测可以关闭的空闲连接间隔时间
@@ -139,6 +139,7 @@ spring:
   # 配置redis链接地址
   redis:
     host: 127.0.0.1
+#    host: 192.168.3.43
     port: 6379
 
 logging:
@@ -153,7 +154,7 @@ logging:
       mybatis: debug
 
 swagger:
-  enable: true
+  enable: false
 
 ---
 

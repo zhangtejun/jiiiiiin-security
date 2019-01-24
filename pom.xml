@@ -16,6 +16,7 @@
         <module>jiiiiiin-module-common</module>
         <module>jiiiiiin-module-mngauth</module>
         <module>jiiiiiin-server-manager</module>
+        <module>jiiiiiin-validation</module>
     </modules>
     <packaging>pom</packaging>
 
