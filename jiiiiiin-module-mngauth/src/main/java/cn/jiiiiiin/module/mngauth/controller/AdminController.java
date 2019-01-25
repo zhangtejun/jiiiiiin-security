@@ -47,8 +47,7 @@ public class AdminController extends BaseController {
     private SimpleGrantedAuthority adminSimpleGrantedAuthority;
 
     @ApiOperation(value = "用户记录分页查询", httpMethod = "GET")
-    // TODO 测试用例可以使用，但是放在控制器方法上面就不能使用，待研究
-     @JsonView(View.SimpleView.class)
+    @JsonView(View.SimpleView.class)
     @GetMapping("{channel:[0]}/{current:\\d+}/{size:\\d+}")
     public R<IPage<AdminDto>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(adminService.pageAdminDto(new Page<>(current, size), channel, null));
@@ -129,7 +128,7 @@ public class AdminController extends BaseController {
         return success(admin);
     }
 
-    @ApiOperation(value="批量删除用户记录", notes = "根据路径参数解析待删除的用户记录id集合，登录用户自身不能删除自己的记录", httpMethod = "DELETE")
+    @ApiOperation(value = "批量删除用户记录", notes = "根据路径参数解析待删除的用户记录id集合，登录用户自身不能删除自己的记录", httpMethod = "DELETE")
     @DeleteMapping("dels/{ids:^[\\d,]+$}")
     public R<Boolean> dels(@PathVariable String ids) {
         _checkHasSelf(ids.split(","));
@@ -148,7 +147,7 @@ public class AdminController extends BaseController {
         }
     }
 
-    @ApiOperation(value="删除用户记录", notes = "根据路径参数用户记录id删除对应用户，登录用户自身不能删除自己的记录", httpMethod = "DELETE")
+    @ApiOperation(value = "删除用户记录", notes = "根据路径参数用户记录id删除对应用户，登录用户自身不能删除自己的记录", httpMethod = "DELETE")
     @DeleteMapping("{id:\\d}")
     public R<Boolean> del(@PathVariable Long id) {
         _checkHasSelf(new String[]{String.valueOf(id)});
