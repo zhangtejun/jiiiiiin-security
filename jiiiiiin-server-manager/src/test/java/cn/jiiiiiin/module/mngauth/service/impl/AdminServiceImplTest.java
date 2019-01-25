@@ -2,16 +2,13 @@ package cn.jiiiiiin.module.mngauth.service.impl;
 
 import cn.jiiiiiin.ManagerApp;
 import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
-import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.mapper.mngauth.RoleMapper;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +65,7 @@ public class AdminServiceImplTest {
 //        Assert.assertEquals("TEMP", admin.getUsername());
         // 测试EHCache缓存
         val admin2 = adminService.signInByUsername("admin", ChannelEnum.MNG);
-        log.debug("findByUsername res: {}", JSONObject.toJSONString(admin2));
+//        log.debug("findByUsername res: {}", JSONObject.toJSONString(admin2));
     }
 
 
@@ -88,7 +85,7 @@ public class AdminServiceImplTest {
 
     @Test
     public void saveAdminAndRelationRecords() {
-        val admin = new AdminDto().setRoleIds(new String[]{"1061277220292595713"}).setUsername("test").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setChannel(ChannelEnum.MNG);
+        AdminDto admin = (AdminDto) new AdminDto().setRoleIds(new String[]{"1061277220292595713"}).setUsername("test").setPassword("$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq").setChannel(ChannelEnum.MNG);
         val res = adminService.saveAdminAndRelationRecords((AdminDto) admin);
         assertTrue(res);
     }

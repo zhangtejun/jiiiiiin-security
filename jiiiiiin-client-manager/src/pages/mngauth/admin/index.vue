@@ -232,7 +232,6 @@ export default {
         if (valid) {
           const params = _.clone(this.form);
           delete params.roles;
-          delete params.createTime;
           this.$vp.ajaxPut('admin/pwd', {
             params
           }).then(res => {
@@ -282,9 +281,7 @@ export default {
     _copy(current, orig) {
       current.username = orig.username
       current.channel = orig.channel
-      current.createTime = orig.createTime
       current.createTimeStr = orig.createTimeStr
-      current.createTimestamp = orig.createTimestamp
       current.email = orig.email
       current.menus = orig.menus
       current.phone = orig.phone
@@ -347,7 +344,6 @@ export default {
               this._submitFinally()
             });
           } else {
-            delete params.createTime
             // 普通修改不允许修改密码，受限于spring security使用的是单项加密，不能解密回显
             delete params.password
             this.$vp.ajaxPut('admin', {
@@ -364,6 +360,7 @@ export default {
   },
   created() {
     this.formTmpl = _.clone(this.form)
+    // 初始化列表
     this.onCancelSubmit()
   }
 }

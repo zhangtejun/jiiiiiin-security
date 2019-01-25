@@ -25,15 +25,14 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 @Accessors(chain = true)
 @ToString
 @TableName("mng_interface")
 @ApiModel(value="Interface对象", description="系统接口表")
 public class Interface extends BaseEntity<Interface> {
 
-    private static final long serialVersionUID = 1L;
-
-
+    private static final long serialVersionUID = 7376983565924190370L;
     @ApiModelProperty(value = "接口名称")
     @TableField("name")
     private String name;

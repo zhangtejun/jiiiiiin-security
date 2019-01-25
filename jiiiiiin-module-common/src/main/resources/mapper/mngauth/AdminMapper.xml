@@ -88,7 +88,7 @@
     <select id="selectPageAdminDto" resultType="cn.jiiiiiin.module.common.dto.mngauth.AdminDto">
         select
         <include refid="Comm_Column_List"/>,
-        UNIX_TIMESTAMP(create_time) as createTimestamp,
+--         UNIX_TIMESTAMP(create_time) as createTimestamp,
         DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') as createTimeStr
         from mng_admin as a where channel = #{channel}
         <if test="adminDto!= null and adminDto.username != null">
@@ -109,7 +109,7 @@
         <result column="phone" property="phone"/>
         <result column="email" property="email"/>
         <result column="channel" property="channel"/>
-        <result column="createTimestamp" property="createTimestamp"/>
+        <!--<result column="createTimestamp" property="createTimestamp"/>-->
         <result column="createTimeStr" property="createTimeStr"/>
         <collection property="roles" ofType="Role" javaType="list">
             <result column="role_id" property="id"/>
@@ -120,7 +120,7 @@
     <select id="selectRoleRecordsById" resultMap="selectRoleRecordsByIdResultMap">
         select
         <include refid="Comm_Column_List"/>,
-        UNIX_TIMESTAMP(create_time) as createTimestamp,
+--         UNIX_TIMESTAMP(create_time) as createTimestamp,
         DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') as createTimeStr,
         role.name as role_name,
         role.id as role_id

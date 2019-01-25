@@ -5,7 +5,6 @@ import cn.jiiiiiin.module.common.dto.mngauth.ResourceDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.After;
@@ -52,6 +51,6 @@ public class IResourceServiceTest {
     public void tree() {
         val res = resourceService.treeAllChildrenNode(0L, ChannelEnum.MNG);
         Assert.assertNotNull(res);
-        log.debug("treeAllChildrenNode {}", JSONObject.toJSON(res));
+//        log.debug("treeAllChildrenNode {}", JSONObject.toJSON(res));
     }
 }

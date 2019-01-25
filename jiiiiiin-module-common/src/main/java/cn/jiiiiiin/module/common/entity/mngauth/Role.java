@@ -7,9 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -27,12 +25,14 @@ import java.util.List;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 @Accessors(chain = true)
 @TableName("mng_role")
 @ApiModel(value = "Role对象", description = "角色表")
 public class Role extends BaseEntity<Role> {
 
     public static final Long ROLE_ADMIN_ID = 1061277220292595713L;
+    private static final long serialVersionUID = 7045256792828824071L;
 
     public static void checkRootRole(@NonNull Role role, @NonNull String errMsg){
         if((role.getId() != null && role.getId().equals(ROLE_ADMIN_ID))
@@ -47,8 +47,6 @@ public class Role extends BaseEntity<Role> {
             throw new BusinessErrException(errMsg);
         }
     }
-
-    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "角色名称")
     private String name;

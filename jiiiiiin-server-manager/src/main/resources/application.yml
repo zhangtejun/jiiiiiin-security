@@ -12,6 +12,8 @@ server:
 spring:
   profiles:
     active: dev
+  jackson:
+    default-property-inclusion: non_null
   thymeleaf:
     cache: false
     # 避免Thymeleaf对html语法检查过严 https://www.jianshu.com/p/b361a6acbe0c

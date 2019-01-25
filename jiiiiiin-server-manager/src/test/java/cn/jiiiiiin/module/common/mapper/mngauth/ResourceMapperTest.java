@@ -10,7 +10,6 @@ import cn.jiiiiiin.module.common.entity.mngauth.Role;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -164,7 +163,7 @@ public class ResourceMapperTest {
         val res = resourceMapper.selectByRoleId(role.getId(), ChannelEnum.MNG);
         Assert.assertNotNull(res);
         assertTrue(res.size() > 0);
-        log.info("testSelectByRoleId {}", JSONObject.toJSON(res));
+//        log.info("testSelectByRoleId {}", JSONObject.toJSON(res));
     }
 
     @Test
@@ -190,7 +189,7 @@ public class ResourceMapperTest {
     public void selectAllChildrenNode() {
         val res = resourceMapper.selectAllChildrenNode(0L, ChannelEnum.MNG, StatusEnum.ENABLE);
         Assert.assertNotNull(res);
-        log.debug("treeAllChildrenNode {}", JSONObject.toJSON(res));
+//        log.debug("treeAllChildrenNode {}", JSONObject.toJSON(res));
     }
 
     @Test
@@ -207,7 +206,7 @@ public class ResourceMapperTest {
     public void selectResourceAndRelationRecords() {
         val res = resourceMapper.selectResourceAndRelationRecords(1062518178556526593L);
         Assert.assertNotNull(res);
-        log.debug("selectResourceAndRelationRecords {}", JSONObject.toJSON(res));
+//        log.debug("selectResourceAndRelationRecords {}", JSONObject.toJSON(res));
     }
 
 }

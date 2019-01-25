@@ -23,6 +23,7 @@ import java.util.*;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 @Accessors(chain = true)
 @ToString
 @TableName("mng_resource")
@@ -33,6 +34,7 @@ public class Resource extends BaseEntity<Resource> {
      * 根节点
      */
     public static final Long IS_ROOT_MENU = 0L;
+    private static final long serialVersionUID = -4096660792214425988L;
 
     public static Resource getRootMenu(ChannelEnum channel) {
         return (Resource) new Resource()
@@ -41,8 +43,6 @@ public class Resource extends BaseEntity<Resource> {
                 .setChannel(channel)
                 .setId(Resource.IS_ROOT_MENU);
     }
-
-    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "资源父id: 0标识(默认)为根节点")
     private Long pid;

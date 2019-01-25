@@ -4,7 +4,10 @@ package cn.jiiiiiin.data.orm.entity;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,11 +23,13 @@ import java.util.Objects;
  * @author jiiiiiin
  * @since 2018-08-11
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @Slf4j
 public class BaseEntity<T extends Model> extends Model<T> {
 
+    private static final long serialVersionUID = 7792309132836966596L;
     /**
      * 数据库表主键
      * <p>

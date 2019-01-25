@@ -7,8 +7,6 @@ import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.mngauth.controller.RoleController;
 import cn.jiiiiiin.module.mngauth.service.IResourceService;
 import cn.jiiiiiin.module.mngauth.service.IRoleService;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.After;

@@ -47,7 +47,6 @@ public class AdminMapperTest {
     @Test
     public void selectPageAdminDto() {
         val res = adminMapper.selectPageAdminDto(new Page<AdminDto>(1, 5), ChannelEnum.MNG, (AdminDto) new AdminDto().setUsername("admin"));
-        log.info("selectPageAdminDto res {}", res.getRecords().get(0).getCreateTimestamp().toString());
         Assert.assertNotNull(res);
     }
 
