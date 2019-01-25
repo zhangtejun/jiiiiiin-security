@@ -11,10 +11,8 @@
 
 # 快速开始
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/eemHJEvsTog" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-视频演示
-
+[![Watch the video](https://ws1.sinaimg.cn/large/006tNc79gy1fzasel64onj316w08ewg1.jpg)](https://www.youtube.com/embed/eemHJEvsTog)
+[高清一点的视频下载地址，百度网盘，直接下载到本地会比较清楚，转码之后就比较不清晰](https://pan.baidu.com/s/1ZZmw7idemDWD0-tnmb1GHA)
 
 + [导入数据【sql-mysql.sql】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/db/sql-mysql.sql)
 + [启动redis，配置查看【application.yml#redis】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L28)
@@ -33,7 +31,7 @@
 | ------ | ------ | ------ |
 | 将spring-boot升级到2.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
 | 将spring-security升级到5.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
-| 自定义spring-mvc控制器接口校验框架 | 0% | 因为个人感觉hibernate validator基于实体的校验方式不够灵活，将计划做一个基于接口方法之上配置注解的形式来进行方法级别校验 |
+| 自定义spring-mvc控制器接口校验框架 | 0% | ~~因为个人感觉hibernate validator基于实体的校验方式不够灵活，将计划做一个基于接口方法之上配置注解的形式来进行方法级别校验~~ [SpringBoot 2.0参数校验Hibernate Validator](https://www.jianshu.com/p/6f3d809c6705) |
 | 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
 | RBAC后端权限控制 | 100% | [基于Spring Security的后端RBAC权限控制](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master/jiiiiiin-security-authorize) |
 | RBAC前端权限控制 | 100% | [1.基于vue-viewplus，实现了一个自定义模块](http://jiiiiiin.cn/vue-viewplus/#/global_api?id=mixin-) <br> [2.实现前端页面可访问性控制，通过路由拦截，判断用户待访问页面是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L250) <br> [3.实现可见页面的局部UI组件的**可使用性或可见性**控制，基于自定义`v-access`指令，对比声明的接口或资源别是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L124)|
