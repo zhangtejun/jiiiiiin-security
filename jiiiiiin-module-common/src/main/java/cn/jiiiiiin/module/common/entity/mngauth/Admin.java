@@ -19,6 +19,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -73,6 +74,7 @@ public class Admin extends BaseEntity<Admin> {
 
     @TableField(exist = false)
     @JsonView(View.DetailView.class)
+    @NotNull(message = "批量删除角色Ids不能为空", groups = {Role.Groups.RoleDels.class})
     private Set<Role> roles = new HashSet<>();
 
     @ApiModelProperty(value = "前端授权资源")

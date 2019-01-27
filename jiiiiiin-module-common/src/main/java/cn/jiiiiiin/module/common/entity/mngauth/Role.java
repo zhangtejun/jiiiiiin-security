@@ -1,14 +1,20 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
+import cn.jiiiiiin.data.orm.util.View;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.exception.BusinessErrException;
+import cn.jiiiiiin.module.common.validation.ChannelStyle;
+import cn.jiiiiiin.module.common.validation.Groups;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -31,9 +37,17 @@ import java.util.List;
 @ApiModel(value = "Role对象", description = "角色表")
 public class Role extends BaseEntity<Role> {
 
+    public static class Groups {
+
+        public interface RoleDels {
+        }
+
+    }
+
     public static final Long ROLE_ADMIN_ID = 1061277220292595713L;
     private static final long serialVersionUID = 7045256792828824071L;
 
+    @SuppressWarnings("AlibabaAvoidComplexCondition")
     public static void checkRootRole(@NonNull Role role, @NonNull String errMsg){
         if((role.getId() != null && role.getId().equals(ROLE_ADMIN_ID))
                 || "Admin".equals(role.getAuthorityName())
@@ -49,15 +63,24 @@ public class Role extends BaseEntity<Role> {
     }
 
     @ApiModelProperty(value = "角色名称")
+    @JsonView(View.SimpleView.class)
+    @NotBlank(message = "角色名称不能为空")
+    @Length(min = 2, max = 10, message = "角色名称长度必须在2~10位之间")
     private String name;
 
     @ApiModelProperty(value = "角色标识")
+    @JsonView(View.SimpleView.class)
+    @NotBlank(message = "角色标识不能为空")
+    @Length(min = 2, max = 10, message = "角色标识长度必须在2~10位之间")
     private String authorityName;
 
     @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
+    @JsonView(View.DetailView.class)
+    @ChannelStyle
     private ChannelEnum channel;
 
     @TableField(exist = false)
+    @JsonView(View.DetailView.class)
     private List<Resource> resources = new LinkedList<>();
 
     public static final String NAME = "name";
