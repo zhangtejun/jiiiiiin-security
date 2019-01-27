@@ -2,10 +2,15 @@ package cn.jiiiiiin.module.common.entity.mngauth;
 
 import cn.jiiiiiin.data.orm.util.View;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.validation.spring.ValidationResult;
+import cn.jiiiiiin.validation.spring.ValidationUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -15,6 +20,9 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 public class AdminTest {
+
+//    @Autowired
+//    private ObjectMapper objectMapper;
 
     @Test
     public void test() throws IOException {
@@ -43,6 +51,13 @@ public class AdminTest {
 
         json = om.writerWithView(View.SecurityView.class).writeValueAsString(user);
         log.debug("format userview.login json: {}", json);
+    }
+
+    @Test
+    public void testJsr303() throws JsonProcessingException {
+        val admin = new Admin();
+        ValidationResult result = ValidationUtils.validateEntity(admin);
+        log.debug("testJsr303 {} ", new ObjectMapper().writeValueAsString(result));
     }
 
 }

@@ -4,19 +4,20 @@ import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import cn.jiiiiiin.data.orm.util.View;
 import cn.jiiiiiin.module.common.dto.mngauth.Menu;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
+import cn.jiiiiiin.module.common.validation.ChannelStyle;
+import cn.jiiiiiin.module.common.validation.Groups;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,12 +46,21 @@ public class Admin extends BaseEntity<Admin> {
     @JsonIgnore
     private LocalDateTime createTime;
 
+    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
+    @JsonView(View.DetailView.class)
+    @ChannelStyle(groups = {Groups.Create.class})
+    private ChannelEnum channel;
+
     @ApiModelProperty(value = "用户名")
     @JsonView(View.SimpleView.class)
+    @NotEmpty(message = "用户名不能为空")
+    @Length(min = 2, max = 10, message = "用户名长度必须在2~10位之间")
     private String username;
 
     @ApiModelProperty(value = "密码，加密存储")
     @JsonView(View.SecurityView.class)
+    @NotEmpty(message = "用户密码不能为空")
+    @Length(min = 4, max = 16, message = "用户名密码长度必须在4~16位之间")
     private String password;
 
     @ApiModelProperty(value = "手机号")
@@ -64,10 +74,6 @@ public class Admin extends BaseEntity<Admin> {
     @TableField(exist = false)
     @JsonView(View.DetailView.class)
     private Set<Role> roles = new HashSet<>();
-
-    @ApiModelProperty(value = "标识渠道，不同的渠道就是不同的资源分组: 0:内管")
-    @JsonView(View.DetailView.class)
-    private ChannelEnum channel;
 
     @ApiModelProperty(value = "前端授权资源")
     @TableField(exist = false)

@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,7 +33,16 @@ public class ControllerExceptionHandler {
     public R<String> handlerException(Exception e) {
         log.error("全局异常处理捕获到的错误 {}", e.getClass().getSimpleName());
         log.error("错误堆栈--》", e);
-        if (e instanceof NullPointerException) {
+        if(e instanceof MethodArgumentNotValidException){
+            MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) e;
+            BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
+            StringBuilder stringBuilder = new StringBuilder("参数传递错误：");
+            bindingResult.getFieldErrors().forEach(fieldError -> {
+                log.error("参数传递错误 {} {} {}", fieldError.getObjectName(), fieldError.getField(), fieldError.getDefaultMessage());
+                stringBuilder.append("[").append(fieldError.getField()).append("]").append(fieldError.getDefaultMessage());
+            });
+            return R.failed(stringBuilder.toString());
+        } else if (e instanceof NullPointerException) {
             return R.failed("服务器内部错误【空指针异常】");
         } else if (e instanceof BusinessErrException) {
             val businessErrException = (BusinessErrException) e;

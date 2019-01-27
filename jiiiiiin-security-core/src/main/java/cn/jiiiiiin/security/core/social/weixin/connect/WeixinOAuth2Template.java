@@ -15,9 +15,7 @@ import org.springframework.social.oauth2.OAuth2Template;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Map;
 
 /**

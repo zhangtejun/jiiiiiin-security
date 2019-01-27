@@ -92,6 +92,13 @@
                 <version>${jiiiiiin-security-version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.jiiiiiin.security</groupId>
+                <artifactId>jiiiiiin-validation</artifactId>
+                <version>${jiiiiiin-security-version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 

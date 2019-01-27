@@ -67,6 +67,12 @@
             <version>${springfox.swagger2.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.jiiiiiin.security</groupId>
+            <artifactId>jiiiiiin-validation</artifactId>
+        </dependency>
+
+
         <!--<dependency>-->
             <!--<groupId>com.alibaba</groupId>-->
             <!--<artifactId>fastjson</artifactId>-->

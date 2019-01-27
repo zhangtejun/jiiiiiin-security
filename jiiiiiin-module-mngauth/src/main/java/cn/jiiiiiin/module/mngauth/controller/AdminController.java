@@ -7,6 +7,7 @@ import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.exception.BusinessErrException;
+import cn.jiiiiiin.module.common.validation.Groups;
 import cn.jiiiiiin.module.mngauth.component.MngUserDetails;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,7 +25,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.groups.Default;
 
 
 /**
@@ -91,7 +95,7 @@ public class AdminController extends BaseController {
 
     @ApiOperation(value = "用户记录查询", httpMethod = "GET")
     @GetMapping("{id:\\d+}")
-//    @JsonView(View.DetailView.class)
+    @JsonView(View.DetailView.class)
     public R<AdminDto> getAdminAndRelationRecords(@PathVariable Long id) {
         return success(adminService.getAdminAndRelationRecords(id));
     }
@@ -99,7 +103,7 @@ public class AdminController extends BaseController {
     @ApiOperation(value = "新增用户", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "POST")
     @PostMapping
     @JsonView(View.DetailView.class)
-    public R<AdminDto> create(@RequestBody AdminDto admin) {
+    public R<AdminDto> create(@RequestBody @Validated({Groups.Create.class, Default.class}) AdminDto admin) {
         if (adminService.saveAdminAndRelationRecords(admin)) {
             return success(admin);
         } else {
