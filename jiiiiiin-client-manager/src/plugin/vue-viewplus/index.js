@@ -42,6 +42,12 @@ const viewPlusOptions = {
       switch (errMsg) {
         case '未解析到服务端返回的错误消息':
           return errMsg;
+        case '参数传递错误':
+          let res = `参数传递错误`
+          response.data.forEach(err => {
+            res += `${err.defaultMessage}\n`
+          });
+          return res
       }
       return `${errMsg} [服务端]`;
     },
@@ -96,8 +102,12 @@ const viewPlusOptions = {
         this.toast('会话超时，请重新登录', {
           type: 'error'
         });
-        store.dispatch('d2admin/account/logout', { vm: this });
-        store.dispatch('d2admin/page/closeAll', { vm: router.app });
+        store.dispatch('d2admin/account/logout', {
+          vm: this
+        });
+        store.dispatch('d2admin/page/closeAll', {
+          vm: router.app
+        });
       },
       unauthorized: ['core_error_unauthorized'],
       onUnauthorized(response) {

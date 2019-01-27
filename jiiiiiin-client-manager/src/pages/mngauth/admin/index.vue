@@ -335,7 +335,7 @@ export default {
           const params = _.clone(this.form);
           delete params.roles
           if (this.formMode === 'add') {
-            // params.channel = this.channel
+            params.channel = this.channel
             this.$vp.ajaxPostJson('admin', {
               params
             }).then(res => {

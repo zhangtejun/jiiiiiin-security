@@ -59,7 +59,7 @@ public class Admin extends BaseEntity<Admin> {
 
     @ApiModelProperty(value = "密码，加密存储")
     @JsonView(View.SecurityView.class)
-    @NotEmpty(message = "用户密码不能为空")
+    @NotEmpty(message = "用户密码不能为空", groups = {Groups.Security.class})
     @Length(min = 4, max = 16, message = "用户名密码长度必须在4~16位之间")
     private String password;
 

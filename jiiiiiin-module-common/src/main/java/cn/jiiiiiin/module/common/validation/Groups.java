@@ -11,4 +11,7 @@ public class Groups {
 
     public interface Create {
     }
+
+    public interface Security {
+    }
 }

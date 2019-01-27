@@ -1,6 +1,7 @@
 package cn.jiiiiiin.module.mngauth.controller;
 
 
+import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import cn.jiiiiiin.data.orm.util.View;
 import cn.jiiiiiin.module.common.controller.BaseController;
 import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
@@ -103,7 +104,7 @@ public class AdminController extends BaseController {
     @ApiOperation(value = "新增用户", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "POST")
     @PostMapping
     @JsonView(View.DetailView.class)
-    public R<AdminDto> create(@RequestBody @Validated({Groups.Create.class, Default.class}) AdminDto admin) {
+    public R<AdminDto> create(@RequestBody @Validated({Groups.Create.class, Groups.Security.class, Default.class}) AdminDto admin) {
         if (adminService.saveAdminAndRelationRecords(admin)) {
             return success(admin);
         } else {
@@ -114,7 +115,7 @@ public class AdminController extends BaseController {
     @ApiOperation(value = "更新用户信息", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "PUT")
     @PutMapping
     @JsonView(View.DetailView.class)
-    public R<AdminDto> update(@RequestBody AdminDto admin) {
+    public R<AdminDto> update(@RequestBody @Validated({BaseEntity.IDGroup.class, Groups.Create.class, Default.class}) AdminDto admin) {
         if (adminService.updateAdminAndRelationRecords(admin)) {
             return success(admin);
         } else {
@@ -125,7 +126,7 @@ public class AdminController extends BaseController {
     @ApiOperation(value = "更新用户密码", notes = "只能在用户拥有系统管理员角色权限的状态下使用该接口", httpMethod = "PUT")
     @PutMapping("pwd")
     @JsonView(View.SecurityView.class)
-    public R<AdminDto> updatePwd(@RequestBody AdminDto admin, @AuthenticationPrincipal UserDetails user) {
+    public R<AdminDto> updatePwd(@RequestBody @Validated({BaseEntity.IDGroup.class, Groups.Security.class}) AdminDto admin, @AuthenticationPrincipal UserDetails user) {
         if (user.getAuthorities().stream().anyMatch(p -> p.equals(adminSimpleGrantedAuthority))) {
             adminService.updatePwd(admin);
         }

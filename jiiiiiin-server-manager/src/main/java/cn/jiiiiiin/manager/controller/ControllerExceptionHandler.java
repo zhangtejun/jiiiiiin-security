@@ -2,6 +2,7 @@ package cn.jiiiiiin.manager.controller;
 
 import cn.jiiiiiin.module.common.exception.BusinessErrException;
 import com.baomidou.mybatisplus.extension.api.R;
+import com.baomidou.mybatisplus.extension.enums.ApiErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -30,18 +31,18 @@ public class ControllerExceptionHandler {
     @ResponseBody
     // 标识返回的状态码
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public R<String> handlerException(Exception e) {
+    public R handlerException(Exception e) {
         log.error("全局异常处理捕获到的错误 {}", e.getClass().getSimpleName());
         log.error("错误堆栈--》", e);
-        if(e instanceof MethodArgumentNotValidException){
+        if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException methodArgumentNotValidException = (MethodArgumentNotValidException) e;
             BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
             StringBuilder stringBuilder = new StringBuilder("参数传递错误：");
             bindingResult.getFieldErrors().forEach(fieldError -> {
                 log.error("参数传递错误 {} {} {}", fieldError.getObjectName(), fieldError.getField(), fieldError.getDefaultMessage());
-                stringBuilder.append("[").append(fieldError.getField()).append("]").append(fieldError.getDefaultMessage());
+                stringBuilder.append("[").append(fieldError.getField()).append("]").append(fieldError.getDefaultMessage()).append("<br/>");
             });
-            return R.failed(stringBuilder.toString());
+            return restResult(bindingResult.getFieldErrors(), ApiErrorCode.FAILED.getCode(), "参数传递错误");
         } else if (e instanceof NullPointerException) {
             return R.failed("服务器内部错误【空指针异常】");
         } else if (e instanceof BusinessErrException) {
@@ -54,4 +55,13 @@ public class ControllerExceptionHandler {
             return R.failed(e.getMessage());
         }
     }
+
+    public static <T> R<T> restResult(T data, long code, String msg) {
+        R<T> apiResult = new R<>();
+        apiResult.setCode(code);
+        apiResult.setData(data);
+        apiResult.setMsg(msg);
+        return apiResult;
+    }
+
 }
