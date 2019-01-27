@@ -1,15 +1,19 @@
 package cn.jiiiiiin.module.common.entity.mngauth;
 
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
+import cn.jiiiiiin.data.orm.util.View;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.enums.mngauth.ResourceTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.*;
 
@@ -45,36 +49,49 @@ public class Resource extends BaseEntity<Resource> {
     }
 
     @ApiModelProperty(value = "资源父id: 0标识(默认)为根节点")
+    @JsonView(View.SimpleView.class)
     private Long pid;
 
     @ApiModelProperty(value = "当前资源的所有父节点id集合: 0(默认)")
+    @JsonView(View.SimpleView.class)
     private String pids;
 
     @ApiModelProperty(value = "资源名称")
+    @JsonView(View.SimpleView.class)
+    @NotBlank(message = "资源名称不能为空")
+    @Length(min = 2, max = 10, message = "资源名称长度必须在2~10位之间")
     private String name;
 
     @ApiModelProperty(value = "资源别名，用于唯一标识当前资源，方便前端进行权限控制，生成规则建议使用：渠道标识+大写英文")
+    @JsonView(View.SimpleView.class)
     private String alias;
 
     @ApiModelProperty(value = "资源图标")
+    @JsonView(View.SimpleView.class)
     private String icon;
 
     @ApiModelProperty(value = "资源前端路由地址")
+    @JsonView(View.SimpleView.class)
     private String path;
 
     @ApiModelProperty(value = "资源排序号")
+    @JsonView(View.SimpleView.class)
     private Integer num;
 
     @ApiModelProperty(value = "资源层级")
+    @JsonView(View.SimpleView.class)
     private Integer levels;
 
     @ApiModelProperty(value = "资源类型: 1:菜单(默认) 0:按钮")
+    @JsonView(View.SimpleView.class)
     private ResourceTypeEnum type;
 
     @ApiModelProperty(value = "资源状态: 1:启用(默认) 0:停用")
+    @JsonView(View.SimpleView.class)
     private StatusEnum status;
 
     @ApiModelProperty(value = "渠道标识，不同的渠道就是不同的资源分组: 0:内管")
+    @JsonView(View.DetailView.class)
     private ChannelEnum channel;
 
     @TableField(exist = false)

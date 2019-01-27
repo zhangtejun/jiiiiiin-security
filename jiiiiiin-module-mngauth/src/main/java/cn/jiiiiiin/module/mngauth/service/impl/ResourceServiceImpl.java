@@ -71,16 +71,9 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         return _parseTreeNode(pid, nodes);
     }
 
-    private void _checkUniqueness(@NonNull Resource resource) {
-        if (StringUtils.isBlank(resource.getName())) {
-            throw new BusinessErrException("资源名称不能为空");
-        }
-    }
-
     @Transactional
     @Override
     public Boolean saveAndSortNumAndRelationInterfaceRecords(ResourceDto resource) {
-        _checkUniqueness(resource);
         // 检测是否存在重复的`name`|`alias`记录
         val existRecord = this.getOne(new QueryWrapper<Resource>().eq(Resource.CHANNEL, resource.getChannel()).eq(Resource.NAME, resource.getName()));
         if (existRecord != null) {
@@ -163,7 +156,6 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Transactional
     @Override
     public Boolean updateAndSortNumAndRelationInterfaceRecords(ResourceDto resource) {
-        _checkUniqueness(resource);
         val currentNode = resourceMapper.selectById(resource.getId());
         if (currentNode == null) {
             throw new BusinessErrException(String.format("找不到待更新的资源记录【%s】", resource.getId()));
@@ -183,7 +175,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             }
         }
 
-        var res = false;
+        Boolean res;
         val currentNum = currentNode.getNum();
         val modifyNum = resource.getNum();
         // 设置可更新属性
