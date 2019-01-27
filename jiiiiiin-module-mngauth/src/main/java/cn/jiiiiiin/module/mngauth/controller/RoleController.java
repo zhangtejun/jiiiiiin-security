@@ -50,36 +50,42 @@ public class RoleController extends BaseController {
     private IRoleService roleService;
 
     @ApiOperation(value = "角色记录列表查询", notes = "查询对应渠道所有角色记录", httpMethod = "GET")
+    @JsonView(View.SimpleView.class)
     @GetMapping("list/{channel:[0]}")
     public R<List<Role>> page(@PathVariable ChannelEnum channel) {
         return R.ok(roleService.list(new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
     @ApiOperation(value = "角色记录分页查询", notes = "分页查询对应渠道角色记录", httpMethod = "GET")
+    @JsonView(View.SimpleView.class)
     @GetMapping("{channel:[0]}/{current:\\d+}/{size:\\d+}")
     public R<IPage<Role>> page(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel)));
     }
 
     @ApiOperation(value = "角色记录分页检索", notes = "分页检索对应渠道角色记录", httpMethod = "GET")
+    @JsonView(View.SimpleView.class)
     @PostMapping("search/{channel:[0]}/{current:\\d+}/{size:\\d+}")
     public R<IPage<Role>> searchPage(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Role role) {
         return R.ok(roleService.page(new Page<>(current, size), new QueryWrapper<Role>().eq(Role.CHANNEL, channel).like(Role.AUTHORITY_NAME, role.getAuthorityName())));
     }
 
     @ApiOperation(value = "角色记录（适配eleui）分页查询", notes = "分页查询对应渠道角色记录，适配前端element-ui数据格式要求，提供展开功能所属数据而定义", httpMethod = "GET")
+    @JsonView(View.SimpleView.class)
     @GetMapping("eleui/{channel:[0]}/{current:\\d+}/{size:\\d+}")
     public R<IPage<RoleDto>> eleuiTableList(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(roleService.pageDto(new Page<>(current, size), channel, null));
     }
 
     @ApiOperation(value = "角色记录（适配eleui）分页检索", notes = "分页检索对应渠道角色记录，适配前端element-ui数据格式要求，提供展开功能所属数据而定义", httpMethod = "GET")
+    @JsonView(View.SimpleView.class)
     @PostMapping("search/eleui/{channel:[0]}/{current:\\d+}/{size:\\d+}")
     public R<IPage<RoleDto>> eleuiTableSearch(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Role role) {
         return R.ok(roleService.pageDto(new Page<>(current, size), channel, role));
     }
 
     @ApiOperation(value = "角色记录查询", notes = "根据路径参数角色id查询其详细数据", httpMethod = "GET")
+    @JsonView(View.DetailView.class)
     @GetMapping("{id:\\d+}")
     public R<RoleDto> getRoleAndRelationRecords(@PathVariable Long id) {
         return R.ok(roleService.getRoleAndRelationRecords(id));

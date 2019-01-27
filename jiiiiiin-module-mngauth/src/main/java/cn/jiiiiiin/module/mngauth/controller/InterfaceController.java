@@ -15,8 +15,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.groups.Default;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,19 +39,19 @@ public class InterfaceController extends BaseController {
     private IInterfaceService interfaceService;
 
     @ApiOperation(value = "接口记录列表查询", httpMethod = "GET")
-    @GetMapping("list/{channel}")
+    @GetMapping("list/{channel:[0]}")
     public R<List<Interface>> list(@PathVariable ChannelEnum channel) {
         return R.ok(interfaceService.list(new QueryWrapper<Interface>().eq(Interface.CHANNEL, channel)));
     }
 
     @ApiOperation(value = "接口记录分页查询", httpMethod = "GET")
-    @GetMapping("{channel}/{current}/{size}")
+    @GetMapping("{channel:[0]}/{current:\\d+}/{size:\\d+}")
     public R<IPage<Interface>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
         return R.ok(interfaceService.page(new Page<>(current, size), new QueryWrapper<Interface>().eq(Interface.CHANNEL, channel)));
     }
 
     @ApiOperation(value = "接口记录分页检索", httpMethod = "GET")
-    @PostMapping("search/{channel}/{current}/{size}")
+    @PostMapping("search/{channel:[0]}/{current:\\d+}/{size:\\d+}")
     public R<IPage<Interface>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Interface itf) {
         val qw = new QueryWrapper<Interface>()
                 .eq(Interface.CHANNEL, channel);
@@ -69,14 +71,14 @@ public class InterfaceController extends BaseController {
     }
 
     @ApiOperation(value = "通过id查询接口记录", httpMethod = "GET")
-    @GetMapping("{id}")
+    @GetMapping("{id:\\d+}")
     public R<Interface> getAdminAndRelationRecords(@PathVariable Long id) {
         return success(interfaceService.getById(id));
     }
 
     @ApiOperation(value ="新增接口记录", httpMethod = "POST")
     @PostMapping
-    public R<Interface> create(@RequestBody Interface itf) {
+    public R<Interface> create(@RequestBody @Validated({Default.class}) Interface itf) {
         if (interfaceService.saveOrUpdate(itf)) {
             return success(itf);
         } else {
@@ -86,7 +88,7 @@ public class InterfaceController extends BaseController {
 
     @ApiOperation(value="更新接口记录", httpMethod = "PUT")
     @PutMapping
-    public R<Interface> update(@RequestBody Interface itf) {
+    public R<Interface> update(@RequestBody @Validated({Default.class}) Interface itf) {
         if (interfaceService.saveOrUpdate(itf)) {
             return success(itf);
         } else {
@@ -95,7 +97,7 @@ public class InterfaceController extends BaseController {
     }
 
     @ApiOperation(value="批量删除接口记录", httpMethod = "DELETE")
-    @DeleteMapping("dels/{ids}")
+    @DeleteMapping("dels/{ids:^[\\d,]+$}")
     public R<Boolean> dels(@PathVariable String ids) {
         return success(interfaceService.removeByIds(Arrays.asList(ids.split(","))));
     }

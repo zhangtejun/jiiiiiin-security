@@ -88,8 +88,8 @@ public class AdminController extends BaseController {
      * 获取当前登录的管理员信息
      */
     @ApiOperation(value = "登录用户自身记录查询", httpMethod = "GET")
-    @GetMapping("/me")
     @JsonView(View.DetailView.class)
+    @GetMapping("/me")
     public R<AdminDto> me(@AuthenticationPrincipal UserDetails user) {
         return success((AdminDto) new AdminDto().setUsername(user.getUsername()));
     }

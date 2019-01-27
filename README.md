@@ -40,7 +40,7 @@
 | 会话集群共享 | 100% | [使用Spring Session与Redis实现会话的共享存储和集群部署](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L20) |
 | d2-mng-page | 100% | [自定义管理页面组件（统一管理：分页、检索、table、编辑）,为了统一审美](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/components/d2-mng-page/index.vue) |
 | 用户管理 | 100% | 用来管理系统存在的用户 |
-| 角色管理 | 95% | 用来管理系统定义的角色 |
+| 角色管理 | 100% | 用来管理系统定义的角色 |
 | 资源管理 | 95% | 用来管理系统定义的资源 |
 | 接口管理 | 95% | 用来管理后台对应的接口集合 |
 
