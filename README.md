@@ -29,8 +29,6 @@
 # 计划
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| 将spring-boot升级到2.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
-| 将spring-security升级到5.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
 | 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
 | RBAC后端权限控制 | 100% | [基于Spring Security的后端RBAC权限控制](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master/jiiiiiin-security-authorize) |
 | RBAC前端权限控制 | 100% | [1.基于vue-viewplus，实现了一个自定义模块](http://jiiiiiin.cn/vue-viewplus/#/global_api?id=mixin-) <br> [2.实现前端页面可访问性控制，通过路由拦截，判断用户待访问页面是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L250) <br> [3.实现可见页面的局部UI组件的**可使用性或可见性**控制，基于自定义`v-access`指令，对比声明的接口或资源别是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L124)|
@@ -42,6 +40,8 @@
 | 角色管理 | 100% | 用来管理系统定义的角色 |
 | 资源管理 | 100% | 用来管理系统定义的资源 |
 | 接口管理 | 100% | 用来管理后台对应的接口集合 |
+| 将spring-boot升级到2.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
+| 将spring-security升级到5.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
 
 # 功能截图
 
