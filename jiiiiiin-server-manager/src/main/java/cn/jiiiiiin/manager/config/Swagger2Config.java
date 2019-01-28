@@ -27,7 +27,7 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("jiiiiiin-security APIs")
-                .description("为升级jiiiiiin-security做测试/")
+                .description("一个前后端分离的内管基础项目")
                 .termsOfServiceUrl("https://github.com/Jiiiiiin/")
                 .contact(new Contact("jiiiiiin", "https://github.com/Jiiiiiin/jiiiiiin-security", "15398699939@163.com"))
                 .version("1.0")
