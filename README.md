@@ -40,6 +40,7 @@
 | 角色管理 | 100% | 用来管理系统定义的角色 |
 | 资源管理 | 100% | 用来管理系统定义的资源 |
 | 接口管理 | 100% | 用来管理后台对应的接口集合 |
+| Swagger集成 | 100% | [用来构建服务端的RESTFull Api接口](https://swagger.io) |
 | 将spring-boot升级到2.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
 | 将spring-security升级到5.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
 
@@ -47,10 +48,11 @@
 
 以下是部分功能截图
 
-|  |  |  |
-| ------ | ------ | ------ |
-| ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fwyf81a19lj31kw0w0awb.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg) | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg) |
-| ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg) | ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7ui2yu4cj31c00u0438.jpg) |
+|  |  |
+| ------ | ------ |
+| ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm53clyhgj31c00u0tal.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg) |
+| ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg) | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg) |
+| ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm4vm6f3pj31c00u0q5t.jpg) |
 
 
 # 表结构和权限说明

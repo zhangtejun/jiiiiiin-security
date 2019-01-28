@@ -1,11 +1,16 @@
-body{
+body {
     background-color: #171717;
     color: white;
     text-align: center;
     vertical-align: center;
 }
 
-h1{
-    position: absolute;
-    top: 200px;
+.container {
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 30%;
+}
+
+a {
+    color: orange;
 }

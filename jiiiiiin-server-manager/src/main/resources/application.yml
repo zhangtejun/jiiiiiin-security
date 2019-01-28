@@ -124,8 +124,8 @@ jiiiiiin:
         size: 30
         interceptor-urls: ${server.context-path}/authentication/form,${server.context-path}/authentication/mobile
     browser:
-      sign-up-url: /signUp.html
-      sign-out-url: /signOut.html
+      sign-up-url: /prompt.html
+      sign-out-url: /prompt.html
       # proxy-uri: http://www.pinzhi365.com
 
 #manager:
@@ -156,7 +156,7 @@ logging:
       mybatis: debug
 
 swagger:
-  enable: false
+  enable: true
 
 ---
 
