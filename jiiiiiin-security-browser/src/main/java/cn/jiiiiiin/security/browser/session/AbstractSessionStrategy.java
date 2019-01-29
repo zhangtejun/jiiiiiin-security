@@ -3,15 +3,16 @@
  */
 package cn.jiiiiiin.security.browser.session;
 
-import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.util.UrlUtils;
@@ -46,7 +47,11 @@ public class AbstractSessionStrategy {
      */
     private boolean createNewSession = true;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    protected LiteDeviceResolver liteDeviceResolver;
 
     /**
      */
@@ -78,7 +83,7 @@ public class AbstractSessionStrategy {
         String sourceUrl = request.getRequestURI();
         String targetUrl;
 
-        final Device currentDevice = HttpUtils.resolveDevice(request);
+        final Device currentDevice = liteDeviceResolver.resolveDevice(request);
 
         if (currentDevice.isNormal()) {
             if (StringUtils.equals(sourceUrl, securityProperties.getBrowser().getSignInUrl())

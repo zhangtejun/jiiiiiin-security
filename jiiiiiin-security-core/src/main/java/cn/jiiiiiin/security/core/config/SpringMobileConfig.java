@@ -4,10 +4,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mobile.device.DeviceHandlerMethodArgumentResolver;
 import org.springframework.mobile.device.DeviceResolverHandlerInterceptor;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,6 +47,22 @@ public class SpringMobileConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(deviceHandlerMethodArgumentResolver());
+    }
+
+
+    /**
+     * https://docs.spring.io/spring-mobile/docs/current/reference/html/device.html
+     *
+     * https://github.com/spring-projects/spring-mobile-samples/blob/22896c9d57e49261be28921fb16ed763a310bd6a/lite-device-resolver/src/test/java/showcases/HomeControllerTest.java
+     * @return
+     */
+    @Bean
+    public LiteDeviceResolver liteDeviceResolver() {
+        List<String> keywords = new ArrayList<String>();
+        // TODO 后期做成配置
+        keywords.add("iphone");
+        keywords.add("android");
+        return new LiteDeviceResolver(keywords);
     }
 
 }

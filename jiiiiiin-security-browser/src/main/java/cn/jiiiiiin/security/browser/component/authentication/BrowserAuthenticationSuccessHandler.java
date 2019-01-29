@@ -1,12 +1,12 @@
 package cn.jiiiiiin.security.browser.component.authentication;
 
 
-import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import cn.jiiiiiin.security.core.dict.CommonConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
@@ -31,6 +31,9 @@ public class BrowserAuthenticationSuccessHandler extends SavedRequestAwareAuthen
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected LiteDeviceResolver liteDeviceResolver;
 
     /**
      * 登录成功之后被调用
@@ -82,7 +85,7 @@ public class BrowserAuthenticationSuccessHandler extends SavedRequestAwareAuthen
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.debug("身份认证（登录）成功");
-        final Device currentDevice = HttpUtils.resolveDevice(request);
+        final Device currentDevice = liteDeviceResolver.resolveDevice(request);
         // 根据渠道返回不同的响应数据
         // 还有一种做法是根据客户端程序配置来指定响应数据格式：https://coding.imooc.com/lesson/134.html#mid=6866
         if (!currentDevice.isNormal()) {

@@ -4,6 +4,7 @@
 package cn.jiiiiiin.security.core.properties;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 
@@ -19,6 +20,7 @@ import org.springframework.boot.autoconfigure.social.SocialProperties;
  */
 @Setter
 @Getter
+@NoArgsConstructor
 public class QQProperties extends SocialProperties {
 
     /**

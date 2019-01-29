@@ -3,13 +3,13 @@
  */
 package cn.jiiiiiin.security.browser.component.logout;
 
-import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import cn.jiiiiiin.security.core.utils.HttpDataUtil;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
@@ -37,6 +37,9 @@ public class BrowserLogoutSuccessHandler implements LogoutSuccessHandler {
     @Autowired
     protected ObjectMapper objectMapper;
 
+    @Autowired
+    protected LiteDeviceResolver liteDeviceResolver;
+
     /**
      * 根据渠道渲染响应数据
      */
@@ -44,7 +47,7 @@ public class BrowserLogoutSuccessHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         log.info("退出成功");
-        final Device currentDevice = HttpUtils.resolveDevice(request);
+        final Device currentDevice = liteDeviceResolver.resolveDevice(request);
         if (!currentDevice.isNormal()) {
             respJson(response);
         } else {

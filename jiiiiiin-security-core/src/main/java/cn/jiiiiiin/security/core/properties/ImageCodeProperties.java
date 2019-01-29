@@ -1,6 +1,7 @@
 package cn.jiiiiiin.security.core.properties;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**

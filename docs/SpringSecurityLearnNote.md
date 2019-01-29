@@ -155,6 +155,10 @@ spring session 支持的存储方式，参考`StoreType`；
 
 #### 核心流程(Spring Security Filter Chain)
 
+
+
+> [核心过滤器流程分析](https://coding.imooc.com/lesson/134.html#mid=6863)
+
   ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuoesrwcz1j31kw0jvgp1.jpg)
 
 ![image-20180920145215355](https://ws1.sinaimg.cn/large/006tNbRwgy1fvg0cuovo0j31kw0jlwy7.jpg)
@@ -856,6 +860,7 @@ public User(String username, String password,
 
 + 参考：https://coding.imooc.com/lesson/134.html#mid=7224
   
+
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fv6jkj7vcgj30zq0hn406.jpg)
 ​    
 使用 spring security oauth 的授权模式改造成上面的  流程，来响应登录请求，返回 token 令牌，替代 cookie 的 jsessionid 模式；
