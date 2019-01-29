@@ -85,6 +85,7 @@ public class BrowserSecurityController extends SocialController {
             if(StringUtils.isEmpty(msg)){
                 msg = "访问的服务需要身份认证";
             }
+            // `WebAttributes.AUTHENTICATION_EXCEPTION`详见身份认证失败处理器`bean::authenticationFailureHandler`
             val url = securityProperties.getBrowser().getSignInUrl()+ "?" + WebAttributes.AUTHENTICATION_EXCEPTION + "=" + msg;
             redirectStrategy.sendRedirect(request, response, url);
             return null;

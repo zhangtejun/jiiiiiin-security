@@ -1,14 +1,15 @@
 package cn.jiiiiiin.security.core.config;
 
+import cn.jiiiiiin.security.core.dict.CommonConstants;
+import lombok.val;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mobile.device.DeviceHandlerMethodArgumentResolver;
-import org.springframework.mobile.device.DeviceResolverHandlerInterceptor;
-import org.springframework.mobile.device.LiteDeviceResolver;
+import org.springframework.mobile.device.*;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,19 @@ public class SpringMobileConfig extends WebMvcConfigurerAdapter {
         // TODO 后期做成配置
         keywords.add("iphone");
         keywords.add("android");
-        return new LiteDeviceResolver(keywords);
+        return new LiteDeviceResolver(keywords){
+            @Override
+            public Device resolveDevice(HttpServletRequest request) {
+                // 有限判断accept请求头
+                val accept = request.getHeader("accept");
+                // Accept-header based detection
+                if (accept != null && (accept.contains(CommonConstants.ACCEPT_JSON_PREFIX) || accept.contains("wap"))) {
+                    return resolveWithPlatform(DeviceType.MOBILE, DevicePlatform.UNKNOWN);
+                } else {
+                    return super.resolveDevice(request);
+                }
+            }
+        };
     }
 
 }
