@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
@@ -79,6 +80,7 @@ public class BrowserAuthenticationFailureHandler extends SimpleUrlAuthentication
     }
 
     protected void respJson(HttpServletResponse response, AuthenticationException exception) throws IOException {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setContentType(CommonConstants.CONTENT_TYPE_JSON);
         // 将authentication转换成json str输出
         response.getWriter().write(objectMapper.writeValueAsString(R.failed(exception.getMessage())));
