@@ -1,12 +1,12 @@
 package cn.jiiiiiin.security.browser.component.authentication;
 
-import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import cn.jiiiiiin.security.core.dict.CommonConstants;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -31,6 +31,9 @@ public class BrowserAuthenticationFailureHandler extends SimpleUrlAuthentication
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected LiteDeviceResolver liteDeviceResolver;
 
     /**
      * 登录失败之后被调用
@@ -64,7 +67,7 @@ public class BrowserAuthenticationFailureHandler extends SimpleUrlAuthentication
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.debug("身份认证（登录）失败", exception);
 
-        val currentDevice = HttpUtils.resolveDevice(request);
+        val currentDevice = liteDeviceResolver.resolveDevice(request);
         // 根据渠道返回不同的响应数据
         if (!currentDevice.isNormal()) {
             respJson(response, exception);

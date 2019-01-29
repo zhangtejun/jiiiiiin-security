@@ -2,7 +2,10 @@ package cn.jiiiiiin.security.core.properties;
 
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.social.oauth2.OAuth2Parameters;
 
 /**
@@ -10,6 +13,7 @@ import org.springframework.social.oauth2.OAuth2Parameters;
  */
 @Setter
 @Getter
+@NoArgsConstructor
 public class BrowserProperties {
 
     /**
@@ -19,6 +23,7 @@ public class BrowserProperties {
 
     /**
      * 身份认证（登录）页面
+     * 当应用判断需要进行身份认证之后，如果访问的渠道是非“客户端”，那么就会渲染下面的这个页面 {@link HttpSecurity#formLogin()} {@link FormLoginConfigurer#loginPage(String)}
      * 默认页面："/signIn.html"
      */
     private String signInUrl = SecurityConstants.DEFAULT_SIGN_IN_PAGE_URL;

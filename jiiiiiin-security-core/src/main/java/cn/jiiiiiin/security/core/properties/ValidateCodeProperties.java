@@ -1,6 +1,7 @@
 package cn.jiiiiiin.security.core.properties;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -10,6 +11,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@NoArgsConstructor
 public class ValidateCodeProperties {
 
     private ImageCodeProperties imageCode = new ImageCodeProperties();

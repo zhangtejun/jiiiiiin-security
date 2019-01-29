@@ -73,7 +73,7 @@ public class BrowserSecurityController extends SocialController {
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public R<String> requireAuthentication(HttpServletRequest request, HttpServletResponse response, Device device, Model model) throws IOException {
         if (device.isNormal()) {
-            // 获取到上一个被拦截的请求(原始请求）
+            // 获取到上一个被拦截的请求(原始请求）或者说引发进行身份认证跳转的请求
             final SavedRequest savedRequest = requestCache.getRequest(request, response);
             if (savedRequest != null) {
                 final String transTarget = savedRequest.getRedirectUrl();

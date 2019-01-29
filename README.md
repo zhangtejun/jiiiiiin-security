@@ -41,6 +41,7 @@
 | 资源管理 | 100% | 用来管理系统定义的资源 |
 | 接口管理 | 100% | 用来管理后台对应的接口集合 |
 | Swagger集成 | 100% | [用来构建服务端的RESTFull Api接口](https://swagger.io) |
+| spring-mobile | 100% | [用来进行渠道判断](https://projects.spring.io/spring-mobile/)，使得应用能根据请求的设备响应不同的数据格式 |
 | 将spring-boot升级到2.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
 | 将spring-security升级到5.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
 

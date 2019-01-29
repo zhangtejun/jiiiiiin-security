@@ -4,6 +4,7 @@
 package cn.jiiiiiin.security.core.properties;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.social.security.SocialAuthenticationFilter;
 
@@ -14,6 +15,7 @@ import org.springframework.social.security.SocialAuthenticationFilter;
  */
 @Setter
 @Getter
+@NoArgsConstructor
 public class SocialProperties {
 
     /**

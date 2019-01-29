@@ -1,13 +1,10 @@
 package cn.jiiiiiin.security.browser.component.authorize;
 
-import cn.jiiiiiin.security.browser.utils.HttpUtils;
-import cn.jiiiiiin.security.core.utils.HttpDataUtil;
-import com.baomidou.mybatisplus.extension.api.R;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
@@ -30,6 +27,9 @@ public class BrowserAccessDeniedHandler extends AccessDeniedHandlerImpl {
 
     private String errorPage;
 
+    @Autowired
+    protected LiteDeviceResolver liteDeviceResolver;
+
     public BrowserAccessDeniedHandler(String errorPage) {
         this.errorPage = errorPage;
     }
@@ -37,7 +37,7 @@ public class BrowserAccessDeniedHandler extends AccessDeniedHandlerImpl {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         if (!response.isCommitted()) {
-            final Device currentDevice = HttpUtils.resolveDevice(request);
+            final Device currentDevice = liteDeviceResolver.resolveDevice(request);
             if (!currentDevice.isNormal()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN,
                         accessDeniedException.getMessage());

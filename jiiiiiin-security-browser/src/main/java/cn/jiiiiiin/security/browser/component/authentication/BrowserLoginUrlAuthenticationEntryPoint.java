@@ -1,8 +1,9 @@
 package cn.jiiiiiin.security.browser.component.authentication;
 
-import cn.jiiiiiin.security.browser.utils.HttpUtils;
 import lombok.val;
 import lombok.var;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -20,6 +21,9 @@ import java.io.IOException;
  */
 public class BrowserLoginUrlAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
 
+    @Autowired
+    protected LiteDeviceResolver liteDeviceResolver;
+
     /**
      * @param loginFormUrl URL where the login page can be found. Should either be
      *                     relative to the web-app context path (include a leading {@code /}) or an absolute
@@ -31,7 +35,7 @@ public class BrowserLoginUrlAuthenticationEntryPoint extends LoginUrlAuthenticat
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        val currentDevice = HttpUtils.resolveDevice(request);
+        val currentDevice = liteDeviceResolver.resolveDevice(request);
         // 根据渠道返回不同的响应数据
         if (!currentDevice.isNormal()) {
             // TODO 待测试
