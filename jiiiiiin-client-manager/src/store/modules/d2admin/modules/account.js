@@ -18,6 +18,7 @@ export default {
       username,
       password,
       imageCode,
+      rememberMe = false,
       route = {
         name: 'index'
       }
@@ -27,7 +28,8 @@ export default {
         AccountLogin(vm.$vp, {
           username,
           password,
-          imageCode
+          imageCode,
+          'remember-me': rememberMe
         })
           .then(async res => {
             // 设置 cookie 一定要存 uuid

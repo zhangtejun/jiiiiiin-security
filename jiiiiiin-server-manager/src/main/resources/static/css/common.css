@@ -1,16 +1,10 @@
-body {
-    background-color: #171717;
-    color: white;
-    text-align: center;
-    vertical-align: center;
-}
-
-.container {
-    width: 400px;
-    margin: 0 auto;
-    margin-top: 30%;
+/* 覆盖 */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 a {
-    color: orange;
+    color: #0f81cc;
 }

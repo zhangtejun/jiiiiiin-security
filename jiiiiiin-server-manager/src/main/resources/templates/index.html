@@ -1,21 +1,32 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"></meta>
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"></meta>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"></meta>
-    <title>jiiiiiin-security</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"></link>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link>
+<meta charset="UTF-8"></meta>
+<title>提示 - jiiiiiin-security</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/bower_components/bulma/css/bulma.min.css}"></link>
+<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"></link>
 </head>
 <body>
 
-<div class="container">
-    <!--TODO 需要手动替换成实际的前端地址-->
-    <h1>请访问正确的页面<a href="http://localhost:9000">去登录</a></h1>
+<section class="hero is-danger">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">
+                提示
+            </h1>
+            <h2 class="subtitle">
+                <!--<h1>请访问正确的前后端分离的前端页面，点击<a th:href="${#httpServletRequest.getAttribute('fontUrl')}">去登录</a></h1>-->
+                <h1>请访问正确的前后端分离的前端页面，点击<a th:href="${fontUrl}" style="color: orange">去登录</a></h1>
+            </h2>
+        </div>
+    </div>
+</section>
 
-    <p>jiiiiiin-security</p>
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p><a href="https://github.com/Jiiiiiin/jiiiiiin-security">jiiiiiin-security</a></p>
+    </div>
+</footer>
 
-</div>
 </body>
 </html>

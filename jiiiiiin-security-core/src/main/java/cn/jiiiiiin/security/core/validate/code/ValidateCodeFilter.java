@@ -3,6 +3,7 @@ package cn.jiiiiiin.security.core.validate.code;
 import cn.jiiiiiin.security.core.dict.CommonConstants;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +36,8 @@ import java.util.Set;
  * @author jiiiiiin
  */
 @Component
+@Slf4j
 public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {
-
-    final static Logger L = LoggerFactory.getLogger(ValidateCodeFilter.class);
 
     /**
      * 系统配置信息
@@ -84,7 +84,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
         addUrlToMap(securityProperties.getValidate().getImageCode().getInterceptorUrls(), ValidateCodeType.IMAGE);
         interceptorUrlsMap.put(SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_MOBILE, ValidateCodeType.SMS);
         addUrlToMap(securityProperties.getValidate().getSmsCode().getInterceptorUrls(), ValidateCodeType.SMS);
-        L.info("验证码将会拦截的接口集合 {}", interceptorUrlsMap);
+        log.debug("验证码将会拦截的接口集合 {}", interceptorUrlsMap);
     }
 
     /**
@@ -124,6 +124,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
                 logger.info("验证码校验通过");
             } catch (ValidateCodeException exception) {
                 logger.error("验证码校验失败", exception);
+                // 统一身份认证异常处理
                 customAuthenticationFailureHandler.onAuthenticationFailure(request, response, exception);
                 return;
             }
