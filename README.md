@@ -27,6 +27,18 @@
     - 启动前端内管应用：`npm run serve`
 
 # 计划
+
++ 业务
+
+| 模块名称 | 完成状态 | 简介 |
+| ------ | ------ | ------ |
+| 用户管理 | 100% | 用来管理系统存在的用户 |
+| 角色管理 | 100% | 用来管理系统定义的角色 |
+| 资源管理 | 100% | 用来管理系统定义的资源 |
+| 接口管理 | 100% | 用来管理后台对应的接口集合 |
+
++ 功能
+
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
 | 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
@@ -35,13 +47,11 @@
 | 集成vue-viewplus | 100% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
 | 会话并发控制 | 100% | [使用SpringSecurity#concurrency-control实现应用中同一用户在同时只能有一个是终端（渠道）成功登录应用，后登录终端会导致前一个会话失效](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-security-browser/src/main/java/cn/jiiiiiin/security/browser/config/BrowserSpringSecurityBaseConfig.java#L123) |
 | 会话集群共享 | 100% | [使用Spring Session与Redis实现会话的共享存储和集群部署](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L20) |
+| 记住我控制 | 50% | [使用spring-security实现remember-me功能](https://www.baeldung.com/spring-security-remember-me) |
 | d2-mng-page | 100% | [自定义管理页面组件（统一管理：分页、检索、table、编辑）,为了统一审美](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/components/d2-mng-page/index.vue) |
-| 用户管理 | 100% | 用来管理系统存在的用户 |
-| 角色管理 | 100% | 用来管理系统定义的角色 |
-| 资源管理 | 100% | 用来管理系统定义的资源 |
-| 接口管理 | 100% | 用来管理后台对应的接口集合 |
 | Swagger集成 | 100% | [用来构建服务端的RESTFull Api接口](https://swagger.io) |
 | spring-mobile | 100% | [用来进行渠道判断](https://projects.spring.io/spring-mobile/)，使得应用能根据请求的设备响应不同的数据格式 |
+| Gif验证码 | 100% | [EasyCaptcha](https://github.com/whvcse/EasyCaptcha)和[kaptcha](https://github.com/penggle/kaptcha)两种验证码库的支持 |
 | 将spring-boot升级到2.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
 | 将spring-security升级到5.0 | 0% | 我将现在[Jiiiiiin/spring-boot2](https://github.com/Jiiiiiin/spring-boot2)这个项目进行试验 |
 
@@ -51,7 +61,7 @@
 
 |  |  |
 | ------ | ------ |
-| ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm53clyhgj31c00u0tal.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg) |
+| ![](https://ws4.sinaimg.cn/large/006tNc79gy1fzpv0weyyhj31c00u0mz6.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg) |
 | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg) | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg) |
 | ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm4vm6f3pj31c00u0q5t.jpg) |
 

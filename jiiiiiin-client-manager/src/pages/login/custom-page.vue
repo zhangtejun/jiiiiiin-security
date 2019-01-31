@@ -41,6 +41,9 @@
                     </template>
                   </el-input>
                 </el-form-item>
+                <el-form-item>
+                  <el-checkbox v-model="formLogin.rememberMe" name="remember-me" type="checkbox" value="true">记住我</el-checkbox>
+                </el-form-item>
                 <el-button size="default" native-type="submit" @click="submit" :disabled="submitBtnDisabled" type="primary" class="button-login">登录</el-button>
               </el-form>
             </el-card>
@@ -79,11 +82,13 @@ export default {
       timeInterval: null,
       time: dayjs().format('HH:mm:ss'),
       submitBtnDisabled: false,
+      // validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image?width=30&${new Date().getTime()}`,
       validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image?${new Date().getTime()}`,
       // 表单
       formLogin: {
         username: 'admin',
         password: 'admin',
+        rememberMe: true,
         code: ''
       },
       // 校验
@@ -121,7 +126,7 @@ export default {
     },
     onChangeValidateImgCode: function(e) {
       this.formLogin.code = ''
-      e.target.src = `${this.validateImgCodeUri}?${new Date().getTime()}`
+      e.target.src = this.validateImgCodeUri
     },
     /**
      * @description 接收选择一个用户快速登录的事件
@@ -143,7 +148,8 @@ export default {
             vm: this,
             username: this.formLogin.username,
             password: this.formLogin.password,
-            imageCode: this.formLogin.code
+            imageCode: this.formLogin.code,
+            rememberMe: this.formLogin.rememberMe
           }).then((res) => {
             // 修改用户登录状态
             this.$vp.modifyLoginState(true);

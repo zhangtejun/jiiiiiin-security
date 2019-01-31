@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static cn.jiiiiiin.security.core.properties.ImageCodeProperties.Type.KAPTCHA;
+
 /**
  * @author jiiiiiin
  */
@@ -25,14 +27,21 @@ public class ValidateCodeBeanConfig {
     @Bean
     @ConditionalOnMissingBean(name = "imageValidateCodeGenerator")
     public ValidateCodeGenerator imageValidateCodeGenerator() {
-        final ImageValidateCodeGenerator imageValidateCodeGenerator = new ImageValidateCodeGenerator(securityProperties, captchaProducer);
+        ImageValidateCodeGenerator imageValidateCodeGenerator;
+
+        if (securityProperties.getValidate().getImageCode().getType().equals(KAPTCHA.name())) {
+            imageValidateCodeGenerator = new ImageValidateCodeGenerator(securityProperties, captchaProducer);
+        }else{
+            imageValidateCodeGenerator = new ImageValidateCodeGenerator(securityProperties);
+        }
+
         return imageValidateCodeGenerator;
     }
 
     @Bean
     @ConditionalOnMissingBean(name = "smsCodeSender")
     public SmsCodeSender smsCodeSender() {
-        final DefaultSmsCodeSender defaultSmsCodeSender= new DefaultSmsCodeSender();
+        final DefaultSmsCodeSender defaultSmsCodeSender = new DefaultSmsCodeSender();
         return defaultSmsCodeSender;
     }
 

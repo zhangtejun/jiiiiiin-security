@@ -18,6 +18,8 @@ spring:
     cache: false
     # 避免Thymeleaf对html语法检查过严 https://www.jianshu.com/p/b361a6acbe0c
     mode: LEGACYHTML5
+    encoding: UTF-8
+    prefix: classpath:/templates/
   # 使用`jiiiiiin-security-browser`模块需开启
   session:
     store-type: redis
@@ -120,12 +122,16 @@ jiiiiiin:
   security:
     validate:
       image-code:
-        length: 3
-        size: 30
+        type: EASYCAPTCHA_GIF_TYPE_NUM_AND_UPPER
+        width: 70
+        length: 2
         interceptor-urls: ${server.context-path}/authentication/form,${server.context-path}/authentication/mobile
     browser:
-      sign-up-url: /prompt.html
-      sign-out-url: /prompt.html
+      fontUrl: http://192.168.1.185:9000/
+      signInUrl: /index
+      sign-up-url: /index
+      sign-out-url: /index
+      rememberMeSeconds: 3600
       # proxy-uri: http://www.pinzhi365.com
 
 #manager:
