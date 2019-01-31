@@ -16,7 +16,7 @@
         <module>jiiiiiin-module-common</module>
         <module>jiiiiiin-module-mngauth</module>
         <module>jiiiiiin-server-manager</module>
-        <module>jiiiiiin-validation</module>
+        <!--<module>jiiiiiin-validation</module>-->
     </modules>
     <packaging>pom</packaging>
 
@@ -92,11 +92,11 @@
                 <version>${jiiiiiin-security-version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>cn.jiiiiiin.security</groupId>
-                <artifactId>jiiiiiin-validation</artifactId>
-                <version>${jiiiiiin-security-version}</version>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>cn.jiiiiiin.security</groupId>-->
+                <!--<artifactId>jiiiiiin-validation</artifactId>-->
+                <!--<version>${jiiiiiin-security-version}</version>-->
+            <!--</dependency>-->
 
 
         </dependencies>

@@ -52,10 +52,10 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>cn.jiiiiiin.security</groupId>
-            <artifactId>jiiiiiin-validation</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>cn.jiiiiiin.security</groupId>-->
+            <!--<artifactId>jiiiiiin-validation</artifactId>-->
+        <!--</dependency>-->
 
     </dependencies>
 

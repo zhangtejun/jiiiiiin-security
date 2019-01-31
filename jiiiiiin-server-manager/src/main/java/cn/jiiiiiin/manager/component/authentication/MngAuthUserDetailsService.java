@@ -2,7 +2,6 @@ package cn.jiiiiiin.manager.component.authentication;
 
 import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.dto.mngauth.Menu;
-import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.entity.mngauth.Interface;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
-
 /**
  * 内管`UserDetailsService`
  * <p>
