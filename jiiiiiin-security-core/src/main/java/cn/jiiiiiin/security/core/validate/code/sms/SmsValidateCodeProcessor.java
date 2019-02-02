@@ -5,6 +5,7 @@ package cn.jiiiiiin.security.core.validate.code.sms;
 
 import cn.jiiiiiin.security.core.validate.code.entity.ValidateCode;
 import cn.jiiiiiin.security.core.validate.code.impl.AbstractValidateCodeProcessor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -20,6 +21,7 @@ import static cn.jiiiiiin.security.core.dict.SecurityConstants.DEFAULT_PARAMETER
  *
  */
 @Component
+@Slf4j
 public class SmsValidateCodeProcessor extends AbstractValidateCodeProcessor<ValidateCode> {
 
 	/**
@@ -27,10 +29,11 @@ public class SmsValidateCodeProcessor extends AbstractValidateCodeProcessor<Vali
 	 */
 	@Autowired
 	private SmsCodeSender smsCodeSender;
-	
+
 	@Override
 	protected void send(ServletWebRequest request, ValidateCode validateCode) throws Exception {
 		final String mobilePhone = ServletRequestUtils.getRequiredStringParameter(request.getRequest(), DEFAULT_PARAMETER_NAME_MOBILE);
+		log.debug("向{} 发送短信验证码 {}", mobilePhone, validateCode.getCode());
 		smsCodeSender.send(mobilePhone, validateCode.getCode());
 	}
 

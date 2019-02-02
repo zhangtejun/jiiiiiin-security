@@ -28,7 +28,7 @@ public class ValidateCodeSecurityConfig extends SecurityConfigurerAdapter<Defaul
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        // 添加自定义图形验证码过滤器，校验session中的图形验证码
+        // 添加自定义图形/短信验证码过滤器，校验session中的图形验证码
         http.addFilterBefore(validateCodeFilter, AbstractPreAuthenticatedProcessingFilter.class);
     }
 

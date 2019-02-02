@@ -34,7 +34,7 @@ public class FormAuthenticationConfig {
                 // 开启表单登录（指定身份认证的方式）
                 // 下面这样配置就改变了默认的httpBasic认证方式，而提供一个登录页面
                 .formLogin()
-                // 配置自定义登录页面所在的接口，如`/signIn.html`，在需要登录的时候去访问的接口（渲染的页面）
+                // 设置自定义`身份认证`控制器处理接口
                 .loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
                 /**
                  * 配置自定义登录交易请求接口名称（上面的登录页面提交表单之后登录接口名称），默认为`/login`

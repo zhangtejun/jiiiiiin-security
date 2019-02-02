@@ -21,15 +21,12 @@ import static cn.jiiiiiin.security.core.dict.SecurityConstants.DEFAULT_PARAMETER
 @Component
 public class SmsValidateCodeGenerator implements ValidateCodeGenerator {
 
-    final static Logger L = LoggerFactory.getLogger(SmsValidateCodeGenerator.class);
-
     @Autowired
     private SecurityProperties securityProperties;
 
     @Override
     public ValidateCode generate(ServletWebRequest request) {
         final int expireIn = ServletRequestUtils.getIntParameter(request.getRequest(), DEFAULT_PARAMETER_NAME_EXPIRE_IN, securityProperties.getValidate().getSmsCode().getExpireIn());
-        L.debug("短信验证码有效期 {}", expireIn);
         // 生成验证码
         final String code = RandomStringUtils.randomNumeric(Integer.parseInt(securityProperties.getValidate().getSmsCode().getLength()));
         final ValidateCode validateCode = new ValidateCode(code, expireIn);
