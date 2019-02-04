@@ -18,8 +18,8 @@ import org.springframework.core.io.ClassPathResource;
  *
  * @author jiiiiiin
  */
-@Configuration
-@EnableCaching
+//@Configuration
+//@EnableCaching
 //@ConditionalOnProperty(prefix = "jiiiiiin.data", name = "cache", havingValue = "ehcache")
 public class EHCacheConfiguration {
 

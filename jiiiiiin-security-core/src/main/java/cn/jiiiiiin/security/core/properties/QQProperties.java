@@ -3,15 +3,15 @@
  */
 package cn.jiiiiiin.security.core.properties;
 
+import cn.jiiiiiin.security.core.properties.adapter.SocialProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 
 /**
  * QQ登录配置项
  * <p>
- * 继承{@link SocialProperties}之后就可以使用框架提供的两个配置来设置应用id和密码对应qq服务授权提供商的
+ * 继承{@link CustomSocialProperties}之后就可以使用框架提供的两个配置来设置应用id和密码对应qq服务授权提供商的
  * <p>
  * 提供给初始化{@link cn.jiiiiiin.security.core.social.qq.connet.QQConnectionFactory}使用
  *
