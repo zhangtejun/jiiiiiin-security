@@ -11,20 +11,26 @@
 
 # 快速开始
 
-[![Watch the video](https://ws1.sinaimg.cn/large/006tNc79gy1fzasel64onj316w08ewg1.jpg)](https://www.youtube.com/embed/eemHJEvsTog)
-[高清一点的视频下载地址，百度网盘，直接下载到本地会比较清楚，转码之后就比较不清晰](https://pan.baidu.com/s/1ZZmw7idemDWD0-tnmb1GHA)
++ 视频演示
 
-+ [导入数据【sql-mysql.sql】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/db/sql-mysql.sql)
-+ [启动redis，配置查看【application.yml#redis】](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L28)
+[![Watch the video](https://ws2.sinaimg.cn/large/006tNc79gy1fzqotcb0i4j31410u07dl.jpg)](https://www.youtube.com/embed/eemHJEvsTog)
 
-+ 启动后端内管应用
+[下载高清视频](https://pan.baidu.com/s/1ZZmw7idemDWD0-tnmb1GHA)
 
-+ 进入前端内管应用：jiiiiiin-client-manager
-    - 安装项目依赖：`npm i`
-    - 配置服务端uri：
-      
-        `.env.development`文件下：`VUE_APP_SEVER_URL=http://192.168.1.123:9000`
-    - 启动前端内管应用：`npm run serve`
++ 提示步骤：
+
+    + [导入数据脚本](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/db/sql-mysql.sql)
+    
+    + [配置redis](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L28)
+
+    + 启动后端内管应用
+
+    + 启动前端内管应用：jiiiiiin-client-manager
+    
+        - 安装项目依赖：`npm i`
+        
+        - 配置服务端uri：`.env.development`文件下：`VUE_APP_SEVER_URL=http://ip:9000`
+
 
 # 计划
 
@@ -52,7 +58,7 @@
 | Swagger集成 | 100% | [用来构建服务端的RESTFull Api接口](https://swagger.io) |
 | spring-mobile | 100% | [用来进行渠道判断](https://projects.spring.io/spring-mobile/)，使得应用能根据请求的设备响应不同的数据格式 |
 | Gif验证码 | 100% | [EasyCaptcha](https://github.com/whvcse/EasyCaptcha)和[kaptcha](https://github.com/penggle/kaptcha)两种验证码库的支持 |
-| 适配spring-cloud Finchley.SR2 | 90% | 详见[feature/springboot-2](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springboot-2)分支 |
+| 项目适配到spring-cloud Finchley.SR2 | 100% | 详见[feature/springboot-2](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springboot-2)分支 |
 
 # 功能截图
 
