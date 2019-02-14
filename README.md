@@ -34,7 +34,7 @@
     + 关于apollo集成
         - 如果你不需要这一块服务，可以去`ManagerApp.java`注释掉`@EnableApolloConfig`
         - 下载并启动[Apollo服务端](https://github.com/ctripcorp/apollo/wiki/Quick-Start)，注意这里使用的是apollo官方为我们做的一个服务端，如觉得不够用，请自行订制
-        - [apollo目前应用配置]()
+        - [apollo目前应用配置](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L9)
 
         - 关于apollo能给这个项目带来什么：
             + 应用基础属性application.yml/Spring Placeholder/ConfigurationProperties([后期将会把一些自定义安全配置类添加动态配置](https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南#3223-configurationproperties使用方式))的动态配置
@@ -136,11 +136,8 @@
 ### 前端    
 
 + [vue](https://github.com/vuejs/vue)
-
 + [ElemeFE/element](https://github.com/ElemeFE/element)
-
 + [vue-viewplus](https://github.com/Jiiiiiin/vue-viewplus)
-
 + [d2-admin](https://github.com/d2-projects/d2-admin)
 
 <a href="https://github.com/d2-projects/d2-admin" target="_blank"><img src="https://raw.githubusercontent.com/FairyEver/d2-admin/master/doc/image/d2-admin@2x.png" width="200"></a>
@@ -148,5 +145,6 @@
 # 参考
 
 + [Spring Security开发安全的REST服务](https://coding.imooc.com/class/134.html)
++ [GitHub 9K Star！Apollo作者手把手教你微服务配置中心之道](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin)
 
 
