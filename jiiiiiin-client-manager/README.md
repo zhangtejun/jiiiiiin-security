@@ -35,6 +35,13 @@
 └─ vue.config.js 配置文件
 ```
 
+# 部署
+
++ docker
+
+`docker run -p 8080:80 -d -v $PWD/dist:/usr/share/nginx/html hub.c.163.com/library/nginx
+7914b03a5428c4e2e74400c8cd1279c1c2ac287cb3e1d92b4471cb5db4ec4531`
+
 # 开发
 
 ## [设置路由](https://d2-projects.github.io/d2-admin-doc/zh/learn-guide/getting-started.html#%E8%AE%BE%E7%BD%AE%E8%B7%AF%E7%94%B1)

@@ -35,3 +35,9 @@ rebel.xml
 .vagrant/
 
 jiiiiiin-validation/
+
+# 针对vscode java
+*.project
+*.classpath
+*.factorypath
+*.settings/
