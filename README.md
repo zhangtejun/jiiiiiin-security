@@ -31,6 +31,15 @@
         
         - 配置服务端uri：`.env.development`文件下：`VUE_APP_SEVER_URL=http://ip:9000`
 
+    + 关于apollo集成
+        - 如果你不需要这一块服务，可以去`ManagerApp.java`注释掉`@EnableApolloConfig`
+        - 下载并启动[Apollo服务端](https://github.com/ctripcorp/apollo/wiki/Quick-Start)，注意这里使用的是apollo官方为我们做的一个服务端，如觉得不够用，请自行订制
+        - [apollo目前应用配置]()
+
+        - 关于apollo能给这个项目带来什么：
+            + 应用基础属性application.yml/Spring Placeholder/ConfigurationProperties([后期将会把一些自定义安全配置类添加动态配置](https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南#3223-configurationproperties使用方式))的动态配置
+            + [其他](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin)
+
 
 # 计划
 
@@ -47,7 +56,7 @@
 
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| 集成Apollo | 0% | 集成[ctripcorp/apollo](https://github.com/ctripcorp/apollo)，配置修改实时生效（热发布） |
+| 集成Apollo | 100% | 集成[ctripcorp/apollo](https://github.com/ctripcorp/apollo)，配置修改实时生效（热发布） |
 | 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
 | RBAC后端权限控制 | 100% | [基于Spring Security的后端RBAC权限控制](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master/jiiiiiin-security-authorize) |
 | RBAC前端权限控制 | 100% | [1.基于vue-viewplus，实现了一个自定义模块](http://jiiiiiin.cn/vue-viewplus/#/global_api?id=mixin-) <br> [2.实现前端页面可访问性控制，通过路由拦截，判断用户待访问页面是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L250) <br> [3.实现可见页面的局部UI组件的**可使用性或可见性**控制，基于自定义`v-access`指令，对比声明的接口或资源别是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L124)|
@@ -70,6 +79,7 @@
 | ![](https://ws4.sinaimg.cn/large/006tNc79gy1fzpv0weyyhj31c00u0mz6.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg) |
 | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg) | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg) |
 | ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm4vm6f3pj31c00u0q5t.jpg) |
+| ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g063daokoij31cy0u0jx2.jpg) | |
 
 
 # 表结构和权限说明
@@ -117,14 +127,11 @@
 ### 后台
 
 + [springboot](https://github.com/spring-projects/spring-boot)
-
 + [spring-security](https://github.com/spring-projects/spring-security)
-
 + [spring-session](https://github.com/spring-projects/spring-session/projects)
-
 + [mybatis-plus](https://github.com/baomidou/mybatis-plus)
-
 + [rzwitserloot/lombok](https://github.com/rzwitserloot/lombok)
++ [ctripcorp/apollo](https://github.com/ctripcorp/apollo)
 
 ### 前端    
 

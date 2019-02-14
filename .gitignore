@@ -41,3 +41,4 @@ jiiiiiin-validation/
 *.classpath
 *.factorypath
 *.settings/
+.vscode/
