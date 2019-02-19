@@ -49,7 +49,7 @@
 
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| 集成Eureka | 0% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
+| 集成Eureka | 90% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
 
 + 业务
 
