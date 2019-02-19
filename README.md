@@ -50,6 +50,7 @@
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
 | 集成Eureka | 90% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
+| 集成Zuul | 90% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
 
 + 业务
 
