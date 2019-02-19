@@ -1,5 +1,6 @@
 package cn.jiiiiiin;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -23,12 +24,21 @@ import java.util.Date;
 @EnableApolloConfig
 @SpringBootApplication
 @EnableDiscoveryClient
+@RestController
 public class ManagerApp {
+
+    @Value("${server.port}")
+    private int port;
 
     public static void main(String[] args) {
         val app = new SpringApplication(ManagerApp.class);
         app.setBannerMode(Banner.Mode.OFF);
         app.run(args);
+    }
+
+    @GetMapping("/testZuul")
+    public R<String> testZuul() {
+        return R.ok(String.format("你好Zuul网关 %s", port));
     }
 
 }

@@ -1,0 +1,40 @@
+server:
+  port: 8861
+spring:
+  application:
+    name: jiiiiiin-gateway
+eureka:
+  client:
+    service-url:
+#    完成eureka的注册
+#    测试8000作为单机版的eureka是无法注册的
+#      defaultZone: http://server1:8000/eureka/
+      defaultZone: http://127.0.0.1:8761/eureka/
+    # TODO
+    register-with-eureka: false
+
+# 参考：http://blog.didispace.com/springcloud5/
+zuul:
+  # 上下文
+  prefix: /api
+  # 配置路由信息
+  routes:
+    # 微服务的自定义名称
+    jiiiiiin-server-manager:
+      # 当前微服务的匹配前缀，对应微服务的`context-path`，进行url匹配
+      path: /mng/**
+      # 微服务对应`application.name`
+      # 去eureka server获取对应的注册信息发起负载均衡器调用
+#      serviceId: jiiiiiin-server-manager
+      # 直接通过地址调用
+      url: http://localhost:9090
+      # 不过滤上下文，这里指的是对应微服务的对应微服务的`context-path`，如果微服务本身配置了`context-path`这里需要设置为false
+      strip-prefix: false
+    jiiiiiin-product:
+      path: /product/**
+      serviceId: jiiiiiin-product
+      strip-prefix: false
+    jiiiiiin-order:
+      path: /order/**
+      serviceId: jiiiiiin-order
+      strip-prefix: false

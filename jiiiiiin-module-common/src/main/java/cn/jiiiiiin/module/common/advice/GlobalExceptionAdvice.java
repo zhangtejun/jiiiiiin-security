@@ -53,7 +53,7 @@ public class GlobalExceptionAdvice {
     }
 
     private R<Exception> _commonHandler(Exception ex) {
-        log.error("全局异常处理捕获到的错误 {}", ex);
+        log.error("全局异常处理捕获到的错误", ex);
         R<Exception> response = R.failed(ex.getMessage());
         response.setData(ex);
         return response;

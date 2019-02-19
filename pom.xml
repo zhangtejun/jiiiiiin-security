@@ -18,6 +18,7 @@
         <module>jiiiiiin-server-manager</module>
         <module>jiiiiiin-eureka-server</module>
         <module>jiiiiiin-service</module>
+        <module>jiiiiiin-gateway</module>
     </modules>
     <packaging>pom</packaging>
 

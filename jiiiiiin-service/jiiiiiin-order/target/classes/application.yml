@@ -1,3 +1,6 @@
+server:
+  context-path: /order
+
 # 单节点配置
 spring:
   profiles:

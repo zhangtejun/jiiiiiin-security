@@ -21,14 +21,17 @@ eureka:
     service-url:
       # 默认地址
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    # 单机配置不等待同步
+    wait-time-in-ms-when-sync-empty: 0
+    # 单机不考虑自保护
+    enable-self-preservation: false
 
 ---
 # 多节点配置
 
 spring:
-  application:
-    name: ad-eureka
-  profiles: server1
+  profiles: node1
 server:
   port: 8000
 eureka:
@@ -42,9 +45,7 @@ eureka:
 
 ---
 spring:
-  application:
-    name: ad-eureka
-  profiles: server2
+  profiles: node2
 server:
   port: 8001
 eureka:
@@ -57,9 +58,7 @@ eureka:
 
 ---
 spring:
-  application:
-    name: ad-eureka
-  profiles: server3
+  profiles: node3
 server:
   port: 8002
 eureka:
