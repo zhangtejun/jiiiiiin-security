@@ -43,6 +43,14 @@
 
 # 计划
 
++ SpringCloud
+
+**近期维护：新增[feature/springcloud](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springcloud)分支，将会在该分支尝试spring-cloud探索**
+
+| 功能 | 完成状态 | 简介 |
+| ------ | ------ | ------ |
+| 集成Eureka | 0% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
+
 + 业务
 
 | 模块名称 | 完成状态 | 简介 |
