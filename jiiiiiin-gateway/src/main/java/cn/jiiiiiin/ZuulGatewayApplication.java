@@ -1,5 +1,7 @@
 package cn.jiiiiiin;
 
+import lombok.val;
+import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
@@ -13,7 +15,8 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 public class ZuulGatewayApplication {
 
     public static void main(String[] args) {
-
-        SpringApplication.run(ZuulGatewayApplication.class, args);
+        val app = new SpringApplication(ZuulGatewayApplication.class);
+        app.setBannerMode(Banner.Mode.OFF);
+        app.run(args);
     }
 }
