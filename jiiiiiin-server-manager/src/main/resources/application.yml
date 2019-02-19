@@ -30,7 +30,20 @@ server:
   port: 9090
   context-path: /mng
 
+eureka:
+  instance:
+    hostname: localhost
+    # id: `本机IP地址:应用程序名称:应用程序服务端口`，作为实例标识，以便通过端口启动多个实例
+#    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+  client:
+    service-url:
+      # 指定服务注册中心的地址
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+
 spring:
+  application:
+    # 指定发布的微服务名（以后调用时，只需该名称即可访问该服务）
+    name: jiiiiiin-server-manager
   profiles:
     active: dev
   jackson:

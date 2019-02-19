@@ -1,6 +1,6 @@
 package cn.jiiiiiin;
 
-import io.jsonwebtoken.lang.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class DataSourceTests {
     public void testDataSource() throws Exception {
         // 获取配置的数据源
         DataSource dataSource = applicationContext.getBean(DataSource.class);
-        Assert.notNull(dataSource);
+        Assert.assertNotNull(dataSource);
         // 查看配置数据源信息
         System.out.println(dataSource.getClass().getName());
     }

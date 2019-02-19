@@ -49,7 +49,7 @@
 
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| 集成Eureka | 0% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
+| 集成Eureka | 90% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
 
 + 业务
 
@@ -87,7 +87,7 @@
 | ![](https://ws4.sinaimg.cn/large/006tNc79gy1fzpv0weyyhj31c00u0mz6.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg) |
 | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg) | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg) |
 | ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm4vm6f3pj31c00u0q5t.jpg) |
-| ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g063daokoij31cy0u0jx2.jpg) | |
+| ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g063daokoij31cy0u0jx2.jpg) | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g0bljv8q3ej31d30u0gol.jpg) |
 
 
 # 表结构和权限说明

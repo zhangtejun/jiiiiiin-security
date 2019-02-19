@@ -1,0 +1,29 @@
+# 单节点配置
+spring:
+  profiles:
+    active: node1
+  application:
+    name: jiiiiiin-product
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      # 指定服务注册中心的地址
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+
+---
+# 多节点配置
+
+spring:
+  profiles: node1
+server:
+  port: 7000
+
+---
+
+spring:
+  profiles: node2
+server:
+  port: 7001
+

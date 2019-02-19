@@ -16,6 +16,8 @@
         <module>jiiiiiin-module-common</module>
         <module>jiiiiiin-module-mngauth</module>
         <module>jiiiiiin-server-manager</module>
+        <module>jiiiiiin-eureka-server</module>
+        <module>jiiiiiin-service</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -23,10 +25,17 @@
 
     <url>https://github.com/Jiiiiiin/jiiiiiin-security</url>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.15.RELEASE</version>
+    </parent>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <spring-cloud.version>Dalston.SR5</spring-cloud.version>
         <jiiiiiin-security-version>1.0-SNAPSHOT</jiiiiiin-security-version>
     </properties>
 
@@ -59,7 +68,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Dalston.SR5</version>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -106,11 +115,11 @@
                 <version>${jiiiiiin-security-version}</version>
             </dependency>
 
-            <!--<dependency>-->
-                <!--<groupId>cn.jiiiiiin.security</groupId>-->
-                <!--<artifactId>jiiiiiin-validation</artifactId>-->
-                <!--<version>${jiiiiiin-security-version}</version>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>cn.jiiiiiin.security</groupId>
+                <artifactId>jiiiiiin-eureka-server</artifactId>
+                <version>${jiiiiiin-security-version}</version>
+            </dependency>
 
 
         </dependencies>
