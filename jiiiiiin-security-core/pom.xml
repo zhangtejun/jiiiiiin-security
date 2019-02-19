@@ -27,12 +27,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
 
         <!--https://docs.spring.io/spring-boot/docs/1.5.15.RELEASE/reference/html/configuration-metadata.html#configuration-metadata-annotation-processor-->
         <dependency>
@@ -101,12 +95,6 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <!-- kaptcha验证码 -->

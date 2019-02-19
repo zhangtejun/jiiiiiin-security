@@ -13,7 +13,6 @@ import cn.jiiiiiin.module.mngauth.component.MngUserDetails;
 import cn.jiiiiiin.module.mngauth.service.IAdminService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,21 +53,21 @@ public class AdminController extends BaseController {
     @ApiOperation(value = "用户记录分页查询", httpMethod = "GET")
     @JsonView(View.SimpleView.class)
     @GetMapping("{channel:[0]}/{current:\\d+}/{size:\\d+}")
-    public R<IPage<AdminDto>> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
-        return R.ok(adminService.pageAdminDto(new Page<>(current, size), channel, null));
+    public IPage<AdminDto> list(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size) {
+        return adminService.pageAdminDto(new Page<>(current, size), channel, null);
     }
 
     @ApiOperation(value = "用户【AdminDto】记录分页检索", httpMethod = "GET")
     @JsonView(View.SimpleView.class)
     @PostMapping("search/dto/{channel:[0]}/{current:\\d+}/{size:\\d+}")
-    public R<IPage<AdminDto>> searchAdminDto(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody AdminDto admin) {
-        return R.ok(adminService.pageAdminDto(new Page<AdminDto>(current, size), channel, admin));
+    public IPage<AdminDto> searchAdminDto(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody AdminDto admin) {
+        return adminService.pageAdminDto(new Page<AdminDto>(current, size), channel, admin);
     }
 
     @ApiOperation(value = "用户记录分页检索", httpMethod = "GET")
     @JsonView(View.SimpleView.class)
     @PostMapping("search/{channel:[0]}/{current:\\d+}/{size:\\d+}")
-    public R<IPage<Admin>> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Admin admin) {
+    public IPage<Admin> search(@PathVariable ChannelEnum channel, @PathVariable Long current, @PathVariable Long size, @RequestBody Admin admin) {
         val qw = new QueryWrapper<Admin>()
                 .eq(Admin.CHANNEL, channel);
         if (StringUtils.isNotEmpty(admin.getUsername())) {
@@ -80,7 +79,7 @@ public class AdminController extends BaseController {
         if (StringUtils.isNotEmpty(admin.getEmail())) {
             qw.like(Admin.EMAIL, admin.getEmail());
         }
-        return R.ok(adminService.page(new Page<Admin>(current, size), qw));
+        return adminService.page(new Page<Admin>(current, size), qw);
     }
 
 
@@ -90,23 +89,23 @@ public class AdminController extends BaseController {
     @ApiOperation(value = "登录用户自身记录查询", httpMethod = "GET")
     @JsonView(View.DetailView.class)
     @GetMapping("/me")
-    public R<AdminDto> me(@AuthenticationPrincipal UserDetails user) {
-        return success((AdminDto) new AdminDto().setUsername(user.getUsername()));
+    public AdminDto me(@AuthenticationPrincipal UserDetails user) {
+        return (AdminDto) new AdminDto().setUsername(user.getUsername());
     }
 
     @ApiOperation(value = "用户记录查询", httpMethod = "GET")
     @GetMapping("{id:\\d+}")
     @JsonView(View.DetailView.class)
-    public R<AdminDto> getAdminAndRelationRecords(@PathVariable Long id) {
-        return success(adminService.getAdminAndRelationRecords(id));
+    public AdminDto getAdminAndRelationRecords(@PathVariable Long id) {
+        return adminService.getAdminAndRelationRecords(id);
     }
 
     @ApiOperation(value = "新增用户", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "POST")
     @PostMapping
     @JsonView(View.DetailView.class)
-    public R<AdminDto> create(@RequestBody @Validated({Groups.Create.class, Groups.Security.class, Default.class}) AdminDto admin) {
+    public AdminDto create(@RequestBody @Validated({Groups.Create.class, Groups.Security.class, Default.class}) AdminDto admin) {
         if (adminService.saveAdminAndRelationRecords(admin)) {
-            return success(admin);
+            return admin;
         } else {
             throw new BusinessErrException("添加用户失败");
         }
@@ -115,9 +114,9 @@ public class AdminController extends BaseController {
     @ApiOperation(value = "更新用户信息", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "PUT")
     @PutMapping
     @JsonView(View.DetailView.class)
-    public R<AdminDto> update(@RequestBody @Validated({BaseEntity.IDGroup.class, Groups.Create.class, Default.class}) AdminDto admin) {
+    public AdminDto update(@RequestBody @Validated({BaseEntity.IDGroup.class, Groups.Create.class, Default.class}) AdminDto admin) {
         if (adminService.updateAdminAndRelationRecords(admin)) {
-            return success(admin);
+            return admin;
         } else {
             throw new BusinessErrException("修改用户记录失败");
         }
@@ -126,18 +125,18 @@ public class AdminController extends BaseController {
     @ApiOperation(value = "更新用户密码", notes = "只能在用户拥有系统管理员角色权限的状态下使用该接口", httpMethod = "PUT")
     @PutMapping("pwd")
     @JsonView(View.SecurityView.class)
-    public R<AdminDto> updatePwd(@RequestBody @Validated({BaseEntity.IDGroup.class, Groups.Security.class}) AdminDto admin, @AuthenticationPrincipal UserDetails user) {
+    public AdminDto updatePwd(@RequestBody @Validated({BaseEntity.IDGroup.class, Groups.Security.class}) AdminDto admin, @AuthenticationPrincipal UserDetails user) {
         if (user.getAuthorities().stream().anyMatch(p -> p.equals(adminSimpleGrantedAuthority))) {
             adminService.updatePwd(admin);
         }
-        return success(admin);
+        return admin;
     }
 
     @ApiOperation(value = "批量删除用户记录", notes = "根据路径参数解析待删除的用户记录id集合，登录用户自身不能删除自己的记录", httpMethod = "DELETE")
     @DeleteMapping("dels/{ids:^[\\d,]+$}")
-    public R<Boolean> dels(@PathVariable String ids) {
+    public void dels(@PathVariable String ids) {
         _checkHasSelf(ids.split(","));
-        return success(adminService.removeAdminsAndRelationRecords(ids));
+        adminService.removeAdminsAndRelationRecords(ids);
     }
 
     /**
@@ -154,9 +153,9 @@ public class AdminController extends BaseController {
 
     @ApiOperation(value = "删除用户记录", notes = "根据路径参数用户记录id删除对应用户，登录用户自身不能删除自己的记录", httpMethod = "DELETE")
     @DeleteMapping("{id:\\d}")
-    public R<Boolean> del(@PathVariable Long id) {
+    public void del(@PathVariable Long id) {
         _checkHasSelf(new String[]{String.valueOf(id)});
-        return success(adminService.removeAdminAndRelationRecord(id));
+        adminService.removeAdminAndRelationRecord(id);
     }
 
 }
