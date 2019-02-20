@@ -9,7 +9,7 @@
 
 + 以最少的表结构字段完成一个基础应用，以便在以此完成实际项目时有更多的扩充自由
 
-> **如果你仅仅需要一个简单的内管系统，请切换到[master](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master)分支，其仅仅是一个spring-boot前后端分离基础应用**
+> **如果你仅仅需要一个简单的内管系统，请切换到[master](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master)分支，其仅仅是一个spring-boot前后端分离基础应用，当前分支，我是用来实践spring-cloud微服务框架的，期望将其做一个轻量级微服务治理实践项目**
 
 # 快速开始
 
