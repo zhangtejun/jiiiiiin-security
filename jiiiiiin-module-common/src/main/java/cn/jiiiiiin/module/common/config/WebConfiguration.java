@@ -22,11 +22,11 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
      *
      * @param converters
      */
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        super.configureMessageConverters(converters);
-        converters.add(0, new MappingJackson2HttpMessageConverter());
-//        converters.clear();
-//        converters.add(new MappingJackson2HttpMessageConverter());
-    }
+//    @Override
+//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        super.configureMessageConverters(converters);
+//        converters.add(0, new MappingJackson2HttpMessageConverter());
+////        converters.clear();
+////        converters.add(new MappingJackson2HttpMessageConverter());
+//    }
 }

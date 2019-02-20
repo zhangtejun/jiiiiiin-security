@@ -1,0 +1,33 @@
+server:
+  context-path: /order
+
+# 单节点配置
+spring:
+  profiles:
+    active: node1
+  application:
+    name: jiiiiiin-order
+eureka:
+  client:
+    service-url:
+      # 指定服务注册中心的地址
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+---
+# 多节点配置
+# 运行时本地可以通过指定：`-Dspring.profiles.active=node2`方式启动多个服务节点
+
+spring:
+  profiles: node1
+server:
+  port: 7100
+
+---
+
+spring:
+  profiles: node2
+server:
+  port: 7101
+

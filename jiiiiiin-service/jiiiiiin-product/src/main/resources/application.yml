@@ -9,14 +9,11 @@ spring:
   application:
     name: jiiiiiin-product
 eureka:
-  instance:
-    hostname: localhost
-    # TODO 不生效
 #    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
   client:
     service-url:
       # 指定服务注册中心的地址
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
     # 服务提供方需要注册到eureka-server
     # 如果是需要被zuul调用也需要注册
     register-with-eureka: true

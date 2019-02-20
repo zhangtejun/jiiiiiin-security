@@ -16,6 +16,7 @@ CREATE USER 'vplus'@'localhost' IDENTIFIED BY '1qaz@WSX';
 GRANT ALL PRIVILEGES ON vplusdb.* TO 'vplus'@'localhost';
 
 USE `vplusdb`;
+
 # ************************************************************
 # Sequel Pro SQL dump
 # Version 4541
@@ -25,7 +26,7 @@ USE `vplusdb`;
 #
 # Host: 127.0.0.1 (MySQL 5.7.24)
 # Database: vplusdb
-# Generation Time: 2019-01-28 03:51:11 +0000
+# Generation Time: 2019-02-20 15:17:07 +0000
 # ************************************************************
 
 
@@ -61,7 +62,7 @@ LOCK TABLES `mng_admin` WRITE;
 INSERT INTO `mng_admin` (`id`, `create_time`, `username`, `password`, `phone`, `email`, `channel`)
 VALUES
 	(1,'2018-11-10 23:12:02','admin','$2a$10$XQi3SDI8aU8VL8PQkkyddOYk62OmDBtLwD9f9EEKf0AZBI0Y7pwPq','15399999999','15399999999@163.com',0),
-	(1070971226366672898,'2018-12-07 17:20:13','test','$2a$10$5BFfI0/kHW86vyqOPobbQuhKVISsjyz5QdvmEgO.hAnuWFfvcUZLe','177777777778','177777777777@qq.com',0),
+	(1070971226366672898,'2018-12-07 17:20:13','test','$2a$10$xuhhlEi5fE5z5gXlRLlM7umUwHYYQYKiN0ieVBm5ndczYH2MT0NCm','177777777778','177777777777@qq.com',0),
 	(1089449434464444417,'2019-01-27 17:06:01','xiaoma','$2a$10$zfp55JN8/lWwL7.BrRljieuhnmszvQhIurOF4pWqpothFDDEP5fde','18888888888','',0);
 
 /*!40000 ALTER TABLE `mng_admin` ENABLE KEYS */;
@@ -179,7 +180,9 @@ VALUES
 	(1072485142741721090,1071741995531116546,'0,1061818316563202049,1071741995531116546','检索接口','',4,3,0,1,0,'',NULL),
 	(1075958459221995521,1061818318517747714,'0,1061818316563202049,1061818318517747714','查看关联接口记录','',5,3,0,1,0,'',''),
 	(1089714060351557634,0,'0','开发运维','american-sign-language-interpreting',3,1,1,1,0,'/develop','DEVELOP'),
-	(1089714800168062977,1089714060351557634,'0,1089714060351557634','接口文档','code',1,2,1,1,0,'/develop/swagger-ui','SWAGGER_API');
+	(1089714800168062977,1089714060351557634,'0,1089714060351557634','接口文档','code',1,2,1,1,0,'/develop/swagger-ui','SWAGGER_API'),
+	(1098236573670981634,1089714060351557634,'0,1089714060351557634','服务注册中心','anchor',2,2,1,1,0,'/develop/eureka','EUREKA'),
+	(1098237860001103873,1089714060351557634,'0,1089714060351557634','配置中心','cogs',3,2,1,1,0,'/develop/apollo','APOLLO');
 
 /*!40000 ALTER TABLE `mng_resource` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -342,7 +345,9 @@ VALUES
 	(894,1061277221831905282,1061818316563202049),
 	(895,1089512138789150721,1062518178556526593),
 	(896,1061277220292595713,1089714060351557634),
-	(897,1061277220292595713,1089714800168062977);
+	(897,1061277220292595713,1089714800168062977),
+	(898,1061277220292595713,1098236573670981634),
+	(899,1061277220292595713,1098237860001103873);
 
 /*!40000 ALTER TABLE `mng_role_resource` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -361,6 +366,15 @@ CREATE TABLE `persistent_logins` (
   PRIMARY KEY (`series`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `persistent_logins` WRITE;
+/*!40000 ALTER TABLE `persistent_logins` DISABLE KEYS */;
+
+INSERT INTO `persistent_logins` (`username`, `series`, `token`, `last_used`)
+VALUES
+	('admin','E4k3XZr9uNnODY35aOHIHw==','lZ4db8aI/jZD/rR3oXbBxg==','2019-02-20 23:08:23');
+
+/*!40000 ALTER TABLE `persistent_logins` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table springsocial_UserConnection
