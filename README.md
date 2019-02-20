@@ -34,7 +34,7 @@
         - 配置服务端uri：`.env.development`文件下：`VUE_APP_SEVER_URL=http://ip:9000`
 
     + 关于apollo集成
-        - 如果你不需要这一块服务，可以去`ManagerApp.java`注释掉`@EnableApolloConfig`
+        > 如果你不需要这一块服务，可以去`ManagerApp.java`注释掉`@EnableApolloConfig`
         - 下载并启动[Apollo服务端](https://github.com/ctripcorp/apollo/wiki/Quick-Start)，注意这里使用的是apollo官方为我们做的一个服务端，如觉得不够用，请自行订制
         - [apollo目前应用配置](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L9)
 

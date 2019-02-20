@@ -19,6 +19,7 @@
         <module>jiiiiiin-eureka-server</module>
         <module>jiiiiiin-service</module>
         <module>jiiiiiin-gateway</module>
+        <module>jiiiiiin-edge-service</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -37,11 +38,19 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-cloud.version>Dalston.SR5</spring-cloud.version>
+        <apollo-client.version>1.1.0</apollo-client.version>
         <jiiiiiin-security-version>1.0-SNAPSHOT</jiiiiiin-security-version>
     </properties>
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.ctrip.framework.apollo</groupId>
+            <artifactId>apollo-client</artifactId>
+            <version>${apollo-client.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

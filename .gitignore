@@ -43,3 +43,6 @@ jiiiiiin-validation/
 *.settings/
 .vscode/
 **/target/
+
+
+/apollo-cache-dir/

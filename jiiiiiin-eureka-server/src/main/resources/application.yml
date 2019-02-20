@@ -1,70 +1,20 @@
-# 单节点配置
-spring:
-  application:
-    name: discovery-server
-# 建议做好规划
-server:
-  # 这里单机为什么要指定为这个端口：[SpringCloud系列第02节之注册中心Eureka](https://jadyer.cn/2017/01/16/springcloud-eureka/)
-  port: 8761
-
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    # 设置是否从注册中心获取注册信息（缺省true）
-    # 因为这是一个单点的EurekaServer，不需要同步其它EurekaServer节点的数据，故设为false
-    fetch-registry: false
-    # 设置是否将自己作为客户端注册到注册中心（缺省true）
-    # 这里为不需要（查看@EnableEurekaServer注解的源码，会发现它间接用到了@EnableDiscoveryClient）
-    register-with-eureka: false
-    # server的服务地址
-    service-url:
-      # 默认地址
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-  server:
-    # 单机配置不等待同步
-    wait-time-in-ms-when-sync-empty: 0
-    # 单机不考虑自保护
-    enable-self-preservation: false
-
----
-# 多节点配置
-
-spring:
-  profiles: node1
-server:
-  port: 8000
-eureka:
-  instance:
-    hostname: server1
-    # 不适用ip地址进行注册，单机的话模拟多节点会注册失败
-    prefer-ip-address: false
-  client:
-    service-url:
-      defaultZone: http://server2:8001/eureka/,http://server3:8002/eureka/
-
----
-spring:
-  profiles: node2
-server:
-  port: 8001
-eureka:
-  instance:
-    hostname: server2
-    prefer-ip-address: false
-  client:
-    service-url:
-      defaultZone: http://server1:8000/eureka/,http://server3:8002/eureka/
-
----
-spring:
-  profiles: node3
-server:
-  port: 8002
-eureka:
-  instance:
-    hostname: server3
-    prefer-ip-address: false
-  client:
-    service-url:
-      defaultZone: http://server1:8000/eureka/,http://server2:8001/eureka/
+# Apollo客户端依赖于AppId https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南
+app:
+  # 需要手动创建，或者直接用apollo默认给出的应用id
+  id: jiiiiiin-eureka-server
+apollo:
+  # Apollo Meta Server https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南#122-apollo-meta-server
+  # meta server和config service是部署在同一个JVM进程，所以meta server的地址就是config service的地址。
+  meta: http://localhost:8080
+  # 本地缓存路径
+  cacheDir: /Users/jiiiiiin/Documents/IdeaProjects/jiiiiiin-security/apollo-cache-dir
+  # Cluster（集群）
+  cluster: default
+  bootstrap:
+    # 注入默认application namespace的配置示例
+    enabled: true
+    # 把日志相关的配置（如logging.level.root=info或logback-spring.xml中的参数）也放在Apollo管理
+#    eagerLoad:
+#      enabled: true
+  # Spring Placeholder的使用
+  autoUpdateInjectedSpringProperties: true
