@@ -56,7 +56,7 @@
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
 | 实践Eureka | 50% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
-| 实践Zuul | 50% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
+| 实践Zuul | 60% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
 | 实践Feign/RestTemplate | 90% | 实践服务间的调用 |
 | 实践HYSTRIX | 0% | 实践[Hystrix WIKI](https://youdang.github.io/2016/01/30/translate-hystrix-wiki-homepage/) |
 | 实践OAuth2授权认证中心 | 0% |  |
