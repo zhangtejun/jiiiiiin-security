@@ -1,23 +1,21 @@
-# Apollo客户端依赖于AppId https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南
-app:
-  # 需要手动创建，或者直接用apollo默认给出的应用id
-  id: jiiiiiin-gateway
-apollo:
-  # Apollo Meta Server https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南#122-apollo-meta-server
-  # meta server和config service是部署在同一个JVM进程，所以meta server的地址就是config service的地址。
-  meta: http://localhost:8080
-  # 本地缓存路径
-  cacheDir: /Users/jiiiiiin/Documents/IdeaProjects/jiiiiiin-security/apollo-cache-dir
-  # Cluster（集群）
-  cluster: default
-  bootstrap:
-    # 注入默认application namespace的配置示例
-    enabled: true
-    # 把日志相关的配置（如logging.level.root=info或logback-spring.xml中的参数）也放在Apollo管理
-    eagerLoad:
-      enabled: true
-  # Spring Placeholder的使用
-  autoUpdateInjectedSpringProperties: true
+server:
+  port: 8861
+spring:
+  application:
+    name: jiiiiiin-gateway
+eureka:
+  client:
+    service-url:
+#    完成eureka的注册
+#    测试8000作为单机版的eureka是无法注册的
+#      defaultZone: http://server1:8000/eureka/
+      defaultZone: http://127.0.0.1:8761/eureka/
+    # TODO
+    register-with-eureka: false
+
+ribbon:
+  ConnectTimeout: 10000
+  ReadTimeout: 30000
 
 # 参考：http://blog.didispace.com/springcloud5/
 zuul:
@@ -50,6 +48,10 @@ zuul:
   ignored-patterns: /**/product/**
 #  ignored-patterns:
 #    - /product/**
+# 测试打开，方便查看zuul提供的api
+management:
+  security:
+    enabled: false
 
 
 logging:

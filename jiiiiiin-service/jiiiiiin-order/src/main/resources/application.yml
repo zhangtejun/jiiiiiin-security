@@ -14,7 +14,7 @@ apollo:
     # 注入默认application namespace的配置示例
     enabled: true
     # 把日志相关的配置（如logging.level.root=info或logback-spring.xml中的参数）也放在Apollo管理
-#    eagerLoad:
-#      enabled: true
+    eagerLoad:
+      enabled: true
   # Spring Placeholder的使用
   autoUpdateInjectedSpringProperties: true
