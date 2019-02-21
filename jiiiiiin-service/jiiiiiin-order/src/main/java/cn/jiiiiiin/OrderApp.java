@@ -18,7 +18,7 @@ import java.util.Date;
  */
 @RestController
 @EnableApolloConfig
-//@EnableFeignClients
+@EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
 public class OrderApp {

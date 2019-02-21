@@ -8,9 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
  *  1.name标识代理的服务名
  * @author jiiiiiin
  */
-//@FeignClient(name="jiiiiiin-product")
-public interface RestTemplateTestClient {
+@FeignClient(name="jiiiiiin-product")
+public interface FeignClientTest {
 
-    @GetMapping("/msg")
+    /**
+     * 注意如果被调用的服务设置了上下文，那么接口必须手动添加上下文
+     * @return
+     */
+    @GetMapping("/product/msg")
     String getMsg();
 }

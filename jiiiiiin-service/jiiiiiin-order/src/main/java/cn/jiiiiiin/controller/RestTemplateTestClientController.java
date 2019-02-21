@@ -1,6 +1,6 @@
 package cn.jiiiiiin.controller;
 
-import cn.jiiiiiin.client.RestTemplateTestClient;
+import cn.jiiiiiin.client.FeignClientTest;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +29,13 @@ public class RestTemplateTestClientController {
 
     private final RestTemplate restTemplate;
 
-//    private final RestTemplateTestClient restTemplateTestClient;
+    private final FeignClientTest feignClientTest;
 
     @Autowired
-    public RestTemplateTestClientController(LoadBalancerClient loadBalancerClient, RestTemplate restTemplate) {
+    public RestTemplateTestClientController(LoadBalancerClient loadBalancerClient, RestTemplate restTemplate, FeignClientTest feignClientTest) {
         this.loadBalancerClient = loadBalancerClient;
         this.restTemplate = restTemplate;
+        this.feignClientTest = feignClientTest;
     }
 
     @GetMapping("/msg")
@@ -51,10 +52,10 @@ public class RestTemplateTestClientController {
 //        val product = templ.getForObject(url, String.class);
 
         // 3.第三种方式
-        val product = restTemplate.getForObject(String.format("http://%s/product/msg", PRODUCT_SERVICE_ID), String.class);
+//        val product = restTemplate.getForObject(String.format("http://%s/product/msg", PRODUCT_SERVICE_ID), String.class);
 
         // 4.第四种方式
-//        val product = restTemplateTestClient.getMsg();
+        val product = feignClientTest.getMsg();
         log.debug("getOrder:: product {}", product);
         // print -> `订单7100::获取到商品7000`
         return "订单" + port + " :: " + product;

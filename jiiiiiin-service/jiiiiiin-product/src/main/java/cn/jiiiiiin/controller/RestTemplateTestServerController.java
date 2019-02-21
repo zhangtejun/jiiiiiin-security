@@ -16,7 +16,7 @@ public class RestTemplateTestServerController {
     private int port;
 
     @GetMapping("/msg")
-    public String getProduct() {
+    public String getMsg() {
         return "商品" + port;
     }
 }
