@@ -9,7 +9,7 @@
 
 + 以最少的表结构字段完成一个基础应用，以便在以此完成实际项目时有更多的扩充自由
 
-> **如果你仅仅需要一个简单的内管系统，请切换到[master](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master)分支，其仅仅是一个spring-boot前后端分离基础应用，当前分支，我是用来实践spring-cloud微服务框架的，期望将其做一个轻量级微服务治理实践项目**
+> **如果你仅仅需要一个简单的内管系统，请切换到[master](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master)分支，其仅仅是一个spring-boot前后端分离基础应用，当前分支，是用来学习和实践spring-cloud微服务框架所开**
 
 # 快速开始
 
@@ -49,6 +49,10 @@
 
 **近期维护：新增[feature/springcloud](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springcloud)分支，将会在该分支尝试spring-cloud探索**
 
+![](https://ws3.sinaimg.cn/large/006tKfTcgy1g0dsh2fztyj318q0lkaek.jpg)
+
+预期实践架构(来自[微服务架构实战160讲](https://time.geekbang.org/course/intro/84))
+
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
 | 集成Eureka | 90% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
@@ -80,6 +84,7 @@
 | spring-mobile | 100% | [用来进行渠道判断](https://projects.spring.io/spring-mobile/)，使得应用能根据请求的设备响应不同的数据格式 |
 | Gif验证码 | 100% | [EasyCaptcha](https://github.com/whvcse/EasyCaptcha)和[kaptcha](https://github.com/penggle/kaptcha)两种验证码库的支持 |
 | 项目适配到spring-cloud Finchley.SR2 | 100% | 详见[feature/springboot-2](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springboot-2)分支 |
+| 集成druid监控 | 90% | [druid](https://github.com/alibaba/druid) |
 
 # 功能截图
 
@@ -120,30 +125,38 @@
 
 ```bash
 .
-├── db 存放数据库脚本
-├── docs 存放一些做项目时候的笔记
-├── jiiiiiin-security-app 针对JWT Token的安全模块（目前没有依赖）
-├── jiiiiiin-security-browser 针对Session的安全层模块
-├── jiiiiiin-security-core 安全层基础模块（处理Spring-Security相关基础配置）
-├── jiiiiiin-security-authorize 后端RBAC抽象模块
+├── pom.xml 公共pom
+├── Vagrantfile
+├── apollo-cache-dir (apollo本地缓存目录，见配置)
+├── config 各个边界服务、后端服务的apollo配置目录
+├── db 数据库初始化脚本
 ├── jiiiiiin-data-orm orm层模块（目前主要针对Mybatis-Plus）
-├── jiiiiiin-module-common 应用通用模块
-├── jiiiiiin-module-mngauth 管理模块
+├── jiiiiiin-security-app 针对JWT Token的安全模块（lib，目前没有依赖）
+├── jiiiiiin-security-authorize 后端RBAC抽象模块(lib)
+├── jiiiiiin-security-browser 针对Session的安全层模块(lib)
+├── jiiiiiin-security-core 安全层基础模块（lib，处理Spring-Security相关基础配置）
+├── jiiiiiin-eureka-server 注册中心服务端(通用服务)
+├── jiiiiiin-gateway 网关(通用服务)
+├── jiiiiiin-edge-service 边界服务(微服务中聚合子服务的聚合项目)
+├── jiiiiiin-service 后端服务(微服务的聚合项目)
+├── jiiiiiin-module-common 应用通用模块(目前内管依赖)
+├── jiiiiiin-module-mngauth 管理模块(目前内管依赖)
 ├── jiiiiiin-server-manager 内管后端应用
 ├── jiiiiiin-client-manager 内管前端应用（Vue项目，依赖d2-admin模块（1.6.9最新））
-├── pom.xml 公共pom
+└── pom.xml
 ```
 
 # 所用技术栈
 
 ### 后台
 
-+ [springboot](https://github.com/spring-projects/spring-boot)
++ [spring-boot](https://github.com/spring-projects/spring-boot)
 + [spring-security](https://github.com/spring-projects/spring-security)
 + [spring-session](https://github.com/spring-projects/spring-session/projects)
 + [mybatis-plus](https://github.com/baomidou/mybatis-plus)
 + [rzwitserloot/lombok](https://github.com/rzwitserloot/lombok)
 + [ctripcorp/apollo](https://github.com/ctripcorp/apollo)
++ [spring-cloud/spring-cloud-netflix](https://github.com/spring-cloud/spring-cloud-netflix)
 
 ### 前端    
 
