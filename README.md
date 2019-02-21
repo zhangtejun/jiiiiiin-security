@@ -55,8 +55,12 @@
 
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| 集成Eureka | 90% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
-| 集成Zuul | 90% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
+| 实践Eureka | 50% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
+| 实践Zuul | 50% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
+| 实践HYSTRIX | 0% | 实践[Hystrix WIKI](https://youdang.github.io/2016/01/30/translate-hystrix-wiki-homepage/) |
+| 实践OAuth2授权认证中心 | 0% |  |
+| 实践apollo | 0% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
+| 实践CAT | 0% |  |
 
 + 业务
 
