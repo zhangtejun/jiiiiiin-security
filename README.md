@@ -132,7 +132,6 @@
 ```bash
 .
 ├── pom.xml 公共pom
-├── Vagrantfile
 ├── apollo-cache-dir (apollo本地缓存目录，见配置)
 ├── config 各个边界服务、后端服务的apollo配置目录
 ├── db 数据库初始化脚本
@@ -144,11 +143,12 @@
 ├── jiiiiiin-eureka-server 注册中心服务端(通用服务)
 ├── jiiiiiin-gateway 网关(通用服务)
 ├── jiiiiiin-edge-service 边界服务(微服务中聚合子服务的聚合项目)
+│   ├── jiiiiiin-service-manager 内管的聚合项目
+│   │   ├── jiiiiiin-client-manager 内管前端应用（Vue项目，依赖d2-admin模块（1.6.9最新））
+│   │   ├── jiiiiiin-module-mngauth 管理模块(目前内管依赖)
+│   │   ├── jiiiiiin-server-manager 内管后端应用
 ├── jiiiiiin-service 后端服务(微服务的聚合项目)
 ├── jiiiiiin-module-common 应用通用模块(目前内管依赖)
-├── jiiiiiin-module-mngauth 管理模块(目前内管依赖)
-├── jiiiiiin-server-manager 内管后端应用
-├── jiiiiiin-client-manager 内管前端应用（Vue项目，依赖d2-admin模块（1.6.9最新））
 └── pom.xml
 ```
 
