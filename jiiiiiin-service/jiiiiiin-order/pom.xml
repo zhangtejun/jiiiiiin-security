@@ -32,14 +32,19 @@
             <artifactId>spring-cloud-starter-feign</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <!-- 引入服务容错 Hystrix 的依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-actuator</artifactId>-->
+        <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>org.springframework.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-context</artifactId>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; 引入服务容错 Hystrix 的依赖 &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.cloud</groupId>-->
-        <!--<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>-->
+            <!--<artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>-->
         <!--</dependency>-->
         <!--&lt;!&ndash; 引入服务消费者 Ribbon 的依赖 &ndash;&gt;-->
         <!--<dependency>-->

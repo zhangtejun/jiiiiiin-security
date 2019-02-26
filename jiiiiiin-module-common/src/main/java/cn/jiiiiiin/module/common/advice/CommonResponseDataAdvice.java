@@ -17,14 +17,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
  * `@RestControllerAdvice`标识对响应进行统一拦截处理
+ *
+ * https://zhaoxuyang.com/springboot%E4%BD%BF%E7%94%A8swagger2%E5%87%BA%E7%8E%B0unable-to-infer-base-url-this-is-common-when-using-dynamic-servlet-registration-or-when-the-api-is-behind-an-api-gateway/
+ * 4.但是在我的项目中，发现是我使用Spring的ResponseBodyAdvice全局返回再处理的一个类，本意是为所有返回JSON数据统一添加“状态=succuess”等信息，没想到该实现影响了Swagger的使用，会导致swagger返回的JSON数据格式和期望的不一致，故swagger报错。解决方法在该接口实现类上面的@ControllerAdvice 注解限制接口的扫描包即可避免。
  * @author jiiiiiin
  */
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "cn.jiiiiiin.*.controller")
 @Slf4j
 public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+//    @Autowired
+//    private ObjectMapper objectMapper;
 
     /**
      * @param methodParameter
