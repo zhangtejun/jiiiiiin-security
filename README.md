@@ -59,11 +59,13 @@
 | 实践Zuul | 60% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
 | 实践Feign/RestTemplate | 90% | 实践服务间的调用 |
 | 实践HYSTRIX | 30% | 实践[Hystrix WIKI](https://youdang.github.io/2016/01/30/translate-hystrix-wiki-homepage/) |
-| 实践apollo | 0% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
+| 实践apollo | 20% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
 | 实践OAuth2授权认证中心 | 0% |  |
 | 实践CAT | 0% |  |
 
 + 业务
+
+> 将会通过一个电商模块来实践服务划分
 
 | 模块名称 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
@@ -71,6 +73,8 @@
 | 角色管理 | 100% | 用来管理系统定义的角色 |
 | 资源管理 | 100% | 用来管理系统定义的资源 |
 | 接口管理 | 100% | 用来管理后台对应的接口集合 |
+| 商品管理 | 0% | 商家用来管理自己的商品 |
+| 订单管理 | 0% | 商家用来管理自己的订单 |
 
 + 功能
 
