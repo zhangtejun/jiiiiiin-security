@@ -58,9 +58,9 @@
 | 实践Eureka | 50% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
 | 实践Zuul | 60% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
 | 实践Feign/RestTemplate | 90% | 实践服务间的调用 |
-| 实践HYSTRIX | 0% | 实践[Hystrix WIKI](https://youdang.github.io/2016/01/30/translate-hystrix-wiki-homepage/) |
-| 实践OAuth2授权认证中心 | 0% |  |
+| 实践HYSTRIX | 30% | 实践[Hystrix WIKI](https://youdang.github.io/2016/01/30/translate-hystrix-wiki-homepage/) |
 | 实践apollo | 0% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
+| 实践OAuth2授权认证中心 | 0% |  |
 | 实践CAT | 0% |  |
 
 + 业务
@@ -101,7 +101,7 @@
 | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg) | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg) |
 | ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm4vm6f3pj31c00u0q5t.jpg) |
 | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g063daokoij31cy0u0jx2.jpg) | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g0daq2y8qwj31d30u0du9.jpg) |
-| ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0ds20z3muj31d30u0dlw.jpg) |  |
+| ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0ds20z3muj31d30u0dlw.jpg) | ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0jmwac98nj31d30u0jww.jpg) |
 
 
 
