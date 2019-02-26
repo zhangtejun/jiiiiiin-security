@@ -1,6 +1,7 @@
 package cn.jiiiiiin.controller;
 
 import cn.jiiiiiin.client.FeignClientTest;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @RestController
 @Slf4j
-public class RestTemplateTestClientController {
+public class ServiceCallTestController {
 
     private static final String PRODUCT_SERVICE_ID = "JIIIIIIN-PRODUCT";
 
@@ -32,17 +33,19 @@ public class RestTemplateTestClientController {
     private final FeignClientTest feignClientTest;
 
     @Autowired
-    public RestTemplateTestClientController(LoadBalancerClient loadBalancerClient, RestTemplate restTemplate, FeignClientTest feignClientTest) {
+    public ServiceCallTestController(LoadBalancerClient loadBalancerClient, RestTemplate restTemplate, FeignClientTest feignClientTest) {
         this.loadBalancerClient = loadBalancerClient;
         this.restTemplate = restTemplate;
         this.feignClientTest = feignClientTest;
     }
 
+    @HystrixCommand(fallbackMethod = "fallback")
     @GetMapping("/msg")
     public String getOrder() {
-//        val templ = new RestTemplate();
+        val templ = new RestTemplate();
 
         // 1.第一种通讯方式（直接使用restTemplate，url写死）
+//        val product = templ.getForObject("http://localhost:7000/product/msg", String.class);
 //        val product = restTemplate.getForObject("http://localhost:7000/product/msg", String.class);
 
         // 2.第二种方式
@@ -57,7 +60,14 @@ public class RestTemplateTestClientController {
         // 4.第四种方式
         val product = feignClientTest.getMsg();
         log.debug("getOrder:: product {}", product);
+
+//        throw new RuntimeException("服务降级测试触发");
+
         // print -> `订单7100::获取到商品7000`
         return "订单" + port + " :: " + product;
+    }
+
+    private String fallback() {
+        return "断路器生效了【fallback】";
     }
 }
