@@ -14,8 +14,6 @@
         <module>jiiiiiin-security-authorize</module>
         <module>jiiiiiin-data-orm</module>
         <module>jiiiiiin-module-common</module>
-        <module>jiiiiiin-module-mngauth</module>
-        <module>jiiiiiin-server-manager</module>
         <module>jiiiiiin-eureka-server</module>
         <module>jiiiiiin-service</module>
         <module>jiiiiiin-gateway</module>

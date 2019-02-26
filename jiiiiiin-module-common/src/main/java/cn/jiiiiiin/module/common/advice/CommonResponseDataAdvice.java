@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * 4.但是在我的项目中，发现是我使用Spring的ResponseBodyAdvice全局返回再处理的一个类，本意是为所有返回JSON数据统一添加“状态=succuess”等信息，没想到该实现影响了Swagger的使用，会导致swagger返回的JSON数据格式和期望的不一致，故swagger报错。解决方法在该接口实现类上面的@ControllerAdvice 注解限制接口的扫描包即可避免。
  * @author jiiiiiin
  */
-@RestControllerAdvice(basePackages = "cn.jiiiiiin.*.controller")
+@RestControllerAdvice(basePackages = "cn.jiiiiiin")
 @Slf4j
 public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 
