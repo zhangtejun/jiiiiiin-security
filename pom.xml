@@ -129,6 +129,12 @@
                 <version>${jiiiiiin-security-version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.jiiiiiin.security</groupId>
+                <artifactId>jiiiiiin-product-client</artifactId>
+                <version>${jiiiiiin-security-version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

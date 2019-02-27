@@ -152,9 +152,24 @@
 │   │   ├── jiiiiiin-module-mngauth 管理模块(目前内管依赖)
 │   │   ├── jiiiiiin-server-manager 内管后端应用
 ├── jiiiiiin-service 后端服务(微服务的聚合项目)
+│   ├── jiiiiiin-order 订单的聚合项目
+│   │   ├── jiiiiiin-order-server 后端应用
+│   ├── jiiiiiin-product 商品的聚合项目
+│   │   ├── jiiiiiin-product-client 商品Feign客户端（提供给调用方使用，如在创建订单时候）
+│   │   ├── jiiiiiin-product-server 后端应用
 ├── jiiiiiin-module-common 应用通用模块(目前内管依赖)
-└── pom.xml
 ```
+
+> 微服务代码划分
+
++ `jiiiiiin-service`为【原子服务】
+    + 一个原子服务，有划分为：
+        - xxx-业务标识-client Feign客户端（提供给调用方使用）
+        - xxx-业务标识-server 服务本身
+        - xxx-业务标识-common 当前原子服务中client和server共同依赖的代码，如实体等
+
++ `jiiiiiin-edge-service`为【边界服务服务】
+    + 边界服务即提供给外部客户端（如：App）来调用，组织比较自由，但有一个原则及其只会依赖【原子服务】，一般不作为内部服务提供者
 
 # 所用技术栈
 
