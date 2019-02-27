@@ -171,6 +171,11 @@
 + `jiiiiiin-edge-service`为【边界服务服务】
     + 边界服务即提供给外部客户端（如：App）来调用，组织比较自由，但有一个原则及其只会依赖【原子服务】，一般不作为内部服务提供者
 
+即下图中的`Edge Service`和`Middle Tier Service`：
+
+![](https://ws2.sinaimg.cn/large/006tKfTcly1g0kscyq1s0j317m0j00ue.jpg)
+
+
 # 所用技术栈
 
 ### 后台
