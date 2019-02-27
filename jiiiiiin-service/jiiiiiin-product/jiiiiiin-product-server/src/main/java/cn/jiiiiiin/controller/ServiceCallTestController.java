@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @author jiiiiiin
  */
 @RestController
-public class RestTemplateTestServerController {
+public class ServiceCallTestController {
 
     @Value("${server.port}")
     private int port;
 
     @GetMapping("/msg")
-    public String getMsg() {
+    public String getMsg() throws InterruptedException {
+        Thread.sleep(2000);
         return "商品" + port;
     }
 }
