@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.social.UserIdSource;
 import org.springframework.social.config.annotation.EnableSocial;
 import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.connect.*;
@@ -134,5 +137,23 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Bean
     public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator) {
         return new ProviderSignInUtils(connectionFactoryLocator, getUsersConnectionRepository(connectionFactoryLocator));
+    }
+
+    /**
+     * `https://www.ibm.com/developerworks/cn/java/j-lo-spring-social/index.html`
+     * @return
+     */
+    @Override
+    public UserIdSource getUserIdSource() {
+        return new UserIdSource() {
+            @Override
+            public String getUserId() {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication == null) {
+                    throw new IllegalStateException("Unable to get a ConnectionRepository: no user signed in");
+                }
+                return authentication.getName();
+            }
+        };
     }
 }

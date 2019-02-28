@@ -28,7 +28,9 @@ apollo:
 
 server:
   port: 9090
-  context-path: /mng
+#  context-path: /mng
+  servlet:
+    context-path: /mng
 
 eureka:
   instance:
@@ -50,19 +52,20 @@ spring:
     default-property-inclusion: non_null
   thymeleaf:
     cache: false
-    # 避免Thymeleaf对html语法检查过严 https://www.jianshu.com/p/b361a6acbe0c
+    # 避免Thymeleaf对html语法检查过严 https://www.jianshu.com/p/b361a6acbe0cz
     mode: LEGACYHTML5
     encoding: UTF-8
     prefix: classpath:/templates/
   # 使用`jiiiiiin-security-browser`模块需开启
   session:
+#    store-type: none
     store-type: redis
   # https://segmentfault.com/a/1190000013269653
-  cache:
-    # 缓存的技术类型
-    ehcache:
-      config: 'classpath:def-ehcache-config.xml'
-    type: ehcache
+#  cache:
+#    # 缓存的技术类型
+#    ehcache:
+#      config: 'classpath:def-ehcache-config.xml'
+#    type: ehcache
   redis:
     # Redis数据库索引（默认为0）
     database: 0
@@ -70,17 +73,18 @@ spring:
     # host: localhost
     # Redis服务器连接端口
     # port: 6379
-    pool:
-      # 连接池最大连接数（使用负值表示没有限制）
-      max-active: 8
-      # 连接池最大阻塞等待时间（使用负值表示没有限制）
-      max-wait: -1
-      # 连接池中的最大空闲连接
-      max-idle: 8
-      # 连接池中的最小空闲连接
-      min-idle: 0
-    # 连接超时时间（毫秒）
-    timeout: 0
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 0
+      # 连接超时时间（毫秒）
+      timeout: 0
   datasource:
     # 参考：https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter
     druid:
@@ -100,7 +104,7 @@ spring:
       test-on-borrow: false
       test-on-return: false
       # 配置监控统计拦截的filters, 去掉后监控界面sql无法统计, 'wall'用于防火墙
-      filters: stat,wall,log4j
+      filters: stat,wall
       # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
       aop-patterns: cn.jiiiiiin.module.*.service.*
       # WebStatFilter配置
@@ -162,9 +166,11 @@ jiiiiiin:
         interceptor-urls: ${server.context-path}/authentication/form,${server.context-path}/authentication/mobile
     browser:
       fontUrl: http://192.168.1.185:9000/
-      signInUrl: /index
-      sign-up-url: /index
-      sign-out-url: /index
+#      signInUrl: /index
+#      sign-up-url: /index
+#      sign-out-url: /index
+      sign-up-url: /signUp.html
+      sign-out-url: /signOut.html
       rememberMeSeconds: 3600
       # proxy-uri: http://www.pinzhi365.com
 

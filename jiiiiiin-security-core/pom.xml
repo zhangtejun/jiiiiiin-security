@@ -39,6 +39,7 @@
         <dependency>
             <groupId>org.springframework.mobile</groupId>
             <artifactId>spring-mobile-device</artifactId>
+            <version>LATEST</version>
         </dependency>
 
         <!--负责引入spring security 和spring security oauth2相关依赖-->
@@ -67,18 +68,22 @@
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-core</artifactId>
+            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-config</artifactId>
+            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-security</artifactId>
+            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-web</artifactId>
+            <version>RELEASE</version>
         </dependency>
 
         <!--工具集合-->
@@ -91,11 +96,13 @@
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
+            <version>RELEASE</version>
         </dependency>
 
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
+            <version>RELEASE</version>
         </dependency>
 
         <!-- kaptcha验证码 -->
@@ -114,6 +121,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+            <version>RELEASE</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-extension -->

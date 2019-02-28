@@ -83,7 +83,7 @@ export default {
       time: dayjs().format('HH:mm:ss'),
       submitBtnDisabled: false,
       // validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image?width=30&${new Date().getTime()}`,
-      validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image?${new Date().getTime()}`,
+      validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image`,
       // 表单
       formLogin: {
         username: 'admin',
@@ -126,7 +126,8 @@ export default {
     },
     onChangeValidateImgCode: function(e) {
       this.formLogin.code = ''
-      e.target.src = this.validateImgCodeUri
+      console.log('code::', `${this.validateImgCodeUri}?${new Date().getTime()}`)
+      e.target.src = `${this.validateImgCodeUri}?${new Date().getTime()}`
     },
     /**
      * @description 接收选择一个用户快速登录的事件

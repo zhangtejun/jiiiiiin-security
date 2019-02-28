@@ -3,10 +3,10 @@
  */
 package cn.jiiiiiin.security.core.properties;
 
+import cn.jiiiiiin.security.core.properties.adapter.SocialProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 
 /**
  * 微信登录配置项

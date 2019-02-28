@@ -31,8 +31,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
  * @author jiiiiiin
  */
 @Configuration
-// TODO 修改为配置项
-@EnableWebSecurity(debug = false)
+@EnableWebSecurity
 public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired

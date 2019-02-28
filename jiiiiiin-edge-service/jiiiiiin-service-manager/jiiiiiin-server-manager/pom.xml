@@ -15,8 +15,6 @@
 
     <properties>
         <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
-        <thymeleaf.version>3.0.2.RELEASE</thymeleaf.version>
-        <thymeleaf-layout-dialect.version>2.0.4</thymeleaf-layout-dialect.version>
     </properties>
 
     <dependencies>
@@ -41,10 +39,6 @@
         <!--<artifactId>jiiiiiin-security-app</artifactId>-->
         <!--</dependency>-->
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
@@ -71,12 +65,6 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox.swagger2.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
         </dependency>
 
         <!--解析jwt自定义源信息-->

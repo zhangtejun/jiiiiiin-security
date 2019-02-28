@@ -10,9 +10,11 @@ import cn.jiiiiiin.security.core.social.weixin.connect.WeixinConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.social.SocialAutoConfigurerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
+import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.connect.ConnectionFactory;
 import org.springframework.web.servlet.View;
 
@@ -27,10 +29,14 @@ import java.util.Map;
  */
 @Configuration
 @ConditionalOnProperty(prefix = "jiiiiiin.security.social.weixin", name = "app-id")
-public class WeixinAutoConfiguration extends SocialAutoConfigurerAdapter {
+public class WeixinAutoConfiguration extends SocialConfigurerAdapter {
 
     @Autowired
     private SecurityProperties securityProperties;
+
+    public void addConnectionFactories(ConnectionFactoryConfigurer configurer, Environment environment) {
+        configurer.addConnectionFactory(this.createConnectionFactory());
+    }
 
     /*
      * (non-Javadoc)
@@ -39,7 +45,7 @@ public class WeixinAutoConfiguration extends SocialAutoConfigurerAdapter {
      * org.springframework.boot.autoconfigure.social.SocialAutoConfigurerAdapter
      * #createConnectionFactory()
      */
-    @Override
+//    @Override
     protected ConnectionFactory<?> createConnectionFactory() {
         WeixinProperties weixinConfig = securityProperties.getSocial().getWeixin();
         return new WeixinConnectionFactory(weixinConfig.getProviderId(), weixinConfig.getAppId(),

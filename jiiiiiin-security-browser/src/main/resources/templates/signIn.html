@@ -37,8 +37,8 @@
 <div id="app" v-cloak>
 
     <el-row class="from">
-        <el-col :span="8">&nbsp;</el-col>
-        <el-col :span="8">
+        <el-col :span="4">&nbsp;</el-col>
+        <el-col :span="16">
 
             <h3 class="title">登录</h3>
 
@@ -59,7 +59,7 @@
                         </el-form-item>
 
                         <el-form-item label="验证码" required="true">
-                            <el-input name="imageCode" class="image-code-input"></el-input>
+                            <input name="imageCode" class="image-code-input"/>
                             <img th:src="@{/code/image}" class="image-code" @click="onChangeValidateImgCode">
                         </el-form-item>
 
@@ -105,7 +105,7 @@
             </el-tabs>
 
         </el-col>
-        <el-col :span="8">&nbsp;</el-col>
+        <el-col :span="4">&nbsp;</el-col>
     </el-row>
 
 </div>
@@ -121,7 +121,7 @@
         el: '#app',
         data: function () {
             return {
-                username: 'operator1',
+                username: 'admin',
                 password: 'admin',
                 mobile: '15388888888',
                 remember: true,
@@ -136,7 +136,6 @@
         },
         methods: {
             onSubmit: function (e) {
-                console.log(this.$refs.form)
                 this.$refs.form.$el.submit();
             },
             onSubmit2: function (e) {

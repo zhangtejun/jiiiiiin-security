@@ -16,7 +16,7 @@ import org.springframework.social.security.SocialAuthenticationFilter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class SocialProperties {
+public class CustomSocialProperties {
 
     /**
      * 社交登录功能拦截的url
