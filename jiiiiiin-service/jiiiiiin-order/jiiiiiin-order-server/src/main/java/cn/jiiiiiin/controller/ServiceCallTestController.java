@@ -67,10 +67,10 @@ public class ServiceCallTestController {
 //        val product = templ.getForObject(url, String.class);
 
         // 3.第三种方式
-//        val product = restTemplate.getForObject(String.format("http://%s/product/msg", PRODUCT_SERVICE_ID), String.class);
+        val product = restTemplate.getForObject(String.format("http://%s/product/msg", PRODUCT_SERVICE_ID), String.class);
 
         // 4.第四种方式
-        val product = feignClientTest.getMsg();
+//        val product = feignClientTest.getMsg();
         log.debug("getOrder:: product {}", product);
 
 //        throw new RuntimeException("服务降级测试触发");

@@ -1,6 +1,5 @@
 package cn.jiiiiiin.product.client;
 
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -27,6 +26,6 @@ public interface FeignClientTest {
     @GetMapping("/product/msg")
     default String getMsg() {
         log.debug("client getMsg");
-        return null;
+        return "服务降级【product服务返回】";
     }
 }

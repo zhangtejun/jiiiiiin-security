@@ -18,6 +18,7 @@
         <module>jiiiiiin-service</module>
         <module>jiiiiiin-gateway</module>
         <module>jiiiiiin-edge-service</module>
+        <module>jiiiiiin-hystrix-dashboard</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -65,13 +66,13 @@
     <dependencyManagement>
         <dependencies>
             <!-- spring io 是替我们去管理依赖之间版本的兼容控制 https://segmentfault.com/a/1190000012743018-->
-            <dependency>
-                <groupId>io.spring.platform</groupId>
-                <artifactId>platform-bom</artifactId>
-                <version>Brussels-SR12</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>io.spring.platform</groupId>-->
+                <!--<artifactId>platform-bom</artifactId>-->
+                <!--<version>Brussels-SR12</version>-->
+                <!--<type>pom</type>-->
+                <!--<scope>import</scope>-->
+            <!--</dependency>-->
 
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
