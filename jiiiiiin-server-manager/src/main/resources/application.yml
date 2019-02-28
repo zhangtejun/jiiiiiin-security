@@ -7,7 +7,9 @@ debug: false
 
 server:
   port: 9090
-  context-path: /mng
+#  context-path: /mng
+  servlet:
+    context-path: /mng
 
 spring:
   profiles:
@@ -16,7 +18,7 @@ spring:
     default-property-inclusion: non_null
   thymeleaf:
     cache: false
-    # 避免Thymeleaf对html语法检查过严 https://www.jianshu.com/p/b361a6acbe0c
+    # 避免Thymeleaf对html语法检查过严 https://www.jianshu.com/p/b361a6acbe0cz
     mode: LEGACYHTML5
     encoding: UTF-8
     prefix: classpath:/templates/
@@ -130,9 +132,11 @@ jiiiiiin:
         interceptor-urls: ${server.context-path}/authentication/form,${server.context-path}/authentication/mobile
     browser:
       fontUrl: http://192.168.1.185:9000/
-      signInUrl: /index
-      sign-up-url: /index
-      sign-out-url: /index
+#      signInUrl: /index
+#      sign-up-url: /index
+#      sign-out-url: /index
+      sign-up-url: /signUp.html
+      sign-out-url: /signOut.html
       rememberMeSeconds: 3600
       # proxy-uri: http://www.pinzhi365.com
 

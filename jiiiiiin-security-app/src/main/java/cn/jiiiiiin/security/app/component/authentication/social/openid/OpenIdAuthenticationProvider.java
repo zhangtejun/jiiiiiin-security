@@ -3,7 +3,7 @@
  */
 package cn.jiiiiiin.security.app.component.authentication.social.openid;
 
-import org.apache.commons.collections.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;

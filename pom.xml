@@ -16,7 +16,6 @@
         <module>jiiiiiin-module-common</module>
         <module>jiiiiiin-module-mngauth</module>
         <module>jiiiiiin-server-manager</module>
-        <!--<module>jiiiiiin-validation</module>-->
     </modules>
     <packaging>pom</packaging>
 
@@ -24,30 +23,47 @@
 
     <url>https://github.com/Jiiiiiin/jiiiiiin-security</url>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.6.RELEASE</version>
+    </parent>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <jiiiiiin-security-version>1.0-SNAPSHOT</jiiiiiin-security-version>
     </properties>
+
+    <dependencies>
+
+        <!--引入spring 测试框架-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
             <!-- spring io 是替我们去管理依赖之间版本的兼容控制 https://segmentfault.com/a/1190000012743018-->
-            <dependency>
-                <groupId>io.spring.platform</groupId>
-                <artifactId>platform-bom</artifactId>
-                <!--<version>Brussels-SR12</version>-->
-                <version>Cairo-SR6</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>io.spring.platform</groupId>-->
+                <!--<artifactId>platform-bom</artifactId>-->
+                <!--&lt;!&ndash;<version>Brussels-SR12</version>&ndash;&gt;-->
+                <!--<version>Cairo-SR6</version>-->
+                <!--<type>pom</type>-->
+                <!--<scope>import</scope>-->
+            <!--</dependency>-->
 
+            <!--https://spring.io/projects/spring-cloud-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <!--<version>Dalston.SR5</version>-->
-                <version>Finchley.SR2</version>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
