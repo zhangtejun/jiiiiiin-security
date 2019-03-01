@@ -54,7 +54,7 @@ public class ServiceCallTestController {
             commandProperties = {
             // 配置超时时间，默认为1秒，这里设置为3秒
             // 超时时间要看具体接口的调用执行逻辑，根据情况来设置
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
     })
     @GetMapping("/msg")
     public String getOrder() {

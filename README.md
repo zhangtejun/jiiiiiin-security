@@ -58,7 +58,8 @@
 | 实践Eureka | 50% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
 | 实践Zuul | 60% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
 | 实践Feign/RestTemplate | 90% | 实践服务间的调用、服务降级 |
-| 实践HYSTRIX | 30% | 实践[Hystrix WIKI](https://youdang.github.io/2016/01/30/translate-hystrix-wiki-homepage/) |
+| 实践HYSTRIX | 70% |  |
+| 实践Turbine集群监控 | 0% |  |
 | 实践apollo | 20% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
 | 实践OAuth2授权认证中心 | 0% |  |
 | 实践CAT | 0% |  |

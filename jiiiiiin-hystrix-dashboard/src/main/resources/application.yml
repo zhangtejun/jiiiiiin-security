@@ -1,20 +1,20 @@
 server:
-  context-path: /
   port: 8961
+  servlet:
+    context-path: /
 
 # 单节点配置
 spring:
   # 做服务发现是使用（必须唯一）
   application:
     name: jiiiiiin-hystrix-dashboard
-#eureka:
-##    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
-#  client:
-#    service-url:
-#      # 指定服务注册中心的地址
-#      defaultZone: http://localhost:8761/eureka/
-#    # 服务提供方需要注册到eureka-server
-#    # 如果是需要被zuul调用也需要注册
-#    register-with-eureka: true
-#    # 需要获取其他服务提供方，故需要拉取配置信息
-#    fetch-registry: true
+eureka:
+#    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+  client:
+    service-url:
+      # 指定服务注册中心的地址
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: false
+    # 需要获取其他服务提供方，故需要拉取配置信息
+    fetch-registry: true
+
