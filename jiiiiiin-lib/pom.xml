@@ -9,22 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jiiiiiin-service</artifactId>
+    <artifactId>jiiiiiin-lib</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>jiiiiiin-product</module>
-        <module>jiiiiiin-order</module>
+        <module>jiiiiiin-data-orm</module>
+        <module>jiiiiiin-security-core</module>
+        <module>jiiiiiin-security-browser</module>
+        <module>jiiiiiin-security-app</module>
+        <module>jiiiiiin-security-authorize</module>
+        <module>jiiiiiin-module-common</module>
     </modules>
 
-    <dependencies>
-        <!--临时-->
-        <!--<dependency>-->
-            <!--<groupId>com.baomidou</groupId>-->
-            <!--<artifactId>mybatis-plus-boot-starter</artifactId>-->
-            <!--<version>3.0.6</version>-->
-        <!--</dependency>-->
 
-
-    </dependencies>
 
 </project>

@@ -1,4 +1,4 @@
-package cn.jiiiiiin.module.common.controller;
+package cn.jiiiiiin.module.mngauth.controller;
 
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import com.baomidou.mybatisplus.extension.api.ApiController;

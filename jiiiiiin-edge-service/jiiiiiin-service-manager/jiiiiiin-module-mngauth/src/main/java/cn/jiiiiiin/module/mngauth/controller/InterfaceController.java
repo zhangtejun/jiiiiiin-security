@@ -1,7 +1,6 @@
 package cn.jiiiiiin.module.mngauth.controller;
 
 
-import cn.jiiiiiin.module.common.controller.BaseController;
 import cn.jiiiiiin.module.common.entity.mngauth.Interface;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
 import cn.jiiiiiin.module.common.exception.BusinessErrException;

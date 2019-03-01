@@ -41,4 +41,32 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <!--
+            将项目打包成一个可执行的jar，避免只打包项目代码，而不打包依赖
+            https://docs.spring.io/spring-boot/docs/1.5.15.RELEASE/reference/htmlsingle/#getting-started-first-application-executable-jar-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+        <!--
+       打包之后的jar的名称 [INFO] Building jar: /Users/jiiiiiin/Documents/IdeaProjects/spring-boot2/demo/target/demo.jar
+
+       1.clean package -Dmaven.test.skip=true
+
+       2.启动：java -jar demo.jar
+       -->
+        <!--<finalName>jiiiiiin-eureka-server</finalName>-->
+    </build>
+
 </project>

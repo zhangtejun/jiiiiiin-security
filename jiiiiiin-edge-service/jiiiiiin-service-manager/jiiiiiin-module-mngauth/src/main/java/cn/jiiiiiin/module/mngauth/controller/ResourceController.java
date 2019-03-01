@@ -3,7 +3,6 @@ package cn.jiiiiiin.module.mngauth.controller;
 
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import cn.jiiiiiin.data.orm.util.View;
-import cn.jiiiiiin.module.common.controller.BaseController;
 import cn.jiiiiiin.module.common.dto.mngauth.ResourceDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Resource;
 import cn.jiiiiiin.module.common.enums.common.StatusEnum;

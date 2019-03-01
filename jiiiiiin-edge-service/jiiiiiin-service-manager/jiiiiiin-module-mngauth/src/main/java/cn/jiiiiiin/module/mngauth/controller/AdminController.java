@@ -3,7 +3,6 @@ package cn.jiiiiiin.module.mngauth.controller;
 
 import cn.jiiiiiin.data.orm.entity.BaseEntity;
 import cn.jiiiiiin.data.orm.util.View;
-import cn.jiiiiiin.module.common.controller.BaseController;
 import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
