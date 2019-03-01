@@ -13,12 +13,12 @@
         <module>jiiiiiin-security-app</module>
         <module>jiiiiiin-security-authorize</module>
         <module>jiiiiiin-data-orm</module>
-        <module>jiiiiiin-module-common</module>
         <module>jiiiiiin-eureka-server</module>
-        <module>jiiiiiin-service</module>
         <module>jiiiiiin-gateway</module>
-        <module>jiiiiiin-edge-service</module>
         <module>jiiiiiin-hystrix-dashboard</module>
+        <module>jiiiiiin-service</module>
+        <module>jiiiiiin-edge-service</module>
+        <module>jiiiiiin-module-common</module>
     </modules>
     <packaging>pom</packaging>
 

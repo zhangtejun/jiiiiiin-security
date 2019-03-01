@@ -166,11 +166,11 @@ jiiiiiin:
         interceptor-urls: ${server.context-path}/authentication/form,${server.context-path}/authentication/mobile
     browser:
       fontUrl: http://192.168.1.185:9000/
-#      signInUrl: /index
-#      sign-up-url: /index
-#      sign-out-url: /index
-      sign-up-url: /signUp.html
-      sign-out-url: /signOut.html
+      signInUrl: /index
+      sign-up-url: /index
+      sign-out-url: /index
+#      sign-up-url: /signUp.html
+#      sign-out-url: /signOut.html
       rememberMeSeconds: 3600
       # proxy-uri: http://www.pinzhi365.com
 

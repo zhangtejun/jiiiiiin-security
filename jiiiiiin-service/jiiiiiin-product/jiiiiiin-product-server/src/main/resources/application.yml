@@ -1,5 +1,6 @@
 server:
-  context-path: /product
+  servlet:
+    context-path: /
 
 # 单节点配置
 spring:

@@ -28,7 +28,7 @@ public class ProductApp {
         app.run(args);
     }
 
-    @GetMapping
+    @GetMapping("/")
     public String getTime() {
         return "The current time is " + new Date().toString() + "(answered by service running on " + port + ")";
     }
