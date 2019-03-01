@@ -21,6 +21,15 @@ eureka:
     # 需要获取其他服务提供方，故需要拉取配置信息
     fetch-registry: true
 
+feign:
+  hystrix:
+    # Feign是自带断路器的，在D版本的Spring Cloud之后，它没有默认打开。需要在配置文件中配置打开它，在配置文件加以下代码
+    enabled: true
+management:
+  endpoint:
+    web:
+      exposure:
+        include: '*'
 ---
 # 多节点配置
 

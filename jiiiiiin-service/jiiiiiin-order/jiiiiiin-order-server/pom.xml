@@ -28,13 +28,6 @@
             <version>RELEASE</version>
         </dependency>
 
-        <!-- 引入服务容错 Hystrix 的依赖 -->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-starter-hystrix</artifactId>-->
-            <!--<version>RELEASE</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>cn.jiiiiiin.security</groupId>
             <artifactId>jiiiiiin-product-client</artifactId>

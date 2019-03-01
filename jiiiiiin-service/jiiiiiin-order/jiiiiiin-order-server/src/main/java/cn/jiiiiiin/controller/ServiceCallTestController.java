@@ -4,6 +4,7 @@ import cn.jiiiiiin.product.client.FeignClientTest;
 //import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 //import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 //import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 @Slf4j
 // 2. 针对整个控制器进行服务降级接口的声明
-//@DefaultProperties(defaultFallback = "defaultFallback")
+@DefaultProperties(defaultFallback = "defaultFallback")
 public class ServiceCallTestController {
 
     private static final String PRODUCT_SERVICE_ID = "JIIIIIIN-PRODUCT";
@@ -46,16 +47,18 @@ public class ServiceCallTestController {
     }
 
     // 1. 针对单个接口进行服务降级接口的声明
-    // 如果要实现服务降级，就算使用默认配置`fallbackMethod`，也需要在接口上面配置`@HystrixCommand`
-    // 如果使用feign就可以不设置`@HystrixCommand`，直接使用client上面提供的降级配置，注意这里只是指降级对应client的
+    // + 需要进行熔断必须配置`@HystrixCommand`
+    // + 如果要实现服务降级，就算使用默认配置`fallbackMethod`，也需要在接口上面配置`@HystrixCommand`
+    // + feign client 配置的服务降级只是针对其本身 ！！！ 如果使用feign就可以不设置`@HystrixCommand`，直接使用client上面提供的降级配置，注意这里只是指降级对应client的
     // http://blog.didispace.com/springcloud3/
     @HystrixCommand(fallbackMethod = "fallback",
             // `HystrixCommandProperties`查看更多配置信息
             commandProperties = {
             // 配置超时时间，默认为1秒，这里设置为3秒
             // 超时时间要看具体接口的调用执行逻辑，根据情况来设置
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
     })
+//    @HystrixCommand
     @GetMapping("/msg")
     public String getOrder() {
         val templ = new RestTemplate();
@@ -71,10 +74,10 @@ public class ServiceCallTestController {
 //        val product = templ.getForObject(url, String.class);
 
         // 3.第三种方式
-        val product = restTemplate.getForObject(String.format("http://%s/msg", PRODUCT_SERVICE_ID), String.class);
+//        val product = restTemplate.getForObject(String.format("http://%s/msg", PRODUCT_SERVICE_ID), String.class);
 
         // 4.第四种方式
-//        val product = feignClientTest.getMsg();
+        val product = feignClientTest.getMsg();
         log.debug("getOrder:: product {}", product);
 
 //        throw new RuntimeException("服务降级测试触发");

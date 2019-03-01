@@ -1,0 +1,27 @@
+server:
+  port: 8961
+  servlet:
+    context-path: /
+
+# 单节点配置
+spring:
+  # 做服务发现是使用（必须唯一）
+  application:
+    name: jiiiiiin-hystrix-dashboard
+#eureka:
+##    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+#  client:
+#    service-url:
+#      # 指定服务注册中心的地址
+#      defaultZone: http://localhost:8761/eureka/
+#turbine:
+#  aggregator:
+#    # 指定聚合哪些集群，多个使用","分割，默认为default。可使用http://.../turbine.stream?cluster={clusterConfig之一}访问
+#    clusterConfig: default
+#  combine-host-port: true
+#  # 配置Eureka中的serviceId列表，表明监控哪些服务
+#  appConfig: jiiiiiin-order,jiiiiiin-product
+#  cluster-name-expression: "'default'"
+#  # 1. clusterNameExpression指定集群名称，默认表达式appName；此时：turbine.aggregator.clusterConfig需要配置想要监控的应用名称
+#  # 2. 当clusterNameExpression: default时，turbine.aggregator.clusterConfig可以不写，因为默认就是default
+#  # 3. 当clusterNameExpression: metadata['cluster']时，假设想要监控的应用配置了eureka.instance.metadata-map.cluster: ABC，则需要配置，同时turbine.aggregator.clusterConfig: ABC

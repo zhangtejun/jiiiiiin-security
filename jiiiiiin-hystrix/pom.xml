@@ -9,18 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jiiiiiin-service</artifactId>
+    <artifactId>jiiiiiin-hystrix</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>jiiiiiin-product</module>
-        <module>jiiiiiin-order</module>
+        <module>jiiiiiin-hystrix-dashboard</module>
+        <module>jiiiiiin-hystrix-tuibine</module>
     </modules>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-hystrix</artifactId>
-            <version>RELEASE</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 

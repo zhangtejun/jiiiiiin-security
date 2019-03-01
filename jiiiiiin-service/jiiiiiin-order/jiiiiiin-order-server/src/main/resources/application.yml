@@ -19,10 +19,14 @@ apollo:
   # Spring Placeholder的使用
   autoUpdateInjectedSpringProperties: true
 
-#feign:
-#  hystrix:
-#    enabled: true
+feign:
+  hystrix:
+    # Feign是自带断路器的，在D版本的Spring Cloud之后，它没有默认打开。需要在配置文件中配置打开它，在配置文件加以下代码
+    enabled: true
 management:
   endpoint:
-    health:
-      show-details: always
+    web:
+      exposure:
+        include: '*'
+#    health:
+#      show-details: always

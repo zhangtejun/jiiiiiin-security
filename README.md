@@ -55,10 +55,10 @@
 
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| 实践Eureka | 50% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
+| 实践Eureka | 60% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
 | 实践Zuul | 60% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
 | 实践Feign/RestTemplate | 90% | 实践服务间的调用、服务降级 |
-| 实践HYSTRIX/Turbine集群监控 | 70% |  |
+| 实践HYSTRIX/Turbine集群监控 | 100% | 实现通过Turbine聚合各个服务的Hystrix监控信息，通过`jiiiiiin-hystrix-dashboard`项目完成统一聚合监控，需要在dashboard中键入`jiiiiiin-hystrix-tuibine`的集群监控url，如`http://localhost:8962/turbine.stream` |
 | 实践apollo | 20% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
 | 实践OAuth2授权认证中心 | 0% |  |
 | 实践CAT | 0% |  |
@@ -148,7 +148,9 @@
 │   ├── jiiiiiin-module-common 应用通用模块(目前内管依赖)
 ├── jiiiiiin-eureka-server 注册中心服务端(通用服务)
 ├── jiiiiiin-gateway 网关(通用服务)
-├── jiiiiiin-hystrix-dashboard Hystrix/Turbine熔断监服务(通用服务)
+├── jiiiiiin-hystrix
+│   ├── jiiiiiin-hystrix-dashboard Hystrix熔断监服务(通用服务)
+│   ├── jiiiiiin-hystrix-tuibine Hystrix Turbine聚合服务(通用服务)
 ├── jiiiiiin-edge-service 边界服务(微服务中聚合子服务的聚合项目)
 │   ├── jiiiiiin-service-manager 内管的聚合项目
 │   │   ├── jiiiiiin-client-manager 内管前端应用（Vue项目，依赖d2-admin模块（1.6.9最新））
