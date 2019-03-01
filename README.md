@@ -92,7 +92,7 @@
 | Swagger集成 | 100% | [用来构建服务端的RESTFull Api接口](https://swagger.io) |
 | spring-mobile | 100% | [用来进行渠道判断](https://projects.spring.io/spring-mobile/)，使得应用能根据请求的设备响应不同的数据格式 |
 | Gif验证码 | 100% | [EasyCaptcha](https://github.com/whvcse/EasyCaptcha)和[kaptcha](https://github.com/penggle/kaptcha)两种验证码库的支持 |
-| 项目适配到spring-cloud Finchley.SR2 | 100% | 详见[feature/springboot-2](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springboot-2)分支 |
+| 项目适配到spring-cloud Finchley.SR2 | 100% | 详见[feature/springboot-2](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springboot-2)和当前分支 |
 | 集成druid监控 | 90% | [druid](https://github.com/alibaba/druid) |
 
 # 功能截图
