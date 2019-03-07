@@ -24,9 +24,25 @@ feign:
     # Feign是自带断路器的，在D版本的Spring Cloud之后，它没有默认打开。需要在配置文件中配置打开它，在配置文件加以下代码
     enabled: true
 management:
+  endpoints:
+    web:
+      exposure:
+       # http://localhost:8080/actuator/beans 页面出现404错误
+        include: '*'
   endpoint:
+    health:
+      # 它暴露了一些默认不在Web暴露的Endpoint，这些默认只以JMX方式暴露。
+      # 查询应用状态，如hystrix是否up
+      show-details: always
     web:
       exposure:
         include: '*'
 #    health:
 #      show-details: always
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000

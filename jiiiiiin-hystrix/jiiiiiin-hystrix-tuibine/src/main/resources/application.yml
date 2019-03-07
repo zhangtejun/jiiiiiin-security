@@ -20,7 +20,7 @@ turbine:
 #    # 指定聚合哪些集群，多个使用","分割，默认为default。可使用http://.../turbine.stream?cluster={clusterConfig之一}访问
 #    clusterConfig: default
   # 配置Eureka中的serviceId列表，表明监控哪些服务
-  app-config: jiiiiiin-order
+  app-config: jiiiiiin-order,jiiiiiin-product
   cluster-name-expression: "'default'"
   combine-host-port: true
   # 解决`由于spring-boot-starter-actuator的默认context-path为actuator，若turbine.instanceUrlSuffix不做设置，默认路径为/actuator/hystrix.stream，与我们在consumer中设置的路径/hystrix.stream不匹配，所以出现/actuator/hystrix.stream 404 Not Found。`

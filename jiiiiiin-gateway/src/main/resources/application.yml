@@ -55,3 +55,12 @@ zuul:
 logging:
   level:
     org.springframework.cloud.netflix.zuul: info
+
+# 避免初次启动，因为延迟初始化bean的原因导致的访问超时
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000

@@ -39,11 +39,16 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!--&lt;!&ndash; 引入服务消费者 Ribbon 的依赖 &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.cloud</groupId>-->
-        <!--<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-ribbon</artifactId>
+        </dependency>
 
     </dependencies>
 
