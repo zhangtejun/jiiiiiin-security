@@ -47,7 +47,7 @@
 
 + SpringCloud
 
-**近期维护：新增[feature/springcloud](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springcloud)分支，将会在该分支尝试spring-cloud探索**
+**近期维护：新增[feature/springcloud](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springcloud)分支，将会在该分支尝试spring-cloud探索，目前基于第一代spring-cloud基础组件，核心为Netfix套件，进行一个初探**
 
 ![](https://ws3.sinaimg.cn/large/006tKfTcgy1g0dsh2fztyj318q0lkaek.jpg)
 
@@ -55,13 +55,14 @@
 
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| 实践Eureka | 60% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
-| 实践Zuul | 60% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
-| 实践Feign/RestTemplate | 90% | 实践服务间的调用、服务降级 |
-| 实践HYSTRIX/Turbine集群监控 | 100% | 实现通过Turbine聚合各个服务的Hystrix监控信息，通过`jiiiiiin-hystrix-dashboard`项目完成统一聚合监控，需要在dashboard中键入`jiiiiiin-hystrix-tuibine`的集群监控url，如`http://localhost:8962/turbine.stream` |
-| 实践apollo | 20% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
-| 实践OAuth2授权认证中心 | 0% |  |
-| 实践CAT | 0% |  |
+| 实践Eureka 服务注册发现 | 60% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
+| 实践Zuul 服务网关 | 60% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
+| 实践Feign/RestTemplate 服务间通讯和负载均衡 | 90% | 实践服务间的调用、服务降级 |
+| 实践HYSTRIX/Turbine 服务的容错 | 90% | 实现通过Turbine聚合各个服务的Hystrix监控信息，通过`jiiiiiin-hystrix-dashboard`项目完成统一聚合监控，需要在dashboard中键入`jiiiiiin-hystrix-tuibine`的集群监控url，如`http://localhost:8962/turbine.stream` |
+| 实践apollo 服务配置管理| 20% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
+| 实践OAuth2授权认证中心 服务安全 | 0% |  |
+| 实践Zipkin 服务链路追踪 | 0% |  |
+| 服务实时日志 | 0% |  |
 
 + 业务
 
