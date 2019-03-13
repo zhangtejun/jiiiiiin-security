@@ -15,23 +15,33 @@
 
 + 视频演示
 
+> 注意：目前该视频是针对[master](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master)分支录制，等当前分支对spring-cloud实践有一个基础眉目我会在重新录制响应视频，但是这个视频对于`jiiiiiin-service-manager 内管的聚合项目`也具有参考价值，目前这块改动不大
+
 [![Watch the video](https://ws2.sinaimg.cn/large/006tNc79gy1fzqotcb0i4j31410u07dl.jpg)](https://www.youtube.com/embed/eemHJEvsTog)
 
 [下载高清视频](https://pan.baidu.com/s/1ZZmw7idemDWD0-tnmb1GHA)
 
 + 提示步骤：
 
+    + 修改本地hosts
+
+        + [win配置方法](https://www.jb51.net/os/win10/395409.html) | [mac配置方法](https://www.jianshu.com/p/752211238c1b) | 建议使用 switchhost，开源群下载,对自己的网络环境自信的朋友，也可以直接[官网](https://github.com/oldj/SwitchHosts/releases)下载
+
+            ```bash
+            # 本地测试环境
+            127.0.0.1	jiiiiiin-server-manager
+            127.0.0.1	jiiiiiin-zipkin
+            ```
+
+            
+
     + [导入数据脚本](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/db/sql-mysql.sql)
-    
+
     + [配置redis](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L28)
 
     + 启动后端内管应用
 
     + 启动前端内管应用：jiiiiiin-client-manager
-    
-        - 安装项目依赖：`npm i`
-        
-        - 配置服务端uri：`.env.development`文件下：`VUE_APP_SEVER_URL=http://ip:9000`
 
     + 关于apollo集成
         > 如果你不需要这一块服务，可以去`ManagerApp.java`注释掉`@EnableApolloConfig`
@@ -61,7 +71,7 @@
 | 实践HYSTRIX/Turbine 服务的容错 | 90% | 实现通过Turbine聚合各个服务的Hystrix监控信息，通过`jiiiiiin-hystrix-dashboard`项目完成统一聚合监控，需要在dashboard中键入`jiiiiiin-hystrix-tuibine`的集群监控url，如`http://localhost:8962/turbine.stream` |
 | 实践apollo 服务配置管理| 20% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
 | 实践OAuth2授权认证中心 服务安全 | 0% |  |
-| 实践Zipkin 服务链路追踪 | 0% |  |
+| 实践Zipkin 服务链路追踪 | 50% | [集成方式参考](https://windmt.com/2018/04/24/spring-cloud-12-sleuth-zipkin/) |
 | 服务实时日志 | 0% |  |
 
 + 业务
@@ -107,6 +117,7 @@
 | ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm4vm6f3pj31c00u0q5t.jpg) |
 | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g063daokoij31cy0u0jx2.jpg) | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g0daq2y8qwj31d30u0du9.jpg) |
 | ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0ds20z3muj31d30u0dlw.jpg) | ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0jmwac98nj31d30u0jww.jpg) |
+| ![](https://ws3.sinaimg.cn/large/006tKfTcgy1g11m4k4sgtj31d30u076s.jpg) |  |
 
 
 

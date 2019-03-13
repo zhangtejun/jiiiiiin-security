@@ -1,7 +1,7 @@
 module.exports = {
   proxy: {
     '/mng': {
-      target: 'http://127.0.0.1:9090',
+      target: 'http://jiiiiiin-server-manager:9090',
       pathRewrite: {
         '^/mng': '/mng'
       },
@@ -9,5 +9,6 @@ module.exports = {
     }
   },
   open: false,
-  quiet: false
+  quiet: false,
+  disableHostCheck: true
 }

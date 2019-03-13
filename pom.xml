@@ -11,9 +11,9 @@
         <module>jiiiiiin-lib</module>
         <module>jiiiiiin-eureka-server</module>
         <module>jiiiiiin-gateway</module>
+        <module>jiiiiiin-hystrix</module>
         <module>jiiiiiin-service</module>
         <module>jiiiiiin-edge-service</module>
-        <module>jiiiiiin-hystrix</module>
     </modules>
     <packaging>pom</packaging>
 
