@@ -73,6 +73,7 @@
 | 实践OAuth2授权认证中心 服务安全 | 0% |  |
 | 实践Zipkin 服务链路追踪 | 50% | [集成方式参考](https://windmt.com/2018/04/24/spring-cloud-12-sleuth-zipkin/) |
 | 服务实时日志 | 0% |  |
+| 代码自动生成 | 0% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java)，待适配目前的目录结构 |
 
 + 业务
 
@@ -87,12 +88,10 @@
 | 商品管理 | 0% | 商家用来管理自己的商品 |
 | 订单管理 | 0% | 商家用来管理自己的订单 |
 
-+ 功能
++ 已经实践的基础功能
 
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| 集成Apollo | 100% | 集成[ctripcorp/apollo](https://github.com/ctripcorp/apollo)配置中心 |
-| 代码自动生成 | 100% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java) |
 | RBAC后端权限控制 | 100% | [基于Spring Security的后端RBAC权限控制](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master/jiiiiiin-security-authorize) |
 | RBAC前端权限控制 | 100% | [1.基于vue-viewplus，实现了一个自定义模块](http://jiiiiiin.cn/vue-viewplus/#/global_api?id=mixin-) <br> [2.实现前端页面可访问性控制，通过路由拦截，判断用户待访问页面是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L250) <br> [3.实现可见页面的局部UI组件的**可使用性或可见性**控制，基于自定义`v-access`指令，对比声明的接口或资源别是否已经授权](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-client-manager/src/plugin/vue-viewplus/rbac.js#L124)|
 | 集成vue-viewplus | 100% | [vue-viewplus一个简化Vue应用开发的工具库](https://github.com/Jiiiiiin/vue-viewplus) |
@@ -103,8 +102,7 @@
 | Swagger集成 | 100% | [用来构建服务端的RESTFull Api接口](https://swagger.io) |
 | spring-mobile | 100% | [用来进行渠道判断](https://projects.spring.io/spring-mobile/)，使得应用能根据请求的设备响应不同的数据格式 |
 | Gif验证码 | 100% | [EasyCaptcha](https://github.com/whvcse/EasyCaptcha)和[kaptcha](https://github.com/penggle/kaptcha)两种验证码库的支持 |
-| 项目适配到spring-cloud Finchley.SR2 | 100% | 详见[feature/springboot-2](https://github.com/Jiiiiiin/jiiiiiin-security/tree/feature/springboot-2)和当前分支 |
-| 集成druid监控 | 90% | [druid](https://github.com/alibaba/druid) |
+| 集成druid监控 | 100% | [druid](https://github.com/alibaba/druid) |
 
 # 功能截图
 
