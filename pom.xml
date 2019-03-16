@@ -14,6 +14,7 @@
         <module>jiiiiiin-hystrix</module>
         <module>jiiiiiin-service</module>
         <module>jiiiiiin-edge-service</module>
+        <module>jiiiiiin-springboot-admin</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -33,6 +34,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <apollo-client.version>1.1.0</apollo-client.version>
+        <spring-boot-admin-version>2.0.4</spring-boot-admin-version>
         <jiiiiiin-security-version>1.0-SNAPSHOT</jiiiiiin-security-version>
     </properties>
 
@@ -76,6 +78,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin-version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>cn.jiiiiiin.security</groupId>

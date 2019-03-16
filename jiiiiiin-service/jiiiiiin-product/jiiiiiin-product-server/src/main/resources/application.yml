@@ -19,6 +19,10 @@ spring:
   zipkin:
     # 指定了 Zipkin 服务器的地址
     base-url: http://jiiiiiin-zipkin:9411/
+  boot:
+    admin:
+      client:
+        url: http://jiiiiiin-springboot-admin:5000
 eureka:
 #    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
   client:

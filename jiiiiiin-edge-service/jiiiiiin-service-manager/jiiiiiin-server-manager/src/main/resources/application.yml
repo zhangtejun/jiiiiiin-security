@@ -134,7 +134,10 @@ spring:
       filter:
         stat:
           log-slow-sql: true
-
+  boot:
+    admin:
+      client:
+        url: http://jiiiiiin-springboot-admin:5000
 mybatis-plus:
   #Mapper.xml所在的位置
   mapper-locations: classpath:/mapper/*/*Mapper.xml
@@ -174,7 +177,15 @@ jiiiiiin:
       rememberMeSeconds: 3600
       # proxy-uri: http://www.pinzhi365.com
 
-#manager:
+management:
+  endpoints:
+    web:
+      exposure:
+        # As with Spring Boot 2 most of the endpoints aren’t exposed via http by default, we expose all of them. For production you should carefully choose which endpoints to expose.
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
 ---
 
 spring:

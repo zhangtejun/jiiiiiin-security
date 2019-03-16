@@ -30,11 +30,12 @@
             ```bash
             # 本地测试环境
             127.0.0.1   jiiiiiin-redis
-            127.0.0.1   jiiiiiin-gateway
-            127.0.0.1	jiiiiiin-server-manager
             127.0.0.1   jiiiiiin-mysql
             127.0.0.1   jiiiiiin-eureka
+            127.0.0.1   jiiiiiin-gateway
             127.0.0.1   jiiiiiin-hystrix
+            127.0.0.1   jiiiiiin-springboot-admin
+            127.0.0.1	jiiiiiin-server-manager
             ```
 
             
@@ -56,6 +57,8 @@
             + 应用基础属性application.yml/Spring Placeholder/ConfigurationProperties([后期将会把一些自定义安全配置类添加动态配置](https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南#3223-configurationproperties使用方式))的动态配置
             + [其他](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin)
 
+    + 一切ok，就可以直接访问`jiiiiiin-server-manager:9000` 查看管理控制台了 ：）
+
 
 # 计划
 
@@ -74,10 +77,12 @@
 | 实践Feign/RestTemplate 服务间通讯和负载均衡 | 90% | 实践服务间的调用、服务降级 |
 | 实践HYSTRIX/Turbine 服务的容错 | 90% | 实现通过Turbine聚合各个服务的Hystrix监控信息，通过`jiiiiiin-hystrix-dashboard`项目完成统一聚合监控，需要在dashboard中键入`jiiiiiin-hystrix-tuibine`的集群监控url，如`http://localhost:8962/turbine.stream` |
 | 实践Zipkin 服务链路追踪 | 90% | [集成方式参考](https://windmt.com/2018/04/24/spring-cloud-12-sleuth-zipkin/)，建议使用docker直接部署服务端 |
+| 集成Spring Boot Admin | 90% | [集成方式参考](https://codecentric.github.io/spring-boot-admin/2.1.3/#spring-cloud-discovery-support)|
 | 实践apollo 服务配置管理| 20% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
 | 实践OAuth2授权认证中心 服务安全 | 0% |  |
 | 服务实时日志 | 0% |  |
 | 代码自动生成 | 0% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java)，待适配目前的目录结构 |
+| docker化部署实践 | 0% |  |
 
 + 业务
 
@@ -119,7 +124,7 @@
 | ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm4vm6f3pj31c00u0q5t.jpg) |
 | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g063daokoij31cy0u0jx2.jpg) | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g0daq2y8qwj31d30u0du9.jpg) |
 | ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0ds20z3muj31d30u0dlw.jpg) | ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0jmwac98nj31d30u0jww.jpg) |
-| ![](https://ws3.sinaimg.cn/large/006tKfTcgy1g11m4k4sgtj31d30u076s.jpg) |  |
+| ![](https://ws3.sinaimg.cn/large/006tKfTcgy1g11m4k4sgtj31d30u076s.jpg) | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g14ok7i3n4j31d30u07g5.jpg) |
 
 
 
