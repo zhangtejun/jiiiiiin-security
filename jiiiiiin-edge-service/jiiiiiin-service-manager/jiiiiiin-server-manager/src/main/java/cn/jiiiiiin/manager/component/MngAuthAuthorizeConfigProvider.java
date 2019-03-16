@@ -23,6 +23,8 @@ public class MngAuthAuthorizeConfigProvider implements AuthorizeConfigProvider {
                         "/js/**", "/css/**", "/img/**", "/images/**", "/fonts/**", "/**/favicon.ico",
                         // Druid监控的配置
                         "/", "/druid", "/druid/*", "/druid/**",
+                        // Spring Boot Admin监控配置
+                        "/actuator/**",
                         "/testZuul"
                 ).permitAll();
         return false;
