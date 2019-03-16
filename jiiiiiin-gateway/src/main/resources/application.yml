@@ -19,8 +19,25 @@ apollo:
   # Spring Placeholder的使用
   autoUpdateInjectedSpringProperties: true
 
+spring:
+  sleuth:
+    web:
+      client:
+        enabled: true
+    sampler:
+      # 将采样比例设置为 1.0，也就是全部都需要。默认是 0.1
+      probability: 1.0
+  zipkin:
+    # 指定了 Zipkin 服务器的地址
+    base-url: http://jiiiiiin-zipkin:9411/
+
 # 参考：http://blog.didispace.com/springcloud5/
 zuul:
+  # 全局关闭重试机制
+  # 指定路由关闭重试机制
+  # zuul.routes.<route>.retryable=false
+  # 关于重试 https://blog.csdn.net/WYA1993/article/details/82770827
+  retryable: false
   # 上下文
   prefix: /api
   # 配置路由信息
@@ -63,4 +80,11 @@ hystrix:
       execution:
         isolation:
           thread:
+            # 该参数用来设置API网关中路由转发请求的HystrixCommand超时时间，单位为毫秒。当路由转发请求的命令执行时间超过该配置值后，Hystrix会将该执行命令标记为TIMEOUT并抛出异常。
             timeoutInMilliseconds: 3000
+
+ribbon:
+  # 该参数用来设置路由转发请求的时候，创建请求连接的超时时间。当ribbon.ConnectTimeout的配置值小于hystrix.command.default.execution.isolation.thread.timeoutMilliseconds配置值的时候，若出现路由请求连接超时，会自动进行重试路由请求，如果重试依然失败，Zuul会抛出异常。如果ribbon.ConnectTimeout的配置值大于hystrix.command.default.execution.isolation.thread.timeoutMilliseconds配置值的时候，不会进行请求重试，直接抛出异常。
+  ConnectTimeout: 4000
+  # 该参数用来设置路由转发请求的超时时间。它的处理与ribbon.ConnectTimeout相似，当ribbon.ReadTimeout的配置值小于hystrix.command.default.execution.isolation.thread.timeoutMilliseconds配置值的时候，若出现路由请求连接超时，会自动进行重试路由请求，如果重试依然失败，Zuul会抛出异常。如果ribbon.ReadTimeout的配置值大于hystrix.command.default.execution.isolation.thread.timeoutMilliseconds配置值的时候，不会进行请求重试，直接抛出异常。
+  ReadTimeout: 4000

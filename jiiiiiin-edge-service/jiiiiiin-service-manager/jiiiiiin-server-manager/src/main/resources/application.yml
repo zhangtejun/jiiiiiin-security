@@ -181,13 +181,12 @@ spring:
   profiles: dev
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/vplusdb?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+    url: jdbc:mysql://jiiiiiin-mysql:3306/vplusdb?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
     username: vplus
     password: 1qaz@WSX
   # 配置redis链接地址
   redis:
-    host: 127.0.0.1
-#    host: 192.168.3.43
+    host: jiiiiiin-redis
     port: 6379
 
 logging:
@@ -210,12 +209,12 @@ spring:
   profiles: produce
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/vplusdb?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+    url: jdbc:mysql://jiiiiiin-mysql:3306/vplusdb?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
     username: vplus
     password: 1qaz@WSX
   # 配置redis链接地址
   redis:
-    host: 127.0.0.1
+    host: jiiiiiin-redis
     port: 6379
 
 logging:

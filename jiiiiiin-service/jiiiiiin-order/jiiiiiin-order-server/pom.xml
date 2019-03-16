@@ -51,9 +51,10 @@
             <version>RELEASE</version>
         </dependency>
 
+        <!--Spring 应用在监测到 classpath 中有 Sleuth 和 Zipkin 后，会自动在 WebClient（或 RestTemplate）的调用过程中向 HTTP 请求注入追踪信息，并向 Zipkin Server 发送这些信息。-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-sleuth</artifactId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
         </dependency>
 
     </dependencies>

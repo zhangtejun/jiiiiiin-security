@@ -54,32 +54,32 @@ public class ServiceCallTestController {
     // + 需要进行熔断必须配置`@HystrixCommand`
     // + 如果要实现服务降级，就算使用默认配置`fallbackMethod`，也需要在接口上面配置`@HystrixCommand`
     // http://blog.didispace.com/springcloud3/
-//    @HystrixCommand(fallbackMethod = "fallback",
-//            // `HystrixCommandProperties`查看更多配置信息
-//            commandProperties = {
-//            // 配置超时时间，默认为1秒，这里设置为3秒
-//            // 超时时间要看具体接口的调用执行逻辑，根据情况来设置
-//            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
-//    })
-
     @HystrixCommand(fallbackMethod = "fallback",
+            // `HystrixCommandProperties`查看更多配置信息
             commandProperties = {
-                // HystrixProperty 更多配置，可以查看`HystrixCommandProperties`
-                // 设置开启熔断功能，默认开启
-                    // 流量阈值和失败率阈值都满足才会开启熔断
-                @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
-                    // 流量阈值
-                    // 当在配置时间窗口内达到此数量的失败后，进行短路，默认20个/每秒
-                @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
-                    // 失败率阈值
-                    //出错百分比阈值，当达到此阈值后，开始短路，默认50%
-                @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "60"),
-                    // 休眠时间窗，短路多久以后开始尝试是否恢复，默认5s
-                @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
-                    // 上面的配置就是在说：在10次调用中，失败率超过60%，即7次，那么就会发生熔断，在间隔10秒将会进入半熔断进行放量测试
-
-            }
-    )
+            // 配置超时时间，默认为1秒，这里设置为3秒
+            // 超时时间要看具体接口的调用执行逻辑，根据情况来设置
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000")
+    })
+//
+//    @HystrixCommand(fallbackMethod = "fallback",
+//            commandProperties = {
+//                // HystrixProperty 更多配置，可以查看`HystrixCommandProperties`
+//                // 设置开启熔断功能，默认开启
+//                    // 流量阈值和失败率阈值都满足才会开启熔断
+//                @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+//                    // 流量阈值
+//                    // 当在配置时间窗口内达到此数量的失败后，进行短路，默认20个/每秒
+//                @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+//                    // 失败率阈值
+//                    //出错百分比阈值，当达到此阈值后，开始短路，默认50%
+//                @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "60"),
+//                    // 休眠时间窗，短路多久以后开始尝试是否恢复，默认5s
+//                @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
+//                    // 上面的配置就是在说：在10次调用中，失败率超过60%，即7次，那么就会发生熔断，在间隔10秒将会进入半熔断进行放量测试
+//
+//            }
+//    )
     // 4.定制线程池隔离策略
 //    @HystrixCommand(fallbackMethod = "fallback",
 //            threadPoolKey = "orderServiceThreadPool",
@@ -104,13 +104,13 @@ public class ServiceCallTestController {
     @GetMapping("/msg")
     public String getOrder(@RequestParam(value = "sw", required = false) Integer sw) {
         // 模拟熔断，开关
-        if(sw % 2 == 0){
+        if(sw!= null && sw % 2 == 0){
             return "success";
         }
         val templ = new RestTemplate();
 
         // 1.第一种通讯方式（直接使用restTemplate，url写死）
-        val product = templ.getForObject("http://localhost:7000/msg", String.class);
+//        val product = templ.getForObject("http://localhost:7000/msg", String.class);
 //        val product = restTemplate.getForObject("http://localhost:7000/product/msg", String.class);
 
         // 2.第二种方式
@@ -120,7 +120,7 @@ public class ServiceCallTestController {
 //        val product = templ.getForObject(url, String.class);
 
         // 3.第三种方式
-//        val product = restTemplate.getForObject(String.format("http://%s/msg", PRODUCT_SERVICE_ID), String.class);
+        val product = restTemplate.getForObject(String.format("http://%s/msg", PRODUCT_SERVICE_ID), String.class);
 
         // 4.第四种方式
 //        val product = feignClientTest.getMsg();
@@ -133,10 +133,10 @@ public class ServiceCallTestController {
     }
 
     private String fallback(@RequestParam(value = "sw", required = false) Integer sw) {
-        return "断路器生效了【fallback】";
+        return "order断路器生效了【fallback】";
     }
 
     private String defaultFallback(@RequestParam(value = "sw", required = false) Integer sw) {
-        return "断路器生效了【defaultFallback】";
+        return "order断路器生效了【defaultFallback】";
     }
 }

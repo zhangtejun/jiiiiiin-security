@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,13 +42,12 @@ import javax.validation.groups.Default;
 @RestController
 @RequestMapping("/admin")
 @Api
+@AllArgsConstructor
 public class AdminController extends BaseController {
 
-    @Autowired
-    private IAdminService adminService;
+    private final IAdminService adminService;
 
-    @Autowired
-    private SimpleGrantedAuthority adminSimpleGrantedAuthority;
+    private final SimpleGrantedAuthority adminSimpleGrantedAuthority;
 
     @ApiOperation(value = "用户记录分页查询", httpMethod = "GET")
     @JsonView(View.SimpleView.class)

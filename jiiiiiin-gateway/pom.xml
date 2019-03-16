@@ -25,11 +25,18 @@
             <artifactId>spring-cloud-starter-zuul</artifactId>
             <version>RELEASE</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.cloud</groupId>-->
-            <!--<artifactId>spring-cloud-netflix-core</artifactId>-->
-            <!--&lt;!&ndash;<version>1.3.6.RELEASE</version>&ndash;&gt;-->
-        <!--</dependency>-->
+
+        <!--Spring 应用在监测到 classpath 中有 Sleuth 和 Zipkin 后，会自动在 WebClient（或 RestTemplate）的调用过程中向 HTTP 请求注入追踪信息，并向 Zipkin Server 发送这些信息。-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>

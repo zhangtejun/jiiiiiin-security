@@ -29,8 +29,12 @@
 
             ```bash
             # 本地测试环境
+            127.0.0.1   jiiiiiin-redis
+            127.0.0.1   jiiiiiin-gateway
             127.0.0.1	jiiiiiin-server-manager
-            127.0.0.1	jiiiiiin-zipkin
+            127.0.0.1   jiiiiiin-mysql
+            127.0.0.1   jiiiiiin-eureka
+            127.0.0.1   jiiiiiin-hystrix
             ```
 
             
@@ -65,13 +69,13 @@
 
 | 功能 | 完成状态 | 简介 |
 | ------ | ------ | ------ |
-| 实践Eureka 服务注册发现 | 60% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
-| 实践Zuul 服务网关 | 60% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
+| 实践Eureka 服务注册发现 | 90% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
+| 实践Zuul 服务网关 | 90% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
 | 实践Feign/RestTemplate 服务间通讯和负载均衡 | 90% | 实践服务间的调用、服务降级 |
 | 实践HYSTRIX/Turbine 服务的容错 | 90% | 实现通过Turbine聚合各个服务的Hystrix监控信息，通过`jiiiiiin-hystrix-dashboard`项目完成统一聚合监控，需要在dashboard中键入`jiiiiiin-hystrix-tuibine`的集群监控url，如`http://localhost:8962/turbine.stream` |
+| 实践Zipkin 服务链路追踪 | 90% | [集成方式参考](https://windmt.com/2018/04/24/spring-cloud-12-sleuth-zipkin/)，建议使用docker直接部署服务端 |
 | 实践apollo 服务配置管理| 20% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
 | 实践OAuth2授权认证中心 服务安全 | 0% |  |
-| 实践Zipkin 服务链路追踪 | 50% | [集成方式参考](https://windmt.com/2018/04/24/spring-cloud-12-sleuth-zipkin/) |
 | 服务实时日志 | 0% |  |
 | 代码自动生成 | 0% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java)，待适配目前的目录结构 |
 
@@ -85,8 +89,8 @@
 | 角色管理 | 100% | 用来管理系统定义的角色 |
 | 资源管理 | 100% | 用来管理系统定义的资源 |
 | 接口管理 | 100% | 用来管理后台对应的接口集合 |
-| 商品管理 | 0% | 商家用来管理自己的商品 |
-| 订单管理 | 0% | 商家用来管理自己的订单 |
+| 商品管理 | 10% | 商家用来管理自己的商品 |
+| 订单管理 | 10% | 商家用来管理自己的订单 |
 
 + 已经实践的基础功能
 
