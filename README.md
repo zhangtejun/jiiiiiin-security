@@ -11,6 +11,21 @@
 
 > **如果你仅仅需要一个简单的内管系统，请切换到[master](https://github.com/Jiiiiiin/jiiiiiin-security/tree/master)分支，其仅仅是一个spring-boot前后端分离基础应用，当前分支，是用来学习和实践spring-cloud微服务框架所开**
 
+
+# 功能截图
+
+以下是部分功能截图
+
+|  |  |
+| ------ | ------ |
+| ![](https://ws4.sinaimg.cn/large/006tNc79gy1fzpv0weyyhj31c00u0mz6.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg) |
+| ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg) | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg) |
+| ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm4vm6f3pj31c00u0q5t.jpg) |
+| ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g063daokoij31cy0u0jx2.jpg) | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g0daq2y8qwj31d30u0du9.jpg) |
+| ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0ds20z3muj31d30u0dlw.jpg) | ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0jmwac98nj31d30u0jww.jpg) |
+| ![](https://ws3.sinaimg.cn/large/006tKfTcgy1g11m4k4sgtj31d30u076s.jpg) | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g14ok7i3n4j31d30u07g5.jpg) |
+
+
 # 快速开始
 
 + 视频演示
@@ -33,31 +48,30 @@
             127.0.0.1   jiiiiiin-mysql
             127.0.0.1   jiiiiiin-eureka
             127.0.0.1   jiiiiiin-gateway
-            127.0.0.1   jiiiiiin-hystrix
+            127.0.0.1   jiiiiiin-hystrix-dashboard
+            127.0.0.1   jiiiiiin-hystrix-tuibine
             127.0.0.1   jiiiiiin-springboot-admin
-            127.0.0.1	jiiiiiin-server-manager
+            127.0.0.1   jiiiiiin-server-manager
             ```
-
-            
 
     + [导入数据脚本](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/db/sql-mysql.sql)
 
-    + [配置redis](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L28)
+    + 启动jiiiiiin-mysql|jiiiiiin-redis
+
+    + 启动[apollo](https://github.com/ctripcorp/apollo/wiki/Quick-Start)
+    > 注意这里可以自行控制apollo的连接环境，可以使用`apollo-Quick-Start`快速上手实践
+
+    + 启动jiiiiiin-eureka::DiscoveryServerApplication
+    + 启动监控服务
+        + jiiiiiin-hystrix-dashboard::HystrixDashboardApplication
+        + jiiiiiin-hystrix-tuibine::HystrixTuibineApplication
+        + jiiiiiin-springboot-admin::SpringBootAdminApplication
 
     + 启动后端内管应用
 
     + 启动前端内管应用：jiiiiiin-client-manager
 
-    + 关于apollo集成
-        > 如果你不需要这一块服务，可以去`ManagerApp.java`注释掉`@EnableApolloConfig`
-        - 下载并启动[Apollo服务端](https://github.com/ctripcorp/apollo/wiki/Quick-Start)，注意这里使用的是apollo官方为我们做的一个服务端，如觉得不够用，请自行订制
-        - [apollo目前应用配置](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-server-manager/src/main/resources/application.yml#L9)
-
-        - 关于apollo能给这个项目带来什么：
-            + 应用基础属性application.yml/Spring Placeholder/ConfigurationProperties([后期将会把一些自定义安全配置类添加动态配置](https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南#3223-configurationproperties使用方式))的动态配置
-            + [其他](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin)
-
-    + 一切ok，就可以直接访问`jiiiiiin-server-manager:9000` 查看管理控制台了 ：）
+    > 一切ok，就可以直接访问`jiiiiiin-server-manager:9000` 查看管理控制台了 ：）
 
 
 # 计划
@@ -78,7 +92,7 @@
 | 实践HYSTRIX/Turbine 服务的容错 | 90% | 实现通过Turbine聚合各个服务的Hystrix监控信息，通过`jiiiiiin-hystrix-dashboard`项目完成统一聚合监控，需要在dashboard中键入`jiiiiiin-hystrix-tuibine`的集群监控url，如`http://localhost:8962/turbine.stream` |
 | 实践Zipkin 服务链路追踪 | 90% | [集成方式参考](https://windmt.com/2018/04/24/spring-cloud-12-sleuth-zipkin/)，建议使用docker直接部署服务端 |
 | 集成Spring Boot Admin | 90% | [集成方式参考](https://codecentric.github.io/spring-boot-admin/2.1.3/#spring-cloud-discovery-support)|
-| 实践apollo 服务配置管理| 20% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
+| 实践apollo 服务配置管理| 50% | 实践[Apollo（阿波罗）](https://mp.weixin.qq.com/s/iDmYJre_ULEIxuliu1EbIQ?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin) |
 | 实践OAuth2授权认证中心 服务安全 | 0% |  |
 | 服务实时日志 | 0% |  |
 | 代码自动生成 | 0% | [服务端3层代码自动生成](https://github.com/Jiiiiiin/jiiiiiin-security/blob/master/jiiiiiin-module-common/src/main/java/cn/jiiiiiin/module/common/generator/CodeGenerator.java)，待适配目前的目录结构 |
@@ -112,20 +126,6 @@
 | spring-mobile | 100% | [用来进行渠道判断](https://projects.spring.io/spring-mobile/)，使得应用能根据请求的设备响应不同的数据格式 |
 | Gif验证码 | 100% | [EasyCaptcha](https://github.com/whvcse/EasyCaptcha)和[kaptcha](https://github.com/penggle/kaptcha)两种验证码库的支持 |
 | 集成druid监控 | 100% | [druid](https://github.com/alibaba/druid) |
-
-# 功能截图
-
-以下是部分功能截图
-
-|  |  |
-| ------ | ------ |
-| ![](https://ws4.sinaimg.cn/large/006tNc79gy1fzpv0weyyhj31c00u0mz6.jpg) | ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxy9om3ct3j31hc0u0dpu.jpg) |
-| ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxw90anl1yj31c00u0taw.jpg) | ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyazwdryopj31hc0u0qa5.jpg) |
-| ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy2tx2neg1j31hc0u0q9b.jpg) | ![](https://ws1.sinaimg.cn/large/006tNc79gy1fzm4vm6f3pj31c00u0q5t.jpg) |
-| ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g063daokoij31cy0u0jx2.jpg) | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g0daq2y8qwj31d30u0du9.jpg) |
-| ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0ds20z3muj31d30u0dlw.jpg) | ![](https://ws2.sinaimg.cn/large/006tKfTcgy1g0jmwac98nj31d30u0jww.jpg) |
-| ![](https://ws3.sinaimg.cn/large/006tKfTcgy1g11m4k4sgtj31d30u076s.jpg) | ![](https://ws4.sinaimg.cn/large/006tKfTcgy1g14ok7i3n4j31d30u07g5.jpg) |
-
 
 
 # 表结构和权限说明
