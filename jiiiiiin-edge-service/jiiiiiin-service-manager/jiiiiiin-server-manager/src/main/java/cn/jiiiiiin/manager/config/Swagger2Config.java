@@ -14,6 +14,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 /**
  * 解决：Unable to infer base url. This is common when using dynamic servlet registration or when the API is behind an API Gateway. The base url is the root of where all the swagger resources are served. For e.g. if the api is available at http://example.org/api/v2/api-docs then the base url is http://example.org/api/. Please enter the location manually:
  * https://zhaoxuyang.com/springboot%E4%BD%BF%E7%94%A8swagger2%E5%87%BA%E7%8E%B0unable-to-infer-base-url-this-is-common-when-using-dynamic-servlet-registration-or-when-the-api-is-behind-an-api-gateway/
+ * <p>
+ * https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api
+ *
  * @author jiiiiiin
  */
 @Configuration
