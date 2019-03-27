@@ -4,9 +4,14 @@ import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.social.oauth2.OAuth2Parameters;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author jiiiiiin
@@ -14,6 +19,8 @@ import org.springframework.social.oauth2.OAuth2Parameters;
 @Setter
 @Getter
 @NoArgsConstructor
+@Slf4j
+@ToString
 public class BrowserProperties {
 
     /**
@@ -24,7 +31,7 @@ public class BrowserProperties {
     /**
      * 前端应用的baseUrl
      */
-    private String fontUrl = "http://127.0.0.1:9000/";
+    private String fontUrl = "http://jiiiiiin-server-manager:9000/";
 
     /**
      * 身份认证（登录）页面
@@ -56,6 +63,6 @@ public class BrowserProperties {
      * 代理地址，用于访问第三方授权服务标识自身应用的服务器地址
      * 防止 {@link cn.jiiiiiin.security.core.social.weixin.connect.WeixinOAuth2Template#buildAuthenticateUrl(OAuth2Parameters)} 调用基类返回的其实是一个本地测试地址的情况
      */
-    private String proxyUri;
+    private String proxyUri = "http://jiiiiiin-server-manager:9090/";
 
 }

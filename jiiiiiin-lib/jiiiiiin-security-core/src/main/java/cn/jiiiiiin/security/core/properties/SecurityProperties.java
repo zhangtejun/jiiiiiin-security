@@ -3,7 +3,13 @@ package cn.jiiiiiin.security.core.properties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author jiiiiiin
@@ -13,6 +19,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @Getter
 @NoArgsConstructor
+@RefreshScope
+@ToString
+@Slf4j
+@Component("securityProperties")
 public class SecurityProperties {
     /**
      * 浏览器环境配置
@@ -32,4 +42,9 @@ public class SecurityProperties {
      * OAuth2认证服务器配置
      */
     private OAuth2Properties oauth2 = new OAuth2Properties();
+
+    @PostConstruct
+    private void initialize() {
+        log.info("SecurityProperties initialized - browser: {}, validate: {}, social: {}, oauth2: {}", browser, validate, social, oauth2);
+    }
 }

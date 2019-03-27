@@ -3,6 +3,7 @@ package cn.jiiiiiin.security.core.properties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.awt.*;
 
@@ -16,6 +17,7 @@ import static cn.jiiiiiin.security.core.properties.ImageCodeProperties.Type.EASY
  */
 @Setter
 @Getter
+@ToString
 public class ImageCodeProperties extends SmsCodeProperties {
 
     public ImageCodeProperties() {

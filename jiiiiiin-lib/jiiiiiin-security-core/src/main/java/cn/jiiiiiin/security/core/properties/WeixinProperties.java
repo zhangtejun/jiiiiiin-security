@@ -7,6 +7,7 @@ import cn.jiiiiiin.security.core.properties.adapter.SocialProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 微信登录配置项
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 public class WeixinProperties extends SocialProperties {
 
     /**

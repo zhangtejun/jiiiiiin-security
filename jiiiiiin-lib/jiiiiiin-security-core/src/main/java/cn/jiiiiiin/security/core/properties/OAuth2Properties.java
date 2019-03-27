@@ -6,6 +6,7 @@ package cn.jiiiiiin.security.core.properties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 public class OAuth2Properties {
 
     /**

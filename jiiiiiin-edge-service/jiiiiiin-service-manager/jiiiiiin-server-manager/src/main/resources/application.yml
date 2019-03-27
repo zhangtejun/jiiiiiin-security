@@ -14,6 +14,8 @@ apollo:
   # meta server和config service是部署在同一个JVM进程，所以meta server的地址就是config service的地址。
   meta: http://localhost:8080
   # 本地缓存路径
+  # 默认会存储再/opt/data/「appid」
+  # 对应的目录需要有读写权限
   cacheDir: /Users/jiiiiiin/Documents/IdeaProjects/jiiiiiin-security/apollo-cache-dir
   # Cluster（集群）
   cluster: default
@@ -27,10 +29,10 @@ apollo:
   autoUpdateInjectedSpringProperties: true
 
 # 通过apollo配置
-#server:
-#  port: 9090
-#  servlet:
-#    context-path: /mng
+server:
+  port: 9090
+  servlet:
+    context-path: /mng
 #eureka:
 #  client:
 #    service-url:
@@ -176,7 +178,7 @@ jiiiiiin:
         interceptor-urls: ${server.context-path}/authentication/form,${server.context-path}/authentication/mobile
     browser:
       fontUrl: http://jiiiiiin-server-manager:9000/
-      signInUrl: /index
+      signInUrl: /signIn
       sign-up-url: /index
       sign-out-url: /index
 #      sign-up-url: /signUp.html

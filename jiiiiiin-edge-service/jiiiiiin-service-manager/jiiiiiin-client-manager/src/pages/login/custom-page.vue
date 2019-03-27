@@ -82,7 +82,6 @@ export default {
       timeInterval: null,
       time: dayjs().format('HH:mm:ss'),
       submitBtnDisabled: false,
-      // validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image?width=30&${new Date().getTime()}`,
       validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image`,
       // 表单
       formLogin: {

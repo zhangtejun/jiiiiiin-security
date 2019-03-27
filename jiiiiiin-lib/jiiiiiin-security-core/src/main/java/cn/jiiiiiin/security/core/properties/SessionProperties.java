@@ -7,6 +7,7 @@ import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
@@ -18,6 +19,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 public class SessionProperties {
 
     /**
