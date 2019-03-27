@@ -36,6 +36,57 @@
 
 [下载高清视频](https://pan.baidu.com/s/1ZZmw7idemDWD0-tnmb1GHA)
 
+
+# 项目结构说明
+
+```bash
+.
+├── pom.xml 公共pom
+├── apollo-cache-dir (apollo本地缓存目录，见配置)
+├── config 各个边界服务、后端服务的apollo配置目录
+├── db 数据库初始化脚本
+├── jiiiiiin-lib 自定义库
+│   ├── jiiiiiin-data-orm orm层模块（目前主要针对Mybatis-Plus）
+│   ├── jiiiiiin-security-app 针对JWT Token的安全模块（lib，目前没有依赖）
+│   ├── jiiiiiin-security-authorize 后端RBAC抽象模块(lib)
+│   ├── jiiiiiin-security-browser 针对Session的安全层模块(lib)
+│   ├── jiiiiiin-security-core 安全层基础模块（lib，处理Spring-Security相关基础配置）
+│   ├── jiiiiiin-module-common 应用通用模块(目前内管依赖)
+├── jiiiiiin-eureka-server 注册中心服务端(通用服务)
+├── jiiiiiin-gateway 网关(通用服务)
+├── jiiiiiin-hystrix
+│   ├── jiiiiiin-hystrix-dashboard Hystrix熔断监服务(通用服务)
+│   ├── jiiiiiin-hystrix-tuibine Hystrix Turbine聚合服务(通用服务)
+├── jiiiiiin-edge-service 边界服务(微服务中聚合子服务的聚合项目)
+│   ├── jiiiiiin-service-manager 内管的聚合项目
+│   │   ├── jiiiiiin-client-manager 内管前端应用（Vue项目，依赖d2-admin模块（1.6.9最新））
+│   │   ├── jiiiiiin-module-mngauth 管理模块(目前内管依赖)
+│   │   ├── jiiiiiin-server-manager 内管后端应用
+├── jiiiiiin-service 后端服务(微服务的聚合项目)
+│   ├── jiiiiiin-order 订单的聚合项目
+│   │   ├── jiiiiiin-order-server 后端应用
+│   ├── jiiiiiin-product 商品的聚合项目
+│   │   ├── jiiiiiin-product-client 商品Feign客户端（提供给调用方使用，如在创建订单时候）
+│   │   ├── jiiiiiin-product-server 后端应用
+```
+
+> 微服务代码划分
+
++ `jiiiiiin-service`为【原子服务】
+    + 一个原子服务，有划分为：
+        - xxx-业务标识-client Feign客户端（提供给调用方使用）
+        - xxx-业务标识-server 服务本身
+        - xxx-业务标识-common 当前原子服务中client和server共同依赖的代码，如实体等
+
++ `jiiiiiin-edge-service`为【边界服务服务】
+    + 边界服务即提供给外部客户端（如：App）来调用，组织比较自由，但有一个原则及其只会依赖【原子服务】，一般不作为内部服务提供者
+
+即下图中的`Edge Service`和`Middle Tier Service`：
+
+![](https://ws2.sinaimg.cn/large/006tKfTcly1g0kscyq1s0j317m0j00ue.jpg)
+
+
+
 + 提示步骤：
 
     + 修改本地hosts
@@ -89,7 +140,7 @@
 | ------ | ------ | ------ |
 | 实践Eureka 服务注册发现 | 90% | 集成[Service Discovery (Eureka)](https://spring.io/projects/spring-cloud-netflix)服务注册中心 |
 | 实践Zuul 服务网关 | 90% | 集成[Intelligent Routing (Zuul)](https://spring.io/projects/spring-cloud-netflix)服务网关 |
-| 实践Feign/RestTemplate 服务间通讯和负载均衡 | 90% | 实践服务间的调用、服务降级 |
+| 实践Feign/RestTemplate 服务间通讯和负载均衡 | 90% | 实践服务间的调用 |
 | 实践HYSTRIX/Turbine 服务的容错 | 90% | 实现通过Turbine聚合各个服务的Hystrix监控信息，通过`jiiiiiin-hystrix-dashboard`项目完成统一聚合监控，需要在dashboard中键入`jiiiiiin-hystrix-tuibine`的集群监控url，如`http://localhost:8962/turbine.stream` |
 | 实践Zipkin 服务链路追踪 | 90% | [集成方式参考](https://windmt.com/2018/04/24/spring-cloud-12-sleuth-zipkin/)，建议使用docker直接部署服务端 |
 | 集成Spring Boot Admin | 90% | [集成方式参考](https://codecentric.github.io/spring-boot-admin/2.1.3/#spring-cloud-discovery-support)|
@@ -151,55 +202,6 @@
 
     - 详细配置和api可以点击：[vue-viewplus-自定义RBAC权限控制模块](http://jiiiiiin.cn/vue-viewplus/#/rbac)
     
-# 项目结构说明
-
-```bash
-.
-├── pom.xml 公共pom
-├── apollo-cache-dir (apollo本地缓存目录，见配置)
-├── config 各个边界服务、后端服务的apollo配置目录
-├── db 数据库初始化脚本
-├── jiiiiiin-lib 自定义库
-│   ├── jiiiiiin-data-orm orm层模块（目前主要针对Mybatis-Plus）
-│   ├── jiiiiiin-security-app 针对JWT Token的安全模块（lib，目前没有依赖）
-│   ├── jiiiiiin-security-authorize 后端RBAC抽象模块(lib)
-│   ├── jiiiiiin-security-browser 针对Session的安全层模块(lib)
-│   ├── jiiiiiin-security-core 安全层基础模块（lib，处理Spring-Security相关基础配置）
-│   ├── jiiiiiin-module-common 应用通用模块(目前内管依赖)
-├── jiiiiiin-eureka-server 注册中心服务端(通用服务)
-├── jiiiiiin-gateway 网关(通用服务)
-├── jiiiiiin-hystrix
-│   ├── jiiiiiin-hystrix-dashboard Hystrix熔断监服务(通用服务)
-│   ├── jiiiiiin-hystrix-tuibine Hystrix Turbine聚合服务(通用服务)
-├── jiiiiiin-edge-service 边界服务(微服务中聚合子服务的聚合项目)
-│   ├── jiiiiiin-service-manager 内管的聚合项目
-│   │   ├── jiiiiiin-client-manager 内管前端应用（Vue项目，依赖d2-admin模块（1.6.9最新））
-│   │   ├── jiiiiiin-module-mngauth 管理模块(目前内管依赖)
-│   │   ├── jiiiiiin-server-manager 内管后端应用
-├── jiiiiiin-service 后端服务(微服务的聚合项目)
-│   ├── jiiiiiin-order 订单的聚合项目
-│   │   ├── jiiiiiin-order-server 后端应用
-│   ├── jiiiiiin-product 商品的聚合项目
-│   │   ├── jiiiiiin-product-client 商品Feign客户端（提供给调用方使用，如在创建订单时候）
-│   │   ├── jiiiiiin-product-server 后端应用
-```
-
-> 微服务代码划分
-
-+ `jiiiiiin-service`为【原子服务】
-    + 一个原子服务，有划分为：
-        - xxx-业务标识-client Feign客户端（提供给调用方使用）
-        - xxx-业务标识-server 服务本身
-        - xxx-业务标识-common 当前原子服务中client和server共同依赖的代码，如实体等
-
-+ `jiiiiiin-edge-service`为【边界服务服务】
-    + 边界服务即提供给外部客户端（如：App）来调用，组织比较自由，但有一个原则及其只会依赖【原子服务】，一般不作为内部服务提供者
-
-即下图中的`Edge Service`和`Middle Tier Service`：
-
-![](https://ws2.sinaimg.cn/large/006tKfTcly1g0kscyq1s0j317m0j00ue.jpg)
-
-
 # 所用技术栈
 
 ### 后台
