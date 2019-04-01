@@ -1,55 +1,56 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"></meta>
+    <meta charset="UTF-8"/>
     <meta name="viewport"
-          content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,admin-scalable=no"></meta>
+          content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,admin-scalable=no"/>
     <title>登录 - 默认</title>
-    <!-- 引入样式 -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"></link>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bower_components/bulma/css/bulma.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
+    <link href="https://cdn.bootcss.com/element-ui/2.6.1/theme-chalk/index.css" rel="stylesheet">
     <style>
         [v-cloak] {
             display: none !important;
         }
 
-        .title {
-            text-align: center;
-        }
-
         .image-code-input {
             width: 50%;
-        }
-
-        .image-code {
-            position: absolute;
-            width: 100px;
-            margin-left: 20px;
             height: 40px;
-        }
-
-        .from {
-            margin-top: 150px;
+            border-radius: 5px;
+            border: 1px solid #eee;
         }
     </style>
 </head>
 <body>
 
 <div id="app" v-cloak>
+    <section class="hero is-danger">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    默认登录页面
+                </h1>
+                <h2 class="subtitle">
+                    <p>请配置 `jiiiiiin.security.browser.signUpUrl` 属性来设置自己的注册页</p>
+                </h2>
+            </div>
+        </div>
+    </section>
 
-    <el-row class="from">
+
+    <el-row class="from" style="margin-top: 50px;">
         <el-col :span="4">&nbsp;</el-col>
         <el-col :span="16">
 
-            <h3 class="title">登录</h3>
-
-            <p style="color:red" th:text="${#httpServletRequest.getParameter('SPRING_SECURITY_LAST_EXCEPTION')}"></p>
+            <div style="color:red; margin-bottom: 10px" th:if="${#httpServletRequest.getParameter('SPRING_SECURITY_LAST_EXCEPTION')}">错误提示：<p th:text="${#httpServletRequest.getParameter('SPRING_SECURITY_LAST_EXCEPTION')}"></p></div>
 
             <el-tabs type="border-card">
                 <el-tab-pane label="账号方式">
                     <!--自定义登录交易-->
                     <!--默认框架配置的登录交易，查看UsernamePasswordAuthenticationFilter#requiresAuthenticationRequestMatcher-->
                     <!--<form action="/login" method="post">-->
-                    <el-form ref="form" label-width="80px" th:action="@{/authentication/form}" method="post" @keyup.enter="onSubmit">
+                    <el-form ref="form" label-width="80px" th:action="@{/authentication/form}" method="post"
+                             @keyup.enter="onSubmit">
                         <el-form-item label="用户名" required="true">
                             <el-input name="username" v-model="username"></el-input>
                         </el-form-item>
@@ -108,10 +109,18 @@
         <el-col :span="4">&nbsp;</el-col>
     </el-row>
 
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p><a href="https://github.com/Jiiiiiin/jiiiiiin-security">jiiiiiin-security</a></p>
+        </div>
+    </footer>
+
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.bootcss.com/element-ui/2.6.1/index.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/common.js}"></script>
 
@@ -166,10 +175,10 @@
                 /**
                  * social的过滤器 SocialAuthenticationFilter 会拦截`/auth`标识的接口
                  * /qq 代表的是QQProperties#providerId
-                 * @type {string}
                  */
                 // window.location.href = `${baseConfig.baseURL}/auth/qq`
                 // 测试接口，本地需要使用修改host文件方式映射到，www.pinzhi365.com
+                // alert(`${baseConfig.baseURL}/qqLogin/callback.do`)
                 window.location.href = `${baseConfig.baseURL}/qqLogin/callback.do`
             },
             onTapWeixinAuthSignIn: function () {

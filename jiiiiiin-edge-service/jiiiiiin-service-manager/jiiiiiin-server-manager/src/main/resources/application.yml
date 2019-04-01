@@ -30,9 +30,10 @@ apollo:
 
 # 通过apollo配置
 server:
-  port: 9090
+#  port: 9090
+  port: 80
   servlet:
-    context-path: /mng
+#    context-path: /mng
 #eureka:
 #  client:
 #    service-url:
@@ -170,6 +171,15 @@ mybatis-plus:
 # 自定义配置
 jiiiiiin:
   security:
+    # https://github.com/jojozhai/security
+    social:
+      filterProcessesUrl: /qqLogin
+      qq:
+        app-id: 100550231
+        app-secret: 69b6ab57b22f3c2fe6a6149274e3295e
+        # 覆盖默认的`/auth`用于测试
+        # 覆盖默认的`/qq`用于测试
+        providerId: callback.do
     validate:
       image-code:
         type: EASYCAPTCHA_GIF_TYPE_NUM_AND_UPPER
@@ -179,10 +189,8 @@ jiiiiiin:
     browser:
       fontUrl: http://jiiiiiin-server-manager:9000/
       signInUrl: /signIn
-      sign-up-url: /index
-      sign-out-url: /index
-#      sign-up-url: /signUp.html
-#      sign-out-url: /signOut.html
+      sign-up-url: /signUp
+      sign-out-url: /signOut
       rememberMeSeconds: 3600
       # proxy-uri: http://www.pinzhi365.com
 

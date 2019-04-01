@@ -8,25 +8,37 @@ import cn.jiiiiiin.security.core.social.qq.api.QQ;
 import cn.jiiiiiin.security.core.social.qq.api.QQImpl;
 import org.springframework.social.oauth2.AbstractOAuth2ServiceProvider;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
+ * 对接服务提供商抽象接口
+ * <p>
+ * 参考：
+ * https://coding.imooc.com/lesson/134.html#mid=6888
+ * <p>
  * 下面是spring social的授权登录流程：
  * <p>
  * ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuqnpxoqo6j30wg0hr0v0.jpg)
  * <p>
  * 当前类就是流程中的 Service Provider的实现
  * <p>
- * 泛型需要的是Api的接口类型
+ * 泛型需要的是ApiBinding的接口类型{@link QQ}
  *
  * @author zhailiang
  * @author jiiiiiin
  */
 public class QQServiceProvider extends AbstractOAuth2ServiceProvider<QQ> {
 
+    /**
+     * 服务提供商给应用授权提供的应用id
+     */
     private final String appId;
 
     // 以下两个链接：http://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token
     /**
      * 流程的第一步：获取Authorization Code 接口
+     * {@link org.springframework.social.security.provider.OAuth2AuthenticationService#getAuthToken(HttpServletRequest, HttpServletResponse)}
      * 应用将用户引导到这个地址（授权提供服务），进行流程的第一步，获取授权码【Authorization Code】
      */
     private static final String URL_AUTHORIZE = "https://graph.qq.com/oauth2.0/authorize";
@@ -37,7 +49,9 @@ public class QQServiceProvider extends AbstractOAuth2ServiceProvider<QQ> {
 
     /**
      * 构造service provider
-     * @param appId 应用【用户名】
+     * 配置OAuth2所需2个配置信息
+     *
+     * @param appId     应用【用户名】
      * @param appSecret 应用【密码】
      */
     public QQServiceProvider(String appId, String appSecret) {
@@ -52,9 +66,6 @@ public class QQServiceProvider extends AbstractOAuth2ServiceProvider<QQ> {
         this.appId = appId;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.social.oauth2.AbstractOAuth2ServiceProvider#getApi(java.lang.String)
-     */
     @Override
     public QQ getApi(String accessToken) {
         // 多实例

@@ -3,6 +3,9 @@
  */
 package cn.jiiiiiin.security.core.social.support;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.val;
 import org.springframework.social.security.SocialAuthenticationFilter;
 import org.springframework.social.security.SpringSocialConfigurer;
 
@@ -13,9 +16,13 @@ import org.springframework.social.security.SpringSocialConfigurer;
  *
  * @author zhailiang
  */
+@Getter
+@Setter
 public class CustomSpringSocialConfigurer extends SpringSocialConfigurer {
 
     /**
+     * 社交登录功能拦截的url，即social帮助我们拦截当前url去走对应的oauth流程
+     *
      * @see CustomSpringSocialConfigurer#postProcess(Object)
      */
     private String filterProcessesUrl;
@@ -38,30 +45,13 @@ public class CustomSpringSocialConfigurer extends SpringSocialConfigurer {
     @SuppressWarnings("unchecked")
     @Override
     protected <T> T postProcess(T object) {
-        final SocialAuthenticationFilter filter = (SocialAuthenticationFilter) super.postProcess(object);
+        val filter = (SocialAuthenticationFilter) super.postProcess(object);
         filter.setFilterProcessesUrl(filterProcessesUrl);
         if (socialAuthenticationFilterPostProcessor != null) {
             // 处理获取到第三方用户信息之后的处理
             socialAuthenticationFilterPostProcessor.process(filter);
         }
         return (T) filter;
-    }
-
-    public String getFilterProcessesUrl() {
-        return filterProcessesUrl;
-    }
-
-    public void setFilterProcessesUrl(String filterProcessesUrl) {
-        this.filterProcessesUrl = filterProcessesUrl;
-    }
-
-    public SocialAuthenticationFilterPostProcessor getSocialAuthenticationFilterPostProcessor() {
-        return socialAuthenticationFilterPostProcessor;
-    }
-
-    public void setSocialAuthenticationFilterPostProcessor(
-            SocialAuthenticationFilterPostProcessor socialAuthenticationFilterPostProcessor) {
-        this.socialAuthenticationFilterPostProcessor = socialAuthenticationFilterPostProcessor;
     }
 
 }

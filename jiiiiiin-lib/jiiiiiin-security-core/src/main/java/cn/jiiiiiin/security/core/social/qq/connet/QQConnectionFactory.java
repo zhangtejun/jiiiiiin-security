@@ -7,9 +7,11 @@ import cn.jiiiiiin.security.core.social.qq.api.QQ;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 
 /**
+ * 创建Connection
+ * <p>
  * 参考：
  * ![](https://ws2.sinaimg.cn/large/0069RVTdgy1fuqp901tqxj30y20izwgv.jpg)
- *
+ * <p>
  * 用户创建 {@link org.springframework.social.connect.Connection}
  *
  * @author zhailiang

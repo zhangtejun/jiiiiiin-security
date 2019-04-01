@@ -42,12 +42,12 @@ public class BrowserProperties {
     /**
      * 社交登录，如果需要用户注册，跳转的页面
      */
-    private String signUpUrl = "/signUp.html";
+    private String signUpUrl = SecurityConstants.DEFAULT_SIGN_UP_PAGE_URL;
 
     /**
      * 退出成功时跳转的html输出页面，如果是移动端渠道访问则返回json数据，不走该页面。
      */
-    private String signOutUrl = "/signOut.html";
+    private String signOutUrl = SecurityConstants.DEFAULT_SIGN_OUT_PAGE_URL;
 
     /**
      * 权限校验失败时候显示的页面

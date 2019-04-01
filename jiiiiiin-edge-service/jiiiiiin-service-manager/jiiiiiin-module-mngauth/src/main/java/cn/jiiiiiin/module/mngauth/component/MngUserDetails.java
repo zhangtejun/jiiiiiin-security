@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.social.security.SocialUserDetails;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "admin")
-public class MngUserDetails implements UserDetails {
+public class MngUserDetails implements SocialUserDetails {
 
     private static final long serialVersionUID = -8362660409491439833L;
 
@@ -68,5 +69,10 @@ public class MngUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getUserId() {
+        return admin.getUsername();
     }
 }

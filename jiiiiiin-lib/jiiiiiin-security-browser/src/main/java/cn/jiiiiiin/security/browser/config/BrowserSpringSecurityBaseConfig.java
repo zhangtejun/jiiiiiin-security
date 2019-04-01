@@ -132,7 +132,7 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 .and()
                 .logout()
                 // 定义退出登录发送的接口名称，默认为`/logout`
-                .logoutUrl(SecurityConstants.LOGOUT_URL)
+                .logoutUrl(SecurityConstants.DEFAULT_SIGN_OUT_PAGE_URL)
                 // 退出登录之后的处理类，将会接收到退出登录的请求，可以在这里做响应的业务处理，配置之后`logoutSuccessUrl`配置会失效
                 .logoutSuccessHandler(logoutSuccessHandler)
                 // 退出登录之后访问的页面

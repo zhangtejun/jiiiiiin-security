@@ -36,6 +36,12 @@ public interface SecurityConstants {
      * 默认登录页面
      */
     String DEFAULT_SIGN_IN_PAGE_URL = "/signIn";
+
+    String DEFAULT_SIGN_UP_PAGE_URL = "/signUp";
+    /**
+     * 默认退出登录的处理接口
+     */
+    String DEFAULT_SIGN_OUT_PAGE_URL = "/signOut";
     /**
      * 验证图片验证码时，http请求中默认的携带图片验证码信息的参数的名称
      */
@@ -83,9 +89,4 @@ public interface SecurityConstants {
      * social 第三方授权用户管理表的表前缀
      */
     String SOCIAL_TABLE_PREFIX = "springsocial_";
-    /**
-     * 默认退出登录的处理接口
-     */
-    String LOGOUT_URL = "/signOut";
-
 }

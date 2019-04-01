@@ -7,6 +7,7 @@ import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.support.CustomSpringSocialConfigurer;
 import cn.jiiiiiin.security.core.social.support.SocialAuthenticationFilterPostProcessor;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -92,8 +93,8 @@ public class SocialConfig extends SocialConfigurerAdapter {
      */
     @Override
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
-        // !Encryptors.noOpText()为调试使用，不做加解密
-        JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource,
+        // TODO !Encryptors.noOpText()为调试使用，不做加解密
+        val repository = new JdbcUsersConnectionRepository(dataSource,
                 connectionFactoryLocator, Encryptors.noOpText());
         // 添加表前缀
         repository.setTablePrefix(SecurityConstants.SOCIAL_TABLE_PREFIX);
@@ -113,8 +114,8 @@ public class SocialConfig extends SocialConfigurerAdapter {
      */
     @Bean
     public SpringSocialConfigurer socialSecurityConfig() {
-        final String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
-        final CustomSpringSocialConfigurer configurer = new CustomSpringSocialConfigurer(filterProcessesUrl);
+        val filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
+        val configurer = new CustomSpringSocialConfigurer(filterProcessesUrl);
         // 配置自定义注册页面接口，当第三方授权获取user detail在业务系统找不到的时候默认调整到该页面
         configurer.signupUrl(securityProperties.getBrowser().getSignUpUrl());
         // 注入后处理器，以便app模式（标准）下授权登录能够完成，动态设置signupUrl根据模块（app/browser）

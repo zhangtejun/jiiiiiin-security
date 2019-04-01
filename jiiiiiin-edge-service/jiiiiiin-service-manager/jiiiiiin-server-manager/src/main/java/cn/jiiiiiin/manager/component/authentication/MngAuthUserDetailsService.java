@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.social.security.SocialUserDetails;
+import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -30,13 +32,24 @@ import java.util.HashSet;
  */
 @Component
 @Slf4j
-public class MngAuthUserDetailsService implements UserDetailsService {
+public class MngAuthUserDetailsService implements UserDetailsService, SocialUserDetailsService {
 
     @Autowired
     private IAdminService adminService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.debug("普通登录用户名 {}", username);
+        return _getUserDetails(username);
+    }
+
+    @Override
+    public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException {
+        log.debug("社交登录用户名 {}", userId);
+        return _getUserDetails(userId);
+    }
+
+    private SocialUserDetails _getUserDetails(String username) {
         // 根据channel去获取登录用户的权限信息
         val optionalAdmin = adminService.signInByUsername(username, ChannelEnum.MNG);
         if (optionalAdmin == null) {

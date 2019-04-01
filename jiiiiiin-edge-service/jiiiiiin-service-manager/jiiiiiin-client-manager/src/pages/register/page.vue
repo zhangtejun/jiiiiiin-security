@@ -22,6 +22,9 @@
           <!-- 表单 -->
           <div class="page-login--form">
             <el-card shadow="never">
+              <div slot="header" class="clearfix">
+                <span>用户注册</span>
+              </div>
               <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin" size="default" @submit.native.prevent>
                 <el-form-item  prop="username">
                   <el-input type="text" v-model="formLogin.username" placeholder="用户名">
@@ -116,16 +119,15 @@ export default {
   methods: {
     ...mapActions('d2admin/account', ['login']),
     onQQSignUp() {
-      // TODO this.$vp.pageHref的正则判断可能存在问题
+      console.log(this.$vp)
       // this.$vp.pageHref(`${this.$vp.options.serverUrl}/auth/qq`)
-      window.location.href = `http://www.pinzhi365.com/qqLogin/callback.do`
-      // window.location.href = `${this.$vp.options.serverUrl}/qqLogin/callback.do`
+      window.location.href = `${this.$vp.options.serverUrl}/qqLogin/callback.do`
     },
     onForgetPwd() {
       this.$vp.toast('暂未实现', { type: 'warning' });
     },
     onSignUp() {
-      this.$vp.pageNext('/register')
+      this.$vp.toast('暂未实现', { type: 'warning' });
     },
     refreshTime () {
       this.time = dayjs().format('HH:mm:ss')

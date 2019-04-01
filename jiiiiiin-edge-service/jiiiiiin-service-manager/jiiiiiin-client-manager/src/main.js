@@ -42,7 +42,7 @@ ViewPlus.mixin(Vue, rbacModule, {
   errorHandler,
   moduleName: '自定义RBAC',
   router,
-  publicPaths: ['/login'],
+  publicPaths: ['/login', '/register', '/404'],
   onPathCheckFail(to, from, next) {
     NProgress.done();
     const { path } = to;
