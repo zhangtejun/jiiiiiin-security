@@ -3,12 +3,13 @@ package cn.jiiiiiin.module.mngauth.service;
 import cn.jiiiiiin.module.common.dto.mngauth.AdminDto;
 import cn.jiiiiiin.module.common.entity.mngauth.Admin;
 import cn.jiiiiiin.module.common.enums.common.ChannelEnum;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -99,4 +100,12 @@ public interface IAdminService extends IService<Admin> {
      * @return
      */
     Boolean updatePwd(AdminDto admin);
+
+    /**
+     * 预注册基础用户信息
+     * @param admin
+     * @param request
+     * @return
+     */
+    void regist(AdminDto admin, HttpServletRequest request);
 }

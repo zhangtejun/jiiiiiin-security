@@ -9,11 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
@@ -45,9 +44,6 @@ import java.io.IOException;
 @Slf4j
 public class BrowserSecurityController extends SocialController {
 
-    @Autowired
-    private SecurityProperties securityProperties;
-
     /**
      * 当框架认为需要进行身份认证，会将请求缓存到requestCache中，这里我们在登录完成之后，从这个对象中拿出框架帮我们缓存的上一个被拦截的请求
      */
@@ -55,8 +51,19 @@ public class BrowserSecurityController extends SocialController {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
+    private final ProviderSignInUtils providerSignInUtils;
+
+    private final SecurityProperties securityProperties;
+
+    private final LiteDeviceResolver liteDeviceResolver;
+
+
     @Autowired
-    private ProviderSignInUtils providerSignInUtils;
+    public BrowserSecurityController(SecurityProperties securityProperties, ProviderSignInUtils providerSignInUtils, LiteDeviceResolver liteDeviceResolver) {
+        this.securityProperties = securityProperties;
+        this.providerSignInUtils = providerSignInUtils;
+        this.liteDeviceResolver = liteDeviceResolver;
+    }
 
     /**
      * 即当需要身份认证时候需要访问该接口，该接口负责根据渠道去渲染（身份认证（登录）页面）或返回json提示
@@ -71,8 +78,8 @@ public class BrowserSecurityController extends SocialController {
      */
     @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
-    public R<String> requireAuthentication(HttpServletRequest request, HttpServletResponse response, Device device, Model model) throws IOException {
-        if (device.isNormal()) {
+    public R<String> requireAuthentication(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+        if (this.liteDeviceResolver.resolveDevice(request).isNormal()) {
             // 获取到上一个被拦截的请求(原始请求）或者说引发进行身份认证跳转的请求
             final SavedRequest savedRequest = requestCache.getRequest(request, response);
             if (savedRequest != null) {
@@ -96,7 +103,7 @@ public class BrowserSecurityController extends SocialController {
 
     /**
      * 用户第一次社交登录时，会引导用户进行用户注册或绑定，此服务用于在注册或绑定页面获取社交网站用户信息
-     *
+     * 端点：`"/social/userInfo"`
      * @param request
      * @return
      */

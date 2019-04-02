@@ -180,6 +180,10 @@ jiiiiiin:
         # 覆盖默认的`/auth`用于测试
         # 覆盖默认的`/qq`用于测试
         providerId: callback.do
+      weixin:
+        app-id: wxd99431bbff8305a0
+        app-secret: 60f78681d063590a469f1b297feff3c4
+        providerId: weixin
     validate:
       image-code:
         type: EASYCAPTCHA_GIF_TYPE_NUM_AND_UPPER
@@ -191,8 +195,9 @@ jiiiiiin:
       signInUrl: /signIn
       sign-up-url: /signUp
       sign-out-url: /signOut
+      # 以下设置非必须
       rememberMeSeconds: 3600
-      # proxy-uri: http://www.pinzhi365.com
+      proxy-uri: http://www.pinzhi365.com
 
 management:
   endpoints:

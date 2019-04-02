@@ -77,13 +77,14 @@ public interface SecurityConstants {
      * @see org.springframework.security.config.annotation.web.builders.HttpSecurity#sessionManagement#invalidSessionUrl
      */
     String DEFAULT_SESSION_INVALID_URL = "/sessionInvalid";
+
     /**
      * 获取第三方用户信息的url
      *
      * 针对 app模块的针对{@link SpringSocialConfigurer#signupUrl(String)}的处理器
      *      * @see SocialConfig#socialSecurityConfig()
      */
-    String DEFAULT_SOCIAL_USER_INFO_URL = "/social/admin";
+    String DEFAULT_SOCIAL_USER_INFO_URL = "/social/userInfo";
 
     /**
      * social 第三方授权用户管理表的表前缀

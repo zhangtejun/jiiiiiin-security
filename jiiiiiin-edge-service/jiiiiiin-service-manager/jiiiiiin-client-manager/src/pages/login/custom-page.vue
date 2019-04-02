@@ -51,7 +51,7 @@
                     class="page-login--options"
                     flex="main:justify cross:center">
               <span @click="onForgetPwd"><d2-icon name="question-circle"/> 忘记密码</span>
-              <span @click="onQQSignUp">QQ登录</span>
+              <!-- <span @click="onQQSignUp">QQ登录</span> -->
               <span @click="onSignUp">注册用户</span>
             </p>
           </div>

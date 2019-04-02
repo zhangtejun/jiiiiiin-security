@@ -24,6 +24,7 @@ public class BrowserWebMvcConfig extends WebMvcConfigurerAdapter {
             // setViewName("signIn")指向`/jiiiiiin-security-browser/src/main/resources/templates/signIn.html`
             registry.addViewController(securityProperties.getBrowser().getSignInUrl()).setViewName(securityProperties.getBrowser().getSignInUrl().substring(1));
         }
+        // 默认`social`会在oath授权成功之后访问该端点
         if (securityProperties.getBrowser().getSignUpUrl().equals(SecurityConstants.DEFAULT_SIGN_UP_PAGE_URL)) {
             registry.addViewController(securityProperties.getBrowser().getSignUpUrl()).setViewName(securityProperties.getBrowser().getSignUpUrl().substring(1));
         }

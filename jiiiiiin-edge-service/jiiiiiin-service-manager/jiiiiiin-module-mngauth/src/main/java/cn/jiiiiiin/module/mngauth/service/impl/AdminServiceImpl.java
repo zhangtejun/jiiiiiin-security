@@ -16,15 +16,18 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -39,23 +42,21 @@ import java.util.HashSet;
  */
 @Service
 @Slf4j
+@AllArgsConstructor
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements IAdminService {
 
-    @Autowired
-    AdminMapper adminMapper;
+    private final AdminMapper adminMapper;
 
-    @Autowired
-    private ResourceMapper resourceMapper;
+    private final ResourceMapper resourceMapper;
 
-    @Autowired
-    private InterfaceMapper interfaceMapper;
+    private final InterfaceMapper interfaceMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    private final ProviderSignInUtils providerSignInUtils;
 
     @Override
     public Admin signInByUsername(@NonNull String username, ChannelEnum channel) {
-        log.debug("登录用户名 {} {}", channel, username);
         val res = adminMapper.selectByUsername(username, channel);
         if (res.getRoles().stream().anyMatch(p -> p.getId().equals(Role.ROLE_ADMIN_ID))) {
             // 系统管理员拥有所有访问控制权限和菜单资源
@@ -179,5 +180,15 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         }
         currentRecord.setPassword(passwordEncoder.encode(pwd));
         return SqlHelper.retBool(adminMapper.updateById(currentRecord));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void regist(AdminDto admin, HttpServletRequest request) {
+        saveAdminAndRelationRecords(admin);
+        // 不管是注册用户还是绑定用户，都会拿到一个用户唯一标识。
+        String userId = admin.getUsername();
+        // 插入关联数据，针对social的UserConnection表
+        providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
     }
 }

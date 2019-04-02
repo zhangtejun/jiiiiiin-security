@@ -35,10 +35,12 @@ public class CustomAuthorizeConfigProvider implements AuthorizeConfigProvider {
                         SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_OPENID,
                         SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
                         SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
-                        "/error",
                         securityProperties.getBrowser().getSignInUrl(),
                         securityProperties.getBrowser().getSignUpUrl(),
-                        securityProperties.getBrowser().getSession().getSessionInvalidUrl())
+                        securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
+                        // 默认spring security或者应用在直接响应401的状态时候回访问该端点
+                        "/error"
+                        )
                 .permitAll();
 
         if (StringUtils.isNotBlank(securityProperties.getBrowser().getSignOutUrl())) {

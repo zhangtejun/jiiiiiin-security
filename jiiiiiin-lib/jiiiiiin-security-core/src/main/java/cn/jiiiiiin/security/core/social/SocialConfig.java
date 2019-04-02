@@ -11,6 +11,8 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import org.springframework.social.config.annotation.EnableSocial;
 import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.connect.*;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
+import org.springframework.social.connect.web.ConnectController;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.security.SpringSocialConfigurer;
 
@@ -50,6 +53,25 @@ public class SocialConfig extends SocialConfigurerAdapter {
 
     @Autowired(required = false)
     private SocialAuthenticationFilterPostProcessor socialAuthenticationFilterPostProcessor;
+
+    // 解决social `ConnectController`默认没有开启的问题
+    // https://docs.spring.io/spring-social/docs/1.0.x/reference/html/connecting.html
+    @Bean
+    @Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
+    public ConnectionRepository connectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException("Unable to get a ConnectionRepository: no user signed in");
+        }
+        return getUsersConnectionRepository(connectionFactoryLocator).createConnectionRepository(authentication.getName());
+    }
+
+    @Bean
+    public ConnectController connectController(ConnectionFactoryLocator connectionFactoryLocator) {
+        return new ConnectController(connectionFactoryLocator,
+                connectionRepository(connectionFactoryLocator));
+    }
+    // 解决social `ConnectController`默认没有开启的问题 end
 
     /**
      * 提供{@link UsersConnectionRepository}帮助我们将授权数据插入框架定义的表中
@@ -131,7 +153,7 @@ public class SocialConfig extends SocialConfigurerAdapter {
      * <p>
      * 能将业务系统的id交给social进行处理，存储绑定关系到数据库
      *
-     * @param connectionFactoryLocator 基类已经帮我们注入，用来获取{@link org.springframework.social.connect.ConnectionFactory}
+     * @param connectionFactoryLocator `springboot` 已经帮我们注入，用来获取{@link org.springframework.social.connect.ConnectionFactory}
      * @return
      * @see SocialConfig#getUsersConnectionRepository
      */
@@ -142,19 +164,17 @@ public class SocialConfig extends SocialConfigurerAdapter {
 
     /**
      * `https://www.ibm.com/developerworks/cn/java/j-lo-spring-social/index.html`
+     *
      * @return
      */
     @Override
     public UserIdSource getUserIdSource() {
-        return new UserIdSource() {
-            @Override
-            public String getUserId() {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                if (authentication == null) {
-                    throw new IllegalStateException("Unable to get a ConnectionRepository: no user signed in");
-                }
-                return authentication.getName();
+        return () -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null) {
+                throw new IllegalStateException("Unable to get a ConnectionRepository: no user signed in");
             }
+            return authentication.getName();
         };
     }
 }

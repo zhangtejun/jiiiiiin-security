@@ -23,14 +23,6 @@ import java.util.Map;
  */
 public class CustomBindingConnectView extends AbstractView {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.springframework.web.servlet.view.AbstractView#renderMergedOutputModel
-     * (java.util.Map, javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
-     */
     @Override
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
                                            HttpServletResponse response) throws Exception {

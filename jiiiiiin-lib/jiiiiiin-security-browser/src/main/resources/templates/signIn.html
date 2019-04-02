@@ -6,8 +6,8 @@
           content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,admin-scalable=no"/>
     <title>登录 - 默认</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/bower_components/bulma/css/bulma.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
     <link href="https://cdn.bootcss.com/element-ui/2.6.1/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
     <style>
         [v-cloak] {
             display: none !important;
@@ -145,6 +145,7 @@
         },
         methods: {
             onSubmit: function (e) {
+                alert(1)
                 this.$refs.form.$el.submit();
             },
             onSubmit2: function (e) {

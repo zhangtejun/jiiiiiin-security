@@ -3,9 +3,15 @@
  */
 package cn.jiiiiiin.security.core.social.view;
 
+import cn.jiiiiiin.security.core.utils.HttpDataUtil;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.social.connect.Connection;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.AbstractView;
@@ -24,12 +30,16 @@ import java.util.Set;
  *
  * @author zhailiang
  * @see org.springframework.social.connect.web.ConnectController#connectionStatus
+ * `@Component("connect/status")`组件的名字不能随便改
  */
 @Component("connect/status")
+@AllArgsConstructor
+@Slf4j
 public class CustomConnectionStatusView extends AbstractView {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+
+    private final LiteDeviceResolver liteDeviceResolver;
 
     /**
      * 渲染视图
@@ -43,17 +53,21 @@ public class CustomConnectionStatusView extends AbstractView {
     @Override
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
                                            HttpServletResponse response) throws Exception {
-
-        final Map<String, List<Connection<?>>> connections = (Map<String, List<Connection<?>>>) model.get("connectionMap");
-        final Set<String> keySet = connections.keySet();
-        // 自定义响应数据
-        final Map<String, Boolean> result = new HashMap<>(keySet.size());
-        for (String key : keySet) {
-            result.put(key, CollectionUtils.isNotEmpty(connections.get(key)));
+        // {social_authorization_error=null, providerIds=[weixin, callback.do], connectionMap={weixin=[], callback.do=[]}}
+        log.debug("connect/status查询结果 {}", model);
+        final Device currentDevice = liteDeviceResolver.resolveDevice(request);
+        if (currentDevice.isNormal()) {
+            response.sendRedirect("/connectStatus");
+        } else {
+            final Map<String, List<Connection<?>>> connections = (Map<String, List<Connection<?>>>) model.get("connectionMap");
+            final Set<String> keySet = connections.keySet();
+            // 自定义响应数据
+            final Map<String, Boolean> result = new HashMap<>(keySet.size());
+            for (String key : keySet) {
+                result.put(key, CollectionUtils.isNotEmpty(connections.get(key)));
+            }
+            HttpDataUtil.respJson(response, objectMapper.writeValueAsString(R.ok(result)));
         }
-
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(result));
     }
 
 }

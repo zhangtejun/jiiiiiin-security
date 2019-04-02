@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>绑定第三方平台用户信息 - 默认</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bower_components/bulma/css/bulma.min.css}"/>
+    <link href="https://cdn.bootcss.com/element-ui/2.6.1/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
+    <style>
+        [v-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" v-cloak>
+
+    <section class="hero is-danger">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    默认绑定第三方平台用户信息
+                </h1>
+                <h2 class="subtitle">
+                    <p>请配置 `jiiiiiin.security.browser.signUpUrl` 属性来设置自己的注册页</p>
+                    <p>TODO：当前页面初始化阶段应该发送`"/social/userInfo"`查询授权用户的消息，回显给用户，并设置关联的用户名</p>
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <el-row class="from" style="margin-top: 50px;">
+        <el-col :span="4">&nbsp;</el-col>
+        <el-col :span="16">
+
+            <h3 v-if="user!=null">{{user.username}} 您当前的绑定信息</h3>
+
+            <el-card class="box-card">
+                <el-table
+                        :data="tableData"
+                        stripe>
+                    <el-table-column
+                            prop="providerId"
+                            label="渠道">
+                    </el-table-column>
+                    <el-table-column
+                            prop="status"
+                            label="状态"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            fixed="right"
+                            label="操作"
+                    >
+                        <template slot-scope="scope">
+                            <el-button
+                                    type="text"
+                                    size="small"
+                                    @click="onTapUnBinding(scope.$index, scope.row)"
+                                    v-if="scope.row.isBinding">
+                                解绑
+                            </el-button>
+                            <el-button
+                                    type="text"
+                                    size="small"
+                                    @click="onTapBinding(scope.$index, scope.row)"
+                                    v-if="!scope.row.isBinding">
+                                绑定
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+            </el-card>
+
+            <p>绑定第三方帐号，可以直接登录，还可以将内容同步到以下平台，与更多好友分享</p>
+
+        </el-col>
+        <el-col :span="4">&nbsp;</el-col>
+    </el-row>
+
+
+    <form ref="bindingWeixinForm" style="display: none" action="/connect/weixin" method="post"></form>
+    <form ref="bindingQQForm" style="display: none" action="/connect/qq" method="post"></form>
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p><a href="https://github.com/Jiiiiiin/jiiiiiin-security">jiiiiiin-security</a></p>
+        </div>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/common.js}"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                user: null,
+                // key 是第三方授权服务提供商的provider id
+                bindingInfo: {}
+            }
+        },
+        computed: {
+            weixinBinding() {
+                return this.bindingInfo.weixin
+            },
+            qqBinding() {
+                return this.bindingInfo["callback.do"]
+            },
+            tableData() {
+                const res = []
+                for (const key in this.bindingInfo) {
+                    res.push({
+                        providerId: ((key) => {
+                            switch (key) {
+                                case 'weixin':
+                                    return '微信'
+                                case 'callback.do':
+                                    return 'QQ'
+                            }
+                        })(key),
+                        status: (() => {
+                            return this.bindingInfo[key] ? '已经绑定' : '未绑定'
+                        })(),
+                        isBinding: this.bindingInfo[key]
+                    })
+                }
+                console.log(res)
+                return res
+            }
+        },
+        methods: {
+            onTapUnBinding(idx, item) {
+                let provideId = 'weixin'
+                switch (item.providerId) {
+                    case 'QQ':
+                        provideId = 'callback.do'
+                        break
+                }
+                this.$vp.delete(`/connect/${provideId}`)
+                    .then((response) => {
+                        this.$message('解绑成功')
+                    })
+                    .catch((err) => {
+                        // TODO 待修正
+                        this.$message('解绑成功')
+                        //alert(`解绑出错${JSON.stringify(err.response)}`)
+                    })
+            },
+            onTapBinding: function (idx, item) {
+                switch (item.providerId) {
+                    case 'QQ':
+                        this.$refs.bindingQQForm.submit()
+                        break
+                    default:
+                        this.$refs.bindingWeixinForm.submit()
+                }
+            }
+        },
+        created() {
+            this.$vp.get('/user/me')
+                .then((response) => {
+                    this.user = response.data
+                })
+                .catch((err) => {
+                    alert(`获取登录用户信息出错 ${JSON.stringify(err.response)}`)
+                })
+
+            // 查询系统各个渠道的授权绑定信息，以确定页面的【绑定、解绑】状态按钮
+            this.$vp.get('/connect')
+                .then((response) => {
+                    this.bindingInfo = response.data
+                })
+                .catch((err) => {
+                    alert(`获取登录用户第三方授权绑定信息出错 ${JSON.stringify(err.response)}`)
+                })
+        }
+
+    })
+</script>
+</body>
+</html>

@@ -25,7 +25,9 @@ public class MngAuthAuthorizeConfigProvider implements AuthorizeConfigProvider {
                         "/", "/druid", "/druid/*", "/druid/**",
                         // Spring Boot Admin监控配置
                         "/actuator/**",
-                        "/testZuul"
+                        "/testZuul",
+                        // 用户注册需要放开
+                        "/admin/regist"
                 ).permitAll();
         return false;
     }
