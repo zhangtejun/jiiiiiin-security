@@ -53,19 +53,20 @@ public class CustomConnectionStatusView extends AbstractView {
     @Override
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
                                            HttpServletResponse response) throws Exception {
+        final Map<String, List<Connection<?>>> connections = (Map<String, List<Connection<?>>>) model.get("connectionMap");
+        final Set<String> keySet = connections.keySet();
+        // 自定义响应数据
+        final Map<String, Boolean> result = new HashMap<>(keySet.size());
+        for (String key : keySet) {
+            result.put(key, CollectionUtils.isNotEmpty(connections.get(key)));
+        }
         // {social_authorization_error=null, providerIds=[weixin, callback.do], connectionMap={weixin=[], callback.do=[]}}
-        log.debug("connect/status查询结果 {}", model);
+        log.debug("connect/status查询结果 model: {} result: {}", model, result);
         final Device currentDevice = liteDeviceResolver.resolveDevice(request);
         if (currentDevice.isNormal()) {
-            response.sendRedirect("/connectStatus");
+            request.setAttribute("result", result);
+            request.getRequestDispatcher("/connectStatus").forward(request, response);
         } else {
-            final Map<String, List<Connection<?>>> connections = (Map<String, List<Connection<?>>>) model.get("connectionMap");
-            final Set<String> keySet = connections.keySet();
-            // 自定义响应数据
-            final Map<String, Boolean> result = new HashMap<>(keySet.size());
-            for (String key : keySet) {
-                result.put(key, CollectionUtils.isNotEmpty(connections.get(key)));
-            }
             HttpDataUtil.respJson(response, objectMapper.writeValueAsString(R.ok(result)));
         }
     }

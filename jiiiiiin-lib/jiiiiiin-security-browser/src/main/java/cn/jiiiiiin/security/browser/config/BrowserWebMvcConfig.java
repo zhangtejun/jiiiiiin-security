@@ -31,6 +31,7 @@ public class BrowserWebMvcConfig extends WebMvcConfigurerAdapter {
         if (securityProperties.getBrowser().getSession().getSessionInvalidUrl().equals(SecurityConstants.DEFAULT_SESSION_INVALID_URL)) {
             registry.addViewController(securityProperties.getBrowser().getSession().getSessionInvalidUrl()).setViewName(securityProperties.getBrowser().getSession().getSessionInvalidUrl().substring(1));
         }
+        registry.addViewController("/connectStatus").setViewName("connectStatus");
     }
 
 }

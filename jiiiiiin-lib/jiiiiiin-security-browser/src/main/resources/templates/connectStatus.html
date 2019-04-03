@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Connecting to Service Providers - 默认</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bower_components/bulma/css/bulma.min.css}"/>
+    <link href="https://cdn.bootcss.com/element-ui/2.6.1/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
+    <style>
+        [v-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" v-cloak>
+
+    <section class="hero is-danger">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    默认Connecting to Service Providers
+                </h1>
+                <h2 class="subtitle">
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <div style="padding: 50px">当前用户<span th:text="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username}"></span>的OAuth授权绑定情况：<p th:text="${result}">没有信息</p></div>
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p><a href="https://github.com/Jiiiiiin/jiiiiiin-security">jiiiiiin-security</a></p>
+        </div>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/common.js}"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                user: null,
+                // key 是第三方授权服务提供商的provider id
+                bindingInfo: {}
+            }
+        },
+    })
+</script>
+</body>
+</html>

@@ -22,7 +22,7 @@ import javax.annotation.PostConstruct;
 @RefreshScope
 @ToString
 @Slf4j
-@Component("securityProperties")
+@Component
 public class SecurityProperties {
     /**
      * 浏览器环境配置

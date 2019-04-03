@@ -58,7 +58,7 @@
 
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit" @keyup.enter="onSubmit">提交</el-button>
-                    <el-button type="primary" @click="onBinding" @keyup.enter="onSubmit">已有账号，去绑定</el-button>
+                    <el-button type="primary" @click="onBinding">已有账号，去绑定</el-button>
                 </el-form-item>
             </el-form>
         </el-col>
@@ -94,6 +94,7 @@
         methods: {
             onSubmit: function (e) {
                 // this.$refs.form.$el.submit();
+                alert(1)
                 this.$vp.post('/admin/regist', {
                     username: this.username,
                     password: this.password,
@@ -105,6 +106,8 @@
                     }
                 }).then(function (response) {
                     console.log(`token 授权注册完成->`, response)
+                    alert('注册完成')
+                    window.location.href = `${baseConfig.baseURL}/`
                 }).catch(function (err) {
                     alert(`请求短信验证码出错${JSON.stringify(err.response)}`)
                 })
