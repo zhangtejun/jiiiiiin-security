@@ -109,11 +109,13 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
                 // .invalidSessionUrl(INVALID_SESSION_URL)
                 // 设置session过期之后处理策略
                 .invalidSessionStrategy(invalidSessionStrategy)
-                // .maxSessionsPreventsLogin(true)
-                // 设置单个用户session存在系统的数量，如果设置为1，那么同一个用户后面登录的会话就会把签名的会话踢掉
+                // 设置的最大会话存活数量
+                // 如：设置单个用户session存在系统的数量，如果设置为1，那么同一个用户后面登录的会话就会把签名的会话踢掉
                 .maximumSessions(securityProperties.getBrowser().getSession().getMaximumSessions())
                 // 用来做session被“剔除”之后的记录
                 .expiredSessionStrategy(sessionInformationExpiredStrategy)
+                // 如果查过设置的最大会话存活数量，就不允许后续会话在进来
+                // 如：来控制并发登录：后一个会话不能剔除前一个会话，即如果一个用户已经存在会话，后面的渠道就登录不上的需求
                 .maxSessionsPreventsLogin(securityProperties.getBrowser().getSession().isMaxSessionsPreventsLogin())
                 // 设置不能剔除上一个登录用户，当session数量等于上面配置的最大数量
                 .and()

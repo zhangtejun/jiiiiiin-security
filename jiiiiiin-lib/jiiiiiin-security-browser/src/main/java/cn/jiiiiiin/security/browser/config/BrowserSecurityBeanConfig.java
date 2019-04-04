@@ -11,6 +11,7 @@ import cn.jiiiiiin.security.browser.session.CustomSessionInformationExpiredStrat
 import cn.jiiiiiin.security.browser.session.CustomInvalidSessionStrategy;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -36,10 +37,10 @@ import javax.servlet.ServletResponse;
  * @author jiiiiiin
  */
 @Configuration
+@AllArgsConstructor
 public class BrowserSecurityBeanConfig {
 
-    @Autowired
-    private SecurityProperties securityProperties;
+    private final SecurityProperties securityProperties;
 
     /**
      * session失效时的处理策略配置

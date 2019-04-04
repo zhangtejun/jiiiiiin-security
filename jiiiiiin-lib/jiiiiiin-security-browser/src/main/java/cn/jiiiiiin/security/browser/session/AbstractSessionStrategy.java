@@ -95,6 +95,7 @@ public class AbstractSessionStrategy {
             } else {
                 targetUrl = destinationUrl;
             }
+            targetUrl = buildRedirectUrl(request, targetUrl);
             log.info("跳转到:" + targetUrl);
             redirectStrategy.sendRedirect(request, response, targetUrl);
         } else {
@@ -106,14 +107,17 @@ public class AbstractSessionStrategy {
 
     }
 
-    /**
-     * @param request
-     * @return
-     */
+    protected String buildRedirectUrl(HttpServletRequest request, String targetUrl) {
+        if (isConcurrency(request)) {
+            targetUrl += "?flag=会话已失效，并发登录导致";
+        }
+        return targetUrl;
+    }
+
     protected R<Object> buildResponseContent(HttpServletRequest request) {
         var message = "会话已失效";
         if (isConcurrency(request)) {
-            message = message + "，有可能是并发登录导致的";
+            message = message + "，并发登录导致的";
         }
         return R.failed(message).setCode(-2L);
     }

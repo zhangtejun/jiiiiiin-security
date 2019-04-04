@@ -33,7 +33,7 @@ public class SessionProperties {
      *
      * @see HttpSecurity#sessionManagement() {@link #maxSessionsPreventsLogin}
      */
-    private boolean maxSessionsPreventsLogin;
+    private boolean maxSessionsPreventsLogin = false;
     /**
      * session失效时跳转的地址
      *
