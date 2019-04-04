@@ -7,7 +7,9 @@ import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import lombok.var;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -110,7 +112,7 @@ public class AbstractSessionStrategy {
      */
     protected R<Object> buildResponseContent(HttpServletRequest request) {
         var message = "会话已失效";
-        if (isConcurrency()) {
+        if (isConcurrency(request)) {
             message = message + "，有可能是并发登录导致的";
         }
         return R.failed(message).setCode(-2L);
@@ -119,10 +121,14 @@ public class AbstractSessionStrategy {
     /**
      * session失效是否是并发导致的
      *
-     * @return
+     * {@link CustomSessionInformationExpiredStrategy}
+     *
+     * @param request
+     * @return true 标识是并发登录导致的会话剔除，false则不是
      */
-    protected boolean isConcurrency() {
-        return false;
+    protected boolean isConcurrency(HttpServletRequest request) {
+        val flag = request.getAttribute(CustomSessionInformationExpiredStrategy.EXPIRED_SESSION_DETECTED_STATUS);
+        return flag != null && (boolean) flag;
     }
 
     /**

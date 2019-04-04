@@ -7,6 +7,7 @@ import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.properties.WeixinProperties;
 import cn.jiiiiiin.security.core.social.view.CustomBindingConnectView;
 import cn.jiiiiiin.security.core.social.weixin.connect.WeixinConnectionFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
 import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.connect.ConnectionFactory;
@@ -35,6 +37,10 @@ import java.util.Map;
 public class WeixinAutoConfiguration extends SocialConfigurerAdapter {
 
     private final SecurityProperties securityProperties;
+
+    private final ObjectMapper objectMapper;
+
+    private final LiteDeviceResolver liteDeviceResolver;
 
     @Override
     public void addConnectionFactories(ConnectionFactoryConfigurer configurer, Environment environment) {
@@ -59,7 +65,7 @@ public class WeixinAutoConfiguration extends SocialConfigurerAdapter {
     @Bean({"connect/weixinConnect", "connect/weixinConnected"})
     @ConditionalOnMissingBean(name = "weixinConnectedView")
     public View weixinConnectedView() {
-        return new CustomBindingConnectView();
+        return new CustomBindingConnectView(objectMapper, liteDeviceResolver);
     }
 
 }

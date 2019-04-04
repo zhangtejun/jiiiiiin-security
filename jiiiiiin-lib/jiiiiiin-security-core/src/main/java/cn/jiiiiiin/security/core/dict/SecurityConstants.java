@@ -90,4 +90,8 @@ public interface SecurityConstants {
      * social 第三方授权用户管理表的表前缀
      */
     String SOCIAL_TABLE_PREFIX = "springsocial_";
+    /**
+     * session失效后的跳转地址（默认不配置到springsecurity中）
+     */
+    String INVALID_SESSION_URL = "/session/invalid";
 }

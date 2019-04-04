@@ -32,7 +32,10 @@ public class BrowserLogoutSuccessHandler implements LogoutSuccessHandler {
         this.signOutSuccessUrl = signOutSuccessUrl;
     }
 
-    private String signOutSuccessUrl;
+    /**
+     * 退出登录之后重定向的页面
+     */
+    private final String signOutSuccessUrl;
 
     @Autowired
     protected ObjectMapper objectMapper;
@@ -45,7 +48,7 @@ public class BrowserLogoutSuccessHandler implements LogoutSuccessHandler {
      */
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
+            throws IOException {
         log.info("退出成功");
         final Device currentDevice = liteDeviceResolver.resolveDevice(request);
         if (!currentDevice.isNormal()) {
@@ -53,7 +56,6 @@ public class BrowserLogoutSuccessHandler implements LogoutSuccessHandler {
         } else {
             response.sendRedirect(signOutSuccessUrl);
         }
-
     }
 
     protected void respJson(HttpServletResponse response) throws IOException {

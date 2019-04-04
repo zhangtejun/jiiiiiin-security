@@ -23,8 +23,7 @@
                     默认绑定第三方平台用户信息
                 </h1>
                 <h2 class="subtitle">
-                    <p>请配置 `jiiiiiin.security.browser.signUpUrl` 属性来设置自己的注册页</p>
-                    <p>TODO：当前页面初始化阶段应该发送`"/social/userInfo"`查询授权用户的消息，回显给用户，并设置关联的用户名</p>
+                    <!--<p>请配置 `jiiiiiin.security.browser.signUpUrl` 属性来设置自己的注册页</p>-->
                 </h2>
             </div>
         </div>
@@ -33,8 +32,14 @@
     <el-row class="from" style="margin-top: 50px;">
         <el-col :span="4">&nbsp;</el-col>
         <el-col :span="16">
+            <h2>当前用户<span th:text="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username}"></span>的OAuth授权绑定情况：</h2>
+        </el-col>
+        <el-col :span="4">&nbsp;</el-col>
+    </el-row>
 
-            <h3 v-if="user!=null">{{user.username}} 您当前的绑定信息</h3>
+    <el-row class="from" style="margin-top: 10px;">
+        <el-col :span="4">&nbsp;</el-col>
+        <el-col :span="16">
 
             <el-card class="box-card">
                 <el-table
@@ -50,7 +55,6 @@
                     >
                     </el-table-column>
                     <el-table-column
-                            fixed="right"
                             label="操作"
                     >
                         <template slot-scope="scope">
@@ -74,15 +78,16 @@
 
             </el-card>
 
-            <p>绑定第三方帐号，可以直接登录，还可以将内容同步到以下平台，与更多好友分享</p>
-
         </el-col>
         <el-col :span="4">&nbsp;</el-col>
     </el-row>
 
 
     <form ref="bindingWeixinForm" style="display: none" action="/connect/weixin" method="post"></form>
-    <form ref="bindingQQForm" style="display: none" action="/connect/qq" method="post"></form>
+    <!--<form ref="bindingQQForm" style="display: none" action="/connect/qq" method="post"></form>-->
+
+    <!--TODO 重定向链接不对查看`buildAuthUrl` 修复-->
+    <form ref="bindingQQForm" style="display: none" action="/connect/callback.do" method="post"></form>
 
     <footer class="footer">
         <div class="content has-text-centered">
@@ -131,7 +136,7 @@
                         isBinding: this.bindingInfo[key]
                     })
                 }
-                console.log(res)
+                console.log('计算绑定数据', res, this.bindingInfo)
                 return res
             }
         },
@@ -143,14 +148,15 @@
                         provideId = 'callback.do'
                         break
                 }
+                // TODO 这里会出现莫名其妙的重定向（多次请求），可以看看是否是`axios`的问题
                 this.$vp.delete(`/connect/${provideId}`)
                     .then((response) => {
+                        // window.location.reload()
                         this.$message('解绑成功')
                     })
                     .catch((err) => {
-                        // TODO 待修正
                         this.$message('解绑成功')
-                        //alert(`解绑出错${JSON.stringify(err.response)}`)
+                        window.location.reload()
                     })
             },
             onTapBinding: function (idx, item) {
@@ -164,18 +170,11 @@
             }
         },
         created() {
-            this.$vp.get('/user/me')
-                .then((response) => {
-                    this.user = response.data
-                })
-                .catch((err) => {
-                    alert(`获取登录用户信息出错 ${JSON.stringify(err.response)}`)
-                })
-
             // 查询系统各个渠道的授权绑定信息，以确定页面的【绑定、解绑】状态按钮
             this.$vp.get('/connect')
                 .then((response) => {
-                    this.bindingInfo = response.data
+                    this.bindingInfo = response.data.data
+                    console.log('this.bindingInfo', this.bindingInfo)
                 })
                 .catch((err) => {
                     alert(`获取登录用户第三方授权绑定信息出错 ${JSON.stringify(err.response)}`)

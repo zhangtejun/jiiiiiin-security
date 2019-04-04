@@ -115,33 +115,30 @@ public class BrowserSecurityController extends SocialController {
         return buildSocialUserInfo(connection);
     }
 
-//    /**
-//     * ss权限配置中`invalidSessionUrl`配置
-//     * @param request
-//     * @param response
-//     * @param device
-//     * @return
-//     * @throws IOException
-//     */
-//    @RequestMapping(INVALID_SESSION_URL)
-//    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
-//    public SimpleResponse requireAuthenticationOnInvalidSession(HttpServletRequest request, HttpServletResponse response, Device device, Model entity) throws IOException {
-//        // 获取到上一个被拦截的请求(原始请求）
-//        final SavedRequest savedRequest = requestCache.getRequest(request, response);
-//        if (savedRequest != null) {
-//            final String transTarget = savedRequest.getRedirectUrl();
-//            L.info("session 失效，需要进行身份认证的请求是 {}", transTarget);
-//            // 检测请求是否是以html结尾，我们就认为是访问网页版本
-//            // if(StringUtils.endsWithIgnoreCase(transTarget, ".html")){
-//            // 借助spring mobile来区分渠道
-//            if (device.isNormal()) {
-//                // 直接跳转到登录页面
-//                L.info("跳转到身份认证页面 {}", securityProperties.getBrowser().getSignInUrl());
-//                entity.addAttribute(MODEL_KEY_HINT_MSG, "登录会话失效，访问的服务需要重新身份认证");
-//                redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getSignInUrl());
-//                return null;
-//            }
-//        }
-//        return SimpleResponse.newInstance("登录会话失效，访问的服务需要重新身份认证");
-//    }
+    /**
+     * ss权限配置中`invalidSessionUrl`配置
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(SecurityConstants.INVALID_SESSION_URL)
+    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+    public R<String> requireAuthenticationOnInvalidSession(HttpServletRequest request, HttpServletResponse response, Model entity) throws IOException {
+        // 获取到上一个被拦截的请求(原始请求）
+        final SavedRequest savedRequest = requestCache.getRequest(request, response);
+        if (savedRequest != null) {
+            final String transTarget = savedRequest.getRedirectUrl();
+            log.debug("session 失效，需要进行身份认证的请求是 {}", transTarget);
+        }
+        if (this.liteDeviceResolver.resolveDevice(request).isNormal()) {
+            // 直接跳转到登录页面
+            log.debug("跳转到身份认证页面 {}", securityProperties.getBrowser().getSignInUrl());
+            entity.addAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, "登录会话失效，访问的服务需要重新身份认证");
+            redirectStrategy.sendRedirect(request, response, securityProperties.getBrowser().getSignInUrl());
+            return null;
+        } else {
+            return R.failed("登录会话失效，访问的服务需要重新身份认证");
+        }
+    }
 }

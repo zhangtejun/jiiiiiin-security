@@ -32,6 +32,7 @@ public class BrowserWebMvcConfig extends WebMvcConfigurerAdapter {
             registry.addViewController(securityProperties.getBrowser().getSession().getSessionInvalidUrl()).setViewName(securityProperties.getBrowser().getSession().getSessionInvalidUrl().substring(1));
         }
         registry.addViewController("/connectStatus").setViewName("connectStatus");
+        registry.addViewController("/userBinding").setViewName("userBinding");
     }
 
 }

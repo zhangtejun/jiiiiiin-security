@@ -4,6 +4,7 @@
 package cn.jiiiiiin.security.core.authentication;
 
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -21,13 +22,12 @@ import javax.servlet.ServletResponse;
  * @author zhailiang
  */
 @Component
+@AllArgsConstructor
 public class FormAuthenticationConfig {
 
-    @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    @Autowired
-    private AuthenticationFailureHandler authenticationFailureHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
 
     public void configure(HttpSecurity http) throws Exception {
         http

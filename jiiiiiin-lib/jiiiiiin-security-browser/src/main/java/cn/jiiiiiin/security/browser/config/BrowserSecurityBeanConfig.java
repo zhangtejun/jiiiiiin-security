@@ -7,7 +7,7 @@ import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticati
 import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticationSuccessHandler;
 import cn.jiiiiiin.security.browser.component.authentication.BrowserLoginUrlAuthenticationEntryPoint;
 import cn.jiiiiiin.security.browser.component.authorize.BrowserAccessDeniedHandler;
-import cn.jiiiiiin.security.browser.session.CustomExpiredSessionStrategy;
+import cn.jiiiiiin.security.browser.session.CustomSessionInformationExpiredStrategy;
 import cn.jiiiiiin.security.browser.session.CustomInvalidSessionStrategy;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
@@ -62,7 +62,7 @@ public class BrowserSecurityBeanConfig {
     @Bean
     @ConditionalOnMissingBean(SessionInformationExpiredStrategy.class)
     public SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
-        return new CustomExpiredSessionStrategy(securityProperties);
+        return new CustomSessionInformationExpiredStrategy(securityProperties);
     }
 
     /**
@@ -75,7 +75,7 @@ public class BrowserSecurityBeanConfig {
     @Bean
     @ConditionalOnMissingBean(LogoutSuccessHandler.class)
     public LogoutSuccessHandler logoutSuccessHandler() {
-        return new BrowserLogoutSuccessHandler(securityProperties.getBrowser().getSignOutUrl());
+        return new BrowserLogoutSuccessHandler(securityProperties.getBrowser().getSignInUrl());
     }
 
     /**
