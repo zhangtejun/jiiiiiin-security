@@ -29,7 +29,7 @@ public class CustomAuthorizeConfigProvider implements AuthorizeConfigProvider {
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
         config
                 .antMatchers(
-                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        SecurityConstants.DEFAULT_UNAUTHENTICATED_URL,
                         SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM,
                         SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_MOBILE,
                         SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_OPENID,

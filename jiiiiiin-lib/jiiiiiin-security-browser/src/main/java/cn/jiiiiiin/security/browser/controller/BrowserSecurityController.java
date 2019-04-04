@@ -11,7 +11,6 @@ import lombok.var;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -76,7 +75,7 @@ public class BrowserSecurityController extends SocialController {
      * @return
      * @ResponseStatus(code = HttpStatus.UNAUTHORIZED) 返回的状态码标识返回给非网页版客户端，标识需要进行用户授权
      */
-    @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
+    @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATED_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public R<String> requireAuthentication(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
         if (this.liteDeviceResolver.resolveDevice(request).isNormal()) {

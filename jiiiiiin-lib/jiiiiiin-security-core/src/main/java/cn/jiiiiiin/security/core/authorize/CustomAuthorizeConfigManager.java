@@ -23,7 +23,7 @@ import java.util.List;
  * // https://docs.spring.io/spring-security/site/docs/4.2.7.RELEASE/reference/htmlsingle/#authorize-requests
  * .antMatchers(
  * SecurityConstants.STATIC_RESOURCES_JS,
- * SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+ * SecurityConstants.DEFAULT_UNAUTHENTICATED_URL,
  * ...
  * registerUrl
  * )

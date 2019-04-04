@@ -1,6 +1,7 @@
 package cn.jiiiiiin.security.core.properties;
 
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
+import cn.jiiiiiin.security.core.social.weixin.connect.WeixinOAuth2Template;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -61,8 +62,13 @@ public class BrowserProperties {
 
     /**
      * 代理地址，用于访问第三方授权服务标识自身应用的服务器地址
-     * 防止 {@link cn.jiiiiiin.security.core.social.weixin.connect.WeixinOAuth2Template#buildAuthenticateUrl(OAuth2Parameters)} 调用基类返回的其实是一个本地测试地址的情况
+     * 防止 {@link WeixinOAuth2Template#buildAuthenticateUrl(OAuth2Parameters)} 调用基类返回的其实是一个本地测试地址的情况
      */
     private String proxyUri = "http://jiiiiiin-server-manager:9090/";
+
+    /**
+     * 成功登出之后访问的页面
+     */
+    private String signOutSuccessUrl = this.signInUrl;
 
 }
