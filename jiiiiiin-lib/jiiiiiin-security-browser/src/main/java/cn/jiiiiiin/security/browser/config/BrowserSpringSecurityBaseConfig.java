@@ -78,8 +78,6 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
      * <p>
      * security 过滤器链关键环节：
      *
-     * @param http
-     * @throws Exception
      * @see org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
      * 这个类是用来做身份认证（登录认证）
      * @see org.springframework.security.web.access.ExceptionTranslationFilter
@@ -87,6 +85,9 @@ public class BrowserSpringSecurityBaseConfig extends WebSecurityConfigurerAdapte
      * @see org.springframework.security.web.access.intercept.FilterSecurityInterceptor#invoke(FilterInvocation)
      * 中的InterceptorStatusToken token = super.beforeInvocation(fi); 会进行身份认证授权判断
      * @see org.springframework.social.security.SocialAuthenticationFilter
+     *
+     * @param http
+     * @throws Exception
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {

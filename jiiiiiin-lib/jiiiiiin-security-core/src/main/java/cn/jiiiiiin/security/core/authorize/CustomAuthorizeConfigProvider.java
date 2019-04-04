@@ -33,7 +33,7 @@ public class CustomAuthorizeConfigProvider implements AuthorizeConfigProvider {
                         SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_FORM,
                         SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_MOBILE,
                         SecurityConstants.DEFAULT_SIGN_IN_PROCESSING_URL_OPENID,
-                        SecurityConstants.INVALID_SESSION_URL,
+                        SecurityConstants.DEFAULT_SESSION_INVALID_URL,
                         SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
                         SecurityConstants.DEFAULT_SOCIAL_USER_INFO_URL,
                         securityProperties.getBrowser().getSignInUrl(),

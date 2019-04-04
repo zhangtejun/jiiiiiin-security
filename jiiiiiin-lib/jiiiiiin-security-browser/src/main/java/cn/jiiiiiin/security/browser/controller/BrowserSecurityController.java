@@ -122,7 +122,7 @@ public class BrowserSecurityController extends SocialController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(SecurityConstants.INVALID_SESSION_URL)
+    @RequestMapping(SecurityConstants.DEFAULT_SESSION_INVALID_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public R<String> requireAuthenticationOnInvalidSession(HttpServletRequest request, HttpServletResponse response, Model entity) throws IOException {
         // 获取到上一个被拦截的请求(原始请求）

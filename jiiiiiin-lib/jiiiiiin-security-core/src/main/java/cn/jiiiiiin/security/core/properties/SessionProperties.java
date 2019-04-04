@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 /**
  * session管理相关配置项
  *
+ * `jiiiiiin.security.browser.session.`
+ *
  * @author zhailiang
  * @author jiiiiiin
  */
