@@ -51,6 +51,7 @@
                     class="page-login--options"
                     flex="main:justify cross:center">
               <span @click="onForgetPwd"><d2-icon name="question-circle"/> 忘记密码</span>
+              <!-- <span @click="onQQSignUp">QQ登录</span> -->
               <span @click="onSignUp">注册用户</span>
             </p>
           </div>
@@ -82,7 +83,6 @@ export default {
       timeInterval: null,
       time: dayjs().format('HH:mm:ss'),
       submitBtnDisabled: false,
-      // validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image?width=30&${new Date().getTime()}`,
       validateImgCodeUri: `${this.$vp.options.serverUrl}/code/image`,
       // 表单
       formLogin: {
@@ -115,11 +115,17 @@ export default {
   },
   methods: {
     ...mapActions('d2admin/account', ['login']),
+    onQQSignUp() {
+      // TODO this.$vp.pageHref的正则判断可能存在问题
+      // this.$vp.pageHref(`${this.$vp.options.serverUrl}/auth/qq`)
+      window.location.href = `http://www.pinzhi365.com/qqLogin/callback.do`
+      // window.location.href = `${this.$vp.options.serverUrl}/qqLogin/callback.do`
+    },
     onForgetPwd() {
       this.$vp.toast('暂未实现', { type: 'warning' });
     },
     onSignUp() {
-      this.$vp.toast('暂未实现', { type: 'warning' });
+      this.$vp.pageNext('/register')
     },
     refreshTime () {
       this.time = dayjs().format('HH:mm:ss')

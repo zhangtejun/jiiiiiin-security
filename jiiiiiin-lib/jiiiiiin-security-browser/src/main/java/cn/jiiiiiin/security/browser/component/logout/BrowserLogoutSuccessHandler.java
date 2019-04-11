@@ -6,7 +6,9 @@ package cn.jiiiiiin.security.browser.component.logout;
 import cn.jiiiiiin.security.core.utils.HttpDataUtil;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.LiteDeviceResolver;
@@ -26,34 +28,31 @@ import java.io.IOException;
  * @author jiiiiiin
  */
 @Slf4j
+@AllArgsConstructor
 public class BrowserLogoutSuccessHandler implements LogoutSuccessHandler {
 
-    public BrowserLogoutSuccessHandler(String signOutSuccessUrl) {
-        this.signOutSuccessUrl = signOutSuccessUrl;
-    }
+    /**
+     * 退出登录之后重定向的页面
+     */
+    private final String signOutSuccessUrl;
 
-    private String signOutSuccessUrl;
+    protected final ObjectMapper objectMapper;
 
-    @Autowired
-    protected ObjectMapper objectMapper;
-
-    @Autowired
-    protected LiteDeviceResolver liteDeviceResolver;
+    protected final LiteDeviceResolver liteDeviceResolver;
 
     /**
      * 根据渠道渲染响应数据
      */
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
+            throws IOException {
         log.info("退出成功");
-        final Device currentDevice = liteDeviceResolver.resolveDevice(request);
+        val currentDevice = liteDeviceResolver.resolveDevice(request);
         if (!currentDevice.isNormal()) {
             respJson(response);
         } else {
-            response.sendRedirect(signOutSuccessUrl);
+            response.sendRedirect(signOutSuccessUrl.concat("?logout"));
         }
-
     }
 
     protected void respJson(HttpServletResponse response) throws IOException {

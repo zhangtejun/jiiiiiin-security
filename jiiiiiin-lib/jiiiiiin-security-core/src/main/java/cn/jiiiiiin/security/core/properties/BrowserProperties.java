@@ -1,12 +1,18 @@
 package cn.jiiiiiin.security.core.properties;
 
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
+import cn.jiiiiiin.security.core.social.weixin.connect.WeixinOAuth2Template;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.social.oauth2.OAuth2Parameters;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author jiiiiiin
@@ -14,6 +20,8 @@ import org.springframework.social.oauth2.OAuth2Parameters;
 @Setter
 @Getter
 @NoArgsConstructor
+@Slf4j
+@ToString
 public class BrowserProperties {
 
     /**
@@ -24,7 +32,7 @@ public class BrowserProperties {
     /**
      * 前端应用的baseUrl
      */
-    private String fontUrl = "http://127.0.0.1:9000/";
+    private String fontUrl = "http://jiiiiiin-server-manager:9000/";
 
     /**
      * 身份认证（登录）页面
@@ -35,12 +43,12 @@ public class BrowserProperties {
     /**
      * 社交登录，如果需要用户注册，跳转的页面
      */
-    private String signUpUrl = "/signUp.html";
+    private String signUpUrl = SecurityConstants.DEFAULT_SIGN_UP_PAGE_URL;
 
     /**
      * 退出成功时跳转的html输出页面，如果是移动端渠道访问则返回json数据，不走该页面。
      */
-    private String signOutUrl = "/signOut.html";
+    private String signOutUrl = SecurityConstants.DEFAULT_SIGN_OUT_PAGE_URL;
 
     /**
      * 权限校验失败时候显示的页面
@@ -54,8 +62,13 @@ public class BrowserProperties {
 
     /**
      * 代理地址，用于访问第三方授权服务标识自身应用的服务器地址
-     * 防止 {@link cn.jiiiiiin.security.core.social.weixin.connect.WeixinOAuth2Template#buildAuthenticateUrl(OAuth2Parameters)} 调用基类返回的其实是一个本地测试地址的情况
+     * 防止 {@link WeixinOAuth2Template#buildAuthenticateUrl(OAuth2Parameters)} 调用基类返回的其实是一个本地测试地址的情况
      */
-    private String proxyUri;
+    private String proxyUri = "http://jiiiiiin-server-manager:9090/";
+
+    /**
+     * 成功登出之后访问的页面
+     */
+    private String signOutSuccessUrl = this.signInUrl;
 
 }

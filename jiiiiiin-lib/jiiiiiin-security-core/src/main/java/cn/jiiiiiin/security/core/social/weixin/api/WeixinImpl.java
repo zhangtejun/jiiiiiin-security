@@ -4,6 +4,7 @@
 package cn.jiiiiiin.security.core.social.weixin.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,8 @@ import java.util.List;
  *
  * @author zhailiang
  */
+@Slf4j
 public class WeixinImpl extends AbstractOAuth2ApiBinding implements Weixin {
-
-    final static Logger L = LoggerFactory.getLogger(WeixinImpl.class);
 
     /**
      *
@@ -66,7 +66,7 @@ public class WeixinImpl extends AbstractOAuth2ApiBinding implements Weixin {
         try {
             profile = objectMapper.readValue(response, WeixinUserInfo.class);
         } catch (Exception e) {
-            L.error("获取微信用户信息解析出错", e);
+            log.error("获取微信用户信息解析出错", e);
         }
         return profile;
     }

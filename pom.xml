@@ -11,9 +11,10 @@
         <module>jiiiiiin-lib</module>
         <module>jiiiiiin-eureka-server</module>
         <module>jiiiiiin-gateway</module>
+        <module>jiiiiiin-hystrix</module>
         <module>jiiiiiin-service</module>
         <module>jiiiiiin-edge-service</module>
-        <module>jiiiiiin-hystrix</module>
+        <module>jiiiiiin-springboot-admin</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -33,6 +34,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <apollo-client.version>1.1.0</apollo-client.version>
+        <spring-boot-admin-version>2.0.4</spring-boot-admin-version>
         <jiiiiiin-security-version>1.0-SNAPSHOT</jiiiiiin-security-version>
     </properties>
 
@@ -76,6 +78,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin-version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>cn.jiiiiiin.security</groupId>
@@ -134,5 +144,47 @@
 
         </dependencies>
     </dependencyManagement>
+    <build>
+        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+            <plugins>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.7.0</version>
+                    <!--配置编译相关信息-->
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.20.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
 
 </project>

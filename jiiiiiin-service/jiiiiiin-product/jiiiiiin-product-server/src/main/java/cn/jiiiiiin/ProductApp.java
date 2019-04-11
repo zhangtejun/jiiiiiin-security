@@ -1,5 +1,6 @@
 package cn.jiiiiiin;
 
+import com.netflix.discovery.DiscoveryManager;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.Banner;
@@ -26,6 +27,14 @@ public class ProductApp {
         val app = new SpringApplication(ProductApp.class);
         app.setBannerMode(Banner.Mode.OFF);
         app.run(args);
+    }
+
+    /**
+     * 实现服务剔除
+     */
+    @GetMapping("/pullOut")
+    public void servicePullOut() {
+        DiscoveryManager.getInstance().shutdownComponent();
     }
 
     @GetMapping("/")

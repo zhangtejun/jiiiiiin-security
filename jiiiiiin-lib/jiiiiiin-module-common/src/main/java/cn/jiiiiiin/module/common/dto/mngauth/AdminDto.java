@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
@@ -21,6 +22,7 @@ import java.util.HashSet;
  */
 @Getter
 @Setter
+@ToString
 @Accessors(chain = true)
 public class AdminDto extends Admin {
 

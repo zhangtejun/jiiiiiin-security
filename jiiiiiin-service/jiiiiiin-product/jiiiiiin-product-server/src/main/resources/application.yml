@@ -9,6 +9,20 @@ spring:
   # 做服务发现是使用（必须唯一）
   application:
     name: jiiiiiin-product
+  sleuth:
+    web:
+      client:
+        enabled: true
+    sampler:
+      # 将采样比例设置为 1.0，也就是全部都需要。默认是 0.1
+      probability: 1.0
+  zipkin:
+    # 指定了 Zipkin 服务器的地址
+    base-url: http://jiiiiiin-zipkin:9411/
+  boot:
+    admin:
+      client:
+        url: http://jiiiiiin-springboot-admin:5000
 eureka:
 #    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
   client:

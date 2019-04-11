@@ -3,6 +3,14 @@
  */
 package cn.jiiiiiin.security.core.social.view;
 
+import cn.jiiiiiin.security.core.utils.HttpDataUtil;
+import com.baomidou.mybatisplus.extension.api.R;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.view.AbstractView;
 
@@ -21,28 +29,36 @@ import java.util.Map;
  * @see org.springframework.social.connect.web.ConnectController#connect(String, NativeWebRequest) 定义该接口的响应视图
  * @see cn.jiiiiiin.security.core.social.weixin.config.WeixinAutoConfiguration#weixinConnectedView 在这里去声明具体的响应视图组件
  */
+@AllArgsConstructor
+@Slf4j
 public class CustomBindingConnectView extends AbstractView {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.springframework.web.servlet.view.AbstractView#renderMergedOutputModel
-     * (java.util.Map, javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
-     */
+    private final ObjectMapper objectMapper;
+
+    private final LiteDeviceResolver liteDeviceResolver;
+
     @Override
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
                                            HttpServletResponse response) throws Exception {
-
+        log.debug("绑定解绑接口被执行 model {}", model);
         // 响应绑定页面，微信在授权完毕之后的回调url接口响应内容
         response.setContentType("text/html;charset=UTF-8");
         // 区分绑定还是解绑成功
+        final Device currentDevice = liteDeviceResolver.resolveDevice(request);
         if (model.get("connections") == null) {
-            // TODO 待修正
-            response.getWriter().write("<h3>解绑成功</h3>");
+            // 执行解绑逻辑
+            if (currentDevice.isNormal()) {
+                response.sendRedirect(request.getContextPath() + "/userBinding?unbindOptions=success");
+            } else {
+                HttpDataUtil.respJson(response, objectMapper.writeValueAsString(R.ok("解绑成功")));
+            }
         } else {
-            response.sendRedirect(request.getContextPath() + "/userBinding.html");
+            // 执行绑定逻辑
+            if (currentDevice.isNormal()) {
+                response.sendRedirect(request.getContextPath() + "/userBinding?bindOptions=success");
+            } else {
+                HttpDataUtil.respJson(response, objectMapper.writeValueAsString(R.ok("绑定成功")));
+            }
         }
 
     }

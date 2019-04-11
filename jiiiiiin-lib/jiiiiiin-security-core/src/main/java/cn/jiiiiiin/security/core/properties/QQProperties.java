@@ -7,6 +7,7 @@ import cn.jiiiiiin.security.core.properties.adapter.SocialProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * QQ登录配置项
@@ -21,6 +22,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 public class QQProperties extends SocialProperties {
 
     /**

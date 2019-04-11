@@ -7,10 +7,13 @@ import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
  * session管理相关配置项
+ *
+ * `jiiiiiin.security.browser.session.`
  *
  * @author zhailiang
  * @author jiiiiiin
@@ -18,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 public class SessionProperties {
 
     /**
@@ -31,7 +35,7 @@ public class SessionProperties {
      *
      * @see HttpSecurity#sessionManagement() {@link #maxSessionsPreventsLogin}
      */
-    private boolean maxSessionsPreventsLogin;
+    private boolean maxSessionsPreventsLogin = false;
     /**
      * session失效时跳转的地址
      *

@@ -124,7 +124,6 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
             throw new ValidateCodeException("获取验证码的值失败");
         }
 
-        log.info("验证码 imageCode::code {} validateCode {}", cacheRealValidateCode, validateCode);
         if (StringUtils.isBlank(validateCode)) {
             throw new ValidateCodeException("验证码不能为空");
         }

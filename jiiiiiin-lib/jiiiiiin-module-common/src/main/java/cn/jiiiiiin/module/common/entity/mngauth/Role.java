@@ -31,6 +31,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName("mng_role")

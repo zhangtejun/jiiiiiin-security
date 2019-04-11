@@ -11,6 +11,8 @@ import cn.jiiiiiin.security.rbac.component.dict.RbacDict;
 import cn.jiiiiiin.security.rbac.component.service.RBACService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.var;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -25,7 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 @Component("rbacService")
 public class MngRBACServiceImpl implements RBACService {
 
-    private AntPathMatcher antPathMatcher = new AntPathMatcher();
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
+
+    @Value("${server.servlet.context-path:'/mng'}")
     private String replaceContextPath;
 
     /**
@@ -49,10 +53,12 @@ public class MngRBACServiceImpl implements RBACService {
                 hasPermission = true;
             } else {
                 // 前端`接口记录`只输入类似：'admin/search/*/*/*'，故这里要进行一个请求uri的replace修改
-                if (StringUtils.isEmpty(replaceContextPath)) {
-                    replaceContextPath = request.getContextPath().concat("/");
+
+                var reqURI = request.getRequestURI();
+                if(!"/".equals(replaceContextPath)){
+                    // 如果配置了上下文需要将上下文过滤
+                    reqURI = request.getRequestURI().replace(replaceContextPath, "");
                 }
-                val reqURI = request.getRequestURI().replace(replaceContextPath, "");
                 val reqMethod = request.getMethod();
                 // 读取用户所拥有权限的所有URL
                 // 通过用户标识-》用户角色-》角色拥有的资源

@@ -17,11 +17,6 @@
     </modules>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-hystrix</artifactId>
-            <version>RELEASE</version>
-        </dependency>
     </dependencies>
 
 </project>

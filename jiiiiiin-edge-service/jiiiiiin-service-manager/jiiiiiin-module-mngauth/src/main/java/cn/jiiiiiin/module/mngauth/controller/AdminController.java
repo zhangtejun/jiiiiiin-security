@@ -15,6 +15,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,9 +26,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.groups.Default;
 
 
@@ -41,13 +46,27 @@ import javax.validation.groups.Default;
 @RestController
 @RequestMapping("/admin")
 @Api
+@AllArgsConstructor
+@Slf4j
 public class AdminController extends BaseController {
 
-    @Autowired
-    private IAdminService adminService;
+    private final IAdminService adminService;
 
-    @Autowired
-    private SimpleGrantedAuthority adminSimpleGrantedAuthority;
+    private final SimpleGrantedAuthority adminSimpleGrantedAuthority;
+
+    @ApiOperation(value = "第三方授权登录注册/绑定用户", notes = "关联的角色记录，必须传递到{@link AdminDto#roleIds}字段中", httpMethod = "POST")
+    @PostMapping("regist")
+    @JsonView(View.DetailView.class)
+    public AdminDto regist(@RequestBody @Validated({Groups.Create.class, Groups.Security.class, Default.class}) AdminDto admin, HttpServletRequest request) {
+        // 针对内管的用户注册，将会给定一个特殊的角色，该角色不会赋予任何权限，
+        // 手动注册的用户需要由系统管理员审核之后二次分发权限
+//        admin.setRoleIds(new String[]{"1112903286077321218"});
+//        // 默认为内管渠道
+//        admin.setChannel(ChannelEnum.MNG);
+        adminService.regist(admin, request);
+        log.debug("第三方授权登录注册/绑定用户 {}", admin);
+        return admin;
+    }
 
     @ApiOperation(value = "用户记录分页查询", httpMethod = "GET")
     @JsonView(View.SimpleView.class)

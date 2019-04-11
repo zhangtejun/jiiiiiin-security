@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @author jiiiiiin
  */
 @FeignClient(name = "jiiiiiin-product", fallback = FeignClientTest.FeignClientTestFallBack.class)
+//@FeignClient(name = "jiiiiiin-product")
 public interface FeignClientTest {
 
     Logger log = LoggerFactory.getLogger(FeignClientTest.class);

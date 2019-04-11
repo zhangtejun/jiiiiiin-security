@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <link>
-<meta charset="UTF-8"></meta>
+<meta charset="UTF-8"/>
 <title>404</title>
-<link rel="stylesheet" type="text/css" href="/css/bower_components/bulma/css/bulma.min.css"></link>
-<link rel="stylesheet" type="text/css" href="/css/common.css"></link>
+<link rel="stylesheet" type="text/css" th:href="@{/css/bower_components/bulma/css/bulma.min.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
 </head>
 <body>
 
@@ -14,6 +14,7 @@
             <h1 class="title">
                 404
             </h1>
+            <h2 class="subtitle">没有找到你需要访问的资源</h2>
         </div>
     </div>
 </section>
@@ -21,13 +22,13 @@
 <section class="section">
     <div class="container">
         <p><a href="/">返回首页</a></p>
-        <p><a href="/signIn.html">返回登录</a></p>
+        <p><a href="/signIn">返回登录</a></p>
     </div>
 </section>
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>spring-boot2</p>
+        <p><a href="https://github.com/Jiiiiiin/jiiiiiin-security">jiiiiiin-security</a></p>
     </div>
 </footer>
 

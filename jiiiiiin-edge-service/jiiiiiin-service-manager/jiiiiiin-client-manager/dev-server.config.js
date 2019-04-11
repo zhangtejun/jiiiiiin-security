@@ -1,13 +1,16 @@
 module.exports = {
   proxy: {
+    // https://segmentfault.com/a/1190000016314976
     '/mng': {
-      target: 'http://127.0.0.1:9090',
+      target: 'http://jiiiiiin-server-manager:80',
       pathRewrite: {
-        '^/mng': '/mng'
+        '^/mng': ''
       },
+      secure: false,
       changeOrigin: true
     }
   },
   open: false,
-  quiet: false
+  quiet: false,
+  disableHostCheck: true
 }

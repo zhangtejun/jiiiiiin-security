@@ -27,7 +27,7 @@ public class CustomInvalidSessionStrategy extends AbstractSessionStrategy implem
 
     @Override
     public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException {
         onSessionInvalid(request, response);
     }
 

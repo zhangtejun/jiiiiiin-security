@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>注册 - 默认</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bower_components/bulma/css/bulma.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
+    <style>
+        [v-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <section class="hero is-danger">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    默认注册页面
+                </h1>
+                <h2 class="subtitle">
+                    <p>请配置 `jiiiiiin.security.browser.signUpUrl` 属性来设置自己的注册页</p>
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p><a href="https://github.com/Jiiiiiin/jiiiiiin-security">jiiiiiin-security</a></p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>
+
+<!-- 生产环境版本，优化了尺寸和速度 -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/common.js}"></script>
+
+<script>
+    new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

@@ -26,9 +26,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @Slf4j
 public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 
-//    @Autowired
-//    private ObjectMapper objectMapper;
-
     /**
      * @param methodParameter
      * @param aClass

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<link>
-<meta charset="UTF-8"></meta>
-<title>401</title>
-<link rel="stylesheet" type="text/css" href="/css/bower_components/bulma/css/bulma.min.css"></link>
-<link rel="stylesheet" type="text/css" href="/css/common.css"></link>
+<head>
+    <meta charset="UTF-8"/>
+    <title>401 Unauthorized - 默认</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bower_components/bulma/css/bulma.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
 </head>
 <body>
 
@@ -12,7 +12,7 @@
     <div class="hero-body">
         <div class="container">
             <h1 class="title">
-                401
+                401 Unauthorized
             </h1>
             <h2 class="subtitle" th:text="${#httpServletRequest.getAttribute('SPRING_SECURITY_LAST_EXCEPTION')}">
             </h2>
@@ -23,15 +23,16 @@
 <section class="section">
     <div class="container">
         <p><a href="/">返回首页</a></p>
-        <p><a href="/signIn.html">返回登录</a></p>
+        <p><a href="/signIn">返回登录</a></p>
     </div>
 </section>
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>spring-boot2</p>
+        <p><a href="https://github.com/Jiiiiiin/jiiiiiin-security">jiiiiiin-security</a></p>
     </div>
 </footer>
+
 
 </body>
 </html>

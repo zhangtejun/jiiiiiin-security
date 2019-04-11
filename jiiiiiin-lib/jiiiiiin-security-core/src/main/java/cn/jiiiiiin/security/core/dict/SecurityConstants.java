@@ -19,7 +19,7 @@ public interface SecurityConstants {
     /**
      * 当请求需要身份认证时，默认跳转的url，设置自定义`身份认证`控制器处理接口
      */
-    String DEFAULT_UNAUTHENTICATION_URL = "/authentication/require";
+    String DEFAULT_UNAUTHENTICATED_URL = "/authentication/require";
     /**
      * 默认的用户名密码登录请求处理url，自定义登录交易名
      */
@@ -36,6 +36,12 @@ public interface SecurityConstants {
      * 默认登录页面
      */
     String DEFAULT_SIGN_IN_PAGE_URL = "/signIn";
+
+    String DEFAULT_SIGN_UP_PAGE_URL = "/signUp";
+    /**
+     * 默认退出登录的处理接口
+     */
+    String DEFAULT_SIGN_OUT_PAGE_URL = "/signOut";
     /**
      * 验证图片验证码时，http请求中默认的携带图片验证码信息的参数的名称
      */
@@ -71,21 +77,17 @@ public interface SecurityConstants {
      * @see org.springframework.security.config.annotation.web.builders.HttpSecurity#sessionManagement#invalidSessionUrl
      */
     String DEFAULT_SESSION_INVALID_URL = "/sessionInvalid";
+
     /**
      * 获取第三方用户信息的url
      *
      * 针对 app模块的针对{@link SpringSocialConfigurer#signupUrl(String)}的处理器
      *      * @see SocialConfig#socialSecurityConfig()
      */
-    String DEFAULT_SOCIAL_USER_INFO_URL = "/social/admin";
+    String DEFAULT_SOCIAL_USER_INFO_URL = "/social/userInfo";
 
     /**
      * social 第三方授权用户管理表的表前缀
      */
     String SOCIAL_TABLE_PREFIX = "springsocial_";
-    /**
-     * 默认退出登录的处理接口
-     */
-    String LOGOUT_URL = "/signOut";
-
 }

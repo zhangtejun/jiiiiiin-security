@@ -10,6 +10,8 @@ import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * `@EnableZuulProxy`：开启zuul网关
@@ -20,6 +22,7 @@ import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 @EnableZuulProxy
 @SpringCloudApplication
 @Slf4j
+@RestController
 public class ZuulGatewayApplication {
 
     public static void main(String[] args) {
@@ -34,4 +37,10 @@ public class ZuulGatewayApplication {
         log.debug("zuulProperties refresh");
         return new ZuulProperties();
     }
+
+    @GetMapping("/")
+    public String root(){
+        return "jiiiiiin-gateway";
+    }
+
 }

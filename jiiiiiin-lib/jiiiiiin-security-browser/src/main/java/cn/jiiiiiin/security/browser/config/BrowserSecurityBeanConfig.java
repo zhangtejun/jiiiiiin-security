@@ -7,14 +7,16 @@ import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticati
 import cn.jiiiiiin.security.browser.component.authentication.BrowserAuthenticationSuccessHandler;
 import cn.jiiiiiin.security.browser.component.authentication.BrowserLoginUrlAuthenticationEntryPoint;
 import cn.jiiiiiin.security.browser.component.authorize.BrowserAccessDeniedHandler;
-import cn.jiiiiiin.security.browser.session.CustomExpiredSessionStrategy;
+import cn.jiiiiiin.security.browser.session.CustomSessionInformationExpiredStrategy;
 import cn.jiiiiiin.security.browser.session.CustomInvalidSessionStrategy;
 import cn.jiiiiiin.security.core.dict.SecurityConstants;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -24,6 +26,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import cn.jiiiiiin.security.browser.component.logout.BrowserLogoutSuccessHandler;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -36,10 +39,10 @@ import javax.servlet.ServletResponse;
  * @author jiiiiiin
  */
 @Configuration
+@AllArgsConstructor
 public class BrowserSecurityBeanConfig {
 
-    @Autowired
-    private SecurityProperties securityProperties;
+    private final SecurityProperties securityProperties;
 
     /**
      * session失效时的处理策略配置
@@ -62,7 +65,7 @@ public class BrowserSecurityBeanConfig {
     @Bean
     @ConditionalOnMissingBean(SessionInformationExpiredStrategy.class)
     public SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
-        return new CustomExpiredSessionStrategy(securityProperties);
+        return new CustomSessionInformationExpiredStrategy(securityProperties);
     }
 
     /**
@@ -70,12 +73,12 @@ public class BrowserSecurityBeanConfig {
      * 授权配置之退出成功处理器配置
      *
      * @return
-     * @see HttpSecurity#logout() {@link #logoutSuccessHandler()}
+     * @see HttpSecurity#logout()
      */
     @Bean
     @ConditionalOnMissingBean(LogoutSuccessHandler.class)
-    public LogoutSuccessHandler logoutSuccessHandler() {
-        return new BrowserLogoutSuccessHandler(securityProperties.getBrowser().getSignOutUrl());
+    public LogoutSuccessHandler logoutSuccessHandler(ObjectMapper objectMapper, LiteDeviceResolver liteDeviceResolver) {
+        return new BrowserLogoutSuccessHandler(securityProperties.getBrowser().getSignOutSuccessUrl(), objectMapper, liteDeviceResolver);
     }
 
     /**
@@ -94,7 +97,7 @@ public class BrowserSecurityBeanConfig {
     @Bean
     @ConditionalOnMissingBean(AuthenticationEntryPoint.class)
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new BrowserLoginUrlAuthenticationEntryPoint(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL);
+        return new BrowserLoginUrlAuthenticationEntryPoint(SecurityConstants.DEFAULT_UNAUTHENTICATED_URL);
     }
 
     @Bean

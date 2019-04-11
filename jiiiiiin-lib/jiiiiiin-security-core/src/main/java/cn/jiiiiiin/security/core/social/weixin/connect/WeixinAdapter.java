@@ -12,6 +12,8 @@ import org.springframework.social.connect.UserProfile;
 /**
  * 微信 api适配器，将微信 api的数据模型转为spring social的标准模型。
  *
+ * 是一个多实例对象，和{@link cn.jiiiiiin.security.core.social.qq.connet.QQAdapter}的区别
+ *
  * @author zhailiang
  */
 public class WeixinAdapter implements ApiAdapter<Weixin> {

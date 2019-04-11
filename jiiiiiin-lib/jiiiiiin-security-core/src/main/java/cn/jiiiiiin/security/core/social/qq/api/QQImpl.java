@@ -4,14 +4,19 @@
 package cn.jiiiiiin.security.core.social.qq.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
 import org.springframework.social.oauth2.TokenStrategy;
 
 /**
+ * {@link org.springframework.social.ApiBinding}的实现，用于获取qq的用户信息
+ * <p>
+ * 需要注意该类的实例不能是单例，因为 {@link AbstractOAuth2ApiBinding#accessToken} 字段是一个状态字段
+ * <p>
  * 参考：
+ * <p>
+ * https://coding.imooc.com/lesson/134.html#mid=6888
  * <p>
  * 下面是spring social的授权登录流程：
  * <p>
@@ -29,9 +34,8 @@ import org.springframework.social.oauth2.TokenStrategy;
  * <p>
  * http://wiki.connect.qq.com/get_user_info
  */
+@Slf4j
 public class QQImpl extends AbstractOAuth2ApiBinding implements QQ {
-
-    final static Logger L = LoggerFactory.getLogger(QQImpl.class);
 
     /**
      * 拉取openid qq接口：http://wiki.connect.qq.com/openapi%E8%B0%83%E7%94%A8%E8%AF%B4%E6%98%8E_oauth2-0
@@ -41,14 +45,14 @@ public class QQImpl extends AbstractOAuth2ApiBinding implements QQ {
     /**
      * 拉取用户信息qq接口
      */
-    private static final String URL_GET_USERINFO = "https://graph.qq.com/admin/get_user_info?oauth_consumer_key=%s&openid=%s";
+    private static final String URL_GET_USERINFO = "https://graph.qq.com/user/get_user_info?oauth_consumer_key=%s&openid=%s";
 
-    // === 定义拉取qq用户信息接口`get_user_info`所需参数：appId、openId
+    // === 定义拉取qq用户信息接口`get_user_info`所需的未定义参数：appId、openId
     private String appId;
 
     private String openId;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * 构造实例
@@ -68,14 +72,14 @@ public class QQImpl extends AbstractOAuth2ApiBinding implements QQ {
         this.appId = appId;
 
         final String url = String.format(URL_GET_OPENID, accessToken);
-        final String result = getRestTemplate().getForObject(url, String.class);
+        final String openIdInfo = getRestTemplate().getForObject(url, String.class);
 
         // 返回数据格式参考：http://wiki.connect.qq.com/%E8%8E%B7%E5%8F%96%E7%94%A8%E6%88%B7openid_oauth2-0
         // {"client_id":"YOUR_APPID","openid":"YOUR_OPENID"}
-        L.info("获取openid结果 {}", result);
+        log.debug("获取openid结果 {}", openIdInfo);
 
         // 截取openid
-        this.openId = StringUtils.substringBetween(result, "\"openid\":\"", "\"}");
+        this.openId = StringUtils.substringBetween(openIdInfo, "\"openid\":\"", "\"}");
     }
 
     /**
@@ -90,10 +94,10 @@ public class QQImpl extends AbstractOAuth2ApiBinding implements QQ {
         String url = String.format(URL_GET_USERINFO, appId, openId);
         String result = getRestTemplate().getForObject(url, String.class);
 
-        L.info("获取qq用户信息结果 {}", result);
+        log.debug("获取qq用户信息结果 {}", result);
 
         try {
-            final QQUserInfo userInfo = objectMapper.readValue(result, QQUserInfo.class);
+            final QQUserInfo userInfo = OBJECT_MAPPER.readValue(result, QQUserInfo.class);
             userInfo.setOpenId(openId);
             return userInfo;
         } catch (Exception e) {

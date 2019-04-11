@@ -4,10 +4,12 @@
 package cn.jiiiiiin.security.browser.session;
 
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -18,9 +20,12 @@ import java.io.IOException;
  * @author zhailiang
  * @author jiiiiiin
  */
-public class CustomExpiredSessionStrategy extends AbstractSessionStrategy implements SessionInformationExpiredStrategy {
+@Slf4j
+public class CustomSessionInformationExpiredStrategy extends AbstractSessionStrategy implements SessionInformationExpiredStrategy {
 
-    public CustomExpiredSessionStrategy(SecurityProperties securityProperties) {
+    public static final String EXPIRED_SESSION_DETECTED_STATUS = "EXPIRED_SESSION_DETECTED_STATUS";
+
+    public CustomSessionInformationExpiredStrategy(SecurityProperties securityProperties) {
         super(securityProperties);
     }
 
@@ -31,15 +36,14 @@ public class CustomExpiredSessionStrategy extends AbstractSessionStrategy implem
      */
     @Override
     public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException, ServletException {
-        // 这里可以做日志的记录等操作
+        // TODO 这里可以做日志的记录等操作
+        log.info("发生并发登录剔除事件");
+        event.getRequest().setAttribute(EXPIRED_SESSION_DETECTED_STATUS, true);
         onSessionInvalid(event.getRequest(), event.getResponse());
     }
 
-    /* (non-Javadoc)
-     * @see com.imooc.security.browser.session.AbstractSessionStrategy#isConcurrency()
-     */
     @Override
-    protected boolean isConcurrency() {
+    protected boolean isConcurrency(HttpServletRequest request) {
         return true;
     }
 

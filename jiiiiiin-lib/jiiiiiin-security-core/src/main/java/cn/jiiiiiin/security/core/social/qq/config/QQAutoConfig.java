@@ -3,9 +3,9 @@
  */
 package cn.jiiiiiin.security.core.social.qq.config;
 
-import cn.jiiiiiin.security.core.properties.QQProperties;
 import cn.jiiiiiin.security.core.properties.SecurityProperties;
 import cn.jiiiiiin.security.core.social.qq.connet.QQConnectionFactory;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
@@ -34,16 +34,10 @@ public class QQAutoConfig extends SocialConfigurerAdapter {
         configurer.addConnectionFactory(this.createConnectionFactory());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.springframework.boot.autoconfigure.social.SocialAutoConfigurerAdapter
-     * #createConnectionFactory()
-     */
-//    @Override
+    // 升级到springboot2之后，关联social修改了该接口
+    //@Override
     protected ConnectionFactory<?> createConnectionFactory() {
-        final QQProperties qqConfig = securityProperties.getSocial().getQq();
+        val qqConfig = securityProperties.getSocial().getQq();
         return new QQConnectionFactory(qqConfig.getProviderId(), qqConfig.getAppId(), qqConfig.getAppSecret());
     }
 

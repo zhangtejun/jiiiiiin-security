@@ -4,6 +4,8 @@
 package cn.jiiiiiin.security.core.social.weixin.connect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +27,7 @@ import java.util.Map;
  * @author zhailiang
  * @author jiiiiiin
  */
+@Slf4j
 public class WeixinOAuth2Template extends OAuth2Template {
 
     private String proxyUri;
@@ -36,8 +39,6 @@ public class WeixinOAuth2Template extends OAuth2Template {
     private String accessTokenUrl;
 
     private static final String REFRESH_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/refresh_token";
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public WeixinOAuth2Template(String clientId, String clientSecret, String authorizeUrl, String accessTokenUrl) {
         super(clientId, clientSecret, authorizeUrl, accessTokenUrl);
@@ -61,11 +62,11 @@ public class WeixinOAuth2Template extends OAuth2Template {
 
         StringBuilder accessTokenRequestUrl = new StringBuilder(accessTokenUrl);
 
-        accessTokenRequestUrl.append("?appid=" + clientId);
-        accessTokenRequestUrl.append("&secret=" + clientSecret);
-        accessTokenRequestUrl.append("&code=" + authorizationCode);
-        accessTokenRequestUrl.append("&grant_type=authorization_code");
-        accessTokenRequestUrl.append("&redirect_uri=" + redirectUri);
+        accessTokenRequestUrl.append("?appid=").append(clientId);
+        accessTokenRequestUrl.append("&secret=").append(clientSecret);
+        accessTokenRequestUrl.append("&code=").append(authorizationCode);
+        accessTokenRequestUrl.append("&grant_type=authorization_code")
+                .append("&redirect_uri=").append(redirectUri);
 
         return getAccessToken(accessTokenRequestUrl);
     }
@@ -85,17 +86,17 @@ public class WeixinOAuth2Template extends OAuth2Template {
     @SuppressWarnings("unchecked")
     private AccessGrant getAccessToken(StringBuilder accessTokenRequestUrl) {
 
-        logger.info("获取access_token, 请求URL: " + accessTokenRequestUrl.toString());
+        log.debug("获取access_token, 请求URL: " + accessTokenRequestUrl.toString());
 
         String response = getRestTemplate().getForObject(accessTokenRequestUrl.toString(), String.class);
 
-        logger.info("获取access_token, 响应内容: " + response);
+        log.debug("获取access_token, 响应内容: " + response);
 
         Map<String, Object> result = null;
         try {
             result = new ObjectMapper().readValue(response, Map.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取access_token出错", e);
         }
 
         //返回错误码时直接返回空
@@ -122,7 +123,7 @@ public class WeixinOAuth2Template extends OAuth2Template {
      */
     @Override
     public String buildAuthenticateUrl(OAuth2Parameters parameters) {
-        if(!StringUtils.isBlank(proxyUri)) {
+        if (!StringUtils.isBlank(proxyUri)) {
             parameters.setRedirectUri(buildReturnToUrl(parameters.getRedirectUri()));
         }
         String url = super.buildAuthenticateUrl(parameters);

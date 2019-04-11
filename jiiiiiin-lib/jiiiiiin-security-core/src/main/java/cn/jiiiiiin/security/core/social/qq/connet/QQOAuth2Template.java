@@ -3,6 +3,9 @@
  */
 package cn.jiiiiiin.security.core.social.qq.connet;
 
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +28,8 @@ import java.nio.charset.Charset;
  * @author jiiiiiin
  * @see AccessGrant 是对access token，访问令牌的一个封装
  */
+@Slf4j
 public class QQOAuth2Template extends OAuth2Template {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public QQOAuth2Template(String clientId, String clientSecret, String authorizeUrl, String accessTokenUrl) {
         super(clientId, clientSecret, authorizeUrl, accessTokenUrl);
@@ -46,9 +48,9 @@ public class QQOAuth2Template extends OAuth2Template {
     @Override
     protected AccessGrant postForAccessGrant(String accessTokenUrl, MultiValueMap<String, String> parameters) {
         // 覆盖默认实现，得到String类型的响应数据
-        String responseStr = getRestTemplate().postForObject(accessTokenUrl, parameters, String.class);
+        val responseStr = getRestTemplate().postForObject(accessTokenUrl, parameters, String.class);
         try {
-            logger.info("获取accessToke的响应：" + responseStr);
+            log.info("获取accessToke的响应：" + responseStr);
             String[] items = StringUtils.splitByWholeSeparatorPreserveAllTokens(responseStr, "&");
             String accessToken = StringUtils.substringAfterLast(items[0], "=");
             Long expiresIn = new Long(StringUtils.substringAfterLast(items[1], "="));
@@ -74,7 +76,8 @@ public class QQOAuth2Template extends OAuth2Template {
      */
     @Override
     protected RestTemplate createRestTemplate() {
-        RestTemplate restTemplate = super.createRestTemplate();
+        val restTemplate = super.createRestTemplate();
+        // 处理`text/html`这种内容类型
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
         return restTemplate;
     }
